@@ -46,6 +46,7 @@ export const getStorage = async () => {
 
 export const Colors = {
     colorMain: "#2d2d2d",
+    colorBlack: "#0d0d0d",
     colorSecondary: "#9ed3da",
     colorYellow: "#ffcb08",
     colorRed: "#c0392b",
