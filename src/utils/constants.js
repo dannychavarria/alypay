@@ -1,6 +1,12 @@
 import Asyncstorage from "@react-native-community/async-storage"
 import { Alert, Platform, StatusBar, Dimensions, StyleSheet, Linking } from "react-native"
+import { check, PERMISSIONS, RESULTS, request } from "react-native-permissions"
 import { isIphoneX } from "react-native-iphone-x-helper"
+import { showMessage } from "react-native-flash-message"
+
+// Store and action from redux
+import Store from "../store/index"
+import { SETPERMISSIONS } from "../store/actionsTypes"
 
 // Constanst
 const keyStorage = "@storage"
@@ -119,3 +125,65 @@ export const GlobalStyles = StyleSheet.create({
         backgroundColor: Colors.colorMain
     },
 })
+
+/**Metodo que verifica el permiso para aceeder a `Camera` */
+export const CheckCameraPermission = async () => {
+    try {
+        // Check permission of camera
+        const checkPermission = await check(PERMISSIONS.ANDROID.CAMERA)
+
+        if (checkPermission === RESULTS.DENIED) {
+            // El permiso no se ha solicitado / se ha denegado pero se puede solicitar
+
+            // Solicitamos permiso para ocupar la camara del dispositivo
+            const requestPermission = await request(PERMISSIONS.ANDROID.CAMERA)
+
+            console.log(requestPermission)
+
+            if (requestPermission === RESULTS.GRANTED) {
+                // El usuario acepto el permiso de la camara
+                const payload = {
+                    camera: true
+                }
+
+                Store.dispatch({ type: SETPERMISSIONS, payload })
+            }
+
+            if (requestPermission === RESULTS.DENIED) {
+                // Si el usuario 
+                throw "No podrás escanear códigos de pago"
+            }
+
+            if (requestPermission === RESULTS.BLOCKED) {
+                // Si el usuario 
+                throw "No podrás escanear códigos de pago en el futuro"
+            }
+        }
+
+        if (checkPermission === RESULTS.BLOCKED) {
+            // El permiso es denegado y ya no se puede solicitar.
+            throw 'Configura el permiso de tu camara a Alypay'
+        }
+
+        if (checkPermission === RESULTS.GRANTED) {
+            // El usuario acepto el permiso de la camara
+            const payload = {
+                camera: true
+            }
+
+            Store.dispatch({ type: SETPERMISSIONS, payload })
+        }
+    } catch (description) {
+
+        console.log(description)
+
+        showMessage({
+            backgroundColor: Colors.colorRed,
+            color: "#FFF",
+            description: description.toString(),
+            icon: "warning",
+            message: "AlyPay",
+            autoHide: false,
+        })
+    }
+}

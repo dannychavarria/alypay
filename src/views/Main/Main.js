@@ -3,21 +3,32 @@ import React, { useState, useCallback, useEffect } from "react"
 // Import componentes
 import Loader from "../../components/Loader/Loader"
 import Container from "../../components/Container/Container"
+import QRCodeScanner from "react-native-qrcode-scanner"
+import { RNCamera } from "react-native-camera"
 import { Text, StyleSheet, TouchableOpacity, View, Image } from "react-native"
 
 // Import store from redux
 import Store from "../../store/index"
-import { Colors, RFValue } from "../../utils/constants"
+import { Colors, RFValue, CheckCameraPermission } from "../../utils/constants"
 
 // Import Assets
+
+/**
+ * Constante que almacena el tipo de vista seleccionada del switch
+ * Types: `wallet` or `pay`
+ */
+const TYPE_VIEW = {
+    WALLET: "wallet",
+    PAY: "pay"
+}
 
 /**
  * Componente de switch wallet/sell
  * 
  * @param {Function} onChange 
  */
-const Swich = ({ onSwitch = () => { } }) => {
-    const [state, setState] = useState("wallet")
+const Switch = ({ onSwitch = () => { } }) => {
+    const [state, setState] = useState(TYPE_VIEW.WALLET)
 
     // Esperamos que el estado cambie para saber cuando el usuario cambia de estado
     const changeState = useCallback(() => onSwitch(state), [state])
@@ -66,14 +77,14 @@ const Swich = ({ onSwitch = () => { } }) => {
 
     return (
         <View style={stylesSwitcher.container}>
-            <TouchableOpacity onPress={_ => setState("wallet")} style={[state === "wallet" ? stylesSwitcher.buttonActive : stylesSwitcher.buttonDisactive, stylesSwitcher.buttons]}>
-                <Text style={[state === "wallet" ? stylesSwitcher.textButtonActive : stylesSwitcher.textButtonDisactive, stylesSwitcher.textButton]}>
+            <TouchableOpacity onPress={_ => setState(TYPE_VIEW.WALLET)} style={[state === TYPE_VIEW.WALLET ? stylesSwitcher.buttonActive : stylesSwitcher.buttonDisactive, stylesSwitcher.buttons]}>
+                <Text style={[state === TYPE_VIEW.WALLET ? stylesSwitcher.textButtonActive : stylesSwitcher.textButtonDisactive, stylesSwitcher.textButton]}>
                     Wallets
                 </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={_ => setState("pay")} style={[state === "pay" ? stylesSwitcher.buttonActive : stylesSwitcher.buttonDisactive, stylesSwitcher.buttons]}>
-                <Text style={[state === "pay" ? stylesSwitcher.textButtonActive : stylesSwitcher.textButtonDisactive, stylesSwitcher.textButton]}>
+            <TouchableOpacity onPress={_ => setState(TYPE_VIEW.PAY)} style={[state === TYPE_VIEW.PAY ? stylesSwitcher.buttonActive : stylesSwitcher.buttonDisactive, stylesSwitcher.buttons]}>
+                <Text style={[state === TYPE_VIEW.PAY ? stylesSwitcher.textButtonActive : stylesSwitcher.textButtonDisactive, stylesSwitcher.textButton]}>
                     Pagar
                 </Text>
             </TouchableOpacity>
@@ -81,6 +92,30 @@ const Swich = ({ onSwitch = () => { } }) => {
     )
 }
 
+const PayComponent = () => {
+    const onReadCodeQR = (data) => {
+        console.log(data)
+    }
+
+    return (
+        <QRCodeScanner
+            onRead={onReadCodeQR}
+            flashMode={RNCamera.Constants.FlashMode.torch}
+            topContent={
+                <Text>Scan Code Example</Text>
+            }
+            bottomContent={
+                <TouchableOpacity>
+                    <Text>OK. Got it!</Text>
+                </TouchableOpacity>
+            }
+        />
+    )
+}
+
+/**
+ * Componente que representa la billetera del usuario
+ */
 const ItemWallet = () => {
     const urlImage = "https://s2.coinmarketcap.com/static/img/coins/128x128/1.png"
 
@@ -164,21 +199,48 @@ const ItemWallet = () => {
 }
 
 const Main = () => {
+    /**Store from reduz */
     const store = Store.getState()
+
+    const [state, setState] = useState(TYPE_VIEW.WALLET)
 
     const styles = StyleSheet.create({
         containerWallets: {
             marginHorizontal: RFValue(10),
         }
-    })
+    })    
+
+    useEffect(() => {
+        console.log(store)
+
+        CheckCameraPermission()
+
+        Store.subscribe((e) => {
+            const newStore = Store.getState()
+
+            console.log(e)
+
+            console.log(newStore)
+        })
+    }, [])
 
     return (
         <Container showLogo>
-            <Swich />
+            <Switch onSwitch={e => console.log(e)} />
 
-            <View style={styles.containerWallets}>
-                <ItemWallet />
-            </View>
+            {
+                state === TYPE_VIEW.WALLET &&
+                <View style={styles.containerWallets}>
+                    <ItemWallet />
+                </View>
+            }
+
+            {
+                state === TYPE_VIEW.PAY &&
+                <View style={styles.containerWallets}>
+                    <PayComponent />
+                </View>
+            }
 
         </Container>
     )
