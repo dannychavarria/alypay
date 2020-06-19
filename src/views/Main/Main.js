@@ -93,23 +93,38 @@ const Switch = ({ onSwitch = () => { } }) => {
 }
 
 const PayComponent = () => {
+    const { } = Store.getState()
+
     const onReadCodeQR = (data) => {
         console.log(data)
     }
 
+    const styles = StyleSheet.create({
+        constainerQR: {
+            alignItems: "center",
+            justifyContent: "center",
+            borderRadius: RFValue(5),
+            height: RFValue(320),
+            overflow: "hidden",
+        }
+    })
+
     return (
-        <QRCodeScanner
-            onRead={onReadCodeQR}
-            flashMode={RNCamera.Constants.FlashMode.torch}
-            topContent={
-                <Text>Scan Code Example</Text>
-            }
-            bottomContent={
-                <TouchableOpacity>
-                    <Text>OK. Got it!</Text>
-                </TouchableOpacity>
-            }
-        />
+        <View style={styles.constainerQR}>
+            <QRCodeScanner
+                sty
+                onRead={onReadCodeQR}
+                flashMode={RNCamera.Constants.FlashMode.torch}
+                topContent={
+                    <Text>Scan Code Example</Text>
+                }
+                bottomContent={
+                    <TouchableOpacity>
+                        <Text>OK. Got it!</Text>
+                    </TouchableOpacity>
+                }
+            />
+        </View>
     )
 }
 
@@ -208,25 +223,17 @@ const Main = () => {
         containerWallets: {
             marginHorizontal: RFValue(10),
         }
-    })    
+    })
 
     useEffect(() => {
         console.log(store)
 
         CheckCameraPermission()
-
-        Store.subscribe((e) => {
-            const newStore = Store.getState()
-
-            console.log(e)
-
-            console.log(newStore)
-        })
     }, [])
 
     return (
         <Container showLogo>
-            <Switch onSwitch={e => console.log(e)} />
+            <Switch onSwitch={setState} />
 
             {
                 state === TYPE_VIEW.WALLET &&
