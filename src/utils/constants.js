@@ -1,5 +1,9 @@
 import Asyncstorage from "@react-native-community/async-storage"
-import { Alert, Platform, StatusBar, Dimensions, StyleSheet, Linking } from "react-native"
+import { Platform, StatusBar, Dimensions, StyleSheet } from "react-native"
+
+// Import Functions
+import Clipboard from "@react-native-community/clipboard"
+import Toast from "react-native-simple-toast"
 import { check, PERMISSIONS, RESULTS, request } from "react-native-permissions"
 import { isIphoneX } from "react-native-iphone-x-helper"
 import { showMessage } from "react-native-flash-message"
@@ -83,12 +87,14 @@ export const GlobalStyles = StyleSheet.create({
     },
 
     textInput: {
-        backgroundColor: Colors.colorMain,
+        backgroundColor: Colors.colorBlack,
         borderRadius: 5,
         borderWidth: 2,
+        borderColor: Colors.colorYellow + "55",
         color: '#FFF',
         elevation: 5,
         padding: 5,
+        zIndex: 50,
     },
 
     textButton: {
@@ -185,5 +191,23 @@ export const CheckCameraPermission = async () => {
             message: "AlyPay",
             autoHide: false,
         })
+    }
+}
+
+/**
+ * Funcion que copia un texto al portapeles
+ * 
+ * @param {String} text
+ */
+export const CopyClipboard = async (text = "") => {
+    await Clipboard.setString(text)
+
+    Toast.show("Copiado a portapeles", Toast.LONG)
+}
+
+export const reducer = (state, action) => {
+    return {
+        ...state,
+        [action.type]: action.payload
     }
 }
