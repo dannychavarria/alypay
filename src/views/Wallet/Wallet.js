@@ -1,9 +1,10 @@
 import React, { useState, useReducer } from "react"
 
 // Import components
-import Switch from "../../components/Switch/Switch"
-import ItemWallet from "../../components/ItemWallet/ItemWallet"
 import Container from "../../components/Container/Container"
+import ItemWallet from "../../components/ItemWallet/ItemWallet"
+import StoreElement from "../../components/StoreElement/StoreElement"
+import Switch from "../../components/Switch/Switch"
 
 // Import other components
 import Lottie from "lottie-react-native"
@@ -20,6 +21,7 @@ import { Colors, RFValue, GlobalStyles, CopyClipboard, reducer } from "../../uti
 // Import Assets
 import logo from "../../static/alypay.png"
 import scanQRAnimation from "../../animations/scan-qr.json"
+import { ScrollView } from "react-native-gesture-handler"
 
 const switchItems = [
     {
@@ -161,6 +163,61 @@ const SendComponent = () => {
     )
 }
 
+const arrHistory = [
+    {
+        id: "00001",
+        name: "Casa del cafe",
+        date: new Date(),
+        amount: 0.002,
+        symbol: "BTC",
+        debit: false,
+    },
+    {
+        id: "00002",
+        name: "Retiro",
+        date: new Date(),
+        amount: 1,
+        symbol: "ETH",
+        debit: true,
+    },
+    {
+        id: "00002",
+        name: "0x13952756b39a064080306c73764e56c9c588ab23",
+        date: new Date(),
+        amount: 25,
+        symbol: "ETH",
+        debit: false,
+    },
+]
+
+const History = () => {
+    const styles = StyleSheet.create({
+        scroll: {
+            flex: 1,
+        },
+        
+        container: {
+            paddingHorizontal: RFValue(25),
+        }
+    })
+
+
+    return (
+        <ScrollView style={styles.scroll}>
+            <ViewAnimate style={styles.container} animation="fadeIn">
+                {
+                    (arrHistory.length > 0) &&
+                    <>
+                        {
+                            arrHistory.map(StoreElement)
+                        }
+                    </>
+                }
+            </ViewAnimate>
+        </ScrollView>
+    )
+}
+
 const Wallet = () => {
     const [state, setState] = useState(switchItems[0].state)
 
@@ -185,6 +242,11 @@ const Wallet = () => {
             {
                 state === switchItems[1].state &&
                 <SendComponent />
+            }
+
+            {
+                state === switchItems[2].state &&
+                <History />
             }
         </Container>
     )
