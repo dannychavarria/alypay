@@ -128,7 +128,8 @@ export const GlobalStyles = StyleSheet.create({
 
     superContainer: {
         flex: 1,
-        backgroundColor: Colors.colorMain
+        backgroundColor: Colors.colorMain,
+        position: "relative",
     },
 })
 

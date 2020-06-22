@@ -8,9 +8,9 @@ import { Colors, RFValue } from "../../utils/constants"
 // Import components
 import { View, Text, StyleSheet } from "react-native"
 
-const StoreElement = (item) => {
+const StoreElement = (item, key) => {
     return (
-        <View style={styles.container}>
+        <View key={key} style={styles.container}>
             <View style={styles.subContainer}>
                 <Text style={styles.name}>{item.name}</Text>
 

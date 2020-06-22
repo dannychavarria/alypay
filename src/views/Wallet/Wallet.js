@@ -192,10 +192,6 @@ const arrHistory = [
 
 const History = () => {
     const styles = StyleSheet.create({
-        scroll: {
-            flex: 1,
-        },
-        
         container: {
             paddingHorizontal: RFValue(25),
         }
@@ -203,7 +199,6 @@ const History = () => {
 
 
     return (
-        <ScrollView style={styles.scroll}>
             <ViewAnimate style={styles.container} animation="fadeIn">
                 {
                     (arrHistory.length > 0) &&
@@ -211,10 +206,18 @@ const History = () => {
                         {
                             arrHistory.map(StoreElement)
                         }
+
+                        {
+                            arrHistory.map(StoreElement)
+                        }
+
+                        {
+                            arrHistory.map(StoreElement)
+                        }
                     </>
+
                 }
             </ViewAnimate>
-        </ScrollView>
     )
 }
 
