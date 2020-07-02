@@ -1,10 +1,10 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 
 // Import components
 import Icon from "react-native-vector-icons/Entypo"
 import Icon2 from "react-native-vector-icons/MaterialCommunityIcons"
 import { BlurView } from "@react-native-community/blur"
-import { StyleSheet, View, Text, TouchableOpacity } from "react-native"
+import { StyleSheet, View, Text, TouchableOpacity, Keyboard } from "react-native"
 
 // Import functions and constanst
 import { RFValue, Colors } from "../../utils/constants"
@@ -12,34 +12,55 @@ import { RFValue, Colors } from "../../utils/constants"
 const sizeIcon = RFValue(32)
 
 const Navbar = () => {
-    return (
-        <View style={styles.container}>
-            <View style={styles.subContainer}>
-                <BlurView
-                    style={styles.absolute}
-                    blurType="dark"
-                />
+    const [hidden, setHidden] = useState(false)
 
-                <View style={styles.containerButtons}>
-                    <TouchableOpacity style={styles.button}>
-                        <Icon name="home" size={sizeIcon} color={Colors.colorYellow} />
-                    </TouchableOpacity>
+    useEffect(() => {
+        // Ocultamos el menu cuando el teclado se active
+        const eventShowKeyboard = Keyboard.addListener("keyboardDidShow", () => setHidden(true))
 
-                    <TouchableOpacity style={styles.button}>
-                        <Icon name="user" size={sizeIcon} color={Colors.colorYellow} />
-                    </TouchableOpacity>
+        // Mostramos el menu cuando el teclado se oculte
+        const eventHideKeyboard =Keyboard.addListener("keyboardDidHide", () => setHidden(false))
 
-                    <TouchableOpacity style={styles.button}>
-                        <Icon2 name="qrcode-scan" size={sizeIcon} color={Colors.colorYellow} />
-                    </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.button}>
-                        <Icon name="menu" size={sizeIcon} color={Colors.colorYellow} />
-                    </TouchableOpacity>
+        return () => {
+            // Removemos los eventos cuando el componente se desmonte
+            eventShowKeyboard.remove()
+            eventHideKeyboard.remove()
+        }
+    }, [])
+
+    if (!hidden) {
+        return (
+            <View style={styles.container}>
+                <View style={styles.subContainer}>
+                    <BlurView
+                        style={styles.absolute}
+                        blurType="dark"
+                    />
+
+                    <View style={styles.containerButtons}>
+                        <TouchableOpacity style={styles.button}>
+                            <Icon name="home" size={sizeIcon} color={Colors.colorYellow} />
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={styles.button}>
+                            <Icon name="user" size={sizeIcon} color={Colors.colorYellow} />
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={styles.button}>
+                            <Icon2 name="qrcode-scan" size={sizeIcon} color={Colors.colorYellow} />
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={styles.button}>
+                            <Icon name="menu" size={sizeIcon} color={Colors.colorYellow} />
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </View>
-        </View>
-    )
+        )
+    } else {
+        return null
+    }
 }
 
 const styles = StyleSheet.create({

@@ -181,12 +181,60 @@ const arrHistory = [
         debit: true,
     },
     {
-        id: "00002",
-        name: "0x13952756b39a064080306c73764e56c9c588ab23",
+        id: "00003",
+        name: "Burger King",
         date: new Date(),
-        amount: 25,
+        amount: 0.1,
         symbol: "ETH",
+        debit: true,
+    },
+    {
+        id: "00004",
+        name: "Transferencia",
+        date: new Date(),
+        amount: 50,
+        symbol: "ALY",
         debit: false,
+    },
+    {
+        id: "00005",
+        name: "Reembolso",
+        date: new Date(),
+        amount: 0.001,
+        symbol: "BTC",
+        debit: false,
+    },
+    {
+        id: "00006",
+        name: "Burger King",
+        date: new Date(),
+        amount: 0.1,
+        symbol: "ETH",
+        debit: true,
+    },
+    {
+        id: "00007",
+        name: "Burger King",
+        date: new Date(),
+        amount: 0.1,
+        symbol: "ETH",
+        debit: true,
+    },
+    {
+        id: "00007",
+        name: "Burger King",
+        date: new Date(),
+        amount: 0.1,
+        symbol: "ETH",
+        debit: true,
+    },
+    {
+        id: "00007",
+        name: "Burger King",
+        date: new Date(),
+        amount: 0.1,
+        symbol: "ETH",
+        debit: true,
     },
 ]
 
@@ -203,14 +251,6 @@ const History = () => {
                 {
                     (arrHistory.length > 0) &&
                     <>
-                        {
-                            arrHistory.map(StoreElement)
-                        }
-
-                        {
-                            arrHistory.map(StoreElement)
-                        }
-
                         {
                             arrHistory.map(StoreElement)
                         }

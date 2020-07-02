@@ -4,15 +4,15 @@ import { GlobalStyles, RFValue } from "../../utils/constants"
 
 // Import Components
 import Navbar from "../Navbar/Navbar"
-import { SafeAreaView, Image, StyleSheet, ScrollView, Dimensions, View } from "react-native"
+import { SafeAreaView, Image, StyleSheet, ScrollView, View } from "react-native"
 
 // Import Assets
 import alypayLogo from "../../static/alypay.png"
 
-const Container = ({ children, showLogo = false, hiddenNavbar = false }) => {
+const Container = ({ children, showLogo = false, hiddenNavbar = false, scrollViewStyles = {} }) => {
     return (
         <SafeAreaView style={GlobalStyles.superContainer}>
-            <ScrollView style={styles.scroll}>
+            <ScrollView style={[styles.scroll, scrollViewStyles]}>
 
                 {
                     showLogo !== false &&

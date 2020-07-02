@@ -63,6 +63,10 @@ export const Colors = {
     colorGreen: "#16a085",
 }
 
+export const serverAdress = {
+    PLAYGROUND: "http://localhost:4000/"
+}
+
 const buttonStyle = {
     alignItems: "center",
     borderRadius: 25,
