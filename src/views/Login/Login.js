@@ -6,16 +6,22 @@ import getPublicIp from "react-native-public-ip"
 
 // Import apollo server
 import { View as ViewAnimation } from "react-native-animatable"
-import { useMutation } from "@apollo/react-hooks"
+import { useMutation } from "@apollo/client"
 import { login } from "../../graphql/mutation/mutations"
 
 // Import components
 import Video from "react-native-video"
+import Loader from "../../components/Loader/Loader"
 import { Text, TextInput, StyleSheet, Image, View, Dimensions, KeyboardAvoidingView, Platform, TouchableOpacity } from "react-native"
 
 // Import constants and functions
-import { reducer, Colors, GlobalStyles, RFValue } from "../../utils/constants"
+import { reducer, Colors, GlobalStyles, RFValue, setStorage } from "../../utils/constants"
 import { showMessage } from "react-native-flash-message"
+import validator from "validator"
+
+// Import reduz store and types
+import store from "../../store/index"
+import { SETSTORAGE } from "../../store/actionsTypes"
 
 // Import Assets
 import logo from "../../static/alypay.png"
@@ -27,6 +33,7 @@ const initialState = {
 
     // Info device
     ipAddress: "",
+    device: "",
     macAddress: "",
     systemName: "",
 }
@@ -41,21 +48,61 @@ const Login = () => {
 
     const [submit, { loading }] = useMutation(login, {
         onError: (err) => {
-            console.log(err)
-
             showMessage({
                 message: "Error en autenticacion",
-                description: "Autenticacion fallida, Correo o contraseña incorrecta",
+                description: err.message,
                 backgroundColor: Colors.colorRed,
                 color: "#fff",
-                autoHide: false,
                 icon: "warning"
             })
         },
         onCompleted: (data) => {
-            console.log(data)
+            const { Login } = data
+
+            // Validamos si los datos que retornan son validos
+            if (Object.values(Login).length > 0) {
+                store.dispatch({ type: SETSTORAGE, payload: Login })
+
+                setStorage(Login)
+            }
+
         }
     })
+
+    /***
+     * Metodo que se ejecuta cuando el usuario ejecuta login
+     */
+    const onSubmit = () => {
+        try {
+            // Verificamos si el formato es un correo
+            if (!validator.isEmail(state.email)) {
+                throw "Correo electronico no es correcto"
+            }
+
+            if (state.password.length === 0) {
+                throw "Ingrese alguna Contraseña"
+            }
+
+            const variables = {
+                email: state.email,
+                password: state.password,
+                public_ip: state.ipAddress,
+                device: state.device,
+                mac_adress: state.macAddress,
+                system_name: state.systemName
+            }
+
+            submit({ variables })
+        } catch (error) {
+            showMessage({
+                message: error.toString(),
+                description: "Error en autenticar",
+                color: "#FFF",
+                backgroundColor: Colors.colorRed,
+                icon: "warning",
+            })
+        }
+    }
 
     /**
      * Funcion que obtiene
@@ -63,9 +110,7 @@ const Login = () => {
     const getDeviceInfo = async () => {
 
         // Obtenemos la ip publica del dispositivo
-        getPublicIp().then((payload) => {
-            dispatch({ type: "ipAddress", payload })
-        })
+        getPublicIp().then((payload) => dispatch({ type: "ipAddress", payload }))
 
         /**Marca del dispositivo */
         const device = await getBrand()
@@ -74,18 +119,14 @@ const Login = () => {
         const deviceId = await getDeviceId()
 
         // Ingresamos al store la informacion del dispositivo
-        dispatch({ type: "ipAddress", payload: `${device} - ${deviceId}` })
+        dispatch({ type: "device", payload: `${device} - ${deviceId}` })
 
         // Obtenemos la direccion mac del dispositvo
-        await getMacAddress().then(payload => dispatch({ type: "ipAddress", payload }))
+        await getMacAddress().then(payload => dispatch({ type: "macAddress", payload }))
 
         const systemVersion = await getSystemName()
 
         dispatch({ type: "systemName", payload: systemVersion })
-    }
-
-    const onEndVideo = () => {
-        console.log(videoRef)
     }
 
     useEffect(() => {
@@ -93,7 +134,6 @@ const Login = () => {
         // $email: String!, $password: String!, $ip_publica: String!, $device: String!, $mac_adress: String!, $system_name: String!
 
     }, [])
-
 
     return (
         <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} style={styles.rootContainer}>
@@ -103,7 +143,6 @@ const Login = () => {
                 ref={videoRef}
                 resizeMode="cover"
                 playInBackground={true}
-                onVideoEnd={onEndVideo}
                 controls={false}
                 muted={true}
                 playWhenInactive={true}
@@ -112,7 +151,7 @@ const Login = () => {
 
             <View style={styles.cap} />
 
-            <ViewAnimation style={styles.subcontainer}>
+            <ViewAnimation animation="fadeIn" style={styles.subcontainer}>
                 <Image source={logo} style={styles.logo} />
 
                 <View style={styles.row}>
@@ -122,6 +161,7 @@ const Login = () => {
                         style={GlobalStyles.textInput}
                         value={state.email}
                         keyboardType="email-address"
+                        keyboardAppearance="dark"
                         onChangeText={payload => dispatch({ type: "email", payload })} />
                 </View>
 
@@ -132,6 +172,7 @@ const Login = () => {
                         style={GlobalStyles.textInput}
                         value={state.password}
                         secureTextEntry={true}
+                        keyboardAppearance="dark"
                         onChangeText={payload => dispatch({ type: "password", payload })} />
                 </View>
 
@@ -141,11 +182,13 @@ const Login = () => {
                         <Text style={styles.textRegisterButton}>Registrase</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={[GlobalStyles.buttonPrimaryLine, { flex: 1 }]}>
+                    <TouchableOpacity onPress={onSubmit} style={[GlobalStyles.buttonPrimaryLine, { flex: 1 }]}>
                         <Text style={GlobalStyles.textButtonPrimaryLine}>Iniciar</Text>
                     </TouchableOpacity>
                 </View>
             </ViewAnimation>
+
+            <Loader isVisible={loading} />
 
         </KeyboardAvoidingView>
     )

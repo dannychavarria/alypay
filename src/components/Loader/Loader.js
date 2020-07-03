@@ -10,7 +10,6 @@ import { RFValue } from "../../utils/constants"
 
 /**
  * Componente que se muestra cuando hay un proceso
- * @param {Boolean} isVisible
  */
 const Loader = ({ isVisible = false, size = 128 }) => {
     return (

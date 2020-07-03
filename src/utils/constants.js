@@ -64,7 +64,7 @@ export const Colors = {
 }
 
 export const serverAdress = {
-    PLAYGROUND: "http://localhost:4000/"
+    PLAYGROUND: "http://10.0.2.2:4000"
 }
 
 const buttonStyle = {
