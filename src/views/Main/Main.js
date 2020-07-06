@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 
 // import React navigation functions
 import { StackActions } from "@react-navigation/native"
@@ -9,10 +9,10 @@ import Container from "../../components/Container/Container"
 import ItemWallet from "../../components/ItemWallet/ItemWallet"
 import QRCodeScanner from "react-native-qrcode-scanner"
 import { RNCamera } from "react-native-camera"
-import { Text, StyleSheet, TouchableOpacity, View, Image } from "react-native"
+import { Text, StyleSheet, TouchableOpacity, View } from "react-native"
 
 // Import constant
-import { Colors, RFValue, CheckCameraPermission } from "../../utils/constants"
+import { RFValue, CheckCameraPermission } from "../../utils/constants"
 
 // Import store from redux
 import Store from "../../store/index"
@@ -49,8 +49,6 @@ const switchItems = [
  * el usuario ejecuta el componente pagar en el switch 
  */
 const PayComponent = () => {
-    const { } = Store.getState()
-
     const onReadCodeQR = (data) => {
         console.log(data)
     }

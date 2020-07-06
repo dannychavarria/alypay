@@ -4,13 +4,14 @@ import { Platform, StatusBar, Dimensions, StyleSheet } from "react-native"
 // Import Functions
 import Clipboard from "@react-native-community/clipboard"
 import Toast from "react-native-simple-toast"
+import axios from "axios"
 import { check, PERMISSIONS, RESULTS, request } from "react-native-permissions"
 import { isIphoneX } from "react-native-iphone-x-helper"
 import { showMessage } from "react-native-flash-message"
 
 // Store and action from redux
 import Store from "../store/index"
-import { SETPERMISSIONS } from "../store/actionsTypes"
+import { SETPERMISSIONS, DELETESTORAGE } from "../store/actionsTypes"
 
 // Constanst
 const keyStorage = "@storage"
@@ -29,6 +30,15 @@ const deviceHeight =
 export const RFValue = (fontSize = 0, standardScreenHeight = 680) => {
     const heightPercent = (fontSize * deviceHeight) / standardScreenHeight
     return Math.round(heightPercent)
+}
+
+/**
+ * Metodo que ejecuta el logOut de la aplicacion
+ */
+export const logOutApp = async () => {
+    await deleteStorage()
+
+    Store.dispatch({ type: DELETESTORAGE })
 }
 
 /**Setea los datos de api storage modo encriptado */
@@ -63,10 +73,23 @@ export const Colors = {
     colorGreen: "#16a085",
 }
 
-export const serverAdress = {
-    PLAYGROUND: "http://10.0.2.2:4000"
-}
+/**Direction for server */
+export const serverAdress = "http://10.0.2.2:4000"
 
+export const htttp = axios.create({
+    baseURL: serverAdress,
+    validateStatus: (status) => {
+        if (status === 401) {
+            logOutApp()
+        }
+
+        return status >= 200 && status < 300;
+    }
+})
+
+/**
+ * general button
+ */
 const buttonStyle = {
     alignItems: "center",
     borderRadius: 25,

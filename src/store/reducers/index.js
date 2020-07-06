@@ -8,7 +8,7 @@ import { permissions } from "./permissions"
 const reducers = combineReducers({
     global,
     navigation,
-    permissions,
+    permissions
 })
 
 export default reducers

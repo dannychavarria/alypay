@@ -6,10 +6,7 @@ import { createStackNavigator } from "@react-navigation/stack"
 import FlashMessage from "react-native-flash-message"
 
 // Import functions and utils constanst
-import { getStorage, reducer, serverAdress } from "./utils/constants"
-
-// Apollo config
-import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client"
+import { getStorage, reducer } from "./utils/constants"
 
 // Import redux types and store
 import store from "./store/index"
@@ -22,11 +19,16 @@ import Wallet from "./views/Wallet/Wallet"
 import Splash from "./components/Splash/Splash"
 import { StatusBar } from "react-native"
 
+// Import components
+import Navbar from "./components/Navbar/Navbar"
+import Loader from "./components/Loader/Loader"
+
 const Stack = createStackNavigator()
 
 const initialState = {
     loged: false,
-    splash: true
+    splash: true,
+    loader: false,
 }
 
 const App = () => {
@@ -35,11 +37,11 @@ const App = () => {
     const ConfigurateComponent = async () => {
         const payload = await getStorage()
 
+
         // Comprueba si hay datos retornados en el payload
         if (Object.keys(payload).length > 0) {
-
             // Creamos el dispatch para el storage de redux
-            await reduxStore.dispatch({
+            await store.dispatch({
                 type: SETSTORAGE,
                 payload
             })
@@ -55,10 +57,8 @@ const App = () => {
         }
 
         // Esperamos algun cambio en el store de redux
-        store.subscribe(async _ => {
+        await store.subscribe(async _ => {
             const { global } = store.getState()
-
-            await dispatch({ type: "splash", payload: true })
 
             if (Object.keys(global).length > 0) {
                 // Le decimos que el usuario esta logueado
@@ -67,22 +67,14 @@ const App = () => {
             } else {
                 dispatch({ type: "loged", payload: false })
             }
-
-            setTimeout(() => dispatch({ type: "splash", payload: false }), 1000)
         })
 
-
-        setTimeout(() => dispatch({ type: "splash", payload: false }), 1000)
+        await setTimeout(() => dispatch({ type: "splash", payload: false }), 1000)
     }
-
-    /**endpont playgorund client */
-    const Client = new ApolloClient({
-        uri: serverAdress.PLAYGROUND,
-        cache: new InMemoryCache()
-    })
 
     useEffect(() => {
         console.disableYellowBox = true
+
         ConfigurateComponent()
     }, [])
 
@@ -90,21 +82,24 @@ const App = () => {
         <>
             <StatusBar hidden={true} />
 
-            <ApolloProvider client={Client}>
-                <NavigationContainer>
-                    <Stack.Navigator initialRouteName="Main" headerMode={null} screenOptions={{}}>
-                        {
-                            state.loged
-                                ? <Stack.Screen name="Main" component={Main} />
-                                : <Stack.Screen name="Main" component={Login} />
-                        }
+            <NavigationContainer>
+                <Stack.Navigator initialRouteName="Main" headerMode={null}>
+                    {
+                        state.loged
+                            ? <Stack.Screen name="Main" component={Main} />
+                            : <Stack.Screen name="Main" component={Login} />
+                    }
 
-                        <Stack.Screen name="Wallet" component={Wallet} />
+                    <Stack.Screen name="Wallet" component={Wallet} />
 
 
-                    </Stack.Navigator>
-                </NavigationContainer>
-            </ApolloProvider>
+                </Stack.Navigator>
+            </NavigationContainer>
+
+            {
+                state.loged &&
+                <Navbar />
+            }
 
             <Splash isVisible={state.splash} />
 

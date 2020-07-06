@@ -6,8 +6,6 @@ import getPublicIp from "react-native-public-ip"
 
 // Import apollo server
 import { View as ViewAnimation } from "react-native-animatable"
-import { useMutation } from "@apollo/client"
-import { login } from "../../graphql/mutation/mutations"
 
 // Import components
 import Video from "react-native-video"
@@ -15,7 +13,7 @@ import Loader from "../../components/Loader/Loader"
 import { Text, TextInput, StyleSheet, Image, View, Dimensions, KeyboardAvoidingView, Platform, TouchableOpacity } from "react-native"
 
 // Import constants and functions
-import { reducer, Colors, GlobalStyles, RFValue, setStorage } from "../../utils/constants"
+import { reducer, Colors, GlobalStyles, RFValue, setStorage, htttp, loader } from "../../utils/constants"
 import { showMessage } from "react-native-flash-message"
 import validator from "validator"
 
@@ -36,6 +34,8 @@ const initialState = {
     device: "",
     macAddress: "",
     systemName: "",
+
+    loader: false,
 }
 
 const { width, height } = Dimensions.get("window")
@@ -46,42 +46,23 @@ const Login = () => {
     // Referencia al componente video
     const videoRef = useRef(null)
 
-    const [submit, { loading }] = useMutation(login, {
-        onError: (err) => {
-            showMessage({
-                message: "Error en autenticacion",
-                description: err.message,
-                backgroundColor: Colors.colorRed,
-                color: "#fff",
-                icon: "warning"
-            })
-        },
-        onCompleted: (data) => {
-            const { Login } = data
-
-            // Validamos si los datos que retornan son validos
-            if (Object.values(Login).length > 0) {
-                store.dispatch({ type: SETSTORAGE, payload: Login })
-
-                setStorage(Login)
-            }
-
-        }
-    })
-
     /***
      * Metodo que se ejecuta cuando el usuario ejecuta login
      */
-    const onSubmit = () => {
+    const onSubmit = async () => {
         try {
+
             // Verificamos si el formato es un correo
-            if (!validator.isEmail(state.email)) {
+            if (!validator.isEmail(state.email.trim())) {
                 throw "Correo electronico no es correcto"
             }
 
             if (state.password.length === 0) {
                 throw "Ingrese alguna Contraseña"
             }
+
+            // Loader app mode on
+            // dispatch({ type: "loader", payload: true })
 
             const variables = {
                 email: state.email,
@@ -92,7 +73,24 @@ const Login = () => {
                 system_name: state.systemName
             }
 
-            submit({ variables })
+            await htttp.post("/login", variables)
+                .then(response => {
+                    const { data } = response
+
+                    // Verificamos si hay un error
+                    if (data.error) {
+                        throw data.message
+                    } else {
+                        // Validamos si los datos que retornan son validos
+                        if (Object.values(data).length > 0) {
+                            store.dispatch({ type: SETSTORAGE, payload: data })
+
+                            setStorage(data)
+                        }
+                    }
+                })
+
+            // submit({ variables })
         } catch (error) {
             showMessage({
                 message: error.toString(),
@@ -101,6 +99,9 @@ const Login = () => {
                 backgroundColor: Colors.colorRed,
                 icon: "warning",
             })
+        } finally {
+            // Loader app mode off
+            // dispatch({ type: "loader", payload: true })
         }
     }
 
@@ -131,8 +132,6 @@ const Login = () => {
 
     useEffect(() => {
         getDeviceInfo()
-        // $email: String!, $password: String!, $ip_publica: String!, $device: String!, $mac_adress: String!, $system_name: String!
-
     }, [])
 
     return (
@@ -188,8 +187,8 @@ const Login = () => {
                 </View>
             </ViewAnimation>
 
-            <Loader isVisible={loading} />
 
+            <Loader isVisible={state.loader} />
         </KeyboardAvoidingView>
     )
 }

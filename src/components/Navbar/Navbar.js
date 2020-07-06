@@ -2,17 +2,24 @@ import React, { useState, useEffect } from "react"
 
 // Import components
 import Icon from "react-native-vector-icons/Entypo"
-import Icon2 from "react-native-vector-icons/MaterialCommunityIcons"
-import { BlurView } from "@react-native-community/blur"
-import { StyleSheet, View, Text, TouchableOpacity, Keyboard } from "react-native"
+import { StyleSheet, View, TouchableOpacity, Keyboard } from "react-native"
 
 // Import functions and constanst
-import { RFValue, Colors } from "../../utils/constants"
+import { RFValue, Colors, logOutApp } from "../../utils/constants"
+
+// Import store from redux
+import store from "../../store/index"
 
 const sizeIcon = RFValue(32)
 
 const Navbar = () => {
     const [hidden, setHidden] = useState(false)
+
+    console.log(store.getState())
+
+    const toggleMenu = () => {
+        logOutApp()
+    }
 
     useEffect(() => {
         // Ocultamos el menu cuando el teclado se active
@@ -33,26 +40,22 @@ const Navbar = () => {
         return (
             <View style={styles.container}>
                 <View style={styles.subContainer}>
-                    <BlurView
+                    {/* <BlurView
                         style={styles.absolute}
                         blurType="dark"
-                    />
+                    /> */}
 
                     <View style={styles.containerButtons}>
                         <TouchableOpacity style={styles.button}>
-                            <Icon name="home" size={sizeIcon} color={Colors.colorYellow} />
+                            <Icon name="home" size={sizeIcon} color={Colors.colorBlack} />
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.button}>
-                            <Icon name="user" size={sizeIcon} color={Colors.colorYellow} />
+                            <Icon name="user" size={sizeIcon} color={Colors.colorBlack} />
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={styles.button}>
-                            <Icon2 name="qrcode-scan" size={sizeIcon} color={Colors.colorYellow} />
-                        </TouchableOpacity>
-
-                        <TouchableOpacity style={styles.button}>
-                            <Icon name="menu" size={sizeIcon} color={Colors.colorYellow} />
+                        <TouchableOpacity onPress={toggleMenu} style={styles.button}>
+                            <Icon name="menu" size={sizeIcon} color={Colors.colorBlack} />
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -65,7 +68,7 @@ const Navbar = () => {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: "rgba(0, 0, 0, 0.2)",
+        backgroundColor: Colors.colorYellow,
         overflow: "hidden",
         position: "absolute",
         bottom: 0,

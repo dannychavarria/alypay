@@ -3,7 +3,6 @@ import React from "react"
 import { GlobalStyles, RFValue } from "../../utils/constants"
 
 // Import Components
-import Navbar from "../Navbar/Navbar"
 import { SafeAreaView, Image, StyleSheet, ScrollView, View } from "react-native"
 
 // Import Assets
@@ -23,13 +22,6 @@ const Container = ({ children, showLogo = false, hiddenNavbar = false, scrollVie
 
                 <View style={{ height: RFValue(60) }} />
             </ScrollView>
-
-            {
-                hiddenNavbar === false &&
-                <>
-                    <Navbar />
-                </>
-            }
         </SafeAreaView>
     )
 }
