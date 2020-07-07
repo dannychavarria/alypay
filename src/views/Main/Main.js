@@ -1,23 +1,21 @@
-import React, { useState, useEffect } from "react"
-
-// import React navigation functions
-import { StackActions } from "@react-navigation/native"
+import React, { useState, useEffect, useReducer } from "react"
 
 // Import componentes
 import Loader from "../../components/Loader/Loader"
 import Container from "../../components/Container/Container"
 import ItemWallet from "../../components/ItemWallet/ItemWallet"
 import QRCodeScanner from "react-native-qrcode-scanner"
+import Switch from "../../components/Switch/Switch"
 import { RNCamera } from "react-native-camera"
 import { Text, StyleSheet, TouchableOpacity, View } from "react-native"
+import { showMessage } from "react-native-flash-message"
 
 // Import constant
-import { RFValue, CheckCameraPermission } from "../../utils/constants"
+import { RFValue, CheckCameraPermission, htttp, reducer, errorMessage, getHeaders } from "../../utils/constants"
 
 // Import store from redux
-import Store from "../../store/index"
+import store from "../../store/index"
 import { SETNAVIGATION } from "../../store/actionsTypes"
-import Switch from "../../components/Switch/Switch"
 
 // Import Assets
 
@@ -82,9 +80,16 @@ const PayComponent = () => {
     )
 }
 
-const Main = ({ navigation }) => {
+const initialState = {
+    wallets: []
+}
 
-    const [state, setState] = useState(TYPE_VIEW.WALLET)
+const Main = ({ navigation }) => {
+    const { global } = store.getState()
+
+    const [stateView, setStateView] = useState(TYPE_VIEW.WALLET)
+
+    const [state, dispatch] = useReducer(reducer, initialState)
 
     const styles = StyleSheet.create({
         containerWallets: {
@@ -92,30 +97,49 @@ const Main = ({ navigation }) => {
         }
     })
 
+    /**
+     * Metodo que configura el componente, inicializando todas las tareas
+     */
+    const configurateComponent = () => {
+        try {
+            htttp.get("/wallet", getHeaders()).then(response => {
+                const { data } = response
+
+                if (data.error) {
+                    throw data.message
+                } else {
+                    dispatch({ type: "wallets", payload: data })
+                }
+            })
+        } catch (error) {
+            errorMessage(error.toString())
+        }
+    }
+
     useEffect(() => {
         // Dispatch to redux navigation
-        Store.dispatch({ type: SETNAVIGATION, payload: navigation })
+        store.dispatch({ type: SETNAVIGATION, payload: navigation })
+
+        configurateComponent()
 
         CheckCameraPermission()
     }, [])
 
     return (
         <Container showLogo>
-            <Switch onSwitch={setState} items={switchItems} />
+            <Switch onSwitch={setStateView} items={switchItems} />
 
-            {
-                state === TYPE_VIEW.WALLET &&
-                <View style={styles.containerWallets}>
-                    <ItemWallet onPress={_ => navigation.dispatch(StackActions.push("Wallet"))} />
-                </View>
-            }
+            <View style={styles.containerWallets}>
+                {
+                    stateView === TYPE_VIEW.WALLET &&
+                    state.wallets.map((wallet, index) => <ItemWallet key={index} data={wallet} />)
+                }
 
-            {
-                state === TYPE_VIEW.PAY &&
-                <View style={styles.containerWallets}>
+                {
+                    stateView === TYPE_VIEW.PAY &&
                     <PayComponent />
-                </View>
-            }
+                }
+            </View>
 
         </Container>
     )

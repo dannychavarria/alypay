@@ -1,41 +1,59 @@
 import React from "react"
 
+// import React navigation functions
+import { StackActions } from "@react-navigation/native"
+
 // Import Components
 import { TouchableOpacity, Image, View, Text, StyleSheet } from "react-native"
-import { Colors, RFValue } from "../../utils/constants"
+import { Colors, RFValue, urlAlyCoin } from "../../utils/constants"
+
+// import store
+import store from "../../store/index"
 
 /**
  * Componente que representa la billetera del usuario
  */
-const ItemWallet = ({ onPress = () => { } }) => {
-    const urlImage = "https://s2.coinmarketcap.com/static/img/coins/128x128/1.png"
+const ItemWallet = ({ data = {} }) => {
+    const { navigation } = store.getState()
 
+    const urlImage = data._id !== null
+        ? `https://s2.coinmarketcap.com/static/img/coins/128x128/${data._id}.png`
+        : urlAlyCoin
+
+    /**
+ * Metodo que nos mueve de pantalla a wallet details
+ * 
+ * @param {Object} data 
+ */
+    const navigate = () => {
+        navigation.dispatch(StackActions.push("Wallet", data))
+    }
 
     return (
-        <TouchableOpacity onPress={onPress} style={styles.container}>
+        <TouchableOpacity onPress={navigate} style={styles.container}>
             <Image style={styles.image} source={{ uri: urlImage }} />
 
             <View style={styles.subContainerInfo}>
                 <View style={styles.row}>
                     <Text style={styles.superValue}>
-                        Bitcoin
+                        {data.name}
                     </Text>
 
                     <View style={styles.lastCol}>
                         <Text style={styles.key}>Balance</Text>
-                        <Text style={styles.value}>0.0002 BTC</Text>
+                        <Text style={styles.value}>{data.amount} {data.symbol}</Text>
                     </View>
                 </View>
 
                 <View style={styles.row}>
                     <View>
                         <Text style={styles.key}>Precio del mercado</Text>
-                        <Text style={styles.value}>$ 9,580.54</Text>
+                        <Text style={styles.value}>$ {data.price?.toFixed(2)}</Text>
                     </View>
 
                     <View style={styles.lastCol}>
                         <Text style={styles.key}>Balance USD</Text>
-                        <Text style={styles.value}>$ 25</Text>
+                        <Text style={styles.value}>$ {data.price * data.amount}</Text>
                     </View>
                 </View>
             </View>
@@ -49,7 +67,9 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.colorBlack,
         borderRadius: RFValue(5),
         padding: RFValue(10),
+        marginVertical: RFValue(5),
         flexDirection: "row",
+        elevation: 25,
     },
 
     image: {

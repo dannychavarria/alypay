@@ -1,5 +1,5 @@
 import Asyncstorage from "@react-native-community/async-storage"
-import { Platform, StatusBar, Dimensions, StyleSheet } from "react-native"
+import { Platform, StatusBar, Dimensions, StyleSheet, Alert } from "react-native"
 
 // Import Functions
 import Clipboard from "@react-native-community/clipboard"
@@ -10,7 +10,7 @@ import { isIphoneX } from "react-native-iphone-x-helper"
 import { showMessage } from "react-native-flash-message"
 
 // Store and action from redux
-import Store from "../store/index"
+import store from "../store/index"
 import { SETPERMISSIONS, DELETESTORAGE } from "../store/actionsTypes"
 
 // Constanst
@@ -38,7 +38,7 @@ export const RFValue = (fontSize = 0, standardScreenHeight = 680) => {
 export const logOutApp = async () => {
     await deleteStorage()
 
-    Store.dispatch({ type: DELETESTORAGE })
+    store.dispatch({ type: DELETESTORAGE })
 }
 
 /**Setea los datos de api storage modo encriptado */
@@ -65,8 +65,8 @@ export const getStorage = async () => {
 }
 
 export const Colors = {
-    colorMain: "#2d2d2d",
-    colorBlack: "#0d0d0d",
+    colorMain: "#000",
+    colorBlack: "#1d1d1d",
     colorSecondary: "#9ed3da",
     colorYellow: "#ffcb08",
     colorRed: "#c0392b",
@@ -76,11 +76,21 @@ export const Colors = {
 /**Direction for server */
 export const serverAdress = "http://10.0.2.2:4000"
 
+/**
+ * Constante que almacena la url del preview image del simbolo alycoin
+ */
+export const urlAlyCoin = "https://lh3.googleusercontent.com/5LMKBulbDnGu4JBUYp4Ye4fX0MjH88xF7hMy5-4US3VSAkxK2XIWqNxXdqWZFnUZQoRDL3W7nKhrgWWHzM_eL-1nX4fnBPu7d9u7DyRv_miLRhFp6g38cDD32_H9UoZoh936cWUpUUOLx3qvx-_fBV-ZKQb_2TzVHhR19DKYhm_Zpl_Wczi1I73a6wBo7XDbtdNUrnzW8kC_Hv8J9tpv6wQhsTCr6l68UIVwth6rkpoFycZ2Gpzn6GL_7VSs9NlCj2V5v3NHCRcsZzptz2uxAa0HcsvnEqhtOirEmjBsT114hl3LWjT4Xf9dIxcmVcdt1usggqyuF6svD2VF_fdT6SjqfmVg3ifl5zf7zS1s7JfwrIvFDjXN3i1vYo43nzpt8ykabNqDjRuwMnroAvndk2lgIh1jLcDpjlLFtCvjBej6DQUmTR2MK75RLACot2kbfiA-S45pB9tHgBc77QmzWLLMgHIhQ_5d6OtZVdzbKoGS4eUTeemPo39HuWKAMCl_RiT_O2AOfDQZr9DKOFY780VbPBpryFhlG-8rRp6p7LSKRKbn3v2C0R5GNjUJ0tyOsLArAookarLr4437Tl4SkPavSqvFKK_9rmmdFdfb1Hg5_j9gXnYV_pkTMDjIUeN3awIuZhbBC8iKtafsouFqqsfvQVXsmmawCg4edY_NXg6_XPuVjxaJST5Z7fREYx_8obZJQA=w1600-h784-ft"
+
 export const htttp = axios.create({
     baseURL: serverAdress,
     validateStatus: (status) => {
         if (status === 401) {
-            logOutApp()
+            Alert.alert("AlyPay", "Tu sesion ha caducado", [
+                {
+                    text: "Ok",
+                    // onPress: () => logOutApp()
+                }
+            ])
         }
 
         return status >= 200 && status < 300;
@@ -180,7 +190,7 @@ export const CheckCameraPermission = async () => {
                     camera: true
                 }
 
-                Store.dispatch({ type: SETPERMISSIONS, payload })
+                store.dispatch({ type: SETPERMISSIONS, payload })
             }
 
             if (requestPermission === RESULTS.DENIED) {
@@ -205,7 +215,7 @@ export const CheckCameraPermission = async () => {
                 camera: true
             }
 
-            Store.dispatch({ type: SETPERMISSIONS, payload })
+            store.dispatch({ type: SETPERMISSIONS, payload })
         }
     } catch (description) {
 
@@ -237,5 +247,32 @@ export const reducer = (state, action) => {
     return {
         ...state,
         [action.type]: action.payload
+    }
+}
+
+/**
+ * Funcion que ejeucta un mensaje de error solamente para errores de peticion 
+ */
+export const errorMessage = (description = "") => {
+    showMessage({
+        message: "ha ocurrido un error",
+        description,
+        color: "#FFF",
+        backgroundColor: Colors.colorRed,
+        icon: "danger"
+    })
+}
+
+/**
+ * Funcion que retorna las cabeceras de la peticions
+ */
+export const getHeaders = () => {
+    const { token } = store.getState().global
+
+
+    return {
+        headers: {
+            "x-auth-token": token
+        }
     }
 }

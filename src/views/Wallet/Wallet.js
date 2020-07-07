@@ -1,4 +1,4 @@
-import React, { useState, useReducer } from "react"
+import React, { useState, useReducer, useEffect } from "react"
 
 // Import components
 import Container from "../../components/Container/Container"
@@ -16,12 +16,11 @@ import { View as ViewAnimate } from "react-native-animatable"
 
 
 // Import constanst and others things
-import { Colors, RFValue, GlobalStyles, CopyClipboard, reducer } from "../../utils/constants"
+import { Colors, RFValue, GlobalStyles, CopyClipboard, reducer, htttp, errorMessage, getHeaders } from "../../utils/constants"
 
 // Import Assets
 import logo from "../../static/alypay.png"
 import scanQRAnimation from "../../animations/scan-qr.json"
-import { ScrollView } from "react-native-gesture-handler"
 
 const switchItems = [
     {
@@ -238,58 +237,93 @@ const arrHistory = [
     },
 ]
 
-const History = () => {
+const History = ({ id = 0 }) => {
+    const [data, setData] = useState([])
+
     const styles = StyleSheet.create({
         container: {
             paddingHorizontal: RFValue(25),
         }
     })
 
+    /**
+     * Funcion que se encarga de configurar todo el componente
+     */
+    const configurateComponent = () => {
+        try {
+            htttp.get(`/wallet/history/${id}`, getHeaders())
+                .then(response => {
+                    const { data } = response
+
+                    if (data.error) {
+                        throw data.message
+                    }
+
+
+                    setData(data)
+                })
+                .catch(reason => {
+                    throw reason
+                })
+
+        } catch (error) {
+            errorMessage(error.toString())
+        }
+    }
+
+    useEffect(() => {
+        configurateComponent()
+    }, [])
+
 
     return (
-            <ViewAnimate style={styles.container} animation="fadeIn">
-                {
-                    (arrHistory.length > 0) &&
-                    <>
-                        {
-                            arrHistory.map(StoreElement)
-                        }
-                    </>
+        <ViewAnimate style={styles.container} animation="fadeIn">
+            {
+                (arrHistory.length > 0) &&
+                <>
+                    {
+                        arrHistory.map(StoreElement)
+                    }
+                </>
 
-                }
-            </ViewAnimate>
+            }
+        </ViewAnimate>
     )
 }
 
-const Wallet = () => {
-    const [state, setState] = useState(switchItems[0].state)
-
+const Wallet = ({ route }) => {
+    const [stateView, setStateView] = useState(switchItems[0].state)
     const walletDirection = "3FALsBdWnBLTm6EC5DMyTntZBpAR9AhvmM"
+    const { params } = route
+
+    useEffect(() => {
+        console.log(params)
+    }, [])
 
 
     return (
         <Container>
 
             <View style={styles.conatinerWallet}>
-                <ItemWallet />
+                <ItemWallet data={route.params} />
             </View>
 
-            <Switch onSwitch={setState} items={switchItems} />
+            <Switch onSwitch={setStateView} items={switchItems} />
 
             {
                 // Verificamos si esta en la pantalla de Recibir
-                state === switchItems[0].state &&
+                stateView === switchItems[0].state &&
                 <ReceiveComponent wallet={walletDirection} />
             }
 
             {
-                state === switchItems[1].state &&
+                stateView === switchItems[1].state &&
                 <SendComponent />
             }
 
             {
-                state === switchItems[2].state &&
-                <History />
+                stateView === switchItems[2].state &&
+                <History id={params.id} />
             }
         </Container>
     )
