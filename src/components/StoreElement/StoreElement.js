@@ -12,26 +12,32 @@ const StoreElement = (item, key) => {
     return (
         <View key={key} style={styles.container}>
             <View style={styles.subContainer}>
-                <Text style={styles.name}>{item.name}</Text>
+                <Text style={styles.name}>{item.description}</Text>
 
                 <View style={styles.detailsContain}>
                     <Text style={styles.id}># {item.id}</Text>
-                    <Text style={styles.date}>{moment(item.date).format("DD/MM/YY | HH:mm")}</Text>
+                    {/* <Text style={styles.date}>{item.date_create}</Text> */}
+                    <Text style={styles.date}>
+                        {moment(item.date_create).format("DD/MM/YY | HH:mm")}
+                    </Text>
                 </View>
             </View>
 
-            <Text style={[styles.amount, item.debit ? styles.debitAmount : styles.creditAmount]}>{item.amount} {item.symbol}</Text>
+            <Text style={[styles.amount, item.debit ? styles.debitAmount : styles.creditAmount]}>
+                {item.amount} {item.symbol}
+            </Text>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        alignItems: "center",
-        borderBottomColor: Colors.colorYellow,
-        borderBottomWidth: 1,
         backgroundColor: Colors.colorBlack,
+        alignItems: "center",
+        borderBottomWidth: 1,
+        borderRadius: RFValue(5),
         flexDirection: "row",
+        elevation: 25,
         padding: RFValue(10),
     },
 

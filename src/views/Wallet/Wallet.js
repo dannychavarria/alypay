@@ -21,6 +21,8 @@ import { Colors, RFValue, GlobalStyles, CopyClipboard, reducer, htttp, errorMess
 // Import Assets
 import logo from "../../static/alypay.png"
 import scanQRAnimation from "../../animations/scan-qr.json"
+import emptyAnimation from "../../animations/empty.json"
+import Loader from "../../components/Loader/Loader"
 
 const switchItems = [
     {
@@ -43,6 +45,34 @@ const switchItems = [
  * Componente que renderiza un qr con la direccion wallet
  */
 const ReceiveComponent = ({ wallet = "" }) => {
+    const styles = StyleSheet.create({
+        qrContainer: {
+            backgroundColor: Colors.colorYellow,
+            borderRadius: RFValue(5),
+            padding: RFValue(12),
+            marginBottom: RFValue(10),
+        },
+
+        buttonWallet: {
+            ...GlobalStyles.buttonPrimaryLine,
+            marginHorizontal: RFValue(25),
+            overflow: "hidden",
+        },
+
+        textButton: {
+            ...GlobalStyles.textButtonPrimaryLine,
+            fontSize: RFValue(12),
+            textAlign: "center",
+        },
+
+        receivedViewContainer: {
+            alignItems: "center",
+            justifyContent: "center",
+            width: "100%",
+        },
+    })
+
+
     return (
         <ViewAnimate animation="fadeIn" style={styles.receivedViewContainer}>
             <View style={styles.qrContainer}>
@@ -52,13 +82,12 @@ const ReceiveComponent = ({ wallet = "" }) => {
                     value={wallet} />
             </View>
 
-            <TouchableOpacity style={GlobalStyles.buttonPrimaryLine} onPress={_ => CopyClipboard(wallet)}>
-                <Text selectable style={GlobalStyles.textButtonPrimaryLine}>{wallet}</Text>
+            <TouchableOpacity style={styles.buttonWallet} onPress={_ => CopyClipboard(wallet)}>
+                <Text selectable style={styles.textButton}>{wallet.substr(0, 50)}...</Text>
             </TouchableOpacity>
         </ViewAnimate>
     )
 }
-
 
 /**Constante que almacena los estado de `SendComponent` */
 const initialStateSendComponent = {
@@ -67,6 +96,7 @@ const initialStateSendComponent = {
     walletAdress: "",
 }
 
+/**Componente que renderiza los datos necesarios para ejecutar una transaccion a otra wallet */
 const SendComponent = () => {
     const [state, dispatch] = useReducer(reducer, initialStateSendComponent)
 
@@ -162,110 +192,87 @@ const SendComponent = () => {
     )
 }
 
-const arrHistory = [
-    {
-        id: "00001",
-        name: "Casa del cafe",
-        date: new Date(),
-        amount: 0.002,
-        symbol: "BTC",
-        debit: false,
-    },
-    {
-        id: "00002",
-        name: "Retiro",
-        date: new Date(),
-        amount: 1,
-        symbol: "ETH",
-        debit: true,
-    },
-    {
-        id: "00003",
-        name: "Burger King",
-        date: new Date(),
-        amount: 0.1,
-        symbol: "ETH",
-        debit: true,
-    },
-    {
-        id: "00004",
-        name: "Transferencia",
-        date: new Date(),
-        amount: 50,
-        symbol: "ALY",
-        debit: false,
-    },
-    {
-        id: "00005",
-        name: "Reembolso",
-        date: new Date(),
-        amount: 0.001,
-        symbol: "BTC",
-        debit: false,
-    },
-    {
-        id: "00006",
-        name: "Burger King",
-        date: new Date(),
-        amount: 0.1,
-        symbol: "ETH",
-        debit: true,
-    },
-    {
-        id: "00007",
-        name: "Burger King",
-        date: new Date(),
-        amount: 0.1,
-        symbol: "ETH",
-        debit: true,
-    },
-    {
-        id: "00007",
-        name: "Burger King",
-        date: new Date(),
-        amount: 0.1,
-        symbol: "ETH",
-        debit: true,
-    },
-    {
-        id: "00007",
-        name: "Burger King",
-        date: new Date(),
-        amount: 0.1,
-        symbol: "ETH",
-        debit: true,
-    },
-]
-
-const History = ({ id = 0 }) => {
-    const [data, setData] = useState([])
-
+/**Componente que renderiza el historial de transacciones */
+const History = ({ data = [] }) => {
     const styles = StyleSheet.create({
         container: {
             paddingHorizontal: RFValue(25),
+        },
+        lottieQRAnimation: {
+            alignSelf: "center",
+            height: RFValue(256),
+            width: RFValue(256),
+        },
+        text: {
+            color: "#CCCCCCAA",
+            fontSize: RFValue(24),
+            textAlign: "center",
+            textTransform: "uppercase",
         }
     })
+
+    return (
+        <ViewAnimate style={styles.container} animation="fadeIn">
+            {
+                data.map(StoreElement)
+            }
+
+
+            {
+                (data.length === 0) &&
+                <>
+                    <Lottie source={emptyAnimation} style={styles.lottieQRAnimation} autoPlay loop={false} />
+
+                    <Text style={styles.text}>Sin registros</Text>
+                </>
+            }
+        </ViewAnimate>
+    )
+}
+
+/**Estado general de componente `Wallet` */
+const intialState = {
+    history: [],
+    wallet: "",
+    information: {},
+
+    loader: true,
+}
+
+const Wallet = ({ route }) => {
+    const [state, dispatch] = useReducer(reducer, intialState)
+
+    // state view
+    const [stateView, setStateView] = useState(switchItems[0].state)
+
+    // Params passed from router
+    const { params } = route
 
     /**
      * Funcion que se encarga de configurar todo el componente
      */
-    const configurateComponent = () => {
+    const configurateComponent = async () => {
         try {
-            htttp.get(`/wallet/history/${id}`, getHeaders())
-                .then(response => {
-                    const { data } = response
+            // Loader on mode
+            dispatch({ type: "loader", payload: true })
 
-                    if (data.error) {
-                        throw data.message
-                    }
+            const { data } = await htttp.get(`/wallets/details/${params.id}`, getHeaders())
 
+            if (data.error) {
+                throw data.message
+            }
 
-                    setData(data)
-                })
-                .catch(reason => {
-                    throw reason
-                })
+            // Guardamos la direccion wallet
+            dispatch({ type: "wallet", payload: data.wallet })
 
+            // Guardamos ek historial de transacciones
+            dispatch({ type: "history", payload: data.history })
+
+            // Guardamos informacion general de la wallet
+            dispatch({ type: "information", payload: data.information })
+
+            // Loader off mode
+            dispatch({ type: "loader", payload: false })
         } catch (error) {
             errorMessage(error.toString())
         }
@@ -275,56 +282,37 @@ const History = ({ id = 0 }) => {
         configurateComponent()
     }, [])
 
-
-    return (
-        <ViewAnimate style={styles.container} animation="fadeIn">
-            {
-                (arrHistory.length > 0) &&
-                <>
-                    {
-                        arrHistory.map(StoreElement)
-                    }
-                </>
-
-            }
-        </ViewAnimate>
-    )
-}
-
-const Wallet = ({ route }) => {
-    const [stateView, setStateView] = useState(switchItems[0].state)
-    const walletDirection = "3FALsBdWnBLTm6EC5DMyTntZBpAR9AhvmM"
-    const { params } = route
-
-    useEffect(() => {
-        console.log(params)
-    }, [])
-
-
     return (
         <Container>
 
             <View style={styles.conatinerWallet}>
-                <ItemWallet data={route.params} />
+                <ItemWallet data={route.params} disabled />
             </View>
 
             <Switch onSwitch={setStateView} items={switchItems} />
 
             {
-                // Verificamos si esta en la pantalla de Recibir
-                stateView === switchItems[0].state &&
-                <ReceiveComponent wallet={walletDirection} />
+                !state.loader &&
+                <>
+                    {
+                        // Verificamos si esta en la pantalla de Recibir
+                        stateView === switchItems[0].state &&
+                        <ReceiveComponent wallet={state.wallet} />
+                    }
+
+                    {
+                        stateView === switchItems[1].state &&
+                        <SendComponent />
+                    }
+
+                    {
+                        stateView === switchItems[2].state &&
+                        <History data={state.history} />
+                    }
+                </>
             }
 
-            {
-                stateView === switchItems[1].state &&
-                <SendComponent />
-            }
-
-            {
-                stateView === switchItems[2].state &&
-                <History id={params.id} />
-            }
+            <Loader isVisible={state.loader} />
         </Container>
     )
 }
@@ -332,19 +320,6 @@ const Wallet = ({ route }) => {
 const styles = StyleSheet.create({
     conatinerWallet: {
         margin: RFValue(10),
-    },
-
-    qrContainer: {
-        backgroundColor: Colors.colorYellow,
-        borderRadius: RFValue(5),
-        padding: RFValue(12),
-        marginBottom: RFValue(10),
-    },
-
-    receivedViewContainer: {
-        alignItems: "center",
-        justifyContent: "center",
-        width: "100%",
     },
 })
 

@@ -5,7 +5,7 @@ import { StackActions } from "@react-navigation/native"
 
 // Import Components
 import { TouchableOpacity, Image, View, Text, StyleSheet } from "react-native"
-import { Colors, RFValue, urlAlyCoin } from "../../utils/constants"
+import { Colors, RFValue, urlAlyCoin, WithDecimals } from "../../utils/constants"
 
 // import store
 import store from "../../store/index"
@@ -13,7 +13,7 @@ import store from "../../store/index"
 /**
  * Componente que representa la billetera del usuario
  */
-const ItemWallet = ({ data = {} }) => {
+const ItemWallet = ({ data = {}, disabled = false }) => {
     const { navigation } = store.getState()
 
     const urlImage = data._id !== null
@@ -30,7 +30,7 @@ const ItemWallet = ({ data = {} }) => {
     }
 
     return (
-        <TouchableOpacity onPress={navigate} style={styles.container}>
+        <TouchableOpacity disabled={disabled} onPress={navigate} style={styles.container}>
             <Image style={styles.image} source={{ uri: urlImage }} />
 
             <View style={styles.subContainerInfo}>
@@ -53,7 +53,7 @@ const ItemWallet = ({ data = {} }) => {
 
                     <View style={styles.lastCol}>
                         <Text style={styles.key}>Balance USD</Text>
-                        <Text style={styles.value}>$ {data.price * data.amount}</Text>
+                        <Text style={styles.value}>$ {WithDecimals((data.price * data.amount).toFixed(2))}</Text>
                     </View>
                 </View>
             </View>

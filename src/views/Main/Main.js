@@ -102,7 +102,7 @@ const Main = ({ navigation }) => {
      */
     const configurateComponent = () => {
         try {
-            htttp.get("/wallet", getHeaders()).then(response => {
+            htttp.get("/wallets", getHeaders()).then(response => {
                 const { data } = response
 
                 if (data.error) {

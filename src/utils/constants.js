@@ -276,3 +276,14 @@ export const getHeaders = () => {
         }
     }
 }
+
+/**
+ * Format number with decimal miles separator
+ * example: 
+ *  * 10000 *(INPUT)*
+ *  * 10,000 *(OUTPUT)* 
+ * 
+ * @param {Number} number
+ * 
+ * `return string` */
+export const WithDecimals = (number = 0) => number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
