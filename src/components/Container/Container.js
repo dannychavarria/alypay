@@ -1,17 +1,35 @@
-import React from "react"
+import React, { useState } from "react"
 
 import { GlobalStyles, RFValue } from "../../utils/constants"
 
 // Import Components
-import { SafeAreaView, Image, StyleSheet, ScrollView, View } from "react-native"
+import { SafeAreaView, Image, StyleSheet, ScrollView, View, RefreshControl } from "react-native"
 
 // Import Assets
 import alypayLogo from "../../static/alypay.png"
 
-const Container = ({ children, showLogo = false, hiddenNavbar = false, scrollViewStyles = {} }) => {
+const Container = ({ children, showLogo = false, scrollViewStyles = {}, onRefreshEnd = null }) => {
+    const [refreshing, setRefresh] = useState(false)
+
+    /**Metodo para recargar pantalla */
+    const refetching = async () => {
+        try {
+            setRefresh(true)
+
+            await onRefreshEnd()
+
+            setRefresh(false)
+        } catch (error) {
+
+        }
+    }
+
     return (
         <SafeAreaView style={GlobalStyles.superContainer}>
-            <ScrollView style={[styles.scroll, scrollViewStyles]}>
+            <ScrollView
+                keyboardShouldPersistTaps="always"
+                refreshControl={onRefreshEnd !== null && <RefreshControl refreshing={refreshing} onRefresh={refetching} />}
+                style={[styles.scroll, scrollViewStyles]}>
 
                 {
                     showLogo !== false &&

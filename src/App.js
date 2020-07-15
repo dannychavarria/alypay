@@ -56,9 +56,19 @@ const App = () => {
             await store.dispatch({ type: DELETESTORAGE })
         }
 
+        await setTimeout(() => dispatch({ type: "splash", payload: false }), 1000)
+    }
+
+    useEffect(() => {
+        console.disableYellowBox = true
+
+        // configure component
+        ConfigurateComponent()
+
+        // subscribe changes in store
         // Esperamos algun cambio en el store de redux
-        await store.subscribe(async _ => {
-            const { global } = store.getState()
+        store.subscribe(async data => {
+            const { global, loader } = store.getState()
 
             if (Object.keys(global).length > 0) {
                 // Le decimos que el usuario esta logueado
@@ -67,15 +77,11 @@ const App = () => {
             } else {
                 dispatch({ type: "loged", payload: false })
             }
+
+            if (loader !== state.loader) {
+                dispatch({ type: "loader", payload: loader })
+            }
         })
-
-        await setTimeout(() => dispatch({ type: "splash", payload: false }), 1000)
-    }
-
-    useEffect(() => {
-        console.disableYellowBox = true
-
-        ConfigurateComponent()
     }, [])
 
     return (
@@ -100,6 +106,8 @@ const App = () => {
                 state.loged &&
                 <Navbar />
             }
+
+            <Loader isVisible={state.loader} />
 
             <Splash isVisible={state.splash} />
 

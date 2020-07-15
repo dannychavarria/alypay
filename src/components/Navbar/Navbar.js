@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 
 // Import components
+import * as Animatable from "react-native-animatable"
 import Icon from "react-native-vector-icons/Entypo"
 import { BlurView } from "@react-native-community/blur"
-import { StyleSheet, View, TouchableOpacity, Keyboard } from "react-native"
+import { Animated, StyleSheet, View, TouchableOpacity, Keyboard, Easing } from "react-native"
 
 // Import functions and constanst
 import { RFValue, Colors, logOutApp } from "../../utils/constants"
@@ -11,22 +12,37 @@ import { RFValue, Colors, logOutApp } from "../../utils/constants"
 // Import store from redux
 import store from "../../store/index"
 
+const TouchableAnimationOpacity = Animatable.createAnimatableComponent(TouchableOpacity)
+
 const sizeIcon = RFValue(32)
 
 const Navbar = () => {
     const { navigation } = store.getState()
     const [hidden, setHidden] = useState(false)
-
-    console.log(store.getState())
+    const buttonRefAnimation = useRef(null)
 
     const toggleMenu = () => {
-        logOutApp()
+        logOut()
     }
 
     const goToTop = () => {
-        // console.log(navigation)
-        console.log(navigation)
-        // navigation?.popToTop()
+        // console.log(buttonRefAnimation)
+        // buttonRefAnimation.current.fadeOutLeftBig()
+        try {
+            navigation.popToTop()
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const logOut = async () => {
+        try {
+            await logOutApp()
+
+            navigation.popToTop()
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     useEffect(() => {
@@ -54,6 +70,10 @@ const Navbar = () => {
                     />
 
                     <View style={styles.containerButtons}>
+                        {/* <TouchableAnimationOpacity ref={buttonRefAnimation} onPress={navigation.goBack} style={styles.button}>
+                            <Icon name="arrow-bold-left" size={sizeIcon} color={Colors.colorYellow} />
+                        </TouchableAnimationOpacity> */}
+
                         <TouchableOpacity onPress={goToTop} style={styles.button}>
                             <Icon name="home" size={sizeIcon} color={Colors.colorYellow} />
                         </TouchableOpacity>

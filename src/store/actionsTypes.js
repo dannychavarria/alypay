@@ -15,3 +15,6 @@ export const SETPERMISSIONS = "SETPERMISSIONS"
 
 /**Elimina los permisos de la aplicacion */
 export const DELETEPERMISSIONS = "DELETEPERMISSIONS"
+
+/**Setea los datos de la precarga */
+export const SETLOADER = "SETLOADER"

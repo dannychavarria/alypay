@@ -4,11 +4,13 @@ import { combineReducers } from "redux"
 import { global } from "./global"
 import { navigation } from "./navigation"
 import { permissions } from "./permissions"
+import { loader } from "./loader"
 
 const reducers = combineReducers({
     global,
     navigation,
-    permissions
+    permissions,
+    loader
 })
 
 export default reducers

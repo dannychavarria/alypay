@@ -34,11 +34,9 @@ const initialState = {
     device: "",
     macAddress: "",
     systemName: "",
-
-    loader: false,
 }
 
-const { width, height } = Dimensions.get("window")
+const { height } = Dimensions.get("window")
 
 const Login = () => {
     const [state, dispatch] = useReducer(reducer, initialState)
@@ -62,7 +60,7 @@ const Login = () => {
             }
 
             // Loader app mode on
-            // dispatch({ type: "loader", payload: true })
+            loader(true)
 
             const variables = {
                 email: state.email,
@@ -101,7 +99,7 @@ const Login = () => {
             })
         } finally {
             // Loader app mode off
-            // dispatch({ type: "loader", payload: true })
+            loader(false)
         }
     }
 
@@ -186,9 +184,6 @@ const Login = () => {
                     </TouchableOpacity>
                 </View>
             </ViewAnimation>
-
-
-            <Loader isVisible={state.loader} />
         </KeyboardAvoidingView>
     )
 }

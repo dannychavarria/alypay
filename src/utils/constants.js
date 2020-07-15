@@ -11,7 +11,7 @@ import { showMessage } from "react-native-flash-message"
 
 // Store and action from redux
 import store from "../store/index"
-import { SETPERMISSIONS, DELETESTORAGE } from "../store/actionsTypes"
+import { SETPERMISSIONS, DELETESTORAGE, SETLOADER } from "../store/actionsTypes"
 
 // Constanst
 const keyStorage = "@storage"
@@ -40,6 +40,11 @@ export const logOutApp = async () => {
 
     store.dispatch({ type: DELETESTORAGE })
 }
+
+/**
+ *  Funcion que activa/desactiva precarga general de la aplicacion
+ */
+export const loader = (payload = false) => store.dispatch({ type: SETLOADER, payload })
 
 /**Setea los datos de api storage modo encriptado */
 export const setStorage = async (json = {}) => {
@@ -259,7 +264,8 @@ export const errorMessage = (description = "") => {
         description,
         color: "#FFF",
         backgroundColor: Colors.colorRed,
-        icon: "danger"
+        icon: "danger",
+        duration: 5000
     })
 }
 
