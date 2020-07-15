@@ -7,17 +7,19 @@ import StoreElement from "../../components/StoreElement/StoreElement"
 import Switch from "../../components/Switch/Switch"
 
 // Import other components
+import QRCodeScanner from "react-native-qrcode-scanner"
+import Modal from "react-native-modal"
 import Lottie from "lottie-react-native"
 import QRCode from "react-native-qrcode-svg"
-import Loader from "../../components/Loader/Loader"
 
 // Import Others components from React-Native
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image } from "react-native"
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image, Vibration } from "react-native"
 import { View as ViewAnimate, Text as TextAnimate } from "react-native-animatable"
+import { RNCamera } from "react-native-camera"
 
 
 // Import constanst and others things
-import { Colors, RFValue, GlobalStyles, CopyClipboard, reducer, htttp, errorMessage, getHeaders, loader } from "../../utils/constants"
+import { Colors, RFValue, GlobalStyles, CopyClipboard, reducer, htttp, errorMessage, getHeaders, loader, successMessage } from "../../utils/constants"
 import TouchID from "react-native-touch-id"
 
 // Import Assets
@@ -25,6 +27,7 @@ import scanQRAnimation from "../../animations/scan-qr.json"
 import emptyAnimation from "../../animations/empty.json"
 import profileVerifedAnimation from "../../animations/profile-verifed.json"
 import defaultAvatar from "../../static/profile-default.png"
+import { showMessage } from "react-native-flash-message"
 
 const switchItems = [
     {
@@ -98,15 +101,15 @@ const initialStateSendComponent = {
     walletAdress: "",
 
     errorMessage: "",
-    isSupported: false,
 
     dataWallet: null,
-    loader: false,
     walletAccepted: false,
+
+    showScaner: false,
 }
 
 /**Componente que renderiza los datos necesarios para ejecutar una transaccion a otra wallet */
-const SendComponent = ({ data = {} }) => {
+const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
     const [state, dispatch] = useReducer(reducer, initialStateSendComponent)
 
     const styles = StyleSheet.create({
@@ -188,14 +191,55 @@ const SendComponent = ({ data = {} }) => {
             height: RFValue(32),
             width: RFValue(32),
         },
+        constainerQR: {
+            alignItems: "center",
+            justifyContent: "center",
+            borderRadius: RFValue(5),
+            height: RFValue(320),
+            overflow: "hidden",
+        }
     })
 
     /**Metodo que se ejecuta para enviar los fondos */
-    const submit = () => {
+    const submit = async () => {
         try {
+            console.log("transaccion en proceso")
 
+            if (state.amountUSD.trim().length === 0) {
+                throw "Ingrese un monto"
+            }
+
+            // Authentication id
+            await TouchID.authenticate("Para continuar", {
+                title: "Transferencia Alypay",
+                passcodeFallback: true,
+                cancelText: "CANCELAR"
+            })
+
+            // Ejecutamos una vibracion minima del dispositivo
+            await Vibration.vibrate(100)
+            const vars = {
+                amount_usd: state.amountUSD,
+                amount: state.amountFraction,
+                id_wallet: data.id,
+                wallet: state.walletAdress
+            }
+
+            loader(true)
+
+            const { data: response } = await htttp.post("/wallets/transaction", vars, getHeaders())
+
+            if (response.error) {
+                throw response.message
+            }
+
+            successMessage("Tu transaccion se ha completado")
+
+            onCompleteTrasanction()
         } catch (error) {
             errorMessage(erro.toString())
+        } finally {
+            loader(false)
         }
     }
 
@@ -203,7 +247,7 @@ const SendComponent = ({ data = {} }) => {
     const onComprobateWallet = async () => {
         try {
             // Loader on mode
-            dispatch({ type: "loader", payload: true })
+            loader(true)
 
             if (state.errorMessage.length > 0) {
                 throw state.errorMessage
@@ -232,8 +276,6 @@ const SendComponent = ({ data = {} }) => {
                 throw `Esta billetera no es de ${data.description}`
             }
 
-            console.log(payload)
-
             dispatch({ type: "dataWallet", payload })
 
             // wallet is accepted
@@ -248,7 +290,7 @@ const SendComponent = ({ data = {} }) => {
             // clear data if is necesary
             dispatch({ type: "dataWallet", payload: null })
         } finally {
-            dispatch({ type: "loader", payload: false })
+            loader(false)
         }
     }
 
@@ -282,20 +324,13 @@ const SendComponent = ({ data = {} }) => {
         dispatch({ type: "amountFraction", payload: isNaN(newFractions) ? "" : newFractions.toString() })
     }
 
-    useEffect(() => {
-        try {
-            // Comprobamos si el touch id es soportado
-            TouchID.isSupported({ unifiedErrors: true })
-                .then(payload => {
-                    dispatch({ type: "isSupported", payload })
-                })
-                .catch(reason => {
-                    throw reason
-                })
-        } catch (error) {
-            errorMessage(error)
-        }
-    }, [])
+    const onReadCodeQR = ({ data }) => {
+        toggleScan()
+
+        dispatch({ type: "walletAdress", payload: data })
+    }
+
+    const toggleScan = () => dispatch({ type: "showScaner", payload: !state.showScaner })
 
     return (
         <ViewAnimate style={styles.container} animation="fadeIn">
@@ -310,7 +345,7 @@ const SendComponent = ({ data = {} }) => {
                             // onBlur={onComprobateWallet}
                             style={[GlobalStyles.textInput, { flex: 1 }]} />
 
-                        <TouchableOpacity style={styles.buttonScan}>
+                        <TouchableOpacity onPress={toggleScan} style={styles.buttonScan}>
                             <Lottie source={scanQRAnimation} style={styles.lottieQRAnimation} autoPlay loop />
                         </TouchableOpacity>
                     </View>
@@ -381,7 +416,15 @@ const SendComponent = ({ data = {} }) => {
                 </TouchableOpacity>
             }
 
-            <Loader isVisible={state.loader} />
+            <Modal backdropOpacity={0.9} animationIn="fadeIn" onBackButtonPress={toggleScan} animationOut="fadeOut" isVisible={state.showScaner}>
+                <View style={styles.constainerQR}>
+                    <QRCodeScanner
+                        sty
+                        onRead={onReadCodeQR}
+                        flashMode={RNCamera.Constants.FlashMode.auto}
+                    />
+                </View>
+            </Modal>
         </ViewAnimate>
     )
 }
@@ -441,14 +484,13 @@ const Wallet = ({ route }) => {
 
     // Params passed from router
     const { params } = route
-
+    console.log(params)
     /**
      * Funcion que se encarga de configurar todo el componente
      */
     const configurateComponent = async () => {
         try {
             // Loader on mode
-            // dispatch({ type: "loader", payload: true })
             loader(true)
 
             const { data } = await htttp.get(`/wallets/details/${params.id}`, getHeaders())
@@ -465,15 +507,14 @@ const Wallet = ({ route }) => {
 
             // Guardamos informacion general de la wallet
             dispatch({ type: "information", payload: data.information })
-            
+
             // Loader off mode
         } catch (error) {
             errorMessage(error.toString())
-            
+
             // seteamos a null cuando hay un error
             dispatch({ type: "information", payload: null })
         } finally {
-            // dispatch({ type: "loader", payload: false })        
             loader(false)
         }
     }
@@ -502,7 +543,7 @@ const Wallet = ({ route }) => {
 
                     {
                         stateView === switchItems[1].state &&
-                        <SendComponent data={state.information} />
+                        <SendComponent data={state.information} onCompleteTrasanction={configurateComponent} />
                     }
 
                     {

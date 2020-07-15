@@ -2,17 +2,19 @@ import React from "react"
 
 // Import Functions and constanst
 import moment from "moment"
-import { Colors, RFValue } from "../../utils/constants"
+import { Colors, RFValue, CopyClipboard } from "../../utils/constants"
 
 
 // Import components
-import { View, Text, StyleSheet } from "react-native"
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native"
 
 const StoreElement = (item, key) => {
     return (
-        <View key={key} style={styles.container}>
+        <TouchableOpacity onPress={_ => CopyClipboard(item.hash)} key={key} style={styles.container}>
             <View style={styles.subContainer}>
                 <Text style={styles.name}>{item.description}</Text>
+
+                <Text style={styles.hash}>{item.hash.substr(0, 30)}...</Text>
 
                 <View style={styles.detailsContain}>
                     <Text style={styles.id}># {item.id}</Text>
@@ -26,7 +28,7 @@ const StoreElement = (item, key) => {
             <Text style={[styles.amount, item.debit ? styles.debitAmount : styles.creditAmount]}>
                 {item.amount} {item.symbol}
             </Text>
-        </View>
+        </TouchableOpacity>
     )
 }
 
@@ -49,6 +51,11 @@ const styles = StyleSheet.create({
     name: {
         color: "#FFF",
         fontSize: RFValue(16)
+    },
+
+    hash: {
+        color: "#CCC",
+        fontSize: RFValue(10)
     },
 
     detailsContain: {
@@ -79,7 +86,7 @@ const styles = StyleSheet.create({
     },
 
     creditAmount: {
-        color: Colors.colorYellow,
+        color: Colors.colorGreen,
     }
 })
 

@@ -49,7 +49,7 @@ const Switch = ({ onSwitch = () => { }, items = [], indexActive = 0 }) => {
         },
 
         textButton: {
-            fontSize: RFValue(itemWidth / 2),
+            fontSize: RFValue(itemWidth / 3),
             textTransform: "uppercase",
         },
 

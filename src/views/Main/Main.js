@@ -1,17 +1,15 @@
 import React, { useState, useEffect, useReducer } from "react"
 
 // Import componentes
-import Loader from "../../components/Loader/Loader"
 import Container from "../../components/Container/Container"
 import ItemWallet from "../../components/ItemWallet/ItemWallet"
 import QRCodeScanner from "react-native-qrcode-scanner"
 import Switch from "../../components/Switch/Switch"
 import { RNCamera } from "react-native-camera"
 import { Text, StyleSheet, TouchableOpacity, View } from "react-native"
-import { showMessage } from "react-native-flash-message"
 
 // Import constant
-import { RFValue, CheckCameraPermission, htttp, reducer, errorMessage, getHeaders } from "../../utils/constants"
+import { RFValue, CheckCameraPermission, htttp, reducer, errorMessage, getHeaders, loader } from "../../utils/constants"
 
 // Import store from redux
 import store from "../../store/index"
@@ -100,19 +98,21 @@ const Main = ({ navigation }) => {
     /**
      * Metodo que configura el componente, inicializando todas las tareas
      */
-    const configurateComponent = () => {
+    const configurateComponent = async () => {
         try {
-            htttp.get("/wallets", getHeaders()).then(response => {
-                const { data } = response
+            loader(true)
 
-                if (data.error) {
-                    throw data.message
-                } else {
-                    dispatch({ type: "wallets", payload: data })
-                }
-            })
+            const { data } = await htttp.get("/wallets", getHeaders())
+
+            if (data.error) {
+                throw data.message
+            } else {
+                dispatch({ type: "wallets", payload: data })
+            }
         } catch (error) {
             errorMessage(error.toString())
+        } finally {
+            loader(false)
         }
     }
 
@@ -126,7 +126,7 @@ const Main = ({ navigation }) => {
     }, [])
 
     return (
-        <Container showLogo>
+        <Container onRefreshEnd={configurateComponent} showLogo>
             <Switch onSwitch={setStateView} items={switchItems} />
 
             <View style={styles.containerWallets}>

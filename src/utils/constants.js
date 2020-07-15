@@ -79,7 +79,8 @@ export const Colors = {
 }
 
 /**Direction for server */
-export const serverAdress = "http://10.0.2.2:4000"
+export const serverAdress = "http://10.70.12.30:4000"
+// export const serverAdress = "http://10.0.2.2:4000"
 
 /**
  * Constante que almacena la url del preview image del simbolo alycoin
@@ -266,6 +267,20 @@ export const errorMessage = (description = "") => {
         backgroundColor: Colors.colorRed,
         icon: "danger",
         duration: 5000
+    })
+}
+
+/**
+ * Funcion que ejeucta un mensaje de exito 
+ */
+export const successMessage = (description = "", title = "AlyPay") => {
+    showMessage({
+        message: title,
+        description,
+        color: "#FFF",
+        backgroundColor: Colors.colorGreen,
+        icon: "success",
+        duration: 300
     })
 }
 

@@ -78,9 +78,8 @@ const App = () => {
                 dispatch({ type: "loged", payload: false })
             }
 
-            if (loader !== state.loader) {
-                dispatch({ type: "loader", payload: loader })
-            }
+            // set root loader component
+            dispatch({ type: "loader", payload: loader })
         })
     }, [])
 
