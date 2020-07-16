@@ -27,7 +27,6 @@ import scanQRAnimation from "../../animations/scan-qr.json"
 import emptyAnimation from "../../animations/empty.json"
 import profileVerifedAnimation from "../../animations/profile-verifed.json"
 import defaultAvatar from "../../static/profile-default.png"
-import { showMessage } from "react-native-flash-message"
 
 const switchItems = [
     {
@@ -75,8 +74,11 @@ const ReceiveComponent = ({ wallet = "" }) => {
             justifyContent: "center",
             width: "100%",
         },
-    })
 
+        toUpBalanceContainer: {
+
+        }
+    })
 
     return (
         <ViewAnimate animation="fadeIn" style={styles.receivedViewContainer}>
@@ -90,6 +92,12 @@ const ReceiveComponent = ({ wallet = "" }) => {
             <TouchableOpacity style={styles.buttonWallet} onPress={_ => CopyClipboard(wallet)}>
                 <Text selectable style={styles.textButton}>{wallet.substr(0, 50)}...</Text>
             </TouchableOpacity>
+
+            <ViewAnimate style={styles.toUpBalanceContainer}>
+                <TouchableOpacity>
+                    <Text>Recargar mi billetera</Text>
+                </TouchableOpacity>
+            </ViewAnimate>
         </ViewAnimate>
     )
 }
@@ -203,8 +211,6 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
     /**Metodo que se ejecuta para enviar los fondos */
     const submit = async () => {
         try {
-            console.log("transaccion en proceso")
-
             if (state.amountUSD.trim().length === 0) {
                 throw "Ingrese un monto"
             }
@@ -218,11 +224,14 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
 
             // Ejecutamos una vibracion minima del dispositivo
             await Vibration.vibrate(100)
+
+            // variables que se enviaran a una peticion
             const vars = {
                 amount_usd: state.amountUSD,
                 amount: state.amountFraction,
                 id_wallet: data.id,
-                wallet: state.walletAdress
+                wallet: state.walletAdress,
+                symbol: data.symbol,
             }
 
             loader(true)
@@ -233,7 +242,26 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
                 throw response.message
             }
 
-            successMessage("Tu transaccion se ha completado")
+            // verificamos si todo
+            if(response.response === "success") {
+                successMessage("Tu transaccion se ha completado")
+
+                // limpiamos el monto en usd
+                dispatch({ type: "amountUSD", payload: "" })
+
+                // limpiamos las fracciones de las moneda
+                dispatch({ type: "amountFraction", payload: "" })
+                
+                // Limpiamos el usuario remitente
+                dispatch({ type: "dataWallet", payload: "" })
+
+                // limpiamos la direccion de wallet
+                dispatch({ type: "walletAdress", payload: "" })
+                dispatch({ type: "walletAccepted", payload: false })
+
+            } else {
+                throw "Tu transaccion no se ha completado, contacte a soporte"
+            }
 
             onCompleteTrasanction()
         } catch (error) {
@@ -401,7 +429,6 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
                 </ViewAnimate>
             }
 
-
             {
                 !state.walletAccepted &&
                 <TouchableOpacity onPress={onComprobateWallet} style={GlobalStyles.buttonPrimary}>
@@ -484,7 +511,6 @@ const Wallet = ({ route }) => {
 
     // Params passed from router
     const { params } = route
-    console.log(params)
     /**
      * Funcion que se encarga de configurar todo el componente
      */
@@ -494,6 +520,8 @@ const Wallet = ({ route }) => {
             loader(true)
 
             const { data } = await htttp.get(`/wallets/details/${params.id}`, getHeaders())
+
+            console.log(data.information, params)
 
             if (data.error) {
                 throw data.message
@@ -527,7 +555,7 @@ const Wallet = ({ route }) => {
         <Container onRefreshEnd={configurateComponent}>
 
             <View style={styles.conatinerWallet}>
-                <ItemWallet data={route.params} disabled />
+                <ItemWallet data={state.information === null ? params : state.information} disabled />
             </View>
 
             <Switch onSwitch={setStateView} items={switchItems} />

@@ -280,7 +280,7 @@ export const successMessage = (description = "", title = "AlyPay") => {
         color: "#FFF",
         backgroundColor: Colors.colorGreen,
         icon: "success",
-        duration: 300
+        autoHide: false
     })
 }
 
