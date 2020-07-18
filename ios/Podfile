@@ -31,6 +31,9 @@ def add_flipper_pods!(versions = {})
   pod 'FlipperKit/FlipperKitHighlightOverlay', versions['Flipper'], :configuration => 'Debug'
   pod 'FlipperKit/FlipperKitLayoutTextSearchable', versions['Flipper'], :configuration => 'Debug'
   pod 'FlipperKit/FlipperKitNetworkPlugin', versions['Flipper'], :configuration => 'Debug'
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+  pod 'TouchID', :path => '../node_modules/react-native-touch-id'
+  pod 'lottie-ios', :path => '../node_modules/lottie-ios'
 end
 
 # Post Install processing for Flipper
