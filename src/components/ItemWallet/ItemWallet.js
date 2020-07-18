@@ -1,7 +1,7 @@
 import React from "react"
 
 // import React navigation functions
-import { StackActions } from "@react-navigation/native"
+import { useNavigation } from "@react-navigation/native"
 
 // Import Components
 import { TouchableOpacity, Image, View, Text, StyleSheet } from "react-native"
@@ -14,7 +14,7 @@ import store from "../../store/index"
  * Componente que representa la billetera del usuario
  */
 const ItemWallet = ({ data = {}, disabled = false }) => {
-    const { navigation } = store.getState()
+    const { navigate } = useNavigation()
 
     const urlImage = data._id !== null
         ? `https://s2.coinmarketcap.com/static/img/coins/128x128/${data._id}.png`
@@ -25,12 +25,12 @@ const ItemWallet = ({ data = {}, disabled = false }) => {
  * 
  * @param {Object} data 
  */
-    const navigate = () => {
-        navigation.dispatch(StackActions.push("Wallet", data))
+    const onNavigate = () => {
+        navigate("Wallet", data)        
     }
 
     return (
-        <TouchableOpacity disabled={disabled} onPress={navigate} style={styles.container}>
+        <TouchableOpacity disabled={disabled} onPress={onNavigate} style={styles.container}>
             <Image style={styles.image} source={{ uri: urlImage }} />
 
             <View style={styles.subContainerInfo}>

@@ -79,8 +79,8 @@ export const Colors = {
 }
 
 /**Direction for server */
-export const serverAdress = "http://10.70.12.30:4000"
-// export const serverAdress = "http://10.0.2.2:4000"
+// export const serverAdress = "http://10.70.12.18:4000"
+export const serverAdress = "http://10.127.1.106:4000"
 
 /**
  * Constante que almacena la url del preview image del simbolo alycoin
@@ -180,15 +180,13 @@ export const GlobalStyles = StyleSheet.create({
 export const CheckCameraPermission = async () => {
     try {
         // Check permission of camera
-        const checkPermission = await check(PERMISSIONS.ANDROID.CAMERA)
+        const checkPermission = await check(Platform.OS === "android" ? PERMISSIONS.ANDROID.CAMERA : PERMISSIONS.IOS.CAMERA)
 
         if (checkPermission === RESULTS.DENIED) {
             // El permiso no se ha solicitado / se ha denegado pero se puede solicitar
 
             // Solicitamos permiso para ocupar la camara del dispositivo
-            const requestPermission = await request(PERMISSIONS.ANDROID.CAMERA)
-
-            console.log(requestPermission)
+            const requestPermission = await request(Platform.OS === "android" ? PERMISSIONS.ANDROID.CAMERA : PERMISSIONS.IOS.CAMERA)
 
             if (requestPermission === RESULTS.GRANTED) {
                 // El usuario acepto el permiso de la camara

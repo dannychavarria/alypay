@@ -22,6 +22,7 @@ import { StatusBar } from "react-native"
 // Import components
 import Navbar from "./components/Navbar/Navbar"
 import Loader from "./components/Loader/Loader"
+import Recharge from "./views/Recharge/Recharge"
 
 const Stack = createStackNavigator()
 
@@ -90,14 +91,17 @@ const App = () => {
             <NavigationContainer>
                 <Stack.Navigator initialRouteName="Main" headerMode={null}>
                     {
-                        state.loged
-                            ? <Stack.Screen name="Main" component={Main} />
-                            : <Stack.Screen name="Main" component={Login} />
+                        state.loged &&
+                        <Stack.Screen name="Main" component={Main} />
                     }
 
+                    {
+                        !state.loged &&
+                        <Stack.Screen name="Main" component={Login} />
+                    }
+
+                    <Stack.Screen name="Recharge" component={Recharge} />
                     <Stack.Screen name="Wallet" component={Wallet} />
-
-
                 </Stack.Navigator>
             </NavigationContainer>
 

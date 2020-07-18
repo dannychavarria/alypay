@@ -16,10 +16,10 @@
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* alypayTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* alypayTests.m */; };
-		6C7DB7E60CFF338572351DC1 /* libPods-alypay-alypayTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 676DEE9C03CB9237DFA65F80 /* libPods-alypay-alypayTests.a */; };
-		996819F09EDCC6E188EAE3FC /* libPods-alypay-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BC8B5D0185A6AB325FDAF4B4 /* libPods-alypay-tvOS.a */; };
-		E18266FD234FF5BEE4DC1C02 /* libPods-alypay.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EA259090BDF62443A4B9E54D /* libPods-alypay.a */; };
-		EF70E52AB64B59027937CE13 /* libPods-alypay-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DECDBCBEC6253D1BA851B080 /* libPods-alypay-tvOSTests.a */; };
+		4453D94D49129685F786B5A9 /* libPods-alypay-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D263B921265D8DD6B11BBF1 /* libPods-alypay-tvOS.a */; };
+		809DBE8FC9187FE0DD1C37BD /* libPods-alypay-alypayTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DC5B7F2DFFEC66566AB466CF /* libPods-alypay-alypayTests.a */; };
+		D0DC50F5DD205C3FE7B92CA1 /* libPods-alypay-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B460B4BB170DCB6E3A0C6512 /* libPods-alypay-tvOSTests.a */; };
+		F6618B3FB7A7669CD7E912BB /* libPods-alypay.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D0580E27323878DDE9C98061 /* libPods-alypay.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,20 +51,20 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = alypay/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = alypay/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = alypay/main.m; sourceTree = "<group>"; };
+		18BF511BBD65D72D4DCA0DA3 /* Pods-alypay-alypayTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-alypay-alypayTests.release.xcconfig"; path = "Target Support Files/Pods-alypay-alypayTests/Pods-alypay-alypayTests.release.xcconfig"; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* alypay-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "alypay-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* alypay-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "alypay-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		46378B86C519ABF6031E142B /* Pods-alypay.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-alypay.release.xcconfig"; path = "Target Support Files/Pods-alypay/Pods-alypay.release.xcconfig"; sourceTree = "<group>"; };
-		5A677AC5D8DEC0CF8A2436C9 /* Pods-alypay-alypayTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-alypay-alypayTests.debug.xcconfig"; path = "Target Support Files/Pods-alypay-alypayTests/Pods-alypay-alypayTests.debug.xcconfig"; sourceTree = "<group>"; };
-		676DEE9C03CB9237DFA65F80 /* libPods-alypay-alypayTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-alypay-alypayTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		725D651E4F5B64A597CB282C /* Pods-alypay-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-alypay-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-alypay-tvOSTests/Pods-alypay-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
-		72AA108EF9E47D1558F94696 /* Pods-alypay-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-alypay-tvOS.release.xcconfig"; path = "Target Support Files/Pods-alypay-tvOS/Pods-alypay-tvOS.release.xcconfig"; sourceTree = "<group>"; };
-		75EECFEA0EC9E33D67E9C6CE /* Pods-alypay-alypayTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-alypay-alypayTests.release.xcconfig"; path = "Target Support Files/Pods-alypay-alypayTests/Pods-alypay-alypayTests.release.xcconfig"; sourceTree = "<group>"; };
-		BC8B5D0185A6AB325FDAF4B4 /* libPods-alypay-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-alypay-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		DECDBCBEC6253D1BA851B080 /* libPods-alypay-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-alypay-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		DFE16C98A196BD2575384E4D /* Pods-alypay-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-alypay-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-alypay-tvOSTests/Pods-alypay-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
-		E64EEA038E5E4CBF66A39899 /* Pods-alypay-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-alypay-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-alypay-tvOS/Pods-alypay-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
-		E70D56377510C17C6A32A741 /* Pods-alypay.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-alypay.debug.xcconfig"; path = "Target Support Files/Pods-alypay/Pods-alypay.debug.xcconfig"; sourceTree = "<group>"; };
-		EA259090BDF62443A4B9E54D /* libPods-alypay.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-alypay.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4D0DD5845F7AAD80CF09BD50 /* Pods-alypay.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-alypay.release.xcconfig"; path = "Target Support Files/Pods-alypay/Pods-alypay.release.xcconfig"; sourceTree = "<group>"; };
+		573DBDB513986747F06300AD /* Pods-alypay-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-alypay-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-alypay-tvOS/Pods-alypay-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
+		581FA33C46C5D3BFDB2DC616 /* Pods-alypay-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-alypay-tvOS.release.xcconfig"; path = "Target Support Files/Pods-alypay-tvOS/Pods-alypay-tvOS.release.xcconfig"; sourceTree = "<group>"; };
+		74F51E5CD02B809714BC8496 /* Pods-alypay.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-alypay.debug.xcconfig"; path = "Target Support Files/Pods-alypay/Pods-alypay.debug.xcconfig"; sourceTree = "<group>"; };
+		753C62E1C3EF2A5BC2E341A6 /* Pods-alypay-alypayTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-alypay-alypayTests.debug.xcconfig"; path = "Target Support Files/Pods-alypay-alypayTests/Pods-alypay-alypayTests.debug.xcconfig"; sourceTree = "<group>"; };
+		7D263B921265D8DD6B11BBF1 /* libPods-alypay-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-alypay-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8E29A14A2388CFDFC6D42BE8 /* Pods-alypay-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-alypay-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-alypay-tvOSTests/Pods-alypay-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
+		B460B4BB170DCB6E3A0C6512 /* libPods-alypay-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-alypay-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D0580E27323878DDE9C98061 /* libPods-alypay.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-alypay.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DC5B7F2DFFEC66566AB466CF /* libPods-alypay-alypayTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-alypay-alypayTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E2B851925716D0F2A9D304CE /* Pods-alypay-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-alypay-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-alypay-tvOSTests/Pods-alypay-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
@@ -74,7 +74,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6C7DB7E60CFF338572351DC1 /* libPods-alypay-alypayTests.a in Frameworks */,
+				809DBE8FC9187FE0DD1C37BD /* libPods-alypay-alypayTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -82,7 +82,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E18266FD234FF5BEE4DC1C02 /* libPods-alypay.a in Frameworks */,
+				F6618B3FB7A7669CD7E912BB /* libPods-alypay.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -90,7 +90,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				996819F09EDCC6E188EAE3FC /* libPods-alypay-tvOS.a in Frameworks */,
+				4453D94D49129685F786B5A9 /* libPods-alypay-tvOS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -98,7 +98,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EF70E52AB64B59027937CE13 /* libPods-alypay-tvOSTests.a in Frameworks */,
+				D0DC50F5DD205C3FE7B92CA1 /* libPods-alypay-tvOSTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -141,10 +141,10 @@
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
-				EA259090BDF62443A4B9E54D /* libPods-alypay.a */,
-				676DEE9C03CB9237DFA65F80 /* libPods-alypay-alypayTests.a */,
-				BC8B5D0185A6AB325FDAF4B4 /* libPods-alypay-tvOS.a */,
-				DECDBCBEC6253D1BA851B080 /* libPods-alypay-tvOSTests.a */,
+				D0580E27323878DDE9C98061 /* libPods-alypay.a */,
+				DC5B7F2DFFEC66566AB466CF /* libPods-alypay-alypayTests.a */,
+				7D263B921265D8DD6B11BBF1 /* libPods-alypay-tvOS.a */,
+				B460B4BB170DCB6E3A0C6512 /* libPods-alypay-tvOSTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -185,14 +185,14 @@
 		DB6FF597024CB800D65E28A8 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				E70D56377510C17C6A32A741 /* Pods-alypay.debug.xcconfig */,
-				46378B86C519ABF6031E142B /* Pods-alypay.release.xcconfig */,
-				5A677AC5D8DEC0CF8A2436C9 /* Pods-alypay-alypayTests.debug.xcconfig */,
-				75EECFEA0EC9E33D67E9C6CE /* Pods-alypay-alypayTests.release.xcconfig */,
-				E64EEA038E5E4CBF66A39899 /* Pods-alypay-tvOS.debug.xcconfig */,
-				72AA108EF9E47D1558F94696 /* Pods-alypay-tvOS.release.xcconfig */,
-				DFE16C98A196BD2575384E4D /* Pods-alypay-tvOSTests.debug.xcconfig */,
-				725D651E4F5B64A597CB282C /* Pods-alypay-tvOSTests.release.xcconfig */,
+				74F51E5CD02B809714BC8496 /* Pods-alypay.debug.xcconfig */,
+				4D0DD5845F7AAD80CF09BD50 /* Pods-alypay.release.xcconfig */,
+				753C62E1C3EF2A5BC2E341A6 /* Pods-alypay-alypayTests.debug.xcconfig */,
+				18BF511BBD65D72D4DCA0DA3 /* Pods-alypay-alypayTests.release.xcconfig */,
+				573DBDB513986747F06300AD /* Pods-alypay-tvOS.debug.xcconfig */,
+				581FA33C46C5D3BFDB2DC616 /* Pods-alypay-tvOS.release.xcconfig */,
+				E2B851925716D0F2A9D304CE /* Pods-alypay-tvOSTests.debug.xcconfig */,
+				8E29A14A2388CFDFC6D42BE8 /* Pods-alypay-tvOSTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -204,11 +204,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "alypayTests" */;
 			buildPhases = (
-				6D93EB9CD9F8EC4F22F0F583 /* [CP] Check Pods Manifest.lock */,
+				2A8E4D2CB5DE8EE0C235D97F /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				C95376947A7CA5AFDAFC53CF /* [CP] Copy Pods Resources */,
+				8134EF8EC77BB6B98D978D72 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -224,13 +224,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "alypay" */;
 			buildPhases = (
-				2A69FE080A1DD67B2FBC3C6F /* [CP] Check Pods Manifest.lock */,
+				4DC0B73FDA2BB12E5A29AC11 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				473DDD4EEE7474F4B0E8F2BF /* [CP] Copy Pods Resources */,
+				E089E77BFDF805969947E0D5 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -245,7 +245,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "alypay-tvOS" */;
 			buildPhases = (
-				7F5BF44C14B66D5E398D4618 /* [CP] Check Pods Manifest.lock */,
+				4FB0F1A71ABFF2737171FB9F /* [CP] Check Pods Manifest.lock */,
 				FD10A7F122414F3F0027D42C /* Start Packager */,
 				2D02E4771E0B4A5D006451C7 /* Sources */,
 				2D02E4781E0B4A5D006451C7 /* Frameworks */,
@@ -265,7 +265,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "alypay-tvOSTests" */;
 			buildPhases = (
-				046864D0F1F2D081D43B4FF3 /* [CP] Check Pods Manifest.lock */,
+				0FE6E74B7ED2D0E898AF827D /* [CP] Check Pods Manifest.lock */,
 				2D02E48C1E0B4A5D006451C7 /* Sources */,
 				2D02E48D1E0B4A5D006451C7 /* Frameworks */,
 				2D02E48E1E0B4A5D006451C7 /* Resources */,
@@ -377,7 +377,7 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
-		046864D0F1F2D081D43B4FF3 /* [CP] Check Pods Manifest.lock */ = {
+		0FE6E74B7ED2D0E898AF827D /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -399,91 +399,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		2A69FE080A1DD67B2FBC3C6F /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-alypay-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Bundle React Native Code And Images";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
-		};
-		473DDD4EEE7474F4B0E8F2BF /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-alypay/Pods-alypay-resources.sh",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Feather.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Foundation.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Octicons.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Zocial.ttf",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AntDesign.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Entypo.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EvilIcons.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Feather.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome5_Brands.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome5_Regular.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome5_Solid.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Fontisto.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Foundation.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Ionicons.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MaterialCommunityIcons.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MaterialIcons.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Octicons.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SimpleLineIcons.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Zocial.ttf",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-alypay/Pods-alypay-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		6D93EB9CD9F8EC4F22F0F583 /* [CP] Check Pods Manifest.lock */ = {
+		2A8E4D2CB5DE8EE0C235D97F /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -505,7 +421,43 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		7F5BF44C14B66D5E398D4618 /* [CP] Check Pods Manifest.lock */ = {
+		2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Bundle React Native Code And Images";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+		};
+		4DC0B73FDA2BB12E5A29AC11 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-alypay-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		4FB0F1A71ABFF2737171FB9F /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -527,7 +479,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C95376947A7CA5AFDAFC53CF /* [CP] Copy Pods Resources */ = {
+		8134EF8EC77BB6B98D978D72 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -573,6 +525,54 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-alypay-alypayTests/Pods-alypay-alypayTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E089E77BFDF805969947E0D5 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-alypay/Pods-alypay-resources.sh",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Feather.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Foundation.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Octicons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Zocial.ttf",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AntDesign.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Entypo.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EvilIcons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Feather.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome5_Brands.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome5_Regular.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome5_Solid.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Fontisto.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Foundation.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Ionicons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MaterialCommunityIcons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MaterialIcons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Octicons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SimpleLineIcons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Zocial.ttf",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-alypay/Pods-alypay-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -680,7 +680,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5A677AC5D8DEC0CF8A2436C9 /* Pods-alypay-alypayTests.debug.xcconfig */;
+			baseConfigurationReference = 753C62E1C3EF2A5BC2E341A6 /* Pods-alypay-alypayTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -703,7 +703,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 75EECFEA0EC9E33D67E9C6CE /* Pods-alypay-alypayTests.release.xcconfig */;
+			baseConfigurationReference = 18BF511BBD65D72D4DCA0DA3 /* Pods-alypay-alypayTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -723,7 +723,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E70D56377510C17C6A32A741 /* Pods-alypay.debug.xcconfig */;
+			baseConfigurationReference = 74F51E5CD02B809714BC8496 /* Pods-alypay.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -751,7 +751,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 46378B86C519ABF6031E142B /* Pods-alypay.release.xcconfig */;
+			baseConfigurationReference = 4D0DD5845F7AAD80CF09BD50 /* Pods-alypay.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -773,7 +773,7 @@
 		};
 		2D02E4971E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E64EEA038E5E4CBF66A39899 /* Pods-alypay-tvOS.debug.xcconfig */;
+			baseConfigurationReference = 573DBDB513986747F06300AD /* Pods-alypay-tvOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -801,7 +801,7 @@
 		};
 		2D02E4981E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 72AA108EF9E47D1558F94696 /* Pods-alypay-tvOS.release.xcconfig */;
+			baseConfigurationReference = 581FA33C46C5D3BFDB2DC616 /* Pods-alypay-tvOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -829,7 +829,7 @@
 		};
 		2D02E4991E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DFE16C98A196BD2575384E4D /* Pods-alypay-tvOSTests.debug.xcconfig */;
+			baseConfigurationReference = E2B851925716D0F2A9D304CE /* Pods-alypay-tvOSTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
@@ -856,7 +856,7 @@
 		};
 		2D02E49A1E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 725D651E4F5B64A597CB282C /* Pods-alypay-tvOSTests.release.xcconfig */;
+			baseConfigurationReference = 8E29A14A2388CFDFC6D42BE8 /* Pods-alypay-tvOSTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;

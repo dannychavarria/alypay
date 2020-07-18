@@ -74,6 +74,38 @@ PODS:
   - OpenSSL-Universal (1.0.2.19):
     - OpenSSL-Universal/Static (= 1.0.2.19)
   - OpenSSL-Universal/Static (1.0.2.19)
+  - Permission-BluetoothPeripheral (2.1.5):
+    - RNPermissions
+  - Permission-Calendars (2.1.5):
+    - RNPermissions
+  - Permission-Camera (2.1.5):
+    - RNPermissions
+  - Permission-Contacts (2.1.5):
+    - RNPermissions
+  - Permission-FaceID (2.1.5):
+    - RNPermissions
+  - Permission-LocationAlways (2.1.5):
+    - RNPermissions
+  - Permission-LocationWhenInUse (2.1.5):
+    - RNPermissions
+  - Permission-MediaLibrary (2.1.5):
+    - RNPermissions
+  - Permission-Microphone (2.1.5):
+    - RNPermissions
+  - Permission-Motion (2.1.5):
+    - RNPermissions
+  - Permission-Notifications (2.1.5):
+    - RNPermissions
+  - Permission-PhotoLibrary (2.1.5):
+    - RNPermissions
+  - Permission-Reminders (2.1.5):
+    - RNPermissions
+  - Permission-Siri (2.1.5):
+    - RNPermissions
+  - Permission-SpeechRecognition (2.1.5):
+    - RNPermissions
+  - Permission-StoreKit (2.1.5):
+    - RNPermissions
   - RCTRequired (0.62.2)
   - RCTTypeSafety (0.62.2):
     - FBLazyVector (= 0.62.2)
@@ -368,6 +400,22 @@ DEPENDENCIES:
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - lottie-ios (from `../node_modules/lottie-ios`)
   - lottie-react-native (from `../node_modules/lottie-react-native`)
+  - Permission-BluetoothPeripheral (from `../node_modules/react-native-permissions/ios/BluetoothPeripheral.podspec`)
+  - Permission-Calendars (from `../node_modules/react-native-permissions/ios/Calendars.podspec`)
+  - Permission-Camera (from `../node_modules/react-native-permissions/ios/Camera.podspec`)
+  - Permission-Contacts (from `../node_modules/react-native-permissions/ios/Contacts.podspec`)
+  - Permission-FaceID (from `../node_modules/react-native-permissions/ios/FaceID.podspec`)
+  - Permission-LocationAlways (from `../node_modules/react-native-permissions/ios/LocationAlways.podspec`)
+  - Permission-LocationWhenInUse (from `../node_modules/react-native-permissions/ios/LocationWhenInUse.podspec`)
+  - Permission-MediaLibrary (from `../node_modules/react-native-permissions/ios/MediaLibrary.podspec`)
+  - Permission-Microphone (from `../node_modules/react-native-permissions/ios/Microphone.podspec`)
+  - Permission-Motion (from `../node_modules/react-native-permissions/ios/Motion.podspec`)
+  - Permission-Notifications (from `../node_modules/react-native-permissions/ios/Notifications.podspec`)
+  - Permission-PhotoLibrary (from `../node_modules/react-native-permissions/ios/PhotoLibrary.podspec`)
+  - Permission-Reminders (from `../node_modules/react-native-permissions/ios/Reminders.podspec`)
+  - Permission-Siri (from `../node_modules/react-native-permissions/ios/Siri.podspec`)
+  - Permission-SpeechRecognition (from `../node_modules/react-native-permissions/ios/SpeechRecognition.podspec`)
+  - Permission-StoreKit (from `../node_modules/react-native-permissions/ios/StoreKit.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
   - React (from `../node_modules/react-native/`)
@@ -438,6 +486,38 @@ EXTERNAL SOURCES:
     :path: "../node_modules/lottie-ios"
   lottie-react-native:
     :path: "../node_modules/lottie-react-native"
+  Permission-BluetoothPeripheral:
+    :path: "../node_modules/react-native-permissions/ios/BluetoothPeripheral.podspec"
+  Permission-Calendars:
+    :path: "../node_modules/react-native-permissions/ios/Calendars.podspec"
+  Permission-Camera:
+    :path: "../node_modules/react-native-permissions/ios/Camera.podspec"
+  Permission-Contacts:
+    :path: "../node_modules/react-native-permissions/ios/Contacts.podspec"
+  Permission-FaceID:
+    :path: "../node_modules/react-native-permissions/ios/FaceID.podspec"
+  Permission-LocationAlways:
+    :path: "../node_modules/react-native-permissions/ios/LocationAlways.podspec"
+  Permission-LocationWhenInUse:
+    :path: "../node_modules/react-native-permissions/ios/LocationWhenInUse.podspec"
+  Permission-MediaLibrary:
+    :path: "../node_modules/react-native-permissions/ios/MediaLibrary.podspec"
+  Permission-Microphone:
+    :path: "../node_modules/react-native-permissions/ios/Microphone.podspec"
+  Permission-Motion:
+    :path: "../node_modules/react-native-permissions/ios/Motion.podspec"
+  Permission-Notifications:
+    :path: "../node_modules/react-native-permissions/ios/Notifications.podspec"
+  Permission-PhotoLibrary:
+    :path: "../node_modules/react-native-permissions/ios/PhotoLibrary.podspec"
+  Permission-Reminders:
+    :path: "../node_modules/react-native-permissions/ios/Reminders.podspec"
+  Permission-Siri:
+    :path: "../node_modules/react-native-permissions/ios/Siri.podspec"
+  Permission-SpeechRecognition:
+    :path: "../node_modules/react-native-permissions/ios/SpeechRecognition.podspec"
+  Permission-StoreKit:
+    :path: "../node_modules/react-native-permissions/ios/StoreKit.podspec"
   RCTRequired:
     :path: "../node_modules/react-native/Libraries/RCTRequired"
   RCTTypeSafety:
@@ -528,6 +608,22 @@ SPEC CHECKSUMS:
   lottie-ios: 496ac5cea1bbf1a7bd1f1f472f3232eb1b8d744b
   lottie-react-native: a664f59f1f298c2696dd0ae07b15cbdfc433cb02
   OpenSSL-Universal: 8b48cc0d10c1b2923617dfe5c178aa9ed2689355
+  Permission-BluetoothPeripheral: b28267800e6bbedf18768e2bda7ebed3cf7a1a81
+  Permission-Calendars: 1a0a2ec124d9d184dca9403ce13d236b32c2e6d7
+  Permission-Camera: 53d46bd722aea28d796e20f05fb3cbe6cde6ccb6
+  Permission-Contacts: 3cb117c072db53e26393962b02086dd7ab3bb901
+  Permission-FaceID: 14d400f5a123fdd4ffa5cc3691568e8e97438153
+  Permission-LocationAlways: 14ec76aa2912ea3a7ddc5b564d781bff51a5f3c8
+  Permission-LocationWhenInUse: 16ecd20d82341c6b4336dfe5520c098bea85a2f5
+  Permission-MediaLibrary: c01c27f2e5c8a499fdc4add8fc7f1b97dcb3340e
+  Permission-Microphone: af45e35013788b52eecf3cd8f13185c4b6f7bff7
+  Permission-Motion: 3ce9ebdb992f3da3e9ab3fe18c44d4d491a267ce
+  Permission-Notifications: 5ecb0f433b585c5621dc30b168772d60ae8574c2
+  Permission-PhotoLibrary: 3400b260e5f80e0dd9c04d00c2ceab233bf88427
+  Permission-Reminders: ac694d618f77347754af15fb9bff9362f36161cf
+  Permission-Siri: 3028a9f8663241e30d99021cf163e171715ce612
+  Permission-SpeechRecognition: 844dc75f7165ff00bc0714bedd1c2bd42d6fa076
+  Permission-StoreKit: 92c982c7b36258ef5e878ac7803e2afa47f10d49
   RCTRequired: cec6a34b3ac8a9915c37e7e4ad3aa74726ce4035
   RCTTypeSafety: 93006131180074cffa227a1075802c89a49dd4ce
   React: 29a8b1a02bd764fb7644ef04019270849b9a7ac3
@@ -566,6 +662,6 @@ SPEC CHECKSUMS:
   Yoga: 3ebccbdd559724312790e7742142d062476b698e
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 8396973a39d03691789004928ceb4961bbca7eeb
+PODFILE CHECKSUM: 5839fb966d8548c1f123df3bd530ace740d1548a
 
 COCOAPODS: 1.9.3

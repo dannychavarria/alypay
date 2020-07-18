@@ -83,8 +83,6 @@ const initialState = {
 }
 
 const Main = ({ navigation }) => {
-    const { global } = store.getState()
-
     const [stateView, setStateView] = useState(TYPE_VIEW.WALLET)
 
     const [state, dispatch] = useReducer(reducer, initialState)
@@ -117,9 +115,6 @@ const Main = ({ navigation }) => {
     }
 
     useEffect(() => {
-        // Dispatch to redux navigation
-        store.dispatch({ type: SETNAVIGATION, payload: navigation })
-
         configurateComponent()
 
         CheckCameraPermission()

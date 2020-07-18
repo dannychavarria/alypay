@@ -1,5 +1,8 @@
 import React, { useState, useReducer, useEffect } from "react"
 
+// Import navigation functions
+import { useNavigation } from "@react-navigation/native"
+
 // Import components
 import Container from "../../components/Container/Container"
 import ItemWallet from "../../components/ItemWallet/ItemWallet"
@@ -21,6 +24,10 @@ import { RNCamera } from "react-native-camera"
 // Import constanst and others things
 import { Colors, RFValue, GlobalStyles, CopyClipboard, reducer, htttp, errorMessage, getHeaders, loader, successMessage } from "../../utils/constants"
 import TouchID from "react-native-touch-id"
+
+// store and actionTypes from redux
+import store from "../../store/index"
+import { SETWALLET } from "../../store/actionsTypes"
 
 // Import Assets
 import scanQRAnimation from "../../animations/scan-qr.json"
@@ -49,24 +56,14 @@ const switchItems = [
  * Componente que renderiza un qr con la direccion wallet
  */
 const ReceiveComponent = ({ wallet = "" }) => {
+    const { navigate } = useNavigation()
+
     const styles = StyleSheet.create({
         qrContainer: {
             backgroundColor: Colors.colorYellow,
             borderRadius: RFValue(5),
             padding: RFValue(12),
             marginBottom: RFValue(10),
-        },
-
-        buttonWallet: {
-            ...GlobalStyles.buttonPrimaryLine,
-            marginHorizontal: RFValue(25),
-            overflow: "hidden",
-        },
-
-        textButton: {
-            ...GlobalStyles.textButtonPrimaryLine,
-            fontSize: RFValue(12),
-            textAlign: "center",
         },
 
         receivedViewContainer: {
@@ -76,29 +73,48 @@ const ReceiveComponent = ({ wallet = "" }) => {
         },
 
         toUpBalanceContainer: {
+            marginTop: RFValue(25),
+            flex: 1,
+            flexDirection: "row",
+        },
 
+        line: {
+            marginHorizontal: RFValue(10),
+            borderRightColor: Colors.colorYellow,
+            borderRightWidth: 1,
+        },
+
+        textButtonToUpBalance: {
+            fontSize: RFValue(16),
+            color: Colors.colorYellow,
+            textTransform: "uppercase",
         }
     })
 
-    return (
-        <ViewAnimate animation="fadeIn" style={styles.receivedViewContainer}>
-            <View style={styles.qrContainer}>
-                <QRCode
-                    size={RFValue(256)}
-                    backgroundColor="transparent"
-                    value={wallet} />
-            </View>
+    const toRecharge = () => {
+        navigate("Recharge", { wallet })
+    }
 
-            <TouchableOpacity style={styles.buttonWallet} onPress={_ => CopyClipboard(wallet)}>
-                <Text selectable style={styles.textButton}>{wallet.substr(0, 50)}...</Text>
+    return (<ViewAnimate animation="fadeIn" style={styles.receivedViewContainer}>
+        <View style={styles.qrContainer}>
+            <QRCode
+                size={RFValue(256)}
+                backgroundColor="transparent"
+                value={wallet} />
+        </View>
+
+        <ViewAnimate style={styles.toUpBalanceContainer}>
+            <TouchableOpacity onPress={_ => CopyClipboard(wallet)}>
+                <Text style={styles.textButtonToUpBalance}>Copiar direccion</Text>
             </TouchableOpacity>
 
-            <ViewAnimate style={styles.toUpBalanceContainer}>
-                <TouchableOpacity>
-                    <Text>Recargar mi billetera</Text>
-                </TouchableOpacity>
-            </ViewAnimate>
+            <View style={styles.line} />
+
+            <TouchableOpacity onPress={toRecharge}>
+                <Text style={styles.textButtonToUpBalance}>Recargar billetera</Text>
+            </TouchableOpacity>
         </ViewAnimate>
+    </ViewAnimate>
     )
 }
 
@@ -243,7 +259,7 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
             }
 
             // verificamos si todo
-            if(response.response === "success") {
+            if (response.response === "success") {
                 successMessage("Tu transaccion se ha completado")
 
                 // limpiamos el monto en usd
@@ -251,7 +267,7 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
 
                 // limpiamos las fracciones de las moneda
                 dispatch({ type: "amountFraction", payload: "" })
-                
+
                 // Limpiamos el usuario remitente
                 dispatch({ type: "dataWallet", payload: "" })
 
@@ -265,7 +281,7 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
 
             onCompleteTrasanction()
         } catch (error) {
-            errorMessage(erro.toString())
+            errorMessage(error.toString())
         } finally {
             loader(false)
         }
@@ -443,7 +459,7 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
                 </TouchableOpacity>
             }
 
-            <Modal backdropOpacity={0.9} animationIn="fadeIn" onBackButtonPress={toggleScan} animationOut="fadeOut" isVisible={state.showScaner}>
+            <Modal backdropOpacity={0.9} animationIn="fadeIn" onBackButtonPress={toggleScan} onBackdropPress={toggleScan} animationOut="fadeOut" isVisible={state.showScaner}>
                 <View style={styles.constainerQR}>
                     <QRCodeScanner
                         sty
@@ -521,11 +537,11 @@ const Wallet = ({ route }) => {
 
             const { data } = await htttp.get(`/wallets/details/${params.id}`, getHeaders())
 
-            console.log(data.information, params)
-
             if (data.error) {
                 throw data.message
             }
+
+            store.dispatch({ type: SETWALLET, payload: { ...data, reloadInfo: configurateComponent } })
 
             // Guardamos la direccion wallet
             dispatch({ type: "wallet", payload: data.wallet })
