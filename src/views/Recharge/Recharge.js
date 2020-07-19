@@ -2,6 +2,7 @@ import React, { useReducer, useEffect } from "react"
 
 // Import components
 import Container from "../../components/Container/Container"
+import { View as ViewAnimatable } from "react-native-animatable"
 import { View, TextInput, TouchableOpacity, Text, StyleSheet } from "react-native"
 
 // Imports constants and functions
@@ -41,49 +42,60 @@ const Recharge = () => {
 
     return (
         <Container showLogo>
-            <Text style={[styles.textLegend, { alignSelf: "center", marginBottom: 10 }]}>Toca para copiar</Text>
+            <ViewAnimatable style={styles.containerRoot}>
+                <Text style={[styles.textLegend, { alignSelf: "center", marginBottom: 10 }]}>Toca para copiar</Text>
 
-            <TouchableOpacity onPress={_ => CopyClipboard(information.wallet)} style={GlobalStyles.buttonPrimaryLine}>
-                <Text style={GlobalStyles.textButtonPrimaryLine}>{information.wallet}</Text>
-            </TouchableOpacity>
+                <TouchableOpacity onPress={_ => CopyClipboard(information.wallet)} style={GlobalStyles.buttonPrimaryLine}>
+                    <Text style={styles.textWallet}>{information.wallet}</Text>
+                </TouchableOpacity>
 
-            <View style={styles.line} />
+                <View style={styles.line} />
 
-            <View style={styles.containerTransaction}>
-                <View>
-                    <Text style={styles.textLegend}>Cantidad de {information.symbol}</Text>
-                    <TextInput
-                        value={state.amount}
-                        onChangeText={payload => dispatch({ type: "amount", payload })}
-                        style={GlobalStyles.textInput} />
+                <View style={styles.containerTransaction}>
+                    <View>
+                        <Text style={styles.textLegend}>Cantidad de {information.symbol}</Text>
+                        <TextInput
+                            value={state.amount}
+                            onChangeText={payload => dispatch({ type: "amount", payload })}
+                            style={GlobalStyles.textInput} />
+                    </View>
+
+                    <View style={styles.hashContainer}>
+                        <Text style={styles.textLegend}>Hash de transaccion</Text>
+                        <TextInput
+                            value={state.walletAddress}
+                            onChangeText={payload => dispatch({ type: "walletAddress", payload })}
+                            style={GlobalStyles.textInput} />
+                    </View>
                 </View>
 
-                <View style={styles.hashContainer}>
-                    <Text style={styles.textLegend}>Hash de transaccion</Text>
-                    <TextInput
-                        value={state.walletAddress}
-                        onChangeText={payload => dispatch({ type: "walletAddress", payload })}
-                        style={GlobalStyles.textInput} />
+                <TouchableOpacity style={GlobalStyles.buttonPrimary}>
+                    <Text style={GlobalStyles.textButton}>Confirmar</Text>
+                </TouchableOpacity>
+
+                <View style={styles.containerBalance}>
+                    <Text style={styles.textLegend}>Saldo actual</Text>
+                    <Text style={styles.textBalance}>{information.amount} {information.symbol}</Text>
                 </View>
-            </View>
-
-            <TouchableOpacity style={GlobalStyles.buttonPrimary}>
-                <Text style={GlobalStyles.textButton}>Confirmar</Text>
-            </TouchableOpacity>
-
-            <View style={styles.containerBalance}>
-                <Text style={styles.textLegend}>Saldo actual</Text>
-                <Text style={styles.textBalance}>{information.amount} {information.symbol}</Text>
-            </View>
+            </ViewAnimatable>
         </Container>
     )
 }
 
 const styles = StyleSheet.create({
+    containerRoot: {
+        padding: RFValue(25)
+    },
+
     containerTransaction: {
         flexDirection: "row",
         marginBottom: RFValue(25),
         width: "100%"
+    },
+
+    textWallet: {
+        ...GlobalStyles.textButtonPrimaryLine,
+        fontSize: RFValue(12)
     },
 
     line: {

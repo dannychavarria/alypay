@@ -9,7 +9,6 @@ import { View as ViewAnimation } from "react-native-animatable"
 
 // Import components
 import Video from "react-native-video"
-import Loader from "../../components/Loader/Loader"
 import { Text, TextInput, StyleSheet, Image, View, Dimensions, KeyboardAvoidingView, Platform, TouchableOpacity } from "react-native"
 
 // Import constants and functions
@@ -157,6 +156,8 @@ const Login = () => {
                     <TextInput
                         style={GlobalStyles.textInput}
                         value={state.email}
+                        autoCorrect={false}
+                        autoCapitalize="none"
                         keyboardType="email-address"
                         keyboardAppearance="dark"
                         onChangeText={payload => dispatch({ type: "email", payload })} />

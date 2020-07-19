@@ -136,7 +136,7 @@ export const GlobalStyles = StyleSheet.create({
         borderColor: Colors.colorYellow + "55",
         color: '#FFF',
         elevation: 5,
-        padding: 5,
+        padding: RFValue(10),
         zIndex: 50,
     },
 

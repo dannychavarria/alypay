@@ -64,7 +64,7 @@ const PayComponent = () => {
             <QRCodeScanner
                 sty
                 onRead={onReadCodeQR}
-                flashMode={RNCamera.Constants.FlashMode.torch}
+                flashMode={RNCamera.Constants.FlashMode.auto}
                 topContent={
                     <Text>Scan Code Example</Text>
                 }

@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 
-import { GlobalStyles, RFValue } from "../../utils/constants"
+import { GlobalStyles, RFValue, Colors } from "../../utils/constants"
 
 // Import Components
 import { SafeAreaView, Image, StyleSheet, ScrollView, View, RefreshControl } from "react-native"
@@ -27,6 +27,7 @@ const Container = ({ children, showLogo = false, scrollViewStyles = {}, onRefres
     return (
         <SafeAreaView style={GlobalStyles.superContainer}>
             <ScrollView
+                keyboardDismissMode="interactive"
                 keyboardShouldPersistTaps="always"
                 refreshControl={onRefreshEnd !== null && <RefreshControl refreshing={refreshing} onRefresh={refetching} />}
                 style={[styles.scroll, scrollViewStyles]}>

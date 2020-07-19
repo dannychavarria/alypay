@@ -71,5 +71,22 @@
       <string>SimpleLineIcons.ttf</string>
       <string>Zocial.ttf</string>
   </array>
+  <key>NSCameraUsageDescription</key>
+  <string>Alypay necesita permiso a tu camara para escanear QR</string>
+  
+  <key>NSFaceIDUsageDescription</key>
+  <string>Permiso para usar el servicio de FaceID</string>
+  
+  <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+  <string>AlyPay necesita saber tu ubicacion</string>
+  
+  <key>NSLocationAlwaysUsageDescription</key>
+  <string>AlyPay necesita saber tu ubicacion</string>
+  
+  <key>NSLocationWhenInUseUsageDescription</key>
+  <string>AlyPay necesita saber tu ubicacionT</string>
+  
+  <key>NSPhotoLibraryUsageDescription</key>
+  <string>AlyPay quiere acceder a tus fotos.</string>
 </dict>
 </plist>

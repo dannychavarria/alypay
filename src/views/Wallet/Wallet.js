@@ -16,7 +16,7 @@ import Lottie from "lottie-react-native"
 import QRCode from "react-native-qrcode-svg"
 
 // Import Others components from React-Native
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image, Vibration } from "react-native"
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image, Vibration, Keyboard } from "react-native"
 import { View as ViewAnimate, Text as TextAnimate } from "react-native-animatable"
 import { RNCamera } from "react-native-camera"
 
@@ -227,6 +227,8 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
     /**Metodo que se ejecuta para enviar los fondos */
     const submit = async () => {
         try {
+            Keyboard.dismiss()
+
             if (state.amountUSD.trim().length === 0) {
                 throw "Ingrese un monto"
             }
