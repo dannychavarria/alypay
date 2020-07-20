@@ -1,25 +1,20 @@
 import React, { useState, useEffect, useRef } from "react"
 
 // Import components
-import * as Animatable from "react-native-animatable"
 import Icon from "react-native-vector-icons/Entypo"
 import { BlurView } from "@react-native-community/blur"
-import { Animated, StyleSheet, View, TouchableOpacity, Keyboard, Easing } from "react-native"
+import { StyleSheet, View, TouchableOpacity, Keyboard } from "react-native"
 
 // Import functions and constanst
 import { RFValue, Colors, logOutApp } from "../../utils/constants"
-
-// Import store from redux
-import store from "../../store/index"
-
-const TouchableAnimationOpacity = Animatable.createAnimatableComponent(TouchableOpacity)
+import { useNavigation } from "@react-navigation/native"
+import {  } from "@react-navigation/stack"
 
 const sizeIcon = RFValue(32)
 
 const Navbar = () => {
-    const { navigation } = store.getState()
     const [hidden, setHidden] = useState(false)
-    const buttonRefAnimation = useRef(null)
+    // const { dispatch } = useNavigation()
 
     const toggleMenu = () => {
         logOut()
@@ -29,7 +24,7 @@ const Navbar = () => {
         // console.log(buttonRefAnimation)
         // buttonRefAnimation.current.fadeOutLeftBig()
         try {
-            navigation.popToTop()
+            // dispatch()
         } catch (error) {
             console.log(error)
         }
@@ -70,10 +65,6 @@ const Navbar = () => {
                     />
 
                     <View style={styles.containerButtons}>
-                        {/* <TouchableAnimationOpacity ref={buttonRefAnimation} onPress={navigation.goBack} style={styles.button}>
-                            <Icon name="arrow-bold-left" size={sizeIcon} color={Colors.colorYellow} />
-                        </TouchableAnimationOpacity> */}
-
                         <TouchableOpacity onPress={goToTop} style={styles.button}>
                             <Icon name="home" size={sizeIcon} color={Colors.colorYellow} />
                         </TouchableOpacity>

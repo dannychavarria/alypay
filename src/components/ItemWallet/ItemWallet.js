@@ -7,9 +7,6 @@ import { useNavigation } from "@react-navigation/native"
 import { TouchableOpacity, Image, View, Text, StyleSheet } from "react-native"
 import { Colors, RFValue, urlAlyCoin, WithDecimals } from "../../utils/constants"
 
-// import store
-import store from "../../store/index"
-
 /**
  * Componente que representa la billetera del usuario
  */
