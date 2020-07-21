@@ -15,8 +15,6 @@ import { RFValue, CheckCameraPermission, htttp, reducer, errorMessage, getHeader
 import store from "../../store/index"
 import { SETNAVIGATION } from "../../store/actionsTypes"
 
-// Import Assets
-
 /**
  * Constante que almacena el tipo de vista seleccionada del switch
  * Types: `wallet` or `pay`
@@ -115,6 +113,8 @@ const Main = ({ navigation }) => {
     }
 
     useEffect(() => {
+        store.dispatch({ type: SETNAVIGATION, payload: navigation })
+
         configurateComponent()
 
         CheckCameraPermission()

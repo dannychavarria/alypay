@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect } from "react"
 
 // Import components
 import Icon from "react-native-vector-icons/Entypo"
@@ -7,8 +7,7 @@ import { StyleSheet, View, TouchableOpacity, Keyboard } from "react-native"
 
 // Import functions and constanst
 import { RFValue, Colors, logOutApp } from "../../utils/constants"
-import { useNavigation } from "@react-navigation/native"
-import {  } from "@react-navigation/stack"
+import { useNavigation, StackActions } from "@react-navigation/native"
 
 const sizeIcon = RFValue(32)
 
@@ -21,10 +20,8 @@ const Navbar = () => {
     }
 
     const goToTop = () => {
-        // console.log(buttonRefAnimation)
-        // buttonRefAnimation.current.fadeOutLeftBig()
         try {
-            // dispatch()
+            // dispatch(StackActions.popToTop())
         } catch (error) {
             console.log(error)
         }
@@ -34,7 +31,7 @@ const Navbar = () => {
         try {
             await logOutApp()
 
-            navigation.popToTop()
+            // dispatch(StackActions.popToTop())
         } catch (error) {
             console.log(error)
         }

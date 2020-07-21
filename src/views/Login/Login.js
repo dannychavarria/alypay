@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useRef } from "react"
+import React, { useEffect, useReducer } from "react"
 
 // Import config get info device
 import { getBrand, getDeviceId, getMacAddress, getSystemName } from "react-native-device-info"
@@ -18,7 +18,7 @@ import validator from "validator"
 
 // Import reduz store and types
 import store from "../../store/index"
-import { SETSTORAGE } from "../../store/actionsTypes"
+import { SETSTORAGE, SETNAVIGATION } from "../../store/actionsTypes"
 
 // Import Assets
 import logo from "../../static/alypay.png"
@@ -37,11 +37,8 @@ const initialState = {
 
 const { height } = Dimensions.get("window")
 
-const Login = () => {
+const Login = ({ navigation }) => {
     const [state, dispatch] = useReducer(reducer, initialState)
-
-    // Referencia al componente video
-    const videoRef = useRef(null)
 
     /***
      * Metodo que se ejecuta cuando el usuario ejecuta login
@@ -128,6 +125,8 @@ const Login = () => {
     }
 
     useEffect(() => {
+        store.dispatch({ type: SETNAVIGATION, payload: navigation })
+
         getDeviceInfo()
     }, [])
 
@@ -135,8 +134,6 @@ const Login = () => {
         <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} style={styles.rootContainer}>
             <Video
                 selectedVideoTrack={{ type: "disabled" }}
-                repeat={true}
-                ref={videoRef}
                 resizeMode="cover"
                 playInBackground={true}
                 controls={false}

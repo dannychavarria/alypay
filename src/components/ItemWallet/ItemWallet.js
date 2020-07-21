@@ -45,7 +45,7 @@ const ItemWallet = ({ data = {}, disabled = false }) => {
                 <View style={styles.row}>
                     <View>
                         <Text style={styles.key}>Precio del mercado</Text>
-                        <Text style={styles.value}>$ {data.price?.toFixed(2)}</Text>
+                        <Text style={styles.value}>$ {WithDecimals(data.price?.toFixed(2))}</Text>
                     </View>
 
                     <View style={styles.lastCol}>

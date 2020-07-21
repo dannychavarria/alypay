@@ -14,15 +14,12 @@ import { SETSTORAGE, DELETESTORAGE } from "./store/actionsTypes"
 
 // Import views
 import Login from "./views/Login/Login"
-import Main from "./views/Main/Main"
-import Wallet from "./views/Wallet/Wallet"
+import Main from "./views/Main/Index"
 import Splash from "./components/Splash/Splash"
 import { StatusBar } from "react-native"
 
 // Import components
-import Navbar from "./components/Navbar/Navbar"
 import Loader from "./components/Loader/Loader"
-import Recharge from "./views/Recharge/Recharge"
 
 const Stack = createStackNavigator()
 
@@ -97,18 +94,12 @@ const App = () => {
 
                     {
                         !state.loged &&
-                        <Stack.Screen name="Main" component={Login} />
+                        <>
+                            <Stack.Screen name="Main" component={Login} />
+                        </>
                     }
-
-                    <Stack.Screen name="Recharge" component={Recharge} />
-                    <Stack.Screen name="Wallet" component={Wallet} />
                 </Stack.Navigator>
             </NavigationContainer>
-
-            {
-                state.loged &&
-                <Navbar />
-            }
 
             <Loader isVisible={state.loader} />
 

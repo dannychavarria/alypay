@@ -4,6 +4,12 @@ export const SETSTORAGE = "SETSTORAGE"
 /**Elimina los datos de datos logeado */
 export const DELETESTORAGE = "DELETESTORAGE"
 
+/**Setea funciones de react nativagion */
+export const SETNAVIGATION = "SETNAVIGATION"
+
+/**Elimina los datos de react navigation */
+export const DELETENAVIGATION = "DELETENAVIGATION"
+
 /**Setea la informacion de la billetera seleccionada */
 export const SETWALLET = "SETWALLET"
 
