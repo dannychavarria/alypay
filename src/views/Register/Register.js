@@ -4,16 +4,19 @@ import React, { useEffect, useReducer } from "react"
 import Video from "react-native-video"
 import Modal from "react-native-modal"
 import DatePicker from "react-native-date-picker"
+import Lottie from "lottie-react-native"
 import { View as ViewAnimation } from "react-native-animatable"
 import { Text, TextInput, StyleSheet, Image, View, Dimensions, KeyboardAvoidingView, Platform, TouchableOpacity, Alert, FlatList, ScrollView } from "react-native"
 
 // Import functions and constant
 import { GlobalStyles, reducer, RFValue, Colors, htttp, errorMessage, loader } from "../../utils/constants"
+import moment from "moment"
+import validator from "validator"
 
 // Import Assets
+import sendAnimation from "../../animations/send.json"
 import logo from "../../static/alypay.png"
 import videoclip from "../../static/videos/cover.mp4"
-import moment from "moment"
 
 const initialState = {
     // Datos para el fomulario
@@ -38,6 +41,9 @@ const initialState = {
 
     // Vista seleccionada
     tab: 0,
+
+    // Muestra el mensaje de registrado
+    showSuccess: false,
 }
 
 const { height, width } = Dimensions.get("window")
@@ -100,11 +106,131 @@ const Register = ({ navigation }) => {
     }
 
     /**Funcion que envia los datos al servidor backend */
-    const onSubmit = () => { }
+    const onSubmit = async () => {
+        try {
+            // Loader on mode
+            loader(true)
 
-    /**Funcion que carga la siguiente ventana */
+            const { name: country, phoneCode: code } = state.countries[state.country]
+
+            const dataArgs = {
+                username: state.username,
+                password: state.password,
+                email: state.email,
+                firstname: state.firstname,
+                lastname: state.lastname,
+                birthday: state.birthday,
+                phone: parseInt(state.phoneNumber),
+                city: state.city,
+                postal: state.postalCode,
+                country,
+                code,
+            }
+
+            const { data } = await htttp.post("/register", dataArgs)
+
+            console.log(data)
+
+            if (data.error) {
+                throw data.message
+            }
+
+            if (data.response === "success") {
+                dispatch({ type: "showSuccess", payload: true })
+            } else {
+                throw "Tu registro no se ha podido completar, contacte a soporte"
+            }
+
+        } catch (error) {
+            errorMessage(error.toString())
+        } finally {
+            // Loader off mode
+            loader(false)
+        }
+    }
+
+    /**Funcion que valida la ventana actual carga la siguiente ventana */
     const nextPage = () => {
         const { tab } = state
+
+        try {
+            switch (tab) {
+                // Validamos cuando esta en el primer tab
+                case 0: {
+                    // Validamos nombre
+                    if (state.firstname.trim().length === 0) {
+                        throw "Ingresa un nombre"
+                    }
+
+                    // Validamos el apellido
+                    if (state.lastname.trim().length === 0) {
+                        throw "Ingresa un apellido"
+                    }
+
+                    // Validamos el correo electronico
+                    if (!validator.isEmail(state.email)) {
+                        throw "El correo electronico no es valido"
+                    }
+
+                    // Validamos el numero telefonico
+                    if (state.phoneNumber.length <= 7) {
+                        throw "El numero telefonico no es valido"
+                    }
+
+                    break
+                }
+
+                // Validamos la segunda tab
+                case 1: {
+                    const diferenceTime = moment.duration(moment(state.birthday).diff(moment()))
+
+                    // validamos la edad (debe ser mayor de 12)
+                    if (diferenceTime.get("years") >= -12) {
+                        throw "Tu edad no puede ser procesada"
+                    }
+
+                    // Validamos el codigo postal
+                    if (state.postalCode.length === 0) {
+                        throw "Ingresa tu codigo postal"
+                    }
+
+                    // Validamos el nombre de la ciudad
+                    if (state.city.trim().length === 0) {
+                        throw "Ingresa tu ciudad"
+                    }
+
+                    break
+                }
+
+                // Validamos el tercer tab
+                case 2: {
+                    // Validamos el nombre de usuario
+                    if (state.username.length <= 4) {
+                        throw "Ingresa un nombre de usuario valido"
+                    }
+
+                    // Validamos la Contraseña
+                    if (state.password.length <= 5) {
+                        throw "Contraseña debe llevar como minimo 6 digitos"
+                    }
+
+                    // validamos que las Contraseñas coincidan
+
+                    if (state.password !== state.passwordConfirm) {
+                        throw "Tu contraseñas no coinciden, intenta de nuevo"
+                    }
+
+                    // ejecutamos el servicio
+                    onSubmit()
+
+                    return false
+                }
+            }
+        } catch (error) {
+            errorMessage(error)
+
+            return false
+        }
 
         dispatch({ type: "tab", payload: (tab + 1) })
     }
@@ -247,6 +373,7 @@ const Register = ({ navigation }) => {
                                         placeholderTextColor="#FFF"
                                         placeholder="Codigo postal"
                                         keyboardAppearance="dark"
+                                        keyboardType="number-pad"
                                         value={state.postalCode}
                                         onChangeText={payload => dispatch({ type: "postalCode", payload })} />
 
@@ -345,6 +472,21 @@ const Register = ({ navigation }) => {
                         data={state.countries}
                         renderItem={ItemCountry}
                         keyExtractor={(_, i) => i.toString()} />
+                </View>
+            </Modal>
+
+
+            <Modal animationIn="fadeIn" animationOut="fadeOut" backdropOpacity={0.95} isVisible={state.showSuccess}>
+                <View style={styles.containerModalSuccess}>
+                    <Lottie style={styles.animationSend} source={sendAnimation} loop autoPlay />
+
+                    <Text style={styles.textTitleSuccess}>Tu cuenta esta casi lista</Text>
+                    <Text style={styles.textSecondarySuccess}>Hemos enviado un correo de activacion para verificar que eres tu.</Text>
+
+
+                    <TouchableOpacity style={styles.buttonSuccess} onPress={navigation.pop}>
+                        <Text style={GlobalStyles.textButton}>Listo</Text>
+                    </TouchableOpacity>
                 </View>
             </Modal>
         </KeyboardAvoidingView>
@@ -457,6 +599,35 @@ const styles = StyleSheet.create({
         width: Platform.OS === "ios" ? (width * 0.85) : (width * 0.87),
     },
 
+    containerModalSuccess: {
+        alignItems: "center",
+        flex: 1,
+        justifyContent: "center",
+    },
+
+    animationSend: {
+        height: RFValue(128),
+        width: RFValue(128),
+    },
+
+    textTitleSuccess: {
+        color: Colors.colorYellow,
+        fontSize: RFValue(18),
+        marginVertical: RFValue(10),
+    },
+
+    textSecondarySuccess: {
+        color: "#FFF",
+        fontSize: RFValue(12),
+        textAlign: "center",
+        width: "80%",
+    },
+
+    buttonSuccess: {        
+        ...GlobalStyles.buttonPrimary,
+        marginTop: RFValue(25),
+        width: "80%",
+    },
 })
 
 export default Register
