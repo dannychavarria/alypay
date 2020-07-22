@@ -3,17 +3,20 @@ import React, { useState, useEffect } from "react"
 // Import components
 import Icon from "react-native-vector-icons/Entypo"
 import { BlurView } from "@react-native-community/blur"
-import { StyleSheet, View, TouchableOpacity, Keyboard } from "react-native"
+import { StyleSheet, View, TouchableOpacity, Keyboard, Image, Platform } from "react-native"
 
 // Import functions and constanst
 import { RFValue, Colors, logOutApp } from "../../utils/constants"
 import { useNavigation, StackActions } from "@react-navigation/native"
 
-const sizeIcon = RFValue(32)
+// Import asstes
+import defaultImage from "../../static/profile-default.png"
+
+const iconSize = RFValue(32)
 
 const Navbar = () => {
     const [hidden, setHidden] = useState(false)
-    // const { dispatch } = useNavigation()
+    const { dispatch, canGoBack } = useNavigation()
 
     const toggleMenu = () => {
         logOut()
@@ -21,7 +24,9 @@ const Navbar = () => {
 
     const goToTop = () => {
         try {
-            // dispatch(StackActions.popToTop())
+            if (canGoBack()) {
+                dispatch(StackActions.popToTop())
+            }
         } catch (error) {
             console.log(error)
         }
@@ -30,8 +35,6 @@ const Navbar = () => {
     const logOut = async () => {
         try {
             await logOutApp()
-
-            // dispatch(StackActions.popToTop())
         } catch (error) {
             console.log(error)
         }
@@ -43,7 +46,6 @@ const Navbar = () => {
 
         // Mostramos el menu cuando el teclado se oculte
         const eventHideKeyboard = Keyboard.addListener("keyboardDidHide", () => setHidden(false))
-
 
         return () => {
             // Removemos los eventos cuando el componente se desmonte
@@ -63,17 +65,23 @@ const Navbar = () => {
 
                     <View style={styles.containerButtons}>
                         <TouchableOpacity onPress={goToTop} style={styles.button}>
-                            <Icon name="home" size={sizeIcon} color={Colors.colorYellow} />
+                            <Icon name="home" size={iconSize} color={Colors.colorYellow} />
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.button}>
-                            <Icon name="user" size={sizeIcon} color={Colors.colorYellow} />
+                            {/* <Icon name="user" size={iconSize} color={Colors.colorYellow} /> */}
+                            <Image source={defaultImage} style={styles.imageProfile} />
                         </TouchableOpacity>
 
                         <TouchableOpacity onPress={toggleMenu} style={styles.button}>
-                            <Icon name="menu" size={sizeIcon} color={Colors.colorYellow} />
+                            <Icon name="menu" size={iconSize} color={Colors.colorYellow} />
                         </TouchableOpacity>
                     </View>
+
+                    {
+                        Platform.OS === "ios" &&
+                        <View style={{ height: 20 }} />
+                    }
                 </View>
             </View>
         )
@@ -116,7 +124,14 @@ const styles = StyleSheet.create({
         // backgroundColor: "rgba(255, 255, 255, 0.1)",
         padding: RFValue(5),
         flex: 1,
-    }
+    },
+
+    imageProfile: {
+        borderRadius: iconSize * 2,
+        resizeMode: "contain",
+        width: iconSize,
+        height: iconSize,
+    },
 })
 
 export default Navbar

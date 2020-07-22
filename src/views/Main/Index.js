@@ -1,7 +1,6 @@
-import React from "react"
+import React, { useEffect } from "react"
 
 // Import Components
-import { NavigationContainer } from "@react-navigation/native"
 import { createStackNavigator } from "@react-navigation/stack"
 
 // Import views
@@ -12,9 +11,17 @@ import Wallet from "../Wallet/Wallet"
 import Navbar from "../../components/Navbar/Navbar"
 import Recharge from "../Recharge/Recharge"
 
+// Import store from redux
+import store from "../../store/index"
+import { SETNAVIGATION } from "../../store/actionsTypes"
+
 const Stack = createStackNavigator()
 
-const App = () => {
+const App = ({ navigation }) => {
+    useEffect(() => {
+        store.dispatch({ type: SETNAVIGATION, payload: navigation })
+    }, [])
+
     return (
         <>
             <Stack.Navigator initialRouteName="Logged" headerMode={null}>

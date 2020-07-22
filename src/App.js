@@ -3,7 +3,9 @@ import React, { useReducer, useEffect } from "react"
 // Import Components
 import { NavigationContainer } from "@react-navigation/native"
 import { createStackNavigator } from "@react-navigation/stack"
+import { StatusBar } from "react-native"
 import FlashMessage from "react-native-flash-message"
+import Loader from "./components/Loader/Loader"
 
 // Import functions and utils constanst
 import { getStorage, reducer } from "./utils/constants"
@@ -16,10 +18,7 @@ import { SETSTORAGE, DELETESTORAGE } from "./store/actionsTypes"
 import Login from "./views/Login/Login"
 import Main from "./views/Main/Index"
 import Splash from "./components/Splash/Splash"
-import { StatusBar } from "react-native"
-
-// Import components
-import Loader from "./components/Loader/Loader"
+import Register from "./views/Register/Register"
 
 const Stack = createStackNavigator()
 
@@ -96,6 +95,7 @@ const App = () => {
                         !state.loged &&
                         <>
                             <Stack.Screen name="Main" component={Login} />
+                            <Stack.Screen name="Register" component={Register} />
                         </>
                     }
                 </Stack.Navigator>

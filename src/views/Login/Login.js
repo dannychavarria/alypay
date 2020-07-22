@@ -4,11 +4,9 @@ import React, { useEffect, useReducer } from "react"
 import { getBrand, getDeviceId, getMacAddress, getSystemName } from "react-native-device-info"
 import getPublicIp from "react-native-public-ip"
 
-// Import apollo server
-import { View as ViewAnimation } from "react-native-animatable"
-
 // Import components
 import Video from "react-native-video"
+import { View as ViewAnimation } from "react-native-animatable"
 import { Text, TextInput, StyleSheet, Image, View, Dimensions, KeyboardAvoidingView, Platform, TouchableOpacity } from "react-native"
 
 // Import constants and functions
@@ -124,6 +122,11 @@ const Login = ({ navigation }) => {
         dispatch({ type: "systemName", payload: systemVersion })
     }
 
+    /**Funcion que lleva a la pantalla de registro */
+    const toRegister = () => {
+        navigation.navigate("Register")
+    }
+
     useEffect(() => {
         store.dispatch({ type: SETNAVIGATION, payload: navigation })
 
@@ -173,8 +176,8 @@ const Login = ({ navigation }) => {
 
 
                 <View style={styles.rowButtons}>
-                    <TouchableOpacity style={styles.registerButton}>
-                        <Text style={styles.textRegisterButton}>Registrase</Text>
+                    <TouchableOpacity onPress={toRegister} style={styles.registerButton}>
+                        <Text style={styles.textRegisterButton}>Registro</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity onPress={onSubmit} style={[GlobalStyles.buttonPrimaryLine, { flex: 1 }]}>

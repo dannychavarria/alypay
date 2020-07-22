@@ -11,10 +11,6 @@ import { Text, StyleSheet, TouchableOpacity, View } from "react-native"
 // Import constant
 import { RFValue, CheckCameraPermission, htttp, reducer, errorMessage, getHeaders, loader } from "../../utils/constants"
 
-// Import store from redux
-import store from "../../store/index"
-import { SETNAVIGATION } from "../../store/actionsTypes"
-
 /**
  * Constante que almacena el tipo de vista seleccionada del switch
  * Types: `wallet` or `pay`
@@ -113,8 +109,6 @@ const Main = ({ navigation }) => {
     }
 
     useEffect(() => {
-        store.dispatch({ type: SETNAVIGATION, payload: navigation })
-
         configurateComponent()
 
         CheckCameraPermission()
