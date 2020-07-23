@@ -484,7 +484,7 @@ const Register = ({ navigation }) => {
                     <Text style={styles.textSecondarySuccess}>Hemos enviado un correo de activacion para verificar que eres tu.</Text>
 
 
-                    <TouchableOpacity style={styles.buttonSuccess} onPress={navigation.pop}>
+                    <TouchableOpacity style={styles.buttonSuccess} onPress={_ => navigation.pop()}>
                         <Text style={GlobalStyles.textButton}>Listo</Text>
                     </TouchableOpacity>
                 </View>
