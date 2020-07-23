@@ -81,8 +81,8 @@ export const Colors = {
 const PORT = "3000"
 
 /**Direction for server */
-// export const serverAdress = "http://10.70.12.18:4000"
-export const serverAddress = Platform.OS === "ios" ? `http://localhost:${PORT}` : `http://10.70.12.18:${PORT}`
+export const serverAddress = "https://alypay.uc.r.appspot.com"
+// export const serverAddress = Platform.OS === "ios" ? `http://localhost:${PORT}` : `http://10.70.12.18:${PORT}`
 
 /**
  * Constante que almacena la url del preview image del simbolo alycoin
