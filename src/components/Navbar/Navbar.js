@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 
 // Import components
-import Icon from "react-native-vector-icons/Entypo"
+import Icon from "react-native-vector-icons/Ionicons"
 import { BlurView } from "@react-native-community/blur"
 import { StyleSheet, View, TouchableOpacity, Keyboard, Image, Platform } from "react-native"
 
@@ -65,7 +65,7 @@ const Navbar = () => {
 
                     <View style={styles.containerButtons}>
                         <TouchableOpacity onPress={goToTop} style={styles.button}>
-                            <Icon name="home" size={iconSize} color={Colors.colorYellow} />
+                            <Icon name="ios-home" size={iconSize} color={Colors.colorYellow} />
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.button}>
@@ -74,7 +74,7 @@ const Navbar = () => {
                         </TouchableOpacity>
 
                         <TouchableOpacity onPress={toggleMenu} style={styles.button}>
-                            <Icon name="menu" size={iconSize} color={Colors.colorYellow} />
+                            <Icon name="ios-exit" size={iconSize} color={Colors.colorYellow} />
                         </TouchableOpacity>
                     </View>
 

@@ -233,13 +233,6 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
                 throw "Ingrese un monto"
             }
 
-            // Authentication id
-            await TouchID.authenticate("Para continuar", {
-                title: "Transferencia Alypay",
-                passcodeFallback: true,
-                cancelText: "CANCELAR"
-            })
-
             // Ejecutamos una vibracion minima del dispositivo
             await Vibration.vibrate(100)
 
@@ -251,6 +244,23 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
                 wallet: state.walletAdress,
                 symbol: data.symbol,
             }
+
+            await TouchID.isSupported()
+                .then(async biometricType => {
+                    if (biometricType === "TouchID") {
+                        if (biometryType === "TouchID") {
+                            // Authentication id
+                            await TouchID.authenticate("Para continuar", {
+                                title: "Transferencia Alypay",
+                                passcodeFallback: true,
+                                cancelText: "CANCELAR"
+                            })
+                        }
+                    }
+                })
+                .catch(e => {
+                    console.log(e)
+                })
 
             loader(true)
 
@@ -293,7 +303,6 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
     const onComprobateWallet = async () => {
         try {
             // Loader on mode
-            loader(true)
 
             if (state.errorMessage.length > 0) {
                 throw state.errorMessage
@@ -302,6 +311,8 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
             if (state.walletAdress.length < 90) {
                 throw "Direccion de billetera incorrecta"
             }
+
+            loader(true)
 
             // get data wallet
             const { data: payload } = await htttp.get(`/wallets/verify/${state.walletAdress}`, getHeaders())
