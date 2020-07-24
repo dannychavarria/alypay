@@ -120,7 +120,7 @@ const Register = ({ navigation }) => {
                 firstname: state.firstname,
                 lastname: state.lastname,
                 birthday: state.birthday,
-                phone: parseInt(state.phoneNumber),
+                phone: state.phoneNumber,
                 city: state.city,
                 postal: state.postalCode,
                 country,

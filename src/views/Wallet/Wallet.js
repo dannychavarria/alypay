@@ -248,14 +248,12 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
             await TouchID.isSupported()
                 .then(async biometricType => {
                     if (biometricType === "TouchID") {
-                        if (biometryType === "TouchID") {
-                            // Authentication id
-                            await TouchID.authenticate("Para continuar", {
-                                title: "Transferencia Alypay",
-                                passcodeFallback: true,
-                                cancelText: "CANCELAR"
-                            })
-                        }
+                        // Authentication id
+                        await TouchID.authenticate("Para continuar", {
+                            title: "Transferencia Alypay",
+                            passcodeFallback: true,
+                            cancelText: "CANCELAR"
+                        })
                     }
                 })
                 .catch(e => {
