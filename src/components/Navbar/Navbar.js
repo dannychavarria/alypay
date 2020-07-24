@@ -16,7 +16,7 @@ const iconSize = RFValue(32)
 
 const Navbar = () => {
     const [hidden, setHidden] = useState(false)
-    const { dispatch, canGoBack } = useNavigation()
+    const { dispatch } = useNavigation()
 
     const toggleMenu = () => {
         logOut()
@@ -24,9 +24,7 @@ const Navbar = () => {
 
     const goToTop = () => {
         try {
-            if (canGoBack()) {
-                dispatch(StackActions.popToTop())
-            }
+            dispatch(StackActions.popToTop())
         } catch (error) {
             console.log(error)
         }
