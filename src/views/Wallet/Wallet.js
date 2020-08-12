@@ -22,7 +22,7 @@ import { RNCamera } from "react-native-camera"
 
 
 // Import constanst and others things
-import { Colors, RFValue, GlobalStyles, CopyClipboard, reducer, htttp, errorMessage, getHeaders, loader, successMessage } from "../../utils/constants"
+import { Colors, RFValue, GlobalStyles, CopyClipboard, reducer, http, errorMessage, getHeaders, loader, successMessage } from "../../utils/constants"
 import TouchID from "react-native-touch-id"
 
 // store and actionTypes from redux
@@ -221,7 +221,19 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
             borderRadius: RFValue(5),
             height: RFValue(320),
             overflow: "hidden",
-        }
+        },
+
+        retirementContainer: {
+            alignItems: "center",
+            justifyContent: "center",
+            marginVertical: RFValue(50)
+        },
+
+        retirementText: {
+            fontSize: RFValue(16),
+            color: Colors.colorYellow,
+            textTransform: "uppercase",
+        },
     })
 
     /**Metodo que se ejecuta para enviar los fondos */
@@ -262,7 +274,7 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
 
             loader(true)
 
-            const { data: response } = await htttp.post("/wallets/transaction", vars, getHeaders())
+            const { data: response } = await http.post("/wallets/transaction", vars, getHeaders())
 
             if (response.error) {
                 throw response.message
@@ -313,7 +325,7 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
             loader(true)
 
             // get data wallet
-            const { data: payload } = await htttp.get(`/wallets/verify/${state.walletAdress}`, getHeaders())
+            const { data: payload } = await http.get(`/wallets/verify/${state.walletAdress}`, getHeaders())
 
             // buscamos un error
             if (payload.error) {
@@ -470,6 +482,12 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
                 </TouchableOpacity>
             }
 
+            <View style={styles.retirementContainer}>
+                <TouchableOpacity>
+                    <Text style={styles.retirementText}>Retirar fondos</Text>
+                </TouchableOpacity>
+            </View>
+
             <Modal backdropOpacity={0.9} animationIn="fadeIn" onBackButtonPress={toggleScan} onBackdropPress={toggleScan} animationOut="fadeOut" isVisible={state.showScaner}>
                 <View style={styles.constainerQR}>
                     <QRCodeScanner
@@ -546,7 +564,7 @@ const Wallet = ({ route }) => {
             // Loader on mode
             loader(true)
 
-            const { data } = await htttp.get(`/wallets/details/${params.id}`, getHeaders())
+            const { data } = await http.get(`/wallets/details/${params.id}`, getHeaders())
 
             if (data.error) {
                 throw data.message

@@ -9,7 +9,7 @@ import { View as ViewAnimation } from "react-native-animatable"
 import { Text, TextInput, StyleSheet, Image, View, Dimensions, KeyboardAvoidingView, Platform, TouchableOpacity, Alert, FlatList, ScrollView } from "react-native"
 
 // Import functions and constant
-import { GlobalStyles, reducer, RFValue, Colors, htttp, errorMessage, loader } from "../../utils/constants"
+import { GlobalStyles, reducer, RFValue, Colors, http, errorMessage, loader } from "../../utils/constants"
 import moment from "moment"
 import validator from "validator"
 
@@ -59,7 +59,7 @@ const Register = ({ navigation }) => {
             loader(true)
 
             // Obtenemos el listado de paises
-            const { data } = await htttp.get("/register/countries")
+            const { data } = await http.get("/register/countries")
 
             dispatch({ type: "countries", payload: data })
         } catch (error) {
@@ -127,7 +127,7 @@ const Register = ({ navigation }) => {
                 code,
             }
 
-            const { data } = await htttp.post("/register", dataArgs)
+            const { data } = await http.post("/register", dataArgs)
 
             console.log(data)
 

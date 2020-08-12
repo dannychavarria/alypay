@@ -81,6 +81,7 @@ const styles = StyleSheet.create({
     },
 
     row: {
+        alignItems: "center",
         flexDirection: "row",
         justifyContent: "space-between",
         marginVertical: RFValue(2.5),
@@ -98,7 +99,8 @@ const styles = StyleSheet.create({
 
     superValue: {
         color: Colors.colorYellow,
-        fontSize: RFValue(24),
+        // textTransform: "uppercase",
+        fontSize: RFValue(18),
     },
 
     value: {

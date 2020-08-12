@@ -10,7 +10,7 @@ import { View as ViewAnimation } from "react-native-animatable"
 import { Text, TextInput, StyleSheet, Image, View, Dimensions, KeyboardAvoidingView, Platform, TouchableOpacity } from "react-native"
 
 // Import constants and functions
-import { reducer, Colors, GlobalStyles, RFValue, setStorage, htttp, loader } from "../../utils/constants"
+import { reducer, Colors, GlobalStyles, RFValue, setStorage, http, loader } from "../../utils/constants"
 import { showMessage } from "react-native-flash-message"
 import validator from "validator"
 
@@ -65,7 +65,7 @@ const Login = ({ navigation }) => {
                 system_name: state.systemName
             }
 
-            await htttp.post("/login", variables)
+            await http.post("/login", variables)
                 .then(response => {
                     const { data } = response
 

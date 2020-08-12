@@ -9,7 +9,7 @@ import { RNCamera } from "react-native-camera"
 import { Text, StyleSheet, TouchableOpacity, View } from "react-native"
 
 // Import constant
-import { RFValue, CheckCameraPermission, htttp, reducer, errorMessage, getHeaders, loader } from "../../utils/constants"
+import { RFValue, CheckCameraPermission, http, reducer, errorMessage, getHeaders, loader } from "../../utils/constants"
 
 /**
  * Constante que almacena el tipo de vista seleccionada del switch
@@ -94,7 +94,7 @@ const Main = ({ navigation }) => {
         try {
             loader(true)
 
-            const { data } = await htttp.get("/wallets", getHeaders())
+            const { data } = await http.get("/wallets", getHeaders())
 
             if (data.error) {
                 throw data.message

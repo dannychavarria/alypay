@@ -6,7 +6,7 @@ import { View as ViewAnimatable } from "react-native-animatable"
 import { View, TextInput, TouchableOpacity, Text, StyleSheet, Keyboard } from "react-native"
 
 // Imports constants and functions
-import { reducer, GlobalStyles, Colors, RFValue, CopyClipboard, errorMessage, htttp, getHeaders, loader, successMessage } from "../../utils/constants"
+import { reducer, GlobalStyles, Colors, RFValue, CopyClipboard, errorMessage, http, getHeaders, loader, successMessage } from "../../utils/constants"
 import { useNavigation } from "@react-navigation/native"
 
 // Import store from redux
@@ -61,7 +61,7 @@ const Recharge = () => {
             }
 
             // Ejecutamos la peticion
-            const { data } = await htttp.post("/wallets/recharge", sendData, getHeaders())
+            const { data } = await http.post("/wallets/recharge", sendData, getHeaders())
 
             // Verificamos si hay un error
             if (data.error) {
