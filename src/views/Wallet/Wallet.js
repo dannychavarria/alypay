@@ -22,7 +22,7 @@ import { RNCamera } from "react-native-camera"
 
 
 // Import constanst and others things
-import { Colors, RFValue, GlobalStyles, CopyClipboard, reducer, http, errorMessage, getHeaders, loader, successMessage } from "../../utils/constants"
+import { Colors, RFValue, GlobalStyles, CopyClipboard, reducer, http, errorMessage, getHeaders, loader, successMessage, CheckTouchIDPermission } from "../../utils/constants"
 import TouchID from "react-native-touch-id"
 
 // store and actionTypes from redux
@@ -132,9 +132,11 @@ const initialStateSendComponent = {
     showScaner: false,
 }
 
-/**Componente que renderiza los datos necesarios para ejecutar una transaccion a otra wallet */
+/** Componente que renderiza los datos necesarios para ejecutar una transaccion a otra wallet */
 const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
     const [state, dispatch] = useReducer(reducer, initialStateSendComponent)
+
+    const { navigate } = useNavigation()
 
     const styles = StyleSheet.create({
         container: {
@@ -236,7 +238,7 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
         },
     })
 
-    /**Metodo que se ejecuta para enviar los fondos */
+    /** Metodo que se ejecuta para enviar los fondos */
     const submit = async () => {
         try {
             Keyboard.dismiss()
@@ -257,20 +259,18 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
                 symbol: data.symbol,
             }
 
-            await TouchID.isSupported()
-                .then(async biometricType => {
-                    if (biometricType === "TouchID") {
-                        // Authentication id
-                        await TouchID.authenticate("Para continuar", {
-                            title: "Transferencia Alypay",
-                            passcodeFallback: true,
-                            cancelText: "CANCELAR"
-                        })
-                    }
+            // verificamos si el dispositvo tiene touch id
+            await CheckTouchIDPermission()
+
+            const { permissions } = store.getState()
+
+            if (permissions.touchID === true) {
+                await TouchID.authenticate("Para continuar", {
+                    title: "Transferencia Alypay",
+                    passcodeFallback: true,
+                    cancelText: "CANCELAR"
                 })
-                .catch(e => {
-                    console.log(e)
-                })
+            }
 
             loader(true)
 
@@ -309,7 +309,7 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
         }
     }
 
-    /**Metodo paa consultar los datos de la wallet */
+    /** Metodo paa consultar los datos de la wallet */
     const onComprobateWallet = async () => {
         try {
             // Loader on mode
@@ -361,7 +361,7 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
         }
     }
 
-    /**Metodo que se ejeucta cuando el suuario escibe el monto en fracciones */
+    /** Metodo que se ejeucta cuando el suuario escibe el monto en fracciones */
     const onChangeFractions = (payload = "") => {
         dispatch({ type: "amountFraction", payload })
 
@@ -376,7 +376,7 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
         dispatch({ type: "amountUSD", payload: isNaN(newAmount) ? "" : newAmount.toString() })
     }
 
-    /**Metodo que se ejecuta cuando el usuario escribe el monot */
+    /** Metodo que se ejecuta cuando el usuario escribe el monot */
     const onChangeAmount = (payload = "") => {
         dispatch({ type: "amountUSD", payload })
 
@@ -391,25 +391,31 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
         dispatch({ type: "amountFraction", payload: isNaN(newFractions) ? "" : newFractions.toString() })
     }
 
+    /** Metodo que envia a la pantalla de retiros  */
+    const onRetirement = () => {
+        navigate("Retirement", data)
+    }
+
+    /** Metodo que se ejecuta cuando el lector QR lee el codigo */
     const onReadCodeQR = ({ data }) => {
         toggleScan()
 
         dispatch({ type: "walletAdress", payload: data })
     }
 
+    /** Metodo que se ejcuta para activar/desactivar el scaner QR */
     const toggleScan = () => dispatch({ type: "showScaner", payload: !state.showScaner })
 
     return (
         <ViewAnimate style={styles.container} animation="fadeIn">
             <View style={styles.row}>
                 <View style={styles.col}>
-                    <Text style={styles.legend}>Dirección wallet</Text>
+                    <Text style={styles.legend}>Dirección de billetera</Text>
 
                     <View style={styles.rowInput}>
                         <TextInput
                             value={state.walletAdress}
                             onChangeText={payload => dispatch({ type: "walletAdress", payload })}
-                            // onBlur={onComprobateWallet}
                             style={[GlobalStyles.textInput, { flex: 1 }]} />
 
                         <TouchableOpacity onPress={toggleScan} style={styles.buttonScan}>
@@ -483,7 +489,7 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
             }
 
             <View style={styles.retirementContainer}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={onRetirement}>
                     <Text style={styles.retirementText}>Retirar fondos</Text>
                 </TouchableOpacity>
             </View>
@@ -491,7 +497,6 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
             <Modal backdropOpacity={0.9} animationIn="fadeIn" onBackButtonPress={toggleScan} onBackdropPress={toggleScan} animationOut="fadeOut" isVisible={state.showScaner}>
                 <View style={styles.constainerQR}>
                     <QRCodeScanner
-                        sty
                         onRead={onReadCodeQR}
                         flashMode={RNCamera.Constants.FlashMode.auto}
                     />
@@ -599,7 +604,7 @@ const Wallet = ({ route }) => {
     return (
         <Container onRefreshEnd={configurateComponent}>
 
-            <View style={styles.conatinerWallet}>
+            <View style={styles.containerWallet}>
                 <ItemWallet data={state.information === null ? params : state.information} disabled />
             </View>
 
@@ -630,7 +635,7 @@ const Wallet = ({ route }) => {
 }
 
 const styles = StyleSheet.create({
-    conatinerWallet: {
+    containerWallet: {
         margin: RFValue(10),
     },
 })

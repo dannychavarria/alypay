@@ -2,6 +2,7 @@ import Asyncstorage from "@react-native-community/async-storage"
 import { Platform, StatusBar, Dimensions, StyleSheet, Alert } from "react-native"
 
 // Import Functions
+import TouchID from "react-native-touch-id"
 import Clipboard from "@react-native-community/clipboard"
 import Toast from "react-native-simple-toast"
 import axios from "axios"
@@ -146,7 +147,7 @@ export const GlobalStyles = StyleSheet.create({
 
     textButton: {
         color: Colors.colorMain,
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
         fontSize: RFValue(18),
         textTransform: "uppercase",
     },
@@ -183,6 +184,8 @@ export const GlobalStyles = StyleSheet.create({
 /**Metodo que verifica el permiso para aceeder a `Camera` */
 export const CheckCameraPermission = async () => {
     try {
+        const { permissions } = store.getState()
+
         // Check permission of camera
         const checkPermission = await check(Platform.OS === "android" ? PERMISSIONS.ANDROID.CAMERA : PERMISSIONS.IOS.CAMERA)
 
@@ -220,14 +223,13 @@ export const CheckCameraPermission = async () => {
         if (checkPermission === RESULTS.GRANTED) {
             // El usuario acepto el permiso de la camara
             const payload = {
+                ...permissions,
                 camera: true
             }
 
             store.dispatch({ type: SETPERMISSIONS, payload })
         }
     } catch (description) {
-
-        console.log(description)
 
         showMessage({
             backgroundColor: Colors.colorRed,
@@ -238,6 +240,39 @@ export const CheckCameraPermission = async () => {
             autoHide: false,
         })
     }
+}
+
+/** Funcion que verifica que si el dispositivo tiene touchID */
+export const CheckTouchIDPermission = async () => {
+    try {
+        const { permissions } = store.getState()
+
+        // Verificamos si hay permisos creados en el store de redux
+        if (permissions.touchID === undefined) {
+            await TouchID.isSupported()
+                .then(async biometricType => {
+                    let touchID = null
+
+                    if (biometricType === "TouchID") {
+                        touchID = true
+                    }
+
+                    const payload = {
+                        ...permissions,
+                        touchID
+                    }
+
+                    store.dispatch({ type: SETPERMISSIONS, payload })
+                })
+                .catch(e => {
+                    console.log(e)
+                })
+        }
+
+    } catch (error) {
+        Toast.show(error.toString(), Toast.LONG)
+    }
+
 }
 
 /**
@@ -309,4 +344,4 @@ export const getHeaders = () => {
  * @param {Number} number
  * 
  * `return string` */
-export const WithDecimals = (number = 0) => number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+export const WithDecimals = (number = 0, decimals = 2) => number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")

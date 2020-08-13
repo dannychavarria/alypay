@@ -9,6 +9,7 @@ import Loader from "./components/Loader/Loader"
 
 // Import functions and utils constanst
 import { getStorage, reducer } from "./utils/constants"
+import ROUTES from "./utils/routes.config"
 
 // Import redux types and store
 import store from "./store/index"
@@ -57,7 +58,7 @@ const App = () => {
     }
 
     useEffect(() => {
-        console.disableYellowBox = true
+        // console.disableYellowBox = true
 
         // configure component
         ConfigurateComponent()
@@ -85,17 +86,17 @@ const App = () => {
             <StatusBar hidden={true} />
 
             <NavigationContainer>
-                <Stack.Navigator initialRouteName="Main" headerMode={null}>
+                <Stack.Navigator initialRouteName={ROUTES.MAIN} headerMode={null}>
                     {
                         state.loged &&
-                        <Stack.Screen name="Main" component={Main} />
+                        <Stack.Screen name={ROUTES.MAIN} component={Main} />
                     }
 
                     {
                         !state.loged &&
                         <>
-                            <Stack.Screen name="Main" component={Login} />
-                            <Stack.Screen name="Register" component={Register} />
+                            <Stack.Screen name={ROUTES.MAIN} component={Login} />
+                            <Stack.Screen name={ROUTES.REGISTER} component={Register} />
                         </>
                     }
                 </Stack.Navigator>

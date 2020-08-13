@@ -10,9 +10,11 @@ import { View as ViewAnimation } from "react-native-animatable"
 import { Text, TextInput, StyleSheet, Image, View, Dimensions, KeyboardAvoidingView, Platform, TouchableOpacity } from "react-native"
 
 // Import constants and functions
+import ROUTES from "../../utils/routes.config"
+import validator from "validator"
+import { useNavigation } from "@react-navigation/native"
 import { reducer, Colors, GlobalStyles, RFValue, setStorage, http, loader } from "../../utils/constants"
 import { showMessage } from "react-native-flash-message"
-import validator from "validator"
 
 // Import reduz store and types
 import store from "../../store/index"
@@ -37,6 +39,8 @@ const { height } = Dimensions.get("window")
 
 const Login = ({ navigation }) => {
     const [state, dispatch] = useReducer(reducer, initialState)
+
+    const { navigate } = useNavigation()
 
     /***
      * Metodo que se ejecuta cuando el usuario ejecuta login
@@ -124,7 +128,7 @@ const Login = ({ navigation }) => {
 
     /**Funcion que lleva a la pantalla de registro */
     const toRegister = () => {
-        navigation.navigate("Register")
+        navigate(ROUTES.REGISTER)
     }
 
     useEffect(() => {

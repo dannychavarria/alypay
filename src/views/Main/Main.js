@@ -116,7 +116,7 @@ const Main = ({ navigation }) => {
 
     return (
         <Container onRefreshEnd={configurateComponent} showLogo>
-            <Switch onSwitch={setStateView} items={switchItems} />
+            {/* <Switch onSwitch={setStateView} items={switchItems} /> */}
 
             <View style={styles.containerWallets}>
                 {

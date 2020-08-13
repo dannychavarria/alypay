@@ -1,6 +1,7 @@
 import React from "react"
 
-// import React navigation functions
+// import React navigation functions and constants
+import ROUTES from "../../utils/routes.config"
 import { useNavigation } from "@react-navigation/native"
 
 // Import Components
@@ -23,7 +24,7 @@ const ItemWallet = ({ data = {}, disabled = false }) => {
  * @param {Object} data 
  */
     const onNavigate = () => {
-        navigate("Wallet", data)        
+        navigate(ROUTES.WALLET, data)        
     }
 
     return (
