@@ -3,10 +3,10 @@ import React, { useState, useEffect } from "react"
 // Import components
 import Icon from "react-native-vector-icons/Ionicons"
 import { BlurView } from "@react-native-community/blur"
-import { StyleSheet, View, TouchableOpacity, Keyboard, Image, Platform } from "react-native"
+import { StyleSheet, View, TouchableOpacity, Keyboard, Image, Platform, Alert } from "react-native"
 
 // Import functions and constanst
-import { RFValue, Colors, logOutApp } from "../../utils/constants"
+import { RFValue, Colors, logOutApp, OpenSupport } from "../../utils/constants"
 import { useNavigation, StackActions } from "@react-navigation/native"
 
 // Import asstes
@@ -19,7 +19,16 @@ const Navbar = () => {
     const { dispatch } = useNavigation()
 
     const toggleMenu = () => {
-        logOut()
+        Alert.alert("Cerrar sesion", "Estas apunto de cerrar sesion en AlyPay", [
+            {
+                text: "Cancelar",
+                onPress: () => {},
+            },
+            {
+                text: "Cerrar Sesion",
+                onPress: logOut
+            }
+        ])
     }
 
     const goToTop = () => {
@@ -69,6 +78,10 @@ const Navbar = () => {
                         <TouchableOpacity style={styles.button}>
                             {/* <Icon name="user" size={iconSize} color={Colors.colorYellow} /> */}
                             <Image source={defaultImage} style={styles.imageProfile} />
+                        </TouchableOpacity>
+
+                        <TouchableOpacity onPress={OpenSupport} style={styles.button}>
+                            <Icon name="logo-whatsapp" size={iconSize} color={Colors.colorYellow} />
                         </TouchableOpacity>
 
                         <TouchableOpacity onPress={toggleMenu} style={styles.button}>

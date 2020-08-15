@@ -26,6 +26,7 @@ import Register from "./views/Register/Register"
 
 // import assets and animation
 import notConectionAnimation from "./animations/no-internet-connection.json"
+import ButtonSupport from "./components/ButtonSupport/ButtonSupport.component"
 
 const Stack = createStackNavigator()
 
@@ -123,6 +124,12 @@ const App = () => {
 
                 <Text style={styles.textInternet}>no estas conectado a internet</Text>
             </Modal>
+
+
+            {
+                !state.loged &&
+                <ButtonSupport />
+            }
 
             <Loader isVisible={state.loader} />
 

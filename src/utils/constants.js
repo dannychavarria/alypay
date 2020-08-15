@@ -1,5 +1,5 @@
 import Asyncstorage from "@react-native-community/async-storage"
-import { Platform, StatusBar, Dimensions, StyleSheet, Alert } from "react-native"
+import { Platform, StatusBar, Dimensions, StyleSheet, Alert, Linking } from "react-native"
 
 // Import Functions
 import TouchID from "react-native-touch-id"
@@ -345,3 +345,6 @@ export const getHeaders = () => {
  * 
  * `return string` */
 export const WithDecimals = (number = 0, decimals = 2) => number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
+/**Abre la app de whatsapp para soporte */
+export const OpenSupport = () => Linking.openURL('whatsapp://send?phone=+50660727720')
