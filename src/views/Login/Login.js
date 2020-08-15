@@ -13,7 +13,7 @@ import { Text, TextInput, StyleSheet, Image, View, Dimensions, KeyboardAvoidingV
 import ROUTES from "../../utils/routes.config"
 import validator from "validator"
 import { useNavigation } from "@react-navigation/native"
-import { reducer, Colors, GlobalStyles, RFValue, setStorage, http, loader } from "../../utils/constants"
+import { reducer, Colors, GlobalStyles, RFValue, setStorage, http, loader, errorMessage } from "../../utils/constants"
 import { showMessage } from "react-native-flash-message"
 
 // Import reduz store and types
@@ -105,25 +105,29 @@ const Login = ({ navigation }) => {
      * Funcion que obtiene
      */
     const getDeviceInfo = async () => {
-
-        // Obtenemos la ip publica del dispositivo
-        getPublicIp().then((payload) => dispatch({ type: "ipAddress", payload }))
-
-        /**Marca del dispositivo */
-        const device = await getBrand()
-
-        /**Modelo del dispositivo */
-        const deviceId = await getDeviceId()
-
-        // Ingresamos al store la informacion del dispositivo
-        dispatch({ type: "device", payload: `${device} - ${deviceId}` })
-
-        // Obtenemos la direccion mac del dispositvo
-        await getMacAddress().then(payload => dispatch({ type: "macAddress", payload }))
-
-        const systemVersion = await getSystemName()
-
-        dispatch({ type: "systemName", payload: systemVersion })
+        try {
+            // Obtenemos la ip publica del dispositivo
+            getPublicIp().then((payload) => dispatch({ type: "ipAddress", payload }))
+    
+            /**Marca del dispositivo */
+            const device = await getBrand()
+    
+            /**Modelo del dispositivo */
+            const deviceId = await getDeviceId()
+    
+            // Ingresamos al store la informacion del dispositivo
+            dispatch({ type: "device", payload: `${device} - ${deviceId}` })
+    
+            // Obtenemos la direccion mac del dispositvo
+            await getMacAddress().then(payload => dispatch({ type: "macAddress", payload }))
+    
+            const systemVersion = await getSystemName()
+    
+            dispatch({ type: "systemName", payload: systemVersion })
+            
+        } catch (error) {
+            errorMessage(error.toString())
+        }
     }
 
     /**Funcion que lleva a la pantalla de registro */
@@ -181,7 +185,7 @@ const Login = ({ navigation }) => {
 
                 <View style={styles.rowButtons}>
                     <TouchableOpacity onPress={toRegister} style={styles.registerButton}>
-                        <Text style={styles.textRegisterButton}>Registro</Text>
+                        <Text style={styles.textRegisterButton}>registrarme</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity onPress={onSubmit} style={[GlobalStyles.buttonPrimaryLine, { flex: 1 }]}>
@@ -252,6 +256,7 @@ const styles = StyleSheet.create({
     },
 
     textRegisterButton: {
+        textTransform: "uppercase",
         fontSize: RFValue(14),
         color: Colors.colorYellow,
     },

@@ -83,7 +83,7 @@ const PORT = "3000"
 
 /**Direction for server */
 // export const serverAddress = "https://alypay.uc.r.appspot.com"
-export const serverAddress = Platform.OS === "ios" ? `http://localhost:${PORT}` : `http://10.70.12.18:${PORT}`
+export const serverAddress = Platform.OS === "ios" ? `http://localhost:${PORT}` : `http://192.168.2.120:${PORT}`
 
 /**
  * Constante que almacena la url del preview image del simbolo alycoin
@@ -102,9 +102,9 @@ export const http = axios.create({
             ])
 
             return true
+        } else {
+            return status >= 200 && status < 300
         }
-
-        return status >= 200 && status < 300;
     }
 })
 
@@ -298,7 +298,7 @@ export const reducer = (state, action) => {
  */
 export const errorMessage = (description = "") => {
     showMessage({
-        message: "ha ocurrido un error",
+        message: "Se ha producido un error",
         description,
         color: "#FFF",
         backgroundColor: Colors.colorRed,

@@ -4,9 +4,10 @@ import React, { useEffect, useReducer } from "react"
 import Video from "react-native-video"
 import Modal from "react-native-modal"
 import DatePicker from "react-native-date-picker"
+import CheckBox from "react-native-check-box"
 import Lottie from "lottie-react-native"
 import { View as ViewAnimation } from "react-native-animatable"
-import { Text, TextInput, StyleSheet, Image, View, Dimensions, KeyboardAvoidingView, Platform, TouchableOpacity, Alert, FlatList, ScrollView } from "react-native"
+import { Text, TextInput, StyleSheet, Image, View, Dimensions, KeyboardAvoidingView, Platform, TouchableOpacity, Alert, FlatList, ScrollView, Keyboard } from "react-native"
 
 // Import functions and constant
 import { GlobalStyles, reducer, RFValue, Colors, http, errorMessage, loader } from "../../utils/constants"
@@ -44,6 +45,13 @@ const initialState = {
 
     // Muestra el mensaje de registrado
     showSuccess: false,
+
+    // estdo que indica si el cliente ha leido los terminos y condiciones
+    readTerms: false,
+
+    // estados para terminos y condiciones
+    showButtonTerms: true,
+    showModalTerms: false,
 }
 
 const { height, width } = Dimensions.get("window")
@@ -159,22 +167,22 @@ const Register = ({ navigation }) => {
                 case 0: {
                     // Validamos nombre
                     if (state.firstname.trim().length === 0) {
-                        throw "Ingresa un nombre"
+                        throw String("Ingresa un nombre")
                     }
 
                     // Validamos el apellido
                     if (state.lastname.trim().length === 0) {
-                        throw "Ingresa un apellido"
+                        throw String("Ingresa un apellido")
                     }
 
                     // Validamos el correo electronico
                     if (!validator.isEmail(state.email)) {
-                        throw "El correo electronico no es valido"
+                        throw String("El correo electronico no es valido")
                     }
 
                     // Validamos el numero telefonico
                     if (state.phoneNumber.length <= 7) {
-                        throw "El numero telefonico no es valido"
+                        throw String("El numero telefonico no es valido")
                     }
 
                     break
@@ -186,17 +194,17 @@ const Register = ({ navigation }) => {
 
                     // validamos la edad (debe ser mayor de 12)
                     if (diferenceTime.get("years") >= -12) {
-                        throw "Tu edad no puede ser procesada"
+                        throw String("Tu edad no puede ser procesada")
                     }
 
                     // Validamos el codigo postal
                     if (state.postalCode.length === 0) {
-                        throw "Ingresa tu codigo postal"
+                        throw String("Ingresa tu codigo postal")
                     }
 
                     // Validamos el nombre de la ciudad
                     if (state.city.trim().length === 0) {
-                        throw "Ingresa tu ciudad"
+                        throw String("Ingresa tu ciudad")
                     }
 
                     break
@@ -206,18 +214,22 @@ const Register = ({ navigation }) => {
                 case 2: {
                     // Validamos el nombre de usuario
                     if (state.username.length <= 4) {
-                        throw "Ingresa un nombre de usuario valido"
+                        throw String("Ingresa un nombre de usuario valido")
                     }
 
                     // Validamos la Contraseña
                     if (state.password.length <= 5) {
-                        throw "Contraseña debe llevar como minimo 6 digitos"
+                        throw String("Contraseña debe llevar como minimo 6 digitos")
                     }
 
                     // validamos que las Contraseñas coincidan
 
                     if (state.password !== state.passwordConfirm) {
-                        throw "Tu contraseñas no coinciden, intenta de nuevo"
+                        throw String("Tu contraseñas no coinciden, intenta de nuevo")
+                    }
+
+                    if (!state.readTerms) {
+                        throw String("Acepta los terminos y condiciones")
                     }
 
                     // ejecutamos el servicio
@@ -252,8 +264,23 @@ const Register = ({ navigation }) => {
         dispatch({ type: "birthday", payload })
     }
 
+    /** Funcion que modifica el estado que muestra la ventana modal de terminos y condiciones */
+    const toggleModalTerms = () => dispatch({ type: "showModalTerms", payload: !state.showModalTerms })
+
     useEffect(() => {
         configurateComponent()
+
+        // Ocultamos el menu cuando el teclado se active
+        const eventShowKeyboard = Keyboard.addListener("keyboardDidShow", () => dispatch({ type: "showButtonTerms", payload: false }))
+
+        // Mostramos el menu cuando el teclado se oculte
+        const eventHideKeyboard = Keyboard.addListener("keyboardDidHide", () => dispatch({ type: "showButtonTerms", payload: true }))
+
+        return () => {
+            // Removemos los eventos cuando el componente se desmonte
+            eventShowKeyboard.remove()
+            eventHideKeyboard.remove()
+        }
     }, [])
 
 
@@ -330,7 +357,7 @@ const Register = ({ navigation }) => {
                                                 style={[GlobalStyles.textInput, { flex: 1 }]}
                                                 value={state.phoneNumber}
                                                 autoCorrect={false}
-                                                keyboardType="number-pad"
+                                                keyboardType="numeric"
                                                 keyboardAppearance="dark"
                                                 onChangeText={payload => dispatch({ type: "phoneNumber", payload })} />
                                         </View>
@@ -373,7 +400,7 @@ const Register = ({ navigation }) => {
                                         placeholderTextColor="#FFF"
                                         placeholder="Codigo postal"
                                         keyboardAppearance="dark"
-                                        keyboardType="number-pad"
+                                        keyboardType="numeric"
                                         value={state.postalCode}
                                         onChangeText={payload => dispatch({ type: "postalCode", payload })} />
 
@@ -436,6 +463,17 @@ const Register = ({ navigation }) => {
                                     onChangeText={payload => dispatch({ type: "passwordConfirm", payload })} />
                             </View>
 
+
+                            <View style={styles.rowTerms}>
+                                <Text style={styles.textAccepTerms}>Acepto terminos y condiciones</Text>
+
+                                <CheckBox
+                                    checkBoxColor={Colors.colorYellow}
+                                    onClick={_ => dispatch({ type: "readTerms", payload: !state.readTerms })}
+                                    isChecked={state.readTerms}
+                                />
+                            </View>
+
                             <View style={styles.rowButtons}>
                                 <TouchableOpacity onPress={previousPage} style={styles.registerButton}>
                                     <Text style={styles.textRegisterButton}>Atras</Text>
@@ -448,10 +486,84 @@ const Register = ({ navigation }) => {
                         </ViewAnimation>
                     }
 
-
                 </ViewAnimation>
 
             </ScrollView>
+
+
+            {
+                state.showButtonTerms &&
+                <TouchableOpacity style={styles.buttonTerms} onPress={toggleModalTerms}>
+                    <Text style={styles.textTerms}>Terminos y condiciones</Text>
+                </TouchableOpacity>
+            }
+
+
+            <Modal onBackButtonPress={toggleModalTerms} onBackdropPress={toggleModalTerms} backdropOpacity={0.95} isVisible={state.showModalTerms}>
+
+                <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}>
+                    <Text style={styles.textPartTerms}>
+                        1. AlyPay es el sistema de pagos con criptomonedas de la compañía AlySystem donde los usuarios podrán enviar, recibir, transferir y realizar pagos a comercios afiliados a la App.
+                    </Text>
+
+                    <Text style={styles.textPartTerms}>
+                        2. Toda transacción realizada a través de la App paga un 0.2% debitado en la criptomoneda utilizada. Si posee AlyCoin en AlyPay esta comisión se reducirá al 0.075% debitado de su saldo de AlyCoin y no en la criptomoneda que paga. Si no posee AlyCoin o el saldo no es suficiente para cubrir el 0.075% se le debitará el 0.2% en la criptomoneda utilizada.
+                    </Text>
+
+                    <Text style={styles.textPartTerms}>
+                        3. No se cobra comisión por subir fondos a AlyPay en ninguna criptomoneda.
+                    </Text>
+
+                    <Text style={styles.textPartTerms}>
+                        4. Los fondos transferidos en criptomonedas mantendrán el precio del coinmarketcap en tiempo real. Puedes visitar el sitio web www.coinmarketcap.com
+                    </Text>
+
+                    <Text style={styles.textPartTerms}>
+                        5. Los fondos transferidos en dólar americano a través de Airtm u otras plataformas se cambiarán a la criptomoneda Tether (USDT) en la App de AlyPay.
+                    </Text>
+
+                    <Text style={styles.textPartTerms}>
+                        6. Si el usuario utiliza AlyExchange y/o Money Changer en la App de AlyPay y posee AlyCoin se le cobrará una comisión por el Exchange del 2.5% debitado en AlyCoin, si no posee AlyCoin se cobrará la comisión establecida en AlyExchange y Money Changer.
+                    </Text>
+
+                    <Text style={styles.textPartTerms}>
+                        7. Los usuarios podrán adquirir desde AlyPay un plan de inversión o realizar su upgrade en Speed Tradings Bank, con Bitcoin o Ethereum según sea su plan.
+                    </Text>
+
+                    <Text style={styles.textPartTerms}>
+                        8. Se cobrará una comisión de retiro del 2.5% en la criptomoneda transferida más el fee de minero. Si el usuario posee AlyCoin la comisión de retiro será del 1.5% en AlyCoin mas el fee de minero en la criptomoneda retirada.
+                    </Text>
+
+                    <Text style={styles.textPartTerms}>
+                        9. Todos los usuarios de AlyPay deberán verificar su cuenta, enviando la documentación solicitada, para poder solicitar sus retiros.
+                    </Text>
+
+                    <Text style={styles.textPartTerms}>
+                        10. Los usuarios menores de 18 años deberán enviar su carnet o cedula de menor y la autorización de uno de sus padres o tutor.
+                    </Text>
+
+                    <Text style={styles.textPartTerms}>
+                        11. Los usuarios que retiren sus dólares transferidos a través de Airtm y soliciten su retiro se les enviará en la criptomoneda Tether (USDT).
+                    </Text>
+
+                    <Text style={styles.textPartTerms}>
+                        12. AlyPay no se hace responsable del mal uso de la App y de sus fondos, en caso de extravíos o robo de su dispositivo móvil, o envíos a wallet incorrectas por error del usuario, o mal uso de sus contraseñas y claves de la App.
+                    </Text>
+
+                    <Text style={styles.textPartTerms}>
+                        13. En caso de un extravío o robo de su dispositivo móvil puede escribir a soporte support.alypay@alysystem.com solicitando el bloqueo de tu cuenta. Puede visitar nuestra página www.alypay.com
+                    </Text>
+
+                    <Text style={styles.textPartTerms}>
+                        14. Estos términos y condiciones podrán ser modificados cuando se requiera, notificando a los usuarios por el email registrado en la App.
+                    </Text>
+
+                    <TouchableOpacity onPress={toggleModalTerms} style={styles.buttonCloseModal}>
+                        <Text style={{ color: "#FFF" }}>Cerrar</Text>
+                    </TouchableOpacity>
+
+                </ScrollView>
+            </Modal>
 
 
             <Modal animationIn="fadeIn" backdropOpacity={0.9} animationOut="fadeOut" isVisible={state.showCountries}>
@@ -529,6 +641,22 @@ const styles = StyleSheet.create({
     },
 
     row: {
+        marginVertical: RFValue(10),
+        paddingHorizontal: RFValue(25),
+        width: '100%',
+    },
+
+    textAccepTerms: {
+        color: Colors.colorYellow,
+        textTransform: "uppercase",
+        fontSize: RFValue(12),
+        marginRight: 10,
+    },
+
+    rowTerms: {
+        alignItems: "center",
+        flexDirection: "row",
+        justifyContent: "flex-end",
         marginVertical: RFValue(10),
         paddingHorizontal: RFValue(25),
         width: '100%',
@@ -623,11 +751,39 @@ const styles = StyleSheet.create({
         width: "80%",
     },
 
-    buttonSuccess: {        
+    buttonSuccess: {
         ...GlobalStyles.buttonPrimary,
         marginTop: RFValue(25),
         width: "80%",
     },
+
+    buttonTerms: {
+        alignSelf: "center",
+        padding: RFValue(10),
+        marginBottom: 25,
+    },
+
+    textTerms: {
+        textTransform: "uppercase",
+        color: Colors.colorYellow,
+        textDecorationColor: Colors.colorYellow,
+        textDecorationLine: "underline",
+        fontSize: RFValue(12)
+    },
+
+    textPartTerms: {
+        fontSize: RFValue(8),
+        marginVertical: RFValue(5),
+        color: "#FFF",
+    },
+
+    buttonCloseModal: {
+        alignItems: "center",
+        backgroundColor: "rgba(255, 255, 255, 0.2)",
+        padding: 10,
+        borderRadius: 5,
+        marginTop: 10,
+    }
 })
 
 export default Register

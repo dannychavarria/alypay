@@ -281,6 +281,8 @@ PODS:
     - React
   - react-native-date-picker (3.0.2):
     - React
+  - react-native-netinfo (5.9.6):
+    - React
   - react-native-safe-area-context (3.0.3):
     - React
   - react-native-simple-toast (1.1.2):
@@ -432,6 +434,7 @@ DEPENDENCIES:
   - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - react-native-camera (from `../node_modules/react-native-camera`)
   - react-native-date-picker (from `../node_modules/react-native-date-picker`)
+  - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-simple-toast (from `../node_modules/react-native-simple-toast`)
   - react-native-video (from `../node_modules/react-native-video`)
@@ -545,6 +548,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-camera"
   react-native-date-picker:
     :path: "../node_modules/react-native-date-picker"
+  react-native-netinfo:
+    :path: "../node_modules/@react-native-community/netinfo"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-simple-toast:
@@ -641,6 +646,7 @@ SPEC CHECKSUMS:
   react-native-blur: cad4d93b364f91e7b7931b3fa935455487e5c33c
   react-native-camera: f57b28a587a81c50085b77f3fdc71818089ab45d
   react-native-date-picker: aec68ba9b276beddd2cf941bd7cebf459ac9d301
+  react-native-netinfo: d2c312fa4b151214e1d5c8456ddb5f28ff24a576
   react-native-safe-area-context: 7371751a75e1ca7211f17ea0730ffcb264e2f85c
   react-native-simple-toast: a3a8e9033a549c11741debe875e54698cc4c0dd7
   react-native-video: aa527b0acb37f94c4491e70df0274cb26979405d

@@ -433,7 +433,8 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
                     <TextInput
                         value={state.amountFraction}
                         onChangeText={onChangeFractions}
-                        keyboardType="number-pad"
+                        keyboardType="numeric"
+                        returnKeyType="done"
                         style={GlobalStyles.textInput} />
                 </View>
 
@@ -443,7 +444,8 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
                     <TextInput
                         value={state.amountUSD}
                         onChangeText={onChangeAmount}
-                        keyboardType="number-pad"
+                        keyboardType="numeric"
+                        returnKeyType="done"
                         style={GlobalStyles.textInput} />
                 </View>
             </View>

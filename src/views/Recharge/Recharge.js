@@ -57,7 +57,8 @@ const Recharge = () => {
                 amount,
                 name_coin: information.name,
                 id_wallet: information.id,
-                hash: state.hash
+                hash: state.hash,
+                amount_usd
             }
 
             // Ejecutamos la peticion
@@ -122,7 +123,7 @@ const Recharge = () => {
                             value={state.amount}
                             onChangeText={payload => dispatch({ type: "amount", payload })}
                             keyboardAppearance="dark"
-                            keyboardType="number-pad"
+                            keyboardType="numeric"
                             style={GlobalStyles.textInput} />
                     </View>
 

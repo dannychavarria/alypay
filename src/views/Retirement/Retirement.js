@@ -12,7 +12,7 @@ import QRCodeScanner from "react-native-qrcode-scanner"
 // import constants and functions
 import TouchID from "react-native-touch-id"
 import { RNCamera } from "react-native-camera"
-import { reducer, RFValue, Colors, GlobalStyles, WithDecimals, CheckTouchIDPermission } from "../../utils/constants"
+import { reducer, RFValue, Colors, GlobalStyles, WithDecimals, CheckTouchIDPermission, errorMessage, http, getHeaders, loader, successMessage } from "../../utils/constants"
 
 // Import Assets
 import scanQRAnimation from "../../animations/scan-qr.json"
@@ -58,17 +58,70 @@ const Retirement = ({ route }) => {
 
     /** Metodo que se ejcuta cuando el usuario  */
     const onSubmit = async () => {
-        await CheckTouchIDPermission()
+        try {
+            loader(true)
 
 
-        const { permissions } = store.getState()
+            // validamos si hay alguna wallet ingresada
+            if (state.walletAdress.length === 0) {
+                throw String("Ingresa una billetera")
+            }
 
-        if (permissions.touchID === true) {
-            await TouchID.authenticate("Para continuar", {
-                title: "Retiro Alypay",
-                passcodeFallback: true,
-                cancelText: "CANCELAR"
-            })
+            const amount = parseFloat(state.amountFraction)
+
+            // Validamos si el monto tiene un formato correcto
+            if (isNaN(amount)) {
+                throw String(`Monto de ${data.description} tiene un formato incorrecto`)
+            }
+
+            // validamos si el monto es mayor al balance
+            if (amount > data.amount) {
+                throw String(`Balance insuficiente para retirar ${amount} ${data.symbol}`)
+            }
+
+            // verificamos los permisos del TouchID
+            await CheckTouchIDPermission()
+
+            // obtenemos los permisos acomulados en redux
+            const { permissions } = store.getState()
+
+            // verifcamos si hay permisos para usar el touchID
+            if (permissions.touchID === true) {
+                await TouchID.authenticate("Para continuar", {
+                    title: "Retiro Alypay",
+                    passcodeFallback: true,
+                    cancelText: "CANCELAR"
+                })
+            }
+
+            const dataSend = {
+                wallet: state.walletAdress,
+                id_wallet: data.id,
+                amount,
+                symbol: data.symbol,
+            }
+
+            const { data: response } = await http.post("/wallets/retirement", dataSend, getHeaders())
+
+            console.log(response)
+
+            if (response.error) {
+                throw String(response.message)
+            } else if (response.response === "success") {
+                successMessage("Tu solictud de retiro esta en proceso")
+
+                // limpiamos todos los campos
+                dispatch({ type: "walletAdress", payload: "" })
+
+                onChangeFractions("")
+            } else {
+                throw String("Tu solictud no se ha podido procesar, contacte a soporte")
+            }
+
+        } catch (error) {
+            errorMessage(error.toString())
+        } finally {
+            loader(false)
         }
     }
 
@@ -81,8 +134,6 @@ const Retirement = ({ route }) => {
                 <ItemWallet data={data} disabled />
             </View>
 
-            <Text style={styles.textTitle}>Retirar fondos</Text>
-
             <View style={styles.row}>
                 <View style={styles.col}>
                     <Text style={styles.legend}>Dirección de billetera externa</Text>
@@ -91,7 +142,6 @@ const Retirement = ({ route }) => {
                         <TextInput
                             value={state.walletAdress}
                             onChangeText={payload => dispatch({ type: "walletAdress", payload })}
-                            // onBlur={onComprobateWallet}
                             style={[GlobalStyles.textInput, { flex: 1 }]} />
 
                         <TouchableOpacity onPress={toggleScan} style={styles.buttonScan}>
@@ -109,12 +159,13 @@ const Retirement = ({ route }) => {
                     <TextInput
                         value={state.amountFraction}
                         onChangeText={onChangeFractions}
-                        keyboardType="number-pad"
+                        keyboardType="numeric"
+                        returnKeyType="done"
                         style={GlobalStyles.textInput} />
                 </View>
 
                 <View style={[styles.col, { justifyContent: "center", alignItems: "center" }]}>
-                    <Text style={styles.legend}>Monto (USD)</Text>
+                    <Text style={styles.legend}>Monto (USD) Aprox.</Text>
 
                     <Text style={styles.legendUSDAmount}>
                         {WithDecimals(state.amountUSD)} <Text style={{ fontSize: RFValue(8) }}>USD</Text>
