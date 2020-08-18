@@ -42,13 +42,6 @@ const App = () => {
     const [state, dispatch] = useReducer(reducer, initialState)
 
     const ConfigurateComponent = async () => {
-
-        // agregamos un escuchador de evento cuando cambie el estado del interne
-        NetInfo.addEventListener(({ isConnected: payload }) => {
-            dispatch({ type: "internet", payload })
-        })
-
-
         const payload = await getStorage()
 
 
@@ -70,7 +63,7 @@ const App = () => {
             await store.dispatch({ type: DELETESTORAGE })
         }
 
-        await setTimeout(() => dispatch({ type: "splash", payload: false }), 1000)
+        setTimeout(() => dispatch({ type: "splash", payload: false }), 1000)
     }
 
     useEffect(() => {
@@ -81,7 +74,7 @@ const App = () => {
 
         // subscribe changes in store
         // Esperamos algun cambio en el store de redux
-        store.subscribe(async data => {
+        store.subscribe(async _ => {
             const { global, loader } = store.getState()
 
             if (Object.keys(global).length > 0) {
@@ -95,6 +88,10 @@ const App = () => {
             // set root loader component
             dispatch({ type: "loader", payload: loader })
         })
+
+
+        // agregamos un escuchador de evento cuando cambie el estado del interne
+        NetInfo.addEventListener(({ isConnected: payload }) => dispatch({ type: "internet", payload }))
     }, [])
 
     return (
@@ -120,9 +117,9 @@ const App = () => {
 
 
             <Modal backdropOpacity={0.95} isVisible={!state.internet}>
-                <Lottie source={notConectionAnimation} style={styles.conectionAnimation} loop autoPlay />
-
                 <Text style={styles.textInternet}>no estas conectado a internet</Text>
+
+                <Lottie source={notConectionAnimation} resizeMode="cover" style={styles.conectionAnimation} loop autoPlay />
             </Modal>
 
 
@@ -147,6 +144,8 @@ const styles = StyleSheet.create({
     },
 
     textInternet: {
+        alignSelf: "center",
+        fontWeight: "bold",
         color: Colors.colorRed,
         textTransform: "uppercase",
     },
