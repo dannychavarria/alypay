@@ -45,6 +45,10 @@ const App = () => {
         const payload = await getStorage()
 
 
+        // disabled all yellow messagge
+        console.disableYellowBox = true
+
+
         // Comprueba si hay datos retornados en el payload
         if (Object.keys(payload).length > 0) {
             // Creamos el dispatch para el storage de redux

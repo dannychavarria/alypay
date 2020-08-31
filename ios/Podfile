@@ -96,6 +96,7 @@ target 'alypay' do
   pod 'Permission-SpeechRecognition', :path => "#{permissions_path}/SpeechRecognition.podspec"
   pod 'Permission-StoreKit', :path => "#{permissions_path}/StoreKit.podspec"
 
+
   target 'alypayTests' do
     inherit! :complete
     # Pods for testing

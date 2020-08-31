@@ -6,7 +6,10 @@ import { useNavigation } from "@react-navigation/native"
 
 // Import Components
 import { TouchableOpacity, Image, View, Text, StyleSheet } from "react-native"
+
+// import constants and function
 import { Colors, RFValue, urlAlyCoin, WithDecimals } from "../../utils/constants"
+import _ from "lodash"
 
 /**
  * Componente que representa la billetera del usuario
@@ -46,7 +49,7 @@ const ItemWallet = ({ data = {}, disabled = false }) => {
                 <View style={styles.row}>
                     <View>
                         <Text style={styles.key}>Precio del mercado</Text>
-                        <Text style={styles.value}>$ {WithDecimals(data.price?.toFixed(2))}</Text>
+                        <Text style={styles.value}>$ {WithDecimals(_.floor(data.price, 2))}</Text>
                     </View>
 
                     <View style={styles.lastCol}>

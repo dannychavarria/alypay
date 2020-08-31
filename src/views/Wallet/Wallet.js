@@ -227,13 +227,18 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
 
         retirementContainer: {
             alignItems: "center",
-            justifyContent: "center",
-            marginVertical: RFValue(50)
+            justifyContent: "space-evenly",
+            flexDirection: "row",
+            marginHorizontal: RFValue(10),
         },
 
         retirementText: {
             fontSize: RFValue(16),
             color: Colors.colorYellow,
+            textDecorationLine: "underline",
+            textDecorationColor: Colors.colorYellow,
+            textDecorationStyle: "double",
+            paddingBottom: 5,
             textTransform: "uppercase",
         },
     })
@@ -478,9 +483,15 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
 
             {
                 !state.walletAccepted &&
-                <TouchableOpacity onPress={onComprobateWallet} style={GlobalStyles.buttonPrimary}>
-                    <Text style={GlobalStyles.textButton}>siguiente</Text>
-                </TouchableOpacity>
+                <View style={styles.retirementContainer}>
+                    <TouchableOpacity onPress={onRetirement}>
+                        <Text style={styles.retirementText}>Retirar fondos</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={onComprobateWallet} style={[GlobalStyles.buttonPrimary, { flex: 1, marginLeft: 25 }]}>
+                        <Text style={GlobalStyles.textButton}>siguiente</Text>
+                    </TouchableOpacity>
+                </View>
             }
 
             {
@@ -490,11 +501,7 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
                 </TouchableOpacity>
             }
 
-            <View style={styles.retirementContainer}>
-                <TouchableOpacity onPress={onRetirement}>
-                    <Text style={styles.retirementText}>Retirar fondos</Text>
-                </TouchableOpacity>
-            </View>
+
 
             <Modal backdropOpacity={0.9} animationIn="fadeIn" onBackButtonPress={toggleScan} onBackdropPress={toggleScan} animationOut="fadeOut" isVisible={state.showScaner}>
                 <View style={styles.constainerQR}>

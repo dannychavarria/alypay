@@ -76,14 +76,14 @@ export const Colors = {
     colorSecondary: "#9ed3da",
     colorYellow: "#ffcb08",
     colorRed: "#c0392b",
-    colorGreen: "#16a085",
+    colorGreen: "#33d9b2",
 }
 
 const PORT = "3000"
 
 /**Direction for server */
-export const serverAddress = "https://alypay.uc.r.appspot.com"
-// export const serverAddress = Platform.OS === "ios" ? `http://localhost:${PORT}` : `http://10.0.2.2:${PORT}`
+// export const serverAddress = "https://alypay.uc.r.appspot.com"
+export const serverAddress = Platform.OS === "ios" ? `http://localhost:${PORT}` : `http://10.0.2.2:${PORT}`
 
 /**
  * Constante que almacena la url del preview image del simbolo alycoin
@@ -317,7 +317,7 @@ export const successMessage = (description = "", title = "AlyPay") => {
         color: "#FFF",
         backgroundColor: Colors.colorGreen,
         icon: "success",
-        autoHide: false
+        // autoHide: false
     })
 }
 
