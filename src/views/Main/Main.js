@@ -7,6 +7,9 @@ import QRCodeScanner from "react-native-qrcode-scanner"
 import Switch from "../../components/Switch/Switch"
 import { RNCamera } from "react-native-camera"
 import { Text, StyleSheet, TouchableOpacity, View } from "react-native"
+import { useNavigation } from '@react-navigation/native'
+import * as CryptoJS from 'react-native-crypto-js';
+import LoaderScan from '../../components/Loader/LoaderScan'
 
 // Import constant
 import { RFValue, CheckCameraPermission, http, reducer, errorMessage, getHeaders, loader } from "../../utils/constants"
@@ -34,13 +37,30 @@ const switchItems = [
     }
 ]
 
+
 /**
  * Vista componente que se renderiza cuando 
  * el usuario ejecuta el componente pagar en el switch 
  */
 const PayComponent = () => {
-    const onReadCodeQR = (data) => {
-        console.log(data)
+    const { navigate } = useNavigation()
+    const [reload, setReload] = useState(true)
+
+    const onReadCodeQR = async (response) => {
+        try {
+            const splitData = response.data.split(',')
+            const bytes = CryptoJS.AES.decrypt(splitData[0], splitData[1]).toString(CryptoJS.enc.Utf8)
+            const parsedData = JSON.parse(bytes);
+
+            setReload(false)
+            window.setTimeout(_ => setReload(true), 1000)
+            navigate("Pagar", { data: parsedData })
+
+        } catch (error) {
+            errorMessage(error.toString())
+        } finally {
+
+        }
     }
 
     const styles = StyleSheet.create({
@@ -50,24 +70,33 @@ const PayComponent = () => {
             borderRadius: RFValue(5),
             height: RFValue(320),
             overflow: "hidden",
+        },
+        container: {
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 5
         }
     })
 
     return (
         <View style={styles.constainerQR}>
-            <QRCodeScanner
-                sty
-                onRead={onReadCodeQR}
-                flashMode={RNCamera.Constants.FlashMode.auto}
-                topContent={
-                    <Text>Scan Code Example</Text>
-                }
-                bottomContent={
-                    <TouchableOpacity>
-                        <Text>OK. Got it!</Text>
-                    </TouchableOpacity>
-                }
-            />
+            {
+                reload && <>
+                    <QRCodeScanner
+                        onRead={onReadCodeQR}
+                        flashMode={RNCamera.Constants.FlashMode.auto}
+                        topContent={
+                            <Text>Scan Code Example</Text>
+                        }
+                        bottomContent={
+                            <TouchableOpacity>
+                                <Text>OK. Got it!</Text>
+                            </TouchableOpacity>
+                        }
+                    />
+                    <LoaderScan />
+                </>
+            }
         </View>
     )
 }
@@ -76,7 +105,7 @@ const initialState = {
     wallets: []
 }
 
-const Main = ({ navigation }) => {
+const Main = () => {
     const [stateView, setStateView] = useState(TYPE_VIEW.WALLET)
 
     const [state, dispatch] = useReducer(reducer, initialState)
@@ -97,7 +126,7 @@ const Main = ({ navigation }) => {
             const { data } = await http.get("/wallets", getHeaders())
 
             if (data.error) {
-                throw data.message
+                throw String(data.message)
             } else {
                 dispatch({ type: "wallets", payload: data })
             }
@@ -116,7 +145,7 @@ const Main = ({ navigation }) => {
 
     return (
         <Container onRefreshEnd={configurateComponent} showLogo>
-            {/* <Switch onSwitch={setStateView} items={switchItems} /> */}
+            <Switch onSwitch={setStateView} items={switchItems} />
 
             <View style={styles.containerWallets}>
                 {

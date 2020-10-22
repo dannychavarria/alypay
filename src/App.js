@@ -23,6 +23,7 @@ import Login from "./views/Login/Login"
 import Main from "./views/Main/Index"
 import Splash from "./components/Splash/Splash"
 import Register from "./views/Register/Register"
+import Pagar from "./components/Pagar/Pagar"
 
 // import assets and animation
 import notConectionAnimation from "./animations/no-internet-connection.json"
@@ -106,7 +107,10 @@ const App = () => {
                 <Stack.Navigator initialRouteName={ROUTES.MAIN} headerMode={null}>
                     {
                         state.loged &&
-                        <Stack.Screen name={ROUTES.MAIN} component={Main} />
+                        <>
+                            <Stack.Screen name={ROUTES.MAIN} component={Main} />
+                            <Stack.Screen name={ROUTES.PAGAR} component={Pagar} />
+                        </>
                     }
 
                     {

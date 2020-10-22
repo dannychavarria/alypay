@@ -27,6 +27,8 @@ const Recharge = () => {
 
     const { information } = wallet
 
+    let checkHashPattern = /[a-zA-Z0-9]*$/
+
     // Metodo para enviar la peticion 
     const onSubmit = async () => {
         try {
@@ -41,6 +43,11 @@ const Recharge = () => {
             // Verificamos si el hash contiene mas de 8 caracteres
             if (state.hash.trim().length < 8) {
                 throw "El hash no es correcto"
+            }
+
+            // Verificamos que el hash no contenga caracteres especiales
+            if (!checkHashPattern.test(state.hash)) {
+                throw String("El hash no es correcto")
             }
 
             // Loader mode on
