@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from "react"
+import React, { useState, useEffect, useReducer, } from "react"
 
 // Import componentes
 import Container from "../../components/Container/Container"
@@ -6,13 +6,13 @@ import ItemWallet from "../../components/ItemWallet/ItemWallet"
 import QRCodeScanner from "react-native-qrcode-scanner"
 import Switch from "../../components/Switch/Switch"
 import { RNCamera } from "react-native-camera"
-import { Text, StyleSheet, TouchableOpacity, View } from "react-native"
+import { Text, StyleSheet, TouchableOpacity, View, TextInput } from "react-native"
 import { useNavigation } from '@react-navigation/native'
 import * as CryptoJS from 'react-native-crypto-js';
 import LoaderScan from '../../components/Loader/LoaderScan'
 
 // Import constant
-import { RFValue, CheckCameraPermission, http, reducer, errorMessage, getHeaders, loader } from "../../utils/constants"
+import { RFValue, CheckCameraPermission, http, reducer, errorMessage, getHeaders, loader, Colors, GlobalStyles } from "../../utils/constants"
 
 /**
  * Constante que almacena el tipo de vista seleccionada del switch
@@ -45,21 +45,38 @@ const switchItems = [
 const PayComponent = () => {
     const { navigate } = useNavigation()
     const [reload, setReload] = useState(true)
+    const [checkAmount, setCheckAmount] = useState("")
 
-    const onReadCodeQR = async (response) => {
+
+    const submit = async (orderId) => {
         try {
-            const splitData = response.data.split(',')
-            const bytes = CryptoJS.AES.decrypt(splitData[0], splitData[1]).toString(CryptoJS.enc.Utf8)
-            const parsedData = JSON.parse(bytes);
-
-            setReload(false)
-            window.setTimeout(_ => setReload(true), 1000)
-            navigate("Pagar", { data: parsedData })
+            loader(true)
+            
+            navigate("Pagar", { data: { order: orderId}, scan: false })
 
         } catch (error) {
             errorMessage(error.toString())
         } finally {
+            loader(false)
+        }
+    }
 
+    const onReadCodeQR = async (response) => {
+        try {
+            loader(true)
+
+            const splitData = response.data.split(',')
+            const bytes = CryptoJS.AES.decrypt(splitData[0], splitData[1]).toString(CryptoJS.enc.Utf8)
+            const parsedData = JSON.parse(bytes);
+            setReload(false)
+
+            window.setTimeout(_ => setReload(true), 1000)
+            navigate("Pagar", { data: parsedData, scan: true })
+
+        } catch (error) {
+            errorMessage(error.toString())
+        } finally {
+            loader(false)
         }
     }
 
@@ -71,17 +88,39 @@ const PayComponent = () => {
             height: RFValue(320),
             overflow: "hidden",
         },
-        container: {
+        col: {
+            flex: 1,
+            marginHorizontal: RFValue(10),
+        },
+
+        row: {
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginVertical: RFValue(10)
+        },
+
+        legend: {
+            color: Colors.colorYellow
+        },
+        rowInput: {
             alignItems: "center",
-            justifyContent: "center",
-            padding: 5
-        }
+            flexDirection: "row"
+        },
+        buttonPay: {
+            backgroundColor: Colors.colorYellow,
+            borderRadius: RFValue(5),
+            padding: RFValue(10),
+            marginLeft: RFValue(10),
+            zIndex: 1000,
+        },
+
     })
 
     return (
-        <View style={styles.constainerQR}>
-            {
-                reload && <>
+        <>
+            <View style={styles.constainerQR}>
+                {
+                    reload &&
                     <QRCodeScanner
                         onRead={onReadCodeQR}
                         flashMode={RNCamera.Constants.FlashMode.auto}
@@ -94,10 +133,33 @@ const PayComponent = () => {
                             </TouchableOpacity>
                         }
                     />
-                    <LoaderScan />
-                </>
-            }
-        </View>
+                }
+            </View>
+
+            <View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: 10 }}>
+                <View style={styles.row}>
+                    <View style={styles.col}>
+                        <Text style={styles.legend}>Numero de Orden</Text>
+
+                        <View style={styles.rowInput}>
+                            <TextInput
+                                style={[GlobalStyles.textInput, { flex: 1 }]}
+                                placeholder="Ingrese el numero de orden"
+                                placeholderTextColor="#FFF"
+                                keyboardType="numeric"
+                                value={checkAmount}
+                                onChangeText={setCheckAmount}
+                            />
+
+                            <TouchableOpacity style={styles.buttonPay} onPress={() => submit(checkAmount)}>
+                                <Text>PAGAR</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            </View>
+        </>
+
     )
 }
 

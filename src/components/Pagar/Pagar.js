@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useReducer } from 'react'
 import { Text, View, TouchableOpacity, StyleSheet, Alert, BackHandler } from 'react-native'
 
 // Import functions
@@ -10,20 +10,27 @@ import Container from '../Container/Container'
 import SwitchCoin from '../Switch/SwitchCoin'
 import _ from "lodash"
 
+// Import store from redux
+import store from "../../store/index"
+
+const initialState = {
+    information: null
+}
+
 const pagar = ({ route, navigation }) => {
-    const { navigation } = useNavigation()
+    const { goBack } = useNavigation()
+    // const [state, dispatch] = useReducer(reducer, initialState)
 
     const [currentCoin, setCurrentCoin] = useState({})
     const [crpytoPrices, setCryptoPrices] = useState({ ALY: null, BTC: null, ETH: null, DASH: null, LTC: null })
     const Pay = route.params.data
-
-
+    const scanned = route.params.scan
 
     const getAllPrices = async () => {
         try {
             loader(true)
+
             const { data } = await http.get("/wallets", getHeaders())
-            //console.log(data)
 
             if (data.error) {
                 throw String(data.message)
@@ -42,16 +49,27 @@ const pagar = ({ route, navigation }) => {
     const confirmpPayment = async () => {
         try {
             loader(true)
-            const amount = _.floor(Pay.amount / currentCoin.price, 8)
-            const _amountUSD = parseFloat(Pay.amount)
+            const amount = parseFloat(_.floor(Pay.amount / currentCoin.price, 8))
+            const _amountUSD = currentCoin.price
 
-            const senData =
-            {
-                id: Pay.id,
-                from: currentCoin.id,
-                to: Pay.wallet_commerce,
-                amount: amount,
-                amountUSD: _amountUSD
+            let senData;
+            if (scanned) {
+                senData =
+                {
+                    id: Pay.id,
+                    from: currentCoin.id,
+                    to: Pay.wallet_commerce,
+                    amount: amount,
+                    exchangeRate: _amountUSD,
+                    scan: scanned
+                }
+            } else {
+                senData = {
+                    id: Pay.order,
+                    from: currentCoin.id,
+                    exchangeRate: _amountUSD,
+                    scan: scanned
+                }
             }
 
             const { data } = await http.post("/ecommerce/transaction/pay", senData, getHeaders())
@@ -62,9 +80,11 @@ const pagar = ({ route, navigation }) => {
 
             if (data.response === "success") {
                 successMessage("Pago de su Transaccion Exitosa")
+
+                // await crpytoPrices?.reloadInfo()
             }
 
-            navigate("Main")
+            navigation.pop()
 
         } catch (error) {
             errorMessage(error.toString())
@@ -74,7 +94,7 @@ const pagar = ({ route, navigation }) => {
     }
 
     const cancelPayment = () => {
-        Alert.alert("Estas apunto de cancelar la transaccion", "Realmente quieres ejecutar esta accion", [
+        return Alert.alert("Estas apunto de cancelar la transaccion", "Realmente quieres ejecutar esta accion", [
             {
                 text: "Cancelar",
                 onPress: () => { }
@@ -84,13 +104,21 @@ const pagar = ({ route, navigation }) => {
                 onPress: () => navigation.pop()
             }
         ])
+
+        // return true
     }
 
     useEffect(() => {
-        const handledBack = BackHandler.addEventListener('hardwareBackPress', cancelPayment)
+        const handledBack = BackHandler.addEventListener("hardwareBackPress", cancelPayment)
 
         getAllPrices()
+
+        // store.subscribe(() => {
+        //     getAllPrices()
+        // })
+
         return () => handledBack.remove()
+
     }, [])
 
     return (
