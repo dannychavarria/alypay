@@ -7,7 +7,7 @@ const ROUTES = {
     WALLET: "Wallet",
     RETIREMENT: "Retirement",
     PAGAR: "Pagar",
-
+    SEARCH: "Search",
 }
 
 export default ROUTES

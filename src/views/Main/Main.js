@@ -6,8 +6,9 @@ import ItemWallet from "../../components/ItemWallet/ItemWallet"
 import QRCodeScanner from "react-native-qrcode-scanner"
 import Switch from "../../components/Switch/Switch"
 import { RNCamera } from "react-native-camera"
-import { Text, StyleSheet, TouchableOpacity, View, TextInput } from "react-native"
+import { Text, StyleSheet, TouchableOpacity, View, TextInput, } from "react-native"
 import { useNavigation } from '@react-navigation/native'
+import AsyncStorage from '@react-native-community/async-storage'
 import * as CryptoJS from 'react-native-crypto-js';
 import LoaderScan from '../../components/Loader/LoaderScan'
 
@@ -42,17 +43,49 @@ const switchItems = [
  * Vista componente que se renderiza cuando 
  * el usuario ejecuta el componente pagar en el switch 
  */
-const PayComponent = () => {
+const PayComponent = ({ onChangeTransactionStatus = _ => { } }) => {
     const { navigate } = useNavigation()
+
+    // Estado que renderiza la lectura del QR cada 10s
     const [reload, setReload] = useState(true)
+
+    // Estado que almacena el valor de la orden
     const [checkAmount, setCheckAmount] = useState("")
 
+    // let checkInterval = null
 
+    // const checkTransactionStatus = async _ => {
+    //     try {
+    //         const status = await AsyncStorage.getItem('transactionStatus')
+    //         console.log(status)
+    //         if (status) {
+    //             await AsyncStorage.removeItem('transactionStatus')
+    //             onChangeTransactionStatus()
+    //             window.clearInterval(checkInterval)
+    //         }
+    //         console.log('interval')
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // }
+
+
+    /**
+     * Funcion que realiza el pago si la orden es escrita
+     * @param {*} orderId 
+     */
     const submit = async (orderId) => {
         try {
             loader(true)
-            
-            navigate("Pagar", { data: { order: orderId}, scan: false })
+
+            // Verificamos si hay un numero de orden para hacer el pago
+            if (checkAmount.trim().length === 0) {
+                throw String("Ingresa el numero de orden para continuar el pago")
+            }
+
+            navigate("Pagar", { data: { order: orderId }, scan: false })
+            // checkInterval = _ => checkTransactionStatus()
+            // window.setInterval(checkInterval, 1000)
 
         } catch (error) {
             errorMessage(error.toString())
@@ -61,6 +94,10 @@ const PayComponent = () => {
         }
     }
 
+    /**
+     *  Fucnion que hace la lectura del QR
+     * @param {*} response 
+     */
     const onReadCodeQR = async (response) => {
         try {
             loader(true)
@@ -72,6 +109,8 @@ const PayComponent = () => {
 
             window.setTimeout(_ => setReload(true), 1000)
             navigate("Pagar", { data: parsedData, scan: true })
+            // checkInterval = _ => checkTransactionStatus()
+            // window.setInterval(checkInterval, 1000)
 
         } catch (error) {
             errorMessage(error.toString())
@@ -217,7 +256,8 @@ const Main = () => {
 
                 {
                     stateView === TYPE_VIEW.PAY &&
-                    <PayComponent />
+                    <PayComponent
+                        onChangeTransactionStatus={_ => setStateView(TYPE_VIEW.WALLET)} />
                 }
             </View>
 

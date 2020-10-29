@@ -24,6 +24,7 @@ import Main from "./views/Main/Index"
 import Splash from "./components/Splash/Splash"
 import Register from "./views/Register/Register"
 import Pagar from "./components/Pagar/Pagar"
+import Search from "./components/Search/Search"
 
 // import assets and animation
 import notConectionAnimation from "./animations/no-internet-connection.json"
@@ -110,6 +111,7 @@ const App = () => {
                         <>
                             <Stack.Screen name={ROUTES.MAIN} component={Main} />
                             <Stack.Screen name={ROUTES.PAGAR} component={Pagar} />
+                            <Stack.Screen name={ROUTES.SEARCH} component={Search} />
                         </>
                     }
 

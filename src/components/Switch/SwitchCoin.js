@@ -78,15 +78,34 @@ const SwitchCoin = ({ onSwitch = () => { }, items = {} }) => {
     })
 
     const ItemComponent = (item, key) => {
+         //console.log(item)
         return (
             <TouchableOpacity
+                disabled={!item.credit}
                 onPress={_ => {
                     setIndexActive(key)
                     setState(item)
                 }}
                 key={key}
-                style={[indexActive === key ? styles.buttonActive : styles.buttonDisactive, styles.buttons]}>
-                <Text style={[indexActive === key ? styles.textButtonActive : styles.textButtonDisactive, styles.textButton]}>
+                style={
+                    [
+                        indexActive === key
+                            ? styles.buttonActive
+                            : styles.buttonDisactive,
+                        styles.buttons,
+                    ]
+                }>
+                <Text style={
+                    [
+                        indexActive === key
+                            ? styles.textButtonActive
+                            : styles.textButtonDisactive,
+                        styles.textButton,
+                        {
+                            opacity: item.credit ? 1 : 0.3
+                        }
+                    ]
+                }>
                     {item.symbol}
                 </Text>
             </TouchableOpacity>

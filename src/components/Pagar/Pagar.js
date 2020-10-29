@@ -1,27 +1,22 @@
-import React, { useState, useEffect, useReducer } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Text, View, TouchableOpacity, StyleSheet, Alert, BackHandler } from 'react-native'
 
 // Import functions
 import { RFValue, Colors, GlobalStyles, http, loader, getHeaders, successMessage, errorMessage } from '../../utils/constants'
 import { useNavigation } from "@react-navigation/native"
+import AsyncStorage from '@react-native-community/async-storage'
+
 
 // Import Componets
 import Container from '../Container/Container'
 import SwitchCoin from '../Switch/SwitchCoin'
 import _ from "lodash"
 
-// Import store from redux
-import store from "../../store/index"
-
-const initialState = {
-    information: null
-}
-
 const pagar = ({ route, navigation }) => {
-    const { goBack } = useNavigation()
-    // const [state, dispatch] = useReducer(reducer, initialState)
+    const navigate = useNavigation()
 
     const [currentCoin, setCurrentCoin] = useState({})
+    const [commerceData, setCommerceData] = useState({})
     const [crpytoPrices, setCryptoPrices] = useState({ ALY: null, BTC: null, ETH: null, DASH: null, LTC: null })
     const Pay = route.params.data
     const scanned = route.params.scan
@@ -29,18 +24,24 @@ const pagar = ({ route, navigation }) => {
     const getAllPrices = async () => {
         try {
             loader(true)
-
-            const { data } = await http.get("/wallets", getHeaders())
-
-            if (data.error) {
-                throw String(data.message)
+            if (scanned) {
+                const { data } = await http.get(`/ecommerce/transaction/info/${Pay.orderId}`, getHeaders());
+                if (data.error) {
+                    throw String(data.message)
+                }
+                setCryptoPrices(data.wallets)
+                setCommerceData(data.data)
+            } else {
+                const { data } = await http.get(`/ecommerce/transaction/info/${Pay.order}`, getHeaders());
+                if (data.error) {
+                    throw String(data.message);
+                }
+                setCryptoPrices(data.wallets)
+                setCommerceData(data.data)
             }
-            else {
-                setCryptoPrices(data)
-            }
-
         } catch (error) {
             Alert.alert("Ha Ocurrido un error", error.toString())
+            navigation.navigate('Main')
         } finally {
             loader(false)
         }
@@ -49,26 +50,28 @@ const pagar = ({ route, navigation }) => {
     const confirmpPayment = async () => {
         try {
             loader(true)
-            const amount = parseFloat(_.floor(Pay.amount / currentCoin.price, 8))
-            const _amountUSD = currentCoin.price
+            const amount = currentCoin.fee.subtotal
+            const _amountUSD = currentCoin.feeUSD.subtotal
 
             let senData;
+
             if (scanned) {
                 senData =
                 {
-                    id: Pay.id,
+                    id: Pay.orderId,
                     from: currentCoin.id,
                     to: Pay.wallet_commerce,
                     amount: amount,
-                    exchangeRate: _amountUSD,
-                    scan: scanned
+                    amountUSD: _amountUSD,
                 }
             } else {
                 senData = {
                     id: Pay.order,
                     from: currentCoin.id,
-                    exchangeRate: _amountUSD,
-                    scan: scanned
+                    to: commerceData.wallet,
+                    amount: amount,
+                    amountUSD: _amountUSD,
+
                 }
             }
 
@@ -79,12 +82,14 @@ const pagar = ({ route, navigation }) => {
             }
 
             if (data.response === "success") {
+                // await AsyncStorage.setItem('transactionStatus', 'true')
                 successMessage("Pago de su Transaccion Exitosa")
-
-                // await crpytoPrices?.reloadInfo()
+                navigation.popToTop()
             }
 
-            navigation.pop()
+
+
+            // navigation.pop()
 
         } catch (error) {
             errorMessage(error.toString())
@@ -109,13 +114,10 @@ const pagar = ({ route, navigation }) => {
     }
 
     useEffect(() => {
+
         const handledBack = BackHandler.addEventListener("hardwareBackPress", cancelPayment)
 
         getAllPrices()
-
-        // store.subscribe(() => {
-        //     getAllPrices()
-        // })
 
         return () => handledBack.remove()
 
@@ -129,7 +131,7 @@ const pagar = ({ route, navigation }) => {
 
             <SwitchCoin
                 items={crpytoPrices}
-                onSwitch={current => setCurrentCoin(current)} />
+                onSwitch={value => setCurrentCoin(value)} />
 
             <View style={styles.card}>
                 <View style={styles.headerCard}>
@@ -137,16 +139,28 @@ const pagar = ({ route, navigation }) => {
                 </View>
 
                 <View style={styles.bodyRowTable}>
-                    <Text style={styles.textRowTable}>{Pay.description}</Text>
+                    <Text style={styles.textRowTable}>{scanned ? Pay.description : commerceData.description}</Text>
                 </View>
 
-                {/* <View style={styles.headerCard}>
-                    <Text style={styles.textHeaderCard}>Fee de la transaccion</Text>
+                <View style={styles.headerCard}>
+                    <Text style={styles.textHeaderCard}>Sub-Total {currentCoin.symbol}</Text>
+                    <Text style={styles.textHeaderCard}>Fee {currentCoin.symbol}</Text>
                 </View>
 
                 <View style={styles.bodyRowTable}>
-                    <Text style={styles.textRowTable}>{}</Text>
-                </View> */}
+                    <Text style={styles.textRowTable}>{currentCoin.fee?.subtotal}</Text>
+                    <Text style={styles.textRowTable}>{currentCoin.fee?.fee}</Text>
+                </View>
+
+                <View style={styles.headerCard}>
+                    <Text style={styles.textHeaderCard}>Total {currentCoin.symbol}</Text>
+                    <Text style={styles.textHeaderCard}>Symbolo del Fee</Text>
+                </View>
+
+                <View style={styles.bodyRowTable}>
+                    <Text style={styles.textRowTable}>{currentCoin.fee?.total}</Text>
+                    <Text style={styles.textRowTable}>{currentCoin.fee?.symbol}</Text>
+                </View>
 
                 <View style={styles.headerCardTotals}>
                     <Text style={styles.textHeaderCard}>Total ()</Text>
@@ -154,8 +168,8 @@ const pagar = ({ route, navigation }) => {
                 </View>
 
                 <View style={styles.bodyRowTable}>
-                    <Text style={styles.textRowTable}>{Pay.amount}</Text>
-                    <Text style={styles.textRowTable}>$ {Pay.amount}</Text>
+                    <Text style={styles.textRowTable}>{scanned ? Pay.amount : commerceData.amount}</Text>
+                    <Text style={styles.textRowTable}>$ {scanned ? Pay.amount : commerceData.amount}</Text>
                 </View>
 
                 <View style={styles.headerCardTotals}>
@@ -165,7 +179,7 @@ const pagar = ({ route, navigation }) => {
 
                 <View style={styles.bodyRowTable}>
                     <Text style={styles.textRowTable}>{currentCoin.symbol}</Text>
-                    <Text style={styles.textRowTable}>{_.floor(Pay.amount / currentCoin.price, 8)}</Text>
+                    <Text style={styles.textRowTable}>{currentCoin.feeUSD?.total} {currentCoin.feeUSD?.symbol}</Text>
                 </View>
             </View>
 
@@ -229,7 +243,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 2,
         paddingVertical: 10,
         flexDirection: "row",
-        //justifyContent: "center",
+        justifyContent: "space-between"
     },
     footerCard: {
         borderBottomColor: Colors.colorYellow,

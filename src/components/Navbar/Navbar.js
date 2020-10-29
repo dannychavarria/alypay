@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react"
 import Icon from "react-native-vector-icons/Ionicons"
 import { BlurView } from "@react-native-community/blur"
 import { StyleSheet, View, TouchableOpacity, Keyboard, Image, Platform, Alert } from "react-native"
+import Search from '../Search/Search'
 
 // Import functions and constanst
 import { RFValue, Colors, logOutApp, OpenSupport } from "../../utils/constants"
@@ -16,13 +17,13 @@ const iconSize = RFValue(32)
 
 const Navbar = () => {
     const [hidden, setHidden] = useState(false)
-    const { dispatch } = useNavigation()
+    const { dispatch, navigate } = useNavigation()
 
     const toggleMenu = () => {
         Alert.alert("Cerrar sesion", "Estas apunto de cerrar sesion en AlyPay", [
             {
                 text: "Cancelar",
-                onPress: () => {},
+                onPress: () => { },
             },
             {
                 text: "Cerrar Sesion",
@@ -45,6 +46,13 @@ const Navbar = () => {
         } catch (error) {
             console.log(error)
         }
+    }
+
+    /**
+    * Funcion que envia a la vista de Buscaqueda
+    */
+    const onSearch = () => {
+        navigate("Search")
     }
 
     useEffect(() => {
@@ -75,9 +83,13 @@ const Navbar = () => {
                             <Icon name="ios-home" size={iconSize} color={Colors.colorYellow} />
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={styles.button}>
+                        {/* <TouchableOpacity style={styles.button}>
                             {/* <Icon name="user" size={iconSize} color={Colors.colorYellow} /> */}
-                            <Image source={defaultImage} style={styles.imageProfile} />
+                        {/* <Image source={defaultImage} style={styles.imageProfile} />
+                        </TouchableOpacity> * */}
+
+                        <TouchableOpacity onPress={onSearch} style={styles.button}>
+                            <Icon name="ios-search" size={iconSize} color={Colors.colorYellow} />
                         </TouchableOpacity>
 
                         <TouchableOpacity onPress={OpenSupport} style={styles.button}>
