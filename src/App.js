@@ -56,12 +56,11 @@ const App = () => {
             // Creamos el dispatch para el storage de redux
             await store.dispatch({
                 type: SETSTORAGE,
-                payload
+                payload,
             })
 
             // Le decimos que el usuario esta logueado
             dispatch({ type: "loged", payload: true })
-
         } else {
             dispatch({ type: "loged", payload: false })
 

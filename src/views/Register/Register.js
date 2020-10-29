@@ -566,7 +566,13 @@ const Register = ({ navigation }) => {
             </Modal>
 
 
-            <Modal animationIn="fadeIn" backdropOpacity={0.9} animationOut="fadeOut" isVisible={state.showCountries}>
+            <Modal
+                animationIn="fadeIn"
+                backdropOpacity={0.9}
+                animationOut="fadeOut"
+                onBackdropPress={_ => dispatch({ type: "showCountries", payload: false })}
+                onBackButtonPress={_ => dispatch({ type: "showCountries", payload: false })}
+                isVisible={state.showCountries}>
                 <View style={styles.containerModal}>
                     <TextInput
                         style={GlobalStyles.textInput}

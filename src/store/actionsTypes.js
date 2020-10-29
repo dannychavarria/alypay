@@ -21,3 +21,6 @@ export const DELETEPERMISSIONS = "DELETEPERMISSIONS"
 
 /**Setea los datos de la precarga */
 export const SETLOADER = "SETLOADER"
+
+/**Setea los datos una funcion */
+export const SETFUNCTION = "SETFUNCTION"

@@ -95,6 +95,8 @@ const ReceiveComponent = ({ wallet = "" }) => {
         navigate("Recharge", { wallet })
     }
 
+    console.log(store.getState())
+
     return (<ViewAnimate animation="fadeIn" style={styles.receivedViewContainer}>
         <View style={styles.qrContainer}>
             <QRCode

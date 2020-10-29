@@ -3,42 +3,45 @@ import { Text, View, TouchableOpacity, StyleSheet, Alert, BackHandler } from 're
 
 // Import functions
 import { RFValue, Colors, GlobalStyles, http, loader, getHeaders, successMessage, errorMessage } from '../../utils/constants'
-import { useNavigation } from "@react-navigation/native"
-import AsyncStorage from '@react-native-community/async-storage'
-
 
 // Import Componets
 import Container from '../Container/Container'
 import SwitchCoin from '../Switch/SwitchCoin'
 import _ from "lodash"
+import store from '../../store'
 
-const pagar = ({ route, navigation }) => {
-    const navigate = useNavigation()
-
+const Payment = ({ route, navigation }) => {
+    //
     const [currentCoin, setCurrentCoin] = useState({})
+    
+    //
     const [commerceData, setCommerceData] = useState({})
+    
+    //
     const [crpytoPrices, setCryptoPrices] = useState({ ALY: null, BTC: null, ETH: null, DASH: null, LTC: null })
+    
+    // 
     const Pay = route.params.data
+    
+    //
     const scanned = route.params.scan
 
+    // ?????
     const getAllPrices = async () => {
         try {
             loader(true)
-            if (scanned) {
-                const { data } = await http.get(`/ecommerce/transaction/info/${Pay.orderId}`, getHeaders());
-                if (data.error) {
-                    throw String(data.message)
-                }
-                setCryptoPrices(data.wallets)
-                setCommerceData(data.data)
-            } else {
-                const { data } = await http.get(`/ecommerce/transaction/info/${Pay.order}`, getHeaders());
-                if (data.error) {
-                    throw String(data.message);
-                }
-                setCryptoPrices(data.wallets)
-                setCommerceData(data.data)
+
+            const { data } = await http.get(`/ecommerce/transaction/info/${scanned ? Pay.orderId : Pay.order}`, getHeaders());
+            if (data.error) {
+                throw String(data.message)
             }
+
+            //
+            setCryptoPrices(data.wallets)
+            
+            // ???????
+            setCommerceData(data.data)
+
         } catch (error) {
             Alert.alert("Ha Ocurrido un error", error.toString())
             navigation.navigate('Main')
@@ -47,34 +50,27 @@ const pagar = ({ route, navigation }) => {
         }
     }
 
-    const confirmpPayment = async () => {
+    // 
+    const confirmPayment = async () => {
         try {
             loader(true)
+
+            //
             const amount = currentCoin.fee.subtotal
+
+            // 
             const _amountUSD = currentCoin.feeUSD.subtotal
 
-            let senData;
-
-            if (scanned) {
-                senData =
-                {
-                    id: Pay.orderId,
-                    from: currentCoin.id,
-                    to: Pay.wallet_commerce,
-                    amount: amount,
-                    amountUSD: _amountUSD,
-                }
-            } else {
-                senData = {
-                    id: Pay.order,
-                    from: currentCoin.id,
-                    to: commerceData.wallet,
-                    amount: amount,
-                    amountUSD: _amountUSD,
-
-                }
+            //
+            const senData = {
+                id: scanned ? Pay.orderId : Pay.order,
+                from: currentCoin.id,
+                to: scanned ? Pay.wallet_commerce : commerceData.wallet,
+                amount: amount,
+                amountUSD: _amountUSD,
             }
 
+            // Peticion que hace????
             const { data } = await http.post("/ecommerce/transaction/pay", senData, getHeaders())
 
             if (data.error) {
@@ -84,13 +80,13 @@ const pagar = ({ route, navigation }) => {
             if (data.response === "success") {
                 // await AsyncStorage.setItem('transactionStatus', 'true')
                 successMessage("Pago de su Transaccion Exitosa")
+
+
+                //
                 navigation.popToTop()
             }
 
-
-
             // navigation.pop()
-
         } catch (error) {
             errorMessage(error.toString())
         } finally {
@@ -98,6 +94,7 @@ const pagar = ({ route, navigation }) => {
         }
     }
 
+    //?????
     const cancelPayment = () => {
         return Alert.alert("Estas apunto de cancelar la transaccion", "Realmente quieres ejecutar esta accion", [
             {
@@ -106,7 +103,13 @@ const pagar = ({ route, navigation }) => {
             },
             {
                 text: "Salir",
-                onPress: () => navigation.pop()
+                onPress: () => {
+                    const { functions } = store.getState()
+
+                    functions?.reloadWallets()
+
+                    navigation.pop()
+                }
             }
         ])
 
@@ -115,6 +118,7 @@ const pagar = ({ route, navigation }) => {
 
     useEffect(() => {
 
+        /// ????
         const handledBack = BackHandler.addEventListener("hardwareBackPress", cancelPayment)
 
         getAllPrices()
@@ -189,7 +193,7 @@ const pagar = ({ route, navigation }) => {
                 </TouchableOpacity>
 
                 <TouchableOpacity style={GlobalStyles.buttonPrimary}>
-                    <Text onPress={confirmpPayment}>Confirmar</Text>
+                    <Text onPress={confirmPayment}>Confirmar</Text>
                 </TouchableOpacity>
             </View>
         </Container>
@@ -271,4 +275,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default pagar
+export default Payment

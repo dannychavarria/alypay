@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer, } from "react"
+import React, { useState, useEffect, useReducer } from "react"
 
 // Import componentes
 import Container from "../../components/Container/Container"
@@ -8,12 +8,14 @@ import Switch from "../../components/Switch/Switch"
 import { RNCamera } from "react-native-camera"
 import { Text, StyleSheet, TouchableOpacity, View, TextInput, } from "react-native"
 import { useNavigation } from '@react-navigation/native'
-import AsyncStorage from '@react-native-community/async-storage'
 import * as CryptoJS from 'react-native-crypto-js';
-import LoaderScan from '../../components/Loader/LoaderScan'
 
-// Import constant
+// Import constant and functions
 import { RFValue, CheckCameraPermission, http, reducer, errorMessage, getHeaders, loader, Colors, GlobalStyles } from "../../utils/constants"
+
+// import redux store and configuration
+import store from "../../store/index"
+import { SETFUNCTION } from "../../store/actionsTypes"
 
 /**
  * Constante que almacena el tipo de vista seleccionada del switch
@@ -61,7 +63,7 @@ const PayComponent = ({ onChangeTransactionStatus = _ => { } }) => {
     //         if (status) {
     //             await AsyncStorage.removeItem('transactionStatus')
     //             onChangeTransactionStatus()
-    //             window.clearInterval(checkInterval)
+    // window.clearInterval(checkInterval)
     //         }
     //         console.log('interval')
     //     } catch (error) {
@@ -202,6 +204,7 @@ const PayComponent = ({ onChangeTransactionStatus = _ => { } }) => {
     )
 }
 
+/// ??????
 const initialState = {
     wallets: []
 }
@@ -242,6 +245,18 @@ const Main = () => {
         configurateComponent()
 
         CheckCameraPermission()
+        // asignamos el reload de los datos de las wallets
+        store.dispatch({
+            type: SETFUNCTION,
+            payload: {
+                reloadWallets: configurateComponent
+            }
+        })
+
+        // obtenemos las funciones genericas de redux
+        const { functions } = store.getState()
+
+        console.log(functions)
     }, [])
 
     return (
