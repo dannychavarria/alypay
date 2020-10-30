@@ -6,7 +6,7 @@ import ItemWallet from "../../components/ItemWallet/ItemWallet"
 import QRCodeScanner from "react-native-qrcode-scanner"
 import Switch from "../../components/Switch/Switch"
 import { RNCamera } from "react-native-camera"
-import { Text, StyleSheet, TouchableOpacity, View, TextInput, } from "react-native"
+import { Text, StyleSheet, TouchableOpacity, View, TextInput, KeyboardAvoidingView } from "react-native"
 import { useNavigation } from '@react-navigation/native'
 import * as CryptoJS from 'react-native-crypto-js';
 
@@ -31,11 +31,11 @@ const TYPE_VIEW = {
  */
 const switchItems = [
     {
-        text: "Wallets",
+        text: "Billeteras",
         state: TYPE_VIEW.WALLET
     },
     {
-        text: "Pagar",
+        text: "AlyPay",
         state: TYPE_VIEW.PAY
     }
 ]
@@ -47,9 +47,6 @@ const switchItems = [
  */
 const PayComponent = () => {
     const { navigate } = useNavigation()
-
-    // Estado que renderiza la lectura del QR cada 10s
-    const [reload, setReload] = useState(true)
 
     // Estado que almacena el valor de la orden
     const [checkAmount, setCheckAmount] = useState("")
@@ -69,6 +66,12 @@ const PayComponent = () => {
 
             navigate("Payment", { data: { order: orderId }, scan: false })
 
+            const { functions } = store.getState()
+
+
+            // reset tab default
+            functions?.resetTab()
+
         } catch (error) {
             errorMessage(error.toString())
         } finally {
@@ -86,10 +89,8 @@ const PayComponent = () => {
 
             const splitData = response.data.split(',')
             const bytes = CryptoJS.AES.decrypt(splitData[0], splitData[1]).toString(CryptoJS.enc.Utf8)
-            const parsedData = JSON.parse(bytes);
-            setReload(false)
+            const parsedData = JSON.parse(bytes)
 
-            window.setTimeout(_ => setReload(true), 1000)
             navigate("Payment", { data: parsedData, scan: true })
 
         } catch (error) {
@@ -138,21 +139,11 @@ const PayComponent = () => {
     return (
         <>
             <View style={styles.constainerQR}>
-                {
-                    reload &&
-                    <QRCodeScanner
-                        onRead={onReadCodeQR}
-                        flashMode={RNCamera.Constants.FlashMode.auto}
-                        topContent={
-                            <Text>Scan Code Example</Text>
-                        }
-                        bottomContent={
-                            <TouchableOpacity>
-                                <Text>OK. Got it!</Text>
-                            </TouchableOpacity>
-                        }
-                    />
-                }
+                <QRCodeScanner
+                    vibrate={true}
+                    onRead={onReadCodeQR}
+                    flashMode={RNCamera.Constants.FlashMode.auto}
+                />
             </View>
 
             <View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: 10 }}>
@@ -166,6 +157,8 @@ const PayComponent = () => {
                                 placeholder="Ingrese el numero de orden"
                                 placeholderTextColor="#FFF"
                                 keyboardType="numeric"
+                                keyboardAppearance="dark"
+                                returnKeyType="done"
                                 value={checkAmount}
                                 onChangeText={setCheckAmount}
                             />
@@ -184,7 +177,8 @@ const PayComponent = () => {
 
 /// ??????
 const initialState = {
-    wallets: []
+    wallets: [],
+    indexTabActive: 0,
 }
 
 const Main = () => {
@@ -228,21 +222,22 @@ const Main = () => {
         store.dispatch({
             type: SETFUNCTION,
             payload: {
-                reloadWallets: configurateComponent
+                reloadWallets: configurateComponent,
+                setTabWallet: () => {
+                    // asiganamos que el tab este seleccionado
+                    setStateView(TYPE_VIEW.WALLET)
+
+                    state.dispatch({ type: "indexTabActive", payload: 0 })
+                }
             }
         })
-
-        // // obtenemos las funciones genericas de redux
-        // const { functions } = store.getState()
-
-        // console.log(functions)
     }, [])
 
     return (
         <Container onRefreshEnd={configurateComponent} showLogo>
-            <Switch onSwitch={setStateView} items={switchItems} />
+            <Switch onSwitch={setStateView} items={switchItems} indexActive={state.indexTabActive} />
 
-            <View style={styles.containerWallets}>
+            <KeyboardAvoidingView enabled behavior="padding" style={styles.containerWallets}>
                 {
                     stateView === TYPE_VIEW.WALLET &&
                     state.wallets.map((wallet, index) => <ItemWallet key={index} data={wallet} />)
@@ -252,7 +247,7 @@ const Main = () => {
                     stateView === TYPE_VIEW.PAY &&
                     <PayComponent />
                 }
-            </View>
+            </KeyboardAvoidingView>
 
         </Container>
     )

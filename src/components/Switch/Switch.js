@@ -6,6 +6,10 @@ import { StyleSheet, TouchableOpacity, Text, View } from "react-native"
 // Import Constanst
 import { Colors, RFValue } from "../../utils/constants"
 
+// import redux store
+import store from "../../store/index"
+import { SETFUNCTION } from "../../store/actionsTypes"
+
 /**
  * Componente de switch wallet/sell
  * 
@@ -13,8 +17,8 @@ import { Colors, RFValue } from "../../utils/constants"
  * @param {Array} items
  * @param {Number} indexActive
  */
-const Switch = ({ onSwitch = () => { }, items = [], indexActive = 0 }) => {
-    const [state, setState] = useState(items[indexActive].state)
+const Switch = ({ onSwitch = () => { }, items = [] }) => {
+    const [state, setState] = useState(items[0].state)
 
     // Esperamos que el estado cambie para saber cuando el usuario cambia de estado
     const changeState = useCallback(() => onSwitch(state), [state])
@@ -23,7 +27,19 @@ const Switch = ({ onSwitch = () => { }, items = [], indexActive = 0 }) => {
     const itemWidth = 100 / items.length
 
     // Esperamos que se actualice el estado para ejecutar el callback
-    useEffect(() => changeState(), [state])
+    useEffect(() => {
+        changeState()
+
+        const { functions } = store.getState()
+
+        store.dispatch({
+            type: SETFUNCTION,
+            payload: {
+                ...functions,
+                resetTab: () => setState(items[0].state)
+            }
+        })
+    }, [state])
 
     const styles = StyleSheet.create({
         container: {
