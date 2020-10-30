@@ -247,9 +247,10 @@ export const CheckCameraPermission = async () => {
 export const CheckTouchIDPermission = async () => {
     try {
         const { permissions } = store.getState()
-
+        
         // Verificamos si hay permisos creados en el store de redux
         if (permissions.touchID === undefined) {
+            console.log('Estoy dentro de aqui...')
             await TouchID.isSupported()
                 .then(async biometricType => {
                     let touchID = null
@@ -266,7 +267,8 @@ export const CheckTouchIDPermission = async () => {
                     store.dispatch({ type: SETPERMISSIONS, payload })
                 })
                 .catch(e => {
-                    console.log(e)
+                    console.log('Error de no soportado')
+                    console.log(e.message)
                 })
         }
 

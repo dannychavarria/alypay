@@ -1,7 +1,7 @@
 import React, { useReducer, useEffect } from "react"
 
 // import components from react native
-import { Text, StyleSheet, View, TextInput, TouchableOpacity } from "react-native"
+import { Text, StyleSheet, View, TextInput, TouchableOpacity, Alert } from "react-native"
 
 // Import components
 import Container from "../../components/Container/Container"
@@ -87,11 +87,23 @@ const Retirement = ({ route }) => {
 
             // verifcamos si hay permisos para usar el touchID
             if (permissions.touchID === true) {
-                await TouchID.authenticate("Para continuar", {
+
+                const config = {
                     title: "Retiro Alypay",
                     passcodeFallback: true,
                     cancelText: "CANCELAR"
-                })
+                }
+                TouchID.authenticate("Para continuar", config)
+                    .then((response) => {
+                        console.log(response);
+                        Alert.alert('Autenticado');
+                    }).catch((error) => {
+                        console.log(error);
+                        Alert.alert('No autenticado');
+                    })
+            }
+            else {
+                throw String('Huella sin permisos')
             }
 
             const dataSend = {
@@ -102,8 +114,6 @@ const Retirement = ({ route }) => {
             }
 
             const { data: response } = await http.post("/wallets/retirement", dataSend, getHeaders())
-
-            console.log(response)
 
             if (response.error) {
                 throw String(response.message)

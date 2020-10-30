@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { Text, View, TouchableOpacity, StyleSheet, Alert, BackHandler } from 'react-native'
+import { Text, View, TouchableOpacity, StyleSheet, Alert } from 'react-native'
 
 // Import functions
 import { RFValue, Colors, GlobalStyles, http, loader, getHeaders, successMessage, errorMessage } from '../../utils/constants'
+import { useNavigation } from '@react-navigation/native'
 
 // Import Componets
 import Container from '../Container/Container'
@@ -11,6 +12,8 @@ import _ from "lodash"
 import store from '../../store'
 
 const Payment = ({ route, navigation }) => {
+    const { goBack } = useNavigation()
+
     // Estado que guarda los valores obtenidos de las monedas
     const [currentCoin, setCurrentCoin] = useState({})
 
@@ -85,10 +88,8 @@ const Payment = ({ route, navigation }) => {
                 // Funcion que renderiza los precios de las billetera
                 const { functions } = store.getState()
                 functions?.reloadWallets()
-                // navigation.navigate('Main', { data: TYPE_VIEW.WALLET })
-                // navigation.popToTop()
             }
-            navigation.pop()
+            goBack()
 
         } catch (error) {
             errorMessage(error.toString())
