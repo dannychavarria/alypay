@@ -45,7 +45,7 @@ const switchItems = [
  * Vista componente que se renderiza cuando 
  * el usuario ejecuta el componente pagar en el switch 
  */
-const PayComponent = ({ onChangeTransactionStatus = _ => { } }) => {
+const PayComponent = () => {
     const { navigate } = useNavigation()
 
     // Estado que renderiza la lectura del QR cada 10s
@@ -53,24 +53,6 @@ const PayComponent = ({ onChangeTransactionStatus = _ => { } }) => {
 
     // Estado que almacena el valor de la orden
     const [checkAmount, setCheckAmount] = useState("")
-
-    // let checkInterval = null
-
-    // const checkTransactionStatus = async _ => {
-    //     try {
-    //         const status = await AsyncStorage.getItem('transactionStatus')
-    //         console.log(status)
-    //         if (status) {
-    //             await AsyncStorage.removeItem('transactionStatus')
-    //             onChangeTransactionStatus()
-    // window.clearInterval(checkInterval)
-    //         }
-    //         console.log('interval')
-    //     } catch (error) {
-    //         console.log(error)
-    //     }
-    // }
-
 
     /**
      * Funcion que realiza el pago si la orden es escrita
@@ -85,9 +67,7 @@ const PayComponent = ({ onChangeTransactionStatus = _ => { } }) => {
                 throw String("Ingresa el numero de orden para continuar el pago")
             }
 
-            navigate("Pagar", { data: { order: orderId }, scan: false })
-            // checkInterval = _ => checkTransactionStatus()
-            // window.setInterval(checkInterval, 1000)
+            navigate("Payment", { data: { order: orderId }, scan: false })
 
         } catch (error) {
             errorMessage(error.toString())
@@ -110,9 +90,7 @@ const PayComponent = ({ onChangeTransactionStatus = _ => { } }) => {
             setReload(false)
 
             window.setTimeout(_ => setReload(true), 1000)
-            navigate("Pagar", { data: parsedData, scan: true })
-            // checkInterval = _ => checkTransactionStatus()
-            // window.setInterval(checkInterval, 1000)
+            navigate("Payment", { data: parsedData, scan: true })
 
         } catch (error) {
             errorMessage(error.toString())
@@ -214,6 +192,7 @@ const Main = () => {
 
     const [state, dispatch] = useReducer(reducer, initialState)
 
+
     const styles = StyleSheet.create({
         containerWallets: {
             marginHorizontal: RFValue(10),
@@ -253,10 +232,10 @@ const Main = () => {
             }
         })
 
-        // obtenemos las funciones genericas de redux
-        const { functions } = store.getState()
+        // // obtenemos las funciones genericas de redux
+        // const { functions } = store.getState()
 
-        console.log(functions)
+        // console.log(functions)
     }, [])
 
     return (
@@ -271,8 +250,7 @@ const Main = () => {
 
                 {
                     stateView === TYPE_VIEW.PAY &&
-                    <PayComponent
-                        onChangeTransactionStatus={_ => setStateView(TYPE_VIEW.WALLET)} />
+                    <PayComponent />
                 }
             </View>
 

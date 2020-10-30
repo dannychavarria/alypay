@@ -11,35 +11,37 @@ import _ from "lodash"
 import store from '../../store'
 
 const Payment = ({ route, navigation }) => {
-    //
+    // Estado que guarda los valores obtenidos de las monedas
     const [currentCoin, setCurrentCoin] = useState({})
-    
-    //
+
+    // Almacena los datos recibidos del api GET /transaction/info acerca del comercio.
     const [commerceData, setCommerceData] = useState({})
-    
-    //
+
+    // Estado que guarda la informacion detallada de las monedas
     const [crpytoPrices, setCryptoPrices] = useState({ ALY: null, BTC: null, ETH: null, DASH: null, LTC: null })
-    
-    // 
+
+    // Informacion detallada del comercio
     const Pay = route.params.data
-    
-    //
+
+    // Informacion de la orden de pago si es escaneada/escrita
     const scanned = route.params.scan
 
-    // ?????
+    // Obtenemos los precios de las mones
     const getAllPrices = async () => {
         try {
             loader(true)
 
+            // Ejecutamos la peticion
             const { data } = await http.get(`/ecommerce/transaction/info/${scanned ? Pay.orderId : Pay.order}`, getHeaders());
+
             if (data.error) {
                 throw String(data.message)
             }
 
-            //
+            // Almacena los precios de las monedas optenidas de la peticion 
             setCryptoPrices(data.wallets)
-            
-            // ???????
+
+            // Almacena el detalle de la orden del comercio
             setCommerceData(data.data)
 
         } catch (error) {
@@ -50,18 +52,18 @@ const Payment = ({ route, navigation }) => {
         }
     }
 
-    // 
+    /**Funcion que envia los datos al servidor backend */
     const confirmPayment = async () => {
         try {
             loader(true)
 
-            //
+            // Monto del subtotal del Fee
             const amount = currentCoin.fee.subtotal
 
-            // 
+            // Monto del subtotal del Fee en dolares
             const _amountUSD = currentCoin.feeUSD.subtotal
 
-            //
+            // Construimos el dato formato json para enviarlo al backend
             const senData = {
                 id: scanned ? Pay.orderId : Pay.order,
                 from: currentCoin.id,
@@ -70,7 +72,7 @@ const Payment = ({ route, navigation }) => {
                 amountUSD: _amountUSD,
             }
 
-            // Peticion que hace????
+            // Realiza la peticion de pago con los datos de la transaccion obtenidos
             const { data } = await http.post("/ecommerce/transaction/pay", senData, getHeaders())
 
             if (data.error) {
@@ -78,15 +80,16 @@ const Payment = ({ route, navigation }) => {
             }
 
             if (data.response === "success") {
-                // await AsyncStorage.setItem('transactionStatus', 'true')
                 successMessage("Pago de su Transaccion Exitosa")
 
-
-                //
-                navigation.popToTop()
+                // Funcion que renderiza los precios de las billetera
+                const { functions } = store.getState()
+                functions?.reloadWallets()
+                // navigation.navigate('Main', { data: TYPE_VIEW.WALLET })
+                // navigation.popToTop()
             }
+            navigation.pop()
 
-            // navigation.pop()
         } catch (error) {
             errorMessage(error.toString())
         } finally {
@@ -94,9 +97,9 @@ const Payment = ({ route, navigation }) => {
         }
     }
 
-    //?????
+    // Funcion que cancela la orden generada por el comercio
     const cancelPayment = () => {
-        return Alert.alert("Estas apunto de cancelar la transaccion", "Realmente quieres ejecutar esta accion", [
+        Alert.alert("Estas apunto de cancelar la transaccion", "Realmente quieres ejecutar esta accion", [
             {
                 text: "Cancelar",
                 onPress: () => { }
@@ -104,27 +107,16 @@ const Payment = ({ route, navigation }) => {
             {
                 text: "Salir",
                 onPress: () => {
-                    const { functions } = store.getState()
-
-                    functions?.reloadWallets()
-
                     navigation.pop()
                 }
             }
         ])
 
-        // return true
+        return true
     }
 
     useEffect(() => {
-
-        /// ????
-        const handledBack = BackHandler.addEventListener("hardwareBackPress", cancelPayment)
-
         getAllPrices()
-
-        return () => handledBack.remove()
-
     }, [])
 
     return (
@@ -167,7 +159,7 @@ const Payment = ({ route, navigation }) => {
                 </View>
 
                 <View style={styles.headerCardTotals}>
-                    <Text style={styles.textHeaderCard}>Total ()</Text>
+                    <Text style={styles.textHeaderCard}>Total</Text>
                     <Text style={styles.textHeaderCard}>Total (USD)</Text>
                 </View>
 

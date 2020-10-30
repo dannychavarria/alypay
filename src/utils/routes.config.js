@@ -6,7 +6,7 @@ const ROUTES = {
     RECHARGE: "Recharge",
     WALLET: "Wallet",
     RETIREMENT: "Retirement",
-    PAGAR: "Pagar",
+    PAYMENT: "Payment",
     SEARCH: "Search",
 }
 

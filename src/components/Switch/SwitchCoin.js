@@ -4,7 +4,7 @@ import React, { useState, useCallback, useEffect } from "react"
 import { StyleSheet, TouchableOpacity, Text, View } from "react-native"
 
 // Import Constanst
-import { Colors, RFValue, http } from "../../utils/constants"
+import { Colors, RFValue } from "../../utils/constants"
 
 /**
  * Componente de switch wallet/sell
@@ -78,7 +78,7 @@ const SwitchCoin = ({ onSwitch = () => { }, items = {} }) => {
     })
 
     const ItemComponent = (item, key) => {
-         //console.log(item)
+        //console.log(item)
         return (
             <TouchableOpacity
                 disabled={!item.credit}

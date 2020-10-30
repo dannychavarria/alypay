@@ -23,12 +23,13 @@ import Login from "./views/Login/Login"
 import Main from "./views/Main/Index"
 import Splash from "./components/Splash/Splash"
 import Register from "./views/Register/Register"
-import Pagar from "./components/Pagar/Pagar"
+import Payment from "./components/Payment/Payment"
 import Search from "./components/Search/Search"
 
 // import assets and animation
 import notConectionAnimation from "./animations/no-internet-connection.json"
 import ButtonSupport from "./components/ButtonSupport/ButtonSupport.component"
+
 
 const Stack = createStackNavigator()
 
@@ -109,7 +110,7 @@ const App = () => {
                         state.loged &&
                         <>
                             <Stack.Screen name={ROUTES.MAIN} component={Main} />
-                            <Stack.Screen name={ROUTES.PAGAR} component={Pagar} />
+                            <Stack.Screen name={ROUTES.PAYMENT} component={Payment} />
                             <Stack.Screen name={ROUTES.SEARCH} component={Search} />
                         </>
                     }
