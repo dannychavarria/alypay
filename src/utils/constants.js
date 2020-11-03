@@ -83,8 +83,9 @@ const PORT = "3000"
 
 /**Direction for server */
 //export const serverAddress = "https://alypay.uc.r.appspot.com"
+export const serverAddress = "https://test-after-prod.uc.r.appspot.com"
 //export const serverAddress = "https://192.168.1.224:3000"
-export const serverAddress = Platform.OS === "ios" ? `http://localhost:${PORT}` : `http://192.168.0.134:${PORT}`
+// export const serverAddress = Platform.OS === "ios" ? `http://localhost:${PORT}` : `http://192.168.0.134:${PORT}`
 
 /**
  * Constante que almacena la url del preview image del simbolo alycoin
@@ -104,7 +105,7 @@ export const http = axios.create({
 
             return true
         } else {
-            return status >= 200 && status < 300
+            return (status >= 200 && status < 300)
         }
     }
 })
@@ -243,33 +244,40 @@ export const CheckCameraPermission = async () => {
     }
 }
 
+/**
+ * Funcion que se ejecuta cuando el 
+ * usuario no tiene ningun tipo de autenticacion TouchID/FaceID
+ */
+const securityNotification = () => {
+    showMessage({
+        icon: "info",
+        message: "Sugerencia de Seguridad",
+        backgroundColor: "#2f3542",
+        description: "Te sugerimos proteger tu cuenta con autenticacion TouchID/FaceID. Toca para abrir Preferencias.",
+        textStyle: {
+            fontSize: RFValue(10)
+        },
+        onPress: () => Linking.openSettings(),
+        floating: true,
+        duration: 10000
+    })
+}
+
 /** Funcion que verifica que si el dispositivo tiene touchID */
 export const CheckTouchIDPermission = async () => {
     try {
         const { permissions } = store.getState()
-        
+
         // Verificamos si hay permisos creados en el store de redux
-        if (permissions.touchID === undefined) {
-            console.log('Estoy dentro de aqui...')
-            await TouchID.isSupported()
-                .then(async biometricType => {
-                    let touchID = null
+        if (!permissions.touchID) {
+            const biometricType = await TouchID.isSupported().catch(securityNotification)
 
-                    if (biometricType === "TouchID") {
-                        touchID = true
-                    }
+            const payload = {
+                ...permissions,
+                touchID: biometricType
+            }
 
-                    const payload = {
-                        ...permissions,
-                        touchID
-                    }
-
-                    store.dispatch({ type: SETPERMISSIONS, payload })
-                })
-                .catch(e => {
-                    console.log('Error de no soportado')
-                    console.log(e.message)
-                })
+            store.dispatch({ type: SETPERMISSIONS, payload })
         }
 
     } catch (error) {
@@ -347,7 +355,7 @@ export const getHeaders = () => {
  * @param {Number} number
  * 
  * `return string` */
-export const WithDecimals = (number = 0, decimals = 2) => number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+export const WithDecimals = (number = 0) => number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
 /**Abre la app de whatsapp para soporte */
 export const OpenSupport = () => Linking.openURL('whatsapp://send?phone=+50660727720')
