@@ -12,7 +12,7 @@ import QRCodeScanner from "react-native-qrcode-scanner"
 // import constants and functions
 import TouchID from "react-native-touch-id"
 import { RNCamera } from "react-native-camera"
-import { reducer, RFValue, Colors, GlobalStyles, WithDecimals, CheckTouchIDPermission, errorMessage, http, getHeaders, loader, successMessage } from "../../utils/constants"
+import { reducer, RFValue, Colors, GlobalStyles, WithDecimals, CheckTouchIDPermission, errorMessage, http, getHeaders, loader, successMessage, configTouchIDAuth } from "../../utils/constants"
 
 // Import Assets
 import scanQRAnimation from "../../animations/scan-qr.json"
@@ -74,26 +74,8 @@ const Retirement = ({ route }) => {
                 throw String(`Monto de ${data.description} tiene un formato incorrecto`)
             }
 
-            // // verificamos los permisos del TouchID
+            // verificamos los permisos del TouchID
             await CheckTouchIDPermission()
-
-            // // obtenemos los permisos acomulados en redux
-            const { permissions } = store.getState()
-
-            // // console.log(permissions)
-
-            // // verifcamos si hay permisos para usar el touchID
-            if (permissions.touchID) {
-
-                const config = {
-                    title: "Retiro Alypay",
-                    passcodeFallback: true,
-                    cancelText: "CANCELAR"
-                }
-
-                // verificamos del touch id
-                await TouchID.authenticate("Para continuar", config)
-            }
 
             const dataSend = {
                 wallet: state.walletAdress,

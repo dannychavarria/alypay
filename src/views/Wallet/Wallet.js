@@ -22,7 +22,7 @@ import { RNCamera } from "react-native-camera"
 
 
 // Import constanst and others things
-import { Colors, RFValue, GlobalStyles, CopyClipboard, reducer, http, errorMessage, getHeaders, loader, successMessage, CheckTouchIDPermission } from "../../utils/constants"
+import { Colors, RFValue, GlobalStyles, CopyClipboard, reducer, http, errorMessage, getHeaders, loader, successMessage, CheckTouchIDPermission, configTouchIDAuth } from "../../utils/constants"
 import TouchID from "react-native-touch-id"
 
 // store and actionTypes from redux
@@ -269,22 +269,12 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
             // verificamos si el dispositvo tiene touch id
             await CheckTouchIDPermission()
 
-            const { permissions } = store.getState()
-
-            if (permissions.touchID === true) {
-                await TouchID.authenticate("Para continuar", {
-                    title: "Transferencia Alypay",
-                    passcodeFallback: true,
-                    cancelText: "CANCELAR"
-                })
-            }
-
             loader(true)
 
             const { data: response } = await http.post("/wallets/transaction", vars, getHeaders())
 
             if (response.error) {
-                throw response.message
+                throw String(response.message)
             }
 
             // verificamos si todo
@@ -305,7 +295,7 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
                 dispatch({ type: "walletAccepted", payload: false })
 
             } else {
-                throw "Tu transaccion no se ha completado, contacte a soporte"
+                throw String("Tu transaccion no se ha completado, contacte a soporte")
             }
 
             onCompleteTrasanction()
@@ -321,36 +311,36 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
         try {
             // Loader on mode
 
-            if (state.errorMessage.length > 0) {
-                throw state.errorMessage
-            }
+            // if (state.errorMessage.length > 0) {
+            //     throw state.errorMessage
+            // }
 
-            if (state.walletAdress.length < 90) {
-                throw "Direccion de billetera incorrecta"
-            }
+            // if (state.walletAdress.length < 90) {
+            //     throw "Direccion de billetera incorrecta"
+            // }
 
-            loader(true)
+            // loader(true)
 
-            // get data wallet
-            const { data: payload } = await http.get(`/wallets/verify/${state.walletAdress}`, getHeaders())
+            // // get data wallet
+            // const { data: payload } = await http.get(`/wallets/verify/${state.walletAdress}`, getHeaders())
 
-            // buscamos un error
-            if (payload.error) {
-                throw "Billetera no encontrada, intente nuevamente"
-            }
+            // // buscamos un error
+            // if (payload.error) {
+            //     throw String("Billetera no encontrada, intente nuevamente")
+            // }
 
 
-            // Verificamos que si la billetera es la misma
-            if (payload.id === data.id) {
-                throw "Billetera incorrecta"
-            }
+            // // Verificamos que si la billetera es la misma
+            // if (payload.id === data.id) {
+            //     throw "Billetera incorrecta"
+            // }
 
-            // verificamos si ambas billetera son del mismo tipo
-            if (payload.symbol !== data.symbol) {
-                throw `Esta billetera no es de ${data.description}`
-            }
+            // // verificamos si ambas billetera son del mismo tipo
+            // if (payload.symbol !== data.symbol) {
+            //     throw `Esta billetera no es de ${data.description}`
+            // }
 
-            dispatch({ type: "dataWallet", payload })
+            // dispatch({ type: "dataWallet", payload })
 
             // wallet is accepted
             dispatch({ type: "walletAccepted", payload: true })

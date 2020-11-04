@@ -266,18 +266,10 @@ const securityNotification = () => {
 /** Funcion que verifica que si el dispositivo tiene touchID */
 export const CheckTouchIDPermission = async () => {
     try {
-        const { permissions } = store.getState()
+        const biometricType = await TouchID.isSupported().catch(securityNotification)
 
-        // Verificamos si hay permisos creados en el store de redux
-        if (!permissions.touchID) {
-            const biometricType = await TouchID.isSupported().catch(securityNotification)
-
-            const payload = {
-                ...permissions,
-                touchID: biometricType
-            }
-
-            store.dispatch({ type: SETPERMISSIONS, payload })
+        if (biometricType) {
+            await TouchID.authenticate("Para continuar", configTouchIDAuth)
         }
 
     } catch (error) {
@@ -359,3 +351,12 @@ export const WithDecimals = (number = 0) => number.toString().replace(/\B(?=(\d{
 
 /**Abre la app de whatsapp para soporte */
 export const OpenSupport = () => Linking.openURL('whatsapp://send?phone=+50660727720')
+
+/**
+ * Configuracion de el metodo de authenticacion de touchID
+ */
+export const configTouchIDAuth = {
+    title: "Autenticación",
+    passcodeFallback: true,
+    cancelText: "CANCELAR",                    
+}
