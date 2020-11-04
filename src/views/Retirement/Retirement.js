@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect } from "react"
+import React, { useReducer } from "react"
 
 // import components from react native
 import { Text, StyleSheet, View, TextInput, TouchableOpacity, Alert } from "react-native"
@@ -74,36 +74,25 @@ const Retirement = ({ route }) => {
                 throw String(`Monto de ${data.description} tiene un formato incorrecto`)
             }
 
-            // validamos si el monto es mayor al balance
-            if (amount > data.amount) {
-                throw String(`Balance insuficiente para retirar ${amount} ${data.symbol}`)
-            }
-
-            // verificamos los permisos del TouchID
+            // // verificamos los permisos del TouchID
             await CheckTouchIDPermission()
 
-            // obtenemos los permisos acomulados en redux
+            // // obtenemos los permisos acomulados en redux
             const { permissions } = store.getState()
 
-            // verifcamos si hay permisos para usar el touchID
-            if (permissions.touchID === true) {
+            // // console.log(permissions)
+
+            // // verifcamos si hay permisos para usar el touchID
+            if (permissions.touchID) {
 
                 const config = {
                     title: "Retiro Alypay",
                     passcodeFallback: true,
                     cancelText: "CANCELAR"
                 }
-                TouchID.authenticate("Para continuar", config)
-                    .then((response) => {
-                        console.log(response);
-                        Alert.alert('Autenticado');
-                    }).catch((error) => {
-                        console.log(error);
-                        Alert.alert('No autenticado');
-                    })
-            }
-            else {
-                throw String('Huella sin permisos')
+
+                // verificamos del touch id
+                await TouchID.authenticate("Para continuar", config)
             }
 
             const dataSend = {

@@ -142,7 +142,7 @@ const App = () => {
 
             <Splash isVisible={state.splash} />
 
-            <FlashMessage position="top" />
+            <FlashMessage position="top" floating={true} />
         </>
     )
 }

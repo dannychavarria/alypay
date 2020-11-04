@@ -13,7 +13,7 @@ import { Text, TextInput, StyleSheet, Image, View, Dimensions, KeyboardAvoidingV
 import ROUTES from "../../utils/routes.config"
 import validator from "validator"
 import { useNavigation } from "@react-navigation/native"
-import { reducer, Colors, GlobalStyles, RFValue, setStorage, http, loader, errorMessage } from "../../utils/constants"
+import { reducer, Colors, GlobalStyles, RFValue, setStorage, http, loader, errorMessage, serverAddress } from "../../utils/constants"
 import { showMessage } from "react-native-flash-message"
 
 // Import reduz store and types
@@ -69,22 +69,19 @@ const Login = ({ navigation }) => {
                 system_name: state.systemName
             }
 
-            await http.post("/login", variables)
-                .then(response => {
-                    const { data } = response
+            const { data } = await http.post("/login", variables)
 
-                    // Verificamos si hay un error
-                    if (data.error) {
-                        throw data.message
-                    } else {
-                        // Validamos si los datos que retornan son validos
-                        if (Object.values(data).length > 0) {
-                            store.dispatch({ type: SETSTORAGE, payload: data })
+            // Verificamos si hay un error
+            if (data.error) {
+                throw data.message
+            } else {
+                // Validamos si los datos que retornan son validos
+                if (Object.values(data).length > 0) {
+                    store.dispatch({ type: SETSTORAGE, payload: data })
 
-                            setStorage(data)
-                        }
-                    }
-                })
+                    setStorage(data)
+                }
+            }
 
             // submit({ variables })
         } catch (error) {
@@ -107,24 +104,30 @@ const Login = ({ navigation }) => {
     const getDeviceInfo = async () => {
         try {
             // Obtenemos la ip publica del dispositivo
-            getPublicIp().then((payload) => dispatch({ type: "ipAddress", payload }))
-    
+            // const ip = await getPublicIp()
+
+            // console.log(ip)
+
+            // dispatch({ type: "ipAddress", payload: ip })
+
             /**Marca del dispositivo */
             const device = await getBrand()
-    
+
             /**Modelo del dispositivo */
             const deviceId = await getDeviceId()
-    
+
             // Ingresamos al store la informacion del dispositivo
             dispatch({ type: "device", payload: `${device} - ${deviceId}` })
-    
+
             // Obtenemos la direccion mac del dispositvo
-            await getMacAddress().then(payload => dispatch({ type: "macAddress", payload }))
-    
+            const macAddress = await getMacAddress()
+
+            dispatch({ type: "macAddress", payload: macAddress })
+
             const systemVersion = await getSystemName()
-    
+
             dispatch({ type: "systemName", payload: systemVersion })
-            
+
         } catch (error) {
             errorMessage(error.toString())
         }
