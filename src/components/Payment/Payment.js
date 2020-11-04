@@ -89,7 +89,6 @@ const Payment = ({ route, navigation }) => {
                 const { functions } = store.getState()
                 functions?.reloadWallets()
             }
-            goBack()
 
         } catch (error) {
             errorMessage(error.toString())
@@ -133,50 +132,33 @@ const Payment = ({ route, navigation }) => {
             <View style={styles.card}>
                 <View style={styles.headerCard}>
                     <Text style={styles.textHeaderCard}>Descripcion de la Transaccion</Text>
-                </View>
-
-                <View style={styles.bodyRowTable}>
                     <Text style={styles.textRowTable}>{scanned ? Pay.description : commerceData.description}</Text>
+
                 </View>
 
                 <View style={styles.headerCard}>
-                    <Text style={styles.textHeaderCard}>Sub-Total {currentCoin.symbol}</Text>
-                    <Text style={styles.textHeaderCard}>Fee {currentCoin.symbol}</Text>
+                    <View style={styles.bodyRowTable}>
+                        <Text style={styles.textHeaderCard}>Sub-Total {currentCoin.symbol}</Text>
+                        <Text style={styles.textRowTable}>{currentCoin.fee?.subtotal}</Text>
+                    </View>
+
+                    <View style={styles.bodyRowTable}>
+                        <Text style={styles.textHeaderCard}>Fee {currentCoin.symbol}</Text>
+                        <Text style={styles.textRowTable}>{currentCoin.fee?.fee}</Text>
+                    </View>
+
+                    <View style={styles.bodyRowTable}>
+                        <Text style={styles.textFooterCard}>Total {currentCoin.symbol}</Text>
+                        <Text style={styles.textRowTable}>{currentCoin.fee?.total}</Text>
+                    </View>
                 </View>
 
-                <View style={styles.bodyRowTable}>
-                    <Text style={styles.textRowTable}>{currentCoin.fee?.subtotal}</Text>
-                    <Text style={styles.textRowTable}>{currentCoin.fee?.fee}</Text>
-                </View>
+                <View style={styles.footerCard}>
+                    <View style={styles.bodyRowTable}>
+                        <Text style={styles.textFooterCard}>Total (USD)</Text>
+                        <Text style={styles.textRowTable}>{currentCoin.feeUSD?.total} {currentCoin.feeUSD?.symbol}</Text>
+                    </View>
 
-                <View style={styles.headerCard}>
-                    <Text style={styles.textHeaderCard}>Total {currentCoin.symbol}</Text>
-                    <Text style={styles.textHeaderCard}>Symbolo del Fee</Text>
-                </View>
-
-                <View style={styles.bodyRowTable}>
-                    <Text style={styles.textRowTable}>{currentCoin.fee?.total}</Text>
-                    <Text style={styles.textRowTable}>{currentCoin.fee?.symbol}</Text>
-                </View>
-
-                <View style={styles.headerCardTotals}>
-                    <Text style={styles.textHeaderCard}>Total</Text>
-                    <Text style={styles.textHeaderCard}>Total (USD)</Text>
-                </View>
-
-                <View style={styles.bodyRowTable}>
-                    <Text style={styles.textRowTable}>{scanned ? Pay.amount : commerceData.amount}</Text>
-                    <Text style={styles.textRowTable}>$ {scanned ? Pay.amount : commerceData.amount}</Text>
-                </View>
-
-                <View style={styles.headerCardTotals}>
-                    <Text style={styles.textHeaderCard}>Tipo de Moneda</Text>
-                    <Text style={styles.textHeaderCard}>Total de Moneda</Text>
-                </View>
-
-                <View style={styles.bodyRowTable}>
-                    <Text style={styles.textRowTable}>{currentCoin.symbol}</Text>
-                    <Text style={styles.textRowTable}>{currentCoin.feeUSD?.total} {currentCoin.feeUSD?.symbol}</Text>
                 </View>
             </View>
 
@@ -186,10 +168,10 @@ const Payment = ({ route, navigation }) => {
                 </TouchableOpacity>
 
                 <TouchableOpacity style={GlobalStyles.buttonPrimary}>
-                    <Text onPress={confirmPayment}>Confirmar</Text>
+                    <Text onPress={confirmPayment} style={{textTransform: "uppercase"}}>Confirmar</Text>
                 </TouchableOpacity>
             </View>
-        </Container>
+        </Container >
     )
 
 }
@@ -223,6 +205,7 @@ const styles = StyleSheet.create({
         color: Colors.colorYellow
     },
     textFooterCard: {
+        fontWeight: "bold",
         fontSize: RFValue(16),
         color: Colors.colorYellow
     },
@@ -239,18 +222,14 @@ const styles = StyleSheet.create({
         borderBottomColor: Colors.colorYellow,
         borderBottomWidth: 2,
         paddingVertical: 10,
-        flexDirection: "row",
-        justifyContent: "space-between"
+        // flexDirection: "row",
+        // justifyContent: "space-between"
     },
     footerCard: {
-        borderBottomColor: Colors.colorYellow,
-        borderBottomWidth: 2,
         paddingVertical: 10,
-        flexDirection: "row",
-        justifyContent: "space-between"
     },
     bodyRowTable: {
-        // marginTop: 10,
+        marginTop: 10,
         flexDirection: "row",
         justifyContent: "space-between",
     },

@@ -68,7 +68,6 @@ const PayComponent = () => {
 
             const { functions } = store.getState()
 
-
             // reset tab default
             functions?.resetTab()
 
@@ -215,6 +214,7 @@ const Main = () => {
     }
 
     useEffect(() => {
+
         configurateComponent()
 
         CheckCameraPermission()
