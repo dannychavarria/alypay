@@ -126,7 +126,7 @@ const Description = ({ item }) => {
                 </View>
             </View>
 
-            <TouchableOpacity onPress={_ => CopyClipboard(item.wallet_too)}>
+            <TouchableOpacity onPress={_ => CopyClipboard(item.wallet_to)}>
                 <View style={[styles.hashsec, styles.text]}>
                     <View style={styles.containertitle}>
                         <Text style={styles.title}>Billetera Remitente</Text>
@@ -135,8 +135,8 @@ const Description = ({ item }) => {
 
                     <View style={styles.containertitle}>
                         {
-                            item.wallet_too
-                                ? <Text style={styles.subtitle}>{item.wallet_too}</Text>
+                            item.wallet_to
+                                ? <Text style={styles.subtitle}>{item.wallet_to}</Text>
                                 : <Text style={styles.textInfoEmpty}>SIN DATOS</Text>
                         }
 
@@ -197,8 +197,6 @@ const Search = () => {
             loader(false)
         }
     }
-
-
 
     return (
         <Container>
