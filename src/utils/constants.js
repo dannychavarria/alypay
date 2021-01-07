@@ -82,10 +82,10 @@ export const Colors = {
 const PORT = "3000"
 
 /**Direction for server */
-//export const serverAddress = "https://alypay.uc.r.appspot.com"
-export const serverAddress = "https://test-after-prod.uc.r.appspot.com"
+// export const serverAddress = "https://alypay.uc.r.appspot.com"
+// export const serverAddress = "https://test-after-prod.uc.r.appspot.com"
 //export const serverAddress = "https://192.168.1.224:3000"
-// export const serverAddress = Platform.OS === "ios" ? `http://localhost:${PORT}` : `http://192.168.0.134:${PORT}`
+export const serverAddress = Platform.OS === "ios" ? `http://localhost:${PORT}` : `http://192.168.0.132:${PORT}`
 
 /**
  * Constante que almacena la url del preview image del simbolo alycoin
@@ -264,18 +264,21 @@ const securityNotification = () => {
 }
 
 /** Funcion que verifica que si el dispositivo tiene touchID */
-export const CheckTouchIDPermission = async () => {
+export const CheckTouchIDPermission = async _ => {
     try {
         const biometricType = await TouchID.isSupported().catch(securityNotification)
 
         if (biometricType) {
             await TouchID.authenticate("Para continuar", configTouchIDAuth)
+
+            return true
+        } else {
+            return true
         }
 
     } catch (error) {
-        Toast.show(error.toString(), Toast.LONG)
+        return false
     }
-
 }
 
 /**
@@ -353,10 +356,41 @@ export const WithDecimals = (number = 0) => number.toString().replace(/\B(?=(\d{
 export const OpenSupport = () => Linking.openURL('whatsapp://send?phone=+50660727720')
 
 /**
+* Obtiene el porcentaje del fee según el monto ingresado y el tipo de fee a verificar
+* @param {Number} amount - Monto actual
+* @param {Number} feeType - tipo de fee (1=transacción, 2=retiro, 3=exchange)
+*/
+export const getFeePercentage = (amount, feeType, fees) => {
+    const enableFees = {
+        1: 'transaction',
+        2: 'retirement',
+        3: 'exchange'
+    }
+
+    const currentFeeType = enableFees[feeType]
+
+    const [firstFee, secondFee, lastFee] = fees[currentFeeType]
+
+    // Se verifica sí el monto está dentro del primer rango
+    if (amount <= firstFee.limit) {
+        return firstFee
+    }
+    // Se verifica sí el monto está dentro del segundo rango
+    if (amount > firstFee.limit && amount <= lastFee.limit) {
+        return secondFee
+    }
+    // Se verifica sí el monto está dentro del último rango
+    if (amount > lastFee.limit) {
+        return lastFee
+    }
+    return {}
+}
+
+/**
  * Configuracion de el metodo de authenticacion de touchID
  */
 export const configTouchIDAuth = {
     title: "Autenticación",
     passcodeFallback: true,
-    cancelText: "CANCELAR",                    
+    cancelText: "CANCELAR",
 }

@@ -267,11 +267,17 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
             }
 
             // verificamos si el dispositvo tiene touch id
-            await CheckTouchIDPermission()
+            const auth = await CheckTouchIDPermission()
+
+            if (!auth) {
+                throw String("Autenticación incorrecta")
+            }
 
             loader(true)
 
             const { data: response } = await http.post("/wallets/transaction", vars, getHeaders())
+
+            console.log(response)
 
             if (response.error) {
                 throw String(response.message)

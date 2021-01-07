@@ -9,9 +9,7 @@ import Search from '../Search/Search'
 // Import functions and constanst
 import { RFValue, Colors, logOutApp, OpenSupport } from "../../utils/constants"
 import { useNavigation, StackActions } from "@react-navigation/native"
-
-// Import asstes
-import defaultImage from "../../static/profile-default.png"
+import { isIphoneX } from "react-native-iphone-x-helper"
 
 const iconSize = RFValue(32)
 
@@ -102,7 +100,7 @@ const Navbar = () => {
                     </View>
 
                     {
-                        Platform.OS === "ios" &&
+                        (Platform.OS === "ios" && isIphoneX()) &&
                         <View style={{ height: 20 }} />
                     }
                 </View>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { TextInput, TouchableOpacity, Text, View, StyleSheet, ScrollView } from "react-native"
 
 // import all components
@@ -9,15 +9,11 @@ import Lottie from 'lottie-react-native';
 // import constants and functions
 import { GlobalStyles, http, loader, errorMessage, CopyClipboard, RFValue, Colors } from '../../utils/constants'
 import moment from "moment"
-import { useNavigation } from '@react-navigation/native'
 
 // import assets
 import empty from '../../animations/empty.json';
 
-
-const Description = ({ item }) => {
-
-    const styles = StyleSheet.create({
+const stylesDescription = StyleSheet.create({
         //Secciones de los detalles
         facePost: {
             backgroundColor: Colors.colorBlack,
@@ -70,74 +66,74 @@ const Description = ({ item }) => {
         }
     })
 
+const Description = ({ item }) => {
     return (
-        <ScrollView style={styles.scroll}>
-
+        <ScrollView style={stylesDescription.scroll}>
             <TouchableOpacity onPress={_ => CopyClipboard(item.hash)} >
-                <View style={[styles.hashsec, styles.text]}>
-                    <View style={styles.containertitle}>
-                        <Text style={styles.title}>HASH</Text>
+                <View style={[stylesDescription.hashsec, stylesDescription.text]}>
+                    <View style={stylesDescription.containertitle}>
+                        <Text style={stylesDescription.title}>HASH</Text>
                         <Icon name="ios-copy" size={15} color="#877E7C" />
                     </View>
-                    <View style={styles.containertitle}>
-                        <Text style={styles.subtitle}>{(item.hash ? item.hash : "")}</Text>
+                    <View style={stylesDescription.containertitle}>
+                        <Text style={stylesDescription.subtitle}>{(item.hash ? item.hash : "")}</Text>
                     </View>
                 </View>
             </TouchableOpacity>
 
-            <View style={[styles.facePost, styles.text]}>
-                <View style={styles.containerPrinc}>
+            <View style={[stylesDescription.facePost, stylesDescription.text]}>
+                <View style={stylesDescription.containerPrinc}>
 
-                    <View style={styles.containertitle}>
-                        <Text style={styles.title}>Monto de Transacción</Text>
-                        <Text style={styles.title}>Monto (USD)</Text>
+                    <View style={stylesDescription.containertitle}>
+                        <Text style={stylesDescription.title}>Monto de Transacción</Text>
+                        <Text style={stylesDescription.title}>Monto (USD)</Text>
                     </View>
 
-                    <View style={styles.containertitle}>
-                        <Text style={styles.subtitle}>{(item.amount ? item.amount : "")}</Text>
-                        <Text style={styles.subtitle}>{(item.amount_usd ? item.amount_usd : "")}</Text>
+                    <View style={stylesDescription.containertitle}>
+                        <Text style={stylesDescription.subtitle}>{(item.amount ? item.amount : "")}</Text>
+                        <Text style={stylesDescription.subtitle}>{(item.amount_usd ? item.amount_usd : "")}</Text>
                     </View>
                 </View>
-                <View style={styles.containerPrinc}>
+                <View style={stylesDescription.containerPrinc}>
 
-                    <View style={styles.containertitle}>
-                        <Text style={styles.title}>Moneda</Text>
-                        <Text style={styles.title}>Descripcion</Text>
+                    <View style={stylesDescription.containertitle}>
+                        <Text style={stylesDescription.title}>Moneda</Text>
+                        <Text style={stylesDescription.title}>Descripcion</Text>
                     </View>
 
-                    <View style={styles.containertitle}>
-                        <Text style={styles.subtitle}>{(item.name_coin_transaction ? item.name_coin_transaction : "")}</Text>
-                        <Text style={styles.subtitle}>{(item.transaction_tail ? item.transaction_tail : "None")}</Text>
+                    <View style={stylesDescription.containertitle}>
+                        <Text style={stylesDescription.subtitle}>{(item.name_coin_transaction ? item.name_coin_transaction : "")}</Text>
+                        <Text style={stylesDescription.subtitle}>{(item.transaction_tail ? item.transaction_tail : "None")}</Text>
                     </View>
 
                 </View>
 
-                <View style={styles.containerPrinc}>
-                    <View style={styles.containertitle}>
-                        <Text style={styles.title}>Fee</Text>
-                        <Text style={styles.title}>Fecha</Text>
+                <View style={stylesDescription.containerPrinc}>
+                    <View style={stylesDescription.containertitle}>
+                        <Text style={stylesDescription.title}>Fee</Text>
+                        <Text style={stylesDescription.title}>Fecha</Text>
                     </View>
 
-                    <View style={styles.containertitle}>
-                        <Text style={styles.subtitle}>{(item.amount_fee && item.coin_fee ? item.amount_fee && item.coin_fee : "")}</Text>
-                        <Text style={styles.subtitle}>{(item.date_create ? moment(item.date_create).format("DD/MM/YY - HH:mm") : "")}</Text>
+                    <View style={stylesDescription.containertitle}>
+                        <Text style={stylesDescription.subtitle}>{(item.amount_fee && item.coin_fee ? item.amount_fee && item.coin_fee : "")}</Text>
+                        <Text style={stylesDescription.subtitle}>{(item.date_create ? moment(item.date_create).format("DD/MM/YY - HH:mm") : "")}</Text>
                     </View>
 
                 </View>
             </View>
 
             <TouchableOpacity onPress={_ => CopyClipboard(item.wallet_to)}>
-                <View style={[styles.hashsec, styles.text]}>
-                    <View style={styles.containertitle}>
-                        <Text style={styles.title}>Billetera Remitente</Text>
+                <View style={[stylesDescription.hashsec, stylesDescription.text]}>
+                    <View style={stylesDescription.containertitle}>
+                        <Text style={stylesDescription.title}>Billetera Remitente</Text>
                         <Icon name="ios-copy" size={15} color="#877E7C" />
                     </View>
 
-                    <View style={styles.containertitle}>
+                    <View style={stylesDescription.containertitle}>
                         {
                             item.wallet_to
-                                ? <Text style={styles.subtitle}>{item.wallet_to}</Text>
-                                : <Text style={styles.textInfoEmpty}>SIN DATOS</Text>
+                                ? <Text style={stylesDescription.subtitle}>{item.wallet_to}</Text>
+                                : <Text style={stylesDescription.textInfoEmpty}>SIN DATOS</Text>
                         }
 
                     </View>
@@ -145,15 +141,15 @@ const Description = ({ item }) => {
             </TouchableOpacity>
 
             <TouchableOpacity onPress={_ => CopyClipboard(item.wallet_from)}>
-                <View style={[styles.hashsec, styles.text]}>
+                <View style={[stylesDescription.hashsec, stylesDescription.text]}>
 
-                    <View style={styles.containertitle} >
-                        <Text style={styles.title}>Billetera Receptora</Text>
+                    <View style={stylesDescription.containertitle} >
+                        <Text style={stylesDescription.title}>Billetera Receptora</Text>
                         <Icon name="ios-copy" size={15} color="#877E7C" />
                     </View>
 
-                    <View style={styles.containertitle}>
-                        <Text style={styles.subtitle}>{(item.wallet_from ? item.wallet_from : "")}</Text>
+                    <View style={stylesDescription.containertitle}>
+                        <Text style={stylesDescription.subtitle}>{(item.wallet_from ? item.wallet_from : "")}</Text>
                     </View>
                 </View>
             </TouchableOpacity>
@@ -168,8 +164,6 @@ const Search = () => {
 
     const [searchText, setSearchText] = useState("")
     const [DescripReuslt, setDescripResult] = useState("")
-
-    const { goBack } = useNavigation()
 
     const getAllData = async () => {
         try {
@@ -200,7 +194,7 @@ const Search = () => {
 
     return (
         <Container>
-            <View style={styless.containerSearch}>
+            <View style={stylesComponent.containerSearch}>
                 <TextInput
                     value={searchText}
                     onChangeText={setSearchText}
@@ -208,27 +202,27 @@ const Search = () => {
                     placeholderTextColor="#ffff"
                     returnKeyType="search"
                     onSubmitEditing={getAllData}
-                    style={[GlobalStyles.textInput, styless.inputSearch]} />
+                    style={[GlobalStyles.textInput, stylesComponent.inputSearch]} />
 
-                <TouchableOpacity style={styless.buttonSearch} onPress={goBack}>
+                <TouchableOpacity style={stylesComponent.buttonSearch} onPress={getAllData}>
                     <Text>
-                        <Icon name="ios-arrow-back" size={25} color={Colors.colorYellow} />
+                        <Icon name="ios-search" size={30} color={Colors.colorYellow} />
                     </Text>
                 </TouchableOpacity>
             </View>
             {
                 (DescripReuslt.hash)
                     ? <Description item={DescripReuslt} />
-                    : <Lottie source={empty} style={styless.empty} loop={false} autoPlay />
+                    : <Lottie source={empty} style={stylesComponent.empty} loop={false} autoPlay />
             }
         </Container >
     )
 }
 
-const styless = StyleSheet.create({
+const stylesComponent = StyleSheet.create({
     containerSearch: {
         alignItems: "center",
-        flexDirection: "row-reverse",
+        flexDirection: "row",
         margin: 15
     },
     buttonSearch: {

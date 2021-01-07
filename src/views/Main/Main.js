@@ -1,21 +1,27 @@
-import React, { useState, useEffect, useReducer } from "react"
+import React, { useState, useEffect, useReducer, useRef } from "react"
 
 // Import componentes
 import Container from "../../components/Container/Container"
 import ItemWallet from "../../components/ItemWallet/ItemWallet"
 import QRCodeScanner from "react-native-qrcode-scanner"
 import Switch from "../../components/Switch/Switch"
+import Modal from "react-native-modal"
+import { SETFUNCTION } from "../../store/actionsTypes"
 import { RNCamera } from "react-native-camera"
-import { Text, StyleSheet, TouchableOpacity, View, TextInput, KeyboardAvoidingView } from "react-native"
+import { Text, StyleSheet, TouchableOpacity, View, TextInput, KeyboardAvoidingView, Platform } from "react-native"
+import { Image } from "react-native-animatable"
 import { useNavigation } from '@react-navigation/native'
-import * as CryptoJS from 'react-native-crypto-js';
 
 // Import constant and functions
+import * as CryptoJS from 'react-native-crypto-js';
 import { RFValue, CheckCameraPermission, http, reducer, errorMessage, getHeaders, loader, Colors, GlobalStyles } from "../../utils/constants"
 
 // import redux store and configuration
 import store from "../../store/index"
-import { SETFUNCTION } from "../../store/actionsTypes"
+import { BlurView } from "@react-native-community/blur"
+
+// import assets
+import ExampleImage from "../../static/example-order.png"
 
 /**
  * Constante que almacena el tipo de vista seleccionada del switch
@@ -47,15 +53,18 @@ const switchItems = [
  */
 const PayComponent = () => {
     const { navigate } = useNavigation()
+    const scanerCamera = useRef(null)
 
     // Estado que almacena el valor de la orden
     const [checkAmount, setCheckAmount] = useState("")
+
+    const [typeManual, setManual] = useState(false)
 
     /**
      * Funcion que realiza el pago si la orden es escrita
      * @param {*} orderId 
      */
-    const submit = async (orderId) => {
+    const submit = async _ => {
         try {
             loader(true)
 
@@ -64,12 +73,16 @@ const PayComponent = () => {
                 throw String("Ingresa el numero de orden para continuar el pago")
             }
 
-            navigate("Payment", { data: { order: orderId }, scan: false })
+            navigate("Payment", { data: { order: checkAmount }, scan: false })
 
-            const { functions } = store.getState()
+            if (typeManual) {
+                setManual(false)
+            }
+
+            // const { functions } = store.getState()
 
             // reset tab default
-            functions?.resetTab()
+            // functions?.resetTab()
 
         } catch (error) {
             errorMessage(error.toString())
@@ -93,7 +106,8 @@ const PayComponent = () => {
             navigate("Payment", { data: parsedData, scan: true })
 
         } catch (error) {
-            errorMessage(error.toString())
+            errorMessage(String("QR de pago incorrecto"))
+
         } finally {
             loader(false)
         }
@@ -133,7 +147,38 @@ const PayComponent = () => {
             zIndex: 1000,
         },
 
+        butonManual: {
+            marginTop: RFValue(35),
+            alignSelf: "center",
+            borderBottomWidth: 1,
+            borderBottomColor: Colors.colorYellow,
+        },
+
+        imageExample: {
+            borderRadius: RFValue(255),
+            marginVertical: RFValue(25),
+            position: "absolute",
+            top: 25,
+            left: 25,
+            alignSelf: "center",
+            height: RFValue(128),
+            width: RFValue(128),
+        }
     })
+
+    /**Constante que almacena los props del componente Modal */
+    const propsModalComponent = {
+        onBackButtonPress: _ => setManual(false),
+        onBackdropPress: _ => setManual(false),
+        isVisible: typeManual,
+        backdropOpacity: Platform.OS === "ios" ? 0 : 0.8,
+        style: {
+            padding: 0,
+            margin: 0
+        },
+        animationIn: "fadeIn",
+        animationOut: "fadeOut"
+    }
 
     return (
         <>
@@ -141,34 +186,61 @@ const PayComponent = () => {
                 <QRCodeScanner
                     vibrate={true}
                     onRead={onReadCodeQR}
+                    ref={scanerCamera}
+                    reactivate={true}
+                    reactivateTimeout={3000}
                     flashMode={RNCamera.Constants.FlashMode.auto}
                 />
             </View>
 
-            <View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: 10 }}>
-                <View style={styles.row}>
-                    <View style={styles.col}>
-                        <Text style={styles.legend}>Numero de Orden</Text>
 
-                        <View style={styles.rowInput}>
-                            <TextInput
-                                style={[GlobalStyles.textInput, { flex: 1 }]}
-                                placeholder="Ingrese el numero de orden"
-                                placeholderTextColor="#FFF"
-                                keyboardType="numeric"
-                                keyboardAppearance="dark"
-                                returnKeyType="done"
-                                value={checkAmount}
-                                onChangeText={setCheckAmount}
-                            />
-
-                            <TouchableOpacity style={styles.buttonPay} onPress={() => submit(checkAmount)}>
-                                <Text>PAGAR</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </View>
+            <View>
+                <TouchableOpacity onPress={_ => setManual(true)} style={styles.butonManual}>
+                    <Text style={GlobalStyles.textButtonPrimaryLine}>Ingresar Orden Manualmente</Text>
+                </TouchableOpacity>
             </View>
+
+            <Modal {...propsModalComponent}>
+                <>
+                    <BlurView
+                        style={StyleSheet.absoluteFill}
+                        blurType="dark"
+                    />
+
+                    <Image animation="pulse" easing="ease-out" iterationCount="infinite" source={ExampleImage} style={styles.imageExample} />
+
+                    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+                        <View style={styles.row}>
+                            <View style={styles.col}>
+                                <Text style={styles.legend}>Numero de Orden</Text>
+
+                                <View style={styles.rowInput}>
+                                    <TextInput
+                                        style={[GlobalStyles.textInput, { flex: 1 }]}
+                                        placeholder="Ingrese el numero de orden"
+                                        placeholderTextColor="#FFF"
+                                        keyboardType="numeric"
+                                        keyboardAppearance="dark"
+                                        returnKeyType="done"
+                                        value={checkAmount}
+                                        onChangeText={setCheckAmount}
+                                    />
+
+                                    <TouchableOpacity style={styles.buttonPay} onPress={submit}>
+                                        <Text>PAGAR</Text>
+                                    </TouchableOpacity>
+                                </View>
+
+                                <TouchableOpacity onPress={_ => setManual(false)} style={styles.butonManual}>
+                                    <Text style={GlobalStyles.textButtonPrimaryLine}>Cancelar</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+
+                    </View>
+                </>
+            </Modal>
+
         </>
 
     )

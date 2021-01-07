@@ -1,7 +1,7 @@
 import React, { useReducer } from "react"
 
 // import components from react native
-import { Text, StyleSheet, View, TextInput, TouchableOpacity, Alert } from "react-native"
+import { Text, StyleSheet, View, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView } from "react-native"
 
 // Import components
 import Container from "../../components/Container/Container"
@@ -10,9 +10,9 @@ import Lottie from "lottie-react-native"
 import QRCodeScanner from "react-native-qrcode-scanner"
 
 // import constants and functions
-import TouchID from "react-native-touch-id"
+import _ from "lodash"
 import { RNCamera } from "react-native-camera"
-import { reducer, RFValue, Colors, GlobalStyles, WithDecimals, CheckTouchIDPermission, errorMessage, http, getHeaders, loader, successMessage, configTouchIDAuth } from "../../utils/constants"
+import { reducer, RFValue, Colors, GlobalStyles, WithDecimals, CheckTouchIDPermission, errorMessage, http, getHeaders, loader, successMessage, getFeePercentage } from "../../utils/constants"
 
 // Import Assets
 import scanQRAnimation from "../../animations/scan-qr.json"
@@ -33,12 +33,17 @@ const initialState = {
     amountUSD: 0,
 
     // fraccion de moneda
-    amountFraction: ""
+    amountFraction: "",
+
+    // monto de fee a cobrar
+    fee: 0,
 }
 
 const Retirement = ({ route }) => {
     const [state, dispatch] = useReducer(reducer, initialState)
     const { params: data } = route
+
+    const { global } = store.getState()
 
     /** Metodo que se ejecuta cuando el lector QR lee el codigo */
     const onReadCodeQR = ({ data }) => {
@@ -52,6 +57,10 @@ const Retirement = ({ route }) => {
         dispatch({ type: "amountFraction", payload })
 
         const newAmount = data.price * parseFloat(payload)
+
+        const { fee } = getFeePercentage(payload, 2, global.fee)
+
+        dispatch({ type: "fee", payload: fee })
 
         dispatch({ type: "amountUSD", payload: isNaN(newAmount) ? 0 : newAmount.toFixed(2) })
     }
@@ -75,7 +84,12 @@ const Retirement = ({ route }) => {
             }
 
             // verificamos los permisos del TouchID
-            await CheckTouchIDPermission()
+            const auth = await CheckTouchIDPermission()
+
+            // validamos si el usuario no esta autenticado
+            if (!auth) {
+                throw String("Autenticación incorrecta")
+            }
 
             const dataSend = {
                 wallet: state.walletAdress,
@@ -111,63 +125,81 @@ const Retirement = ({ route }) => {
 
     return (
         <Container showLogo>
-            <View style={styles.containerWallet}>
-                <ItemWallet data={data} disabled />
-            </View>
+            <KeyboardAvoidingView enabled behavior="padding">
+                <View style={styles.containerWallet}>
+                    <ItemWallet data={data} disabled />
+                </View>
 
-            <View style={styles.row}>
-                <View style={styles.col}>
-                    <Text style={styles.legend}>Dirección de billetera externa</Text>
+                <View style={styles.row}>
+                    <View style={styles.col}>
+                        <Text style={styles.legend}>Dirección de billetera externa</Text>
 
-                    <View style={styles.rowInput}>
+                        <View style={styles.rowInput}>
+                            <TextInput
+                                value={state.walletAdress}
+                                returnKeyLabel="done"
+                                onChangeText={payload => dispatch({ type: "walletAdress", payload })}
+                                style={[GlobalStyles.textInput, { flex: 1 }]} />
+
+                            <TouchableOpacity onPress={toggleScan} style={styles.buttonScan}>
+                                <Lottie source={scanQRAnimation} style={styles.lottieQRAnimation} autoPlay loop />
+                            </TouchableOpacity>
+                        </View>
+
+                    </View>
+                </View>
+
+                <View style={styles.row}>
+                    <View style={styles.col}>
+                        <Text style={styles.legend}>Monto ({data.symbol})</Text>
+
                         <TextInput
-                            value={state.walletAdress}
-                            onChangeText={payload => dispatch({ type: "walletAdress", payload })}
-                            style={[GlobalStyles.textInput, { flex: 1 }]} />
-
-                        <TouchableOpacity onPress={toggleScan} style={styles.buttonScan}>
-                            <Lottie source={scanQRAnimation} style={styles.lottieQRAnimation} autoPlay loop />
-                        </TouchableOpacity>
+                            value={state.amountFraction}
+                            onChangeText={onChangeFractions}
+                            keyboardType="numeric"
+                            returnKeyType="done"
+                            style={GlobalStyles.textInput} />
                     </View>
 
-                </View>
-            </View>
+                    <View style={[styles.col, { justifyContent: "center", alignItems: "center" }]}>
+                        <Text style={styles.legend}>Monto (USD) Aprox.</Text>
 
-            <View style={styles.row}>
-                <View style={styles.col}>
-                    <Text style={styles.legend}>Monto ({data.symbol})</Text>
-
-                    <TextInput
-                        value={state.amountFraction}
-                        onChangeText={onChangeFractions}
-                        keyboardType="numeric"
-                        returnKeyType="done"
-                        style={GlobalStyles.textInput} />
+                        <Text style={styles.legendUSDAmount}>
+                            {WithDecimals(state.amountUSD)} <Text style={{ fontSize: RFValue(8) }}>USD</Text>
+                        </Text>
+                    </View>
                 </View>
 
-                <View style={[styles.col, { justifyContent: "center", alignItems: "center" }]}>
-                    <Text style={styles.legend}>Monto (USD) Aprox.</Text>
+                {
+                    state.amountFraction.trim() !== "" &&
+                    <View style={styles.containerFee}>
+                        <View style={styles.headerFee}>
+                            <Text style={styles.textHeaderFee}>SubTotal</Text>
+                            <Text style={styles.textHeaderFee}>Comisión</Text>
+                            <Text style={styles.textHeaderFee}>Total</Text>
+                        </View>
 
-                    <Text style={styles.legendUSDAmount}>
-                        {WithDecimals(state.amountUSD)} <Text style={{ fontSize: RFValue(8) }}>USD</Text>
-                    </Text>
-                </View>
-            </View>
+                        <View style={styles.bodyFee}>
+                            <Text style={styles.textBodyFee}>{state.amountFraction} {data.symbol}</Text>
+                            <Text style={styles.textBodyFee}>{state.fee} {data.symbol}</Text>
+                            <Text style={styles.textBodyFee}>{_.floor(state.amountFraction - state.fee, 8)} {data.symbol}</Text>
+                        </View>
+                    </View>
+                }
 
-            <Text style={styles.legendText}>Recuerda que comisión es de 1.5% si tienes Alycoin's, de lo contrario tu comisión será de 2.5%</Text>
+                <TouchableOpacity onPress={onSubmit} style={[GlobalStyles.buttonPrimary, styles.buttonSend]}>
+                    <Text style={GlobalStyles.textButton}>Retirar</Text>
+                </TouchableOpacity>
 
-            <TouchableOpacity onPress={onSubmit} style={[GlobalStyles.buttonPrimary, styles.buttonSend]}>
-                <Text style={GlobalStyles.textButton}>Retirar</Text>
-            </TouchableOpacity>
-
-            <Modal backdropOpacity={0.9} animationIn="fadeIn" onBackButtonPress={toggleScan} onBackdropPress={toggleScan} animationOut="fadeOut" isVisible={state.showScaner}>
-                <View style={styles.constainerQR}>
-                    <QRCodeScanner
-                        onRead={onReadCodeQR}
-                        flashMode={RNCamera.Constants.FlashMode.auto}
-                    />
-                </View>
-            </Modal>
+                <Modal backdropOpacity={0.9} animationIn="fadeIn" onBackButtonPress={toggleScan} onBackdropPress={toggleScan} animationOut="fadeOut" isVisible={state.showScaner}>
+                    <View style={styles.constainerQR}>
+                        <QRCodeScanner
+                            onRead={onReadCodeQR}
+                            flashMode={RNCamera.Constants.FlashMode.auto}
+                        />
+                    </View>
+                </Modal>
+            </KeyboardAvoidingView>
         </Container>
     )
 }
@@ -217,16 +249,7 @@ const styles = StyleSheet.create({
 
     buttonSend: {
         marginHorizontal: "10%",
-    },
-
-    legendText: {
-        alignSelf: "center",
-        color: Colors.colorYellow,
-        fontSize: RFValue(8),
-        textAlign: "center",
-        marginVertical: RFValue(25),
-        marginHorizontal: "10%",
-        opacity: 0.5,
+        marginTop: RFValue(10)
     },
 
     constainerQR: {
@@ -244,6 +267,36 @@ const styles = StyleSheet.create({
         marginLeft: RFValue(10),
         zIndex: 1000,
     },
+
+    containerFee: {
+        // backgroundColor: "red",
+        flexDirection: "column",
+        marginVertical: RFValue(10),
+        marginHorizontal: RFValue(20),
+    },
+
+    headerFee: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        paddingVertical: 10,
+        borderBottomColor: Colors.colorYellow,
+        borderBottomWidth: 1,
+    },
+
+    textHeaderFee: {
+        color: Colors.colorYellow,
+        fontSize: RFValue(12),
+    },
+
+    bodyFee: {
+        paddingVertical: 15,
+        flexDirection: "row",
+        justifyContent: "space-between",
+    },
+
+    textBodyFee: {
+        color: "#FFF",
+    }
 })
 
 export default Retirement

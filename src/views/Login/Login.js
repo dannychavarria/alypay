@@ -73,7 +73,7 @@ const Login = ({ navigation }) => {
 
             // Verificamos si hay un error
             if (data.error) {
-                throw data.message
+                throw String(data.message)
             } else {
                 // Validamos si los datos que retornan son validos
                 if (Object.values(data).length > 0) {
