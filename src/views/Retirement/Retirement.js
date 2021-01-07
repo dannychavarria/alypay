@@ -181,8 +181,8 @@ const Retirement = ({ route }) => {
 
                         <View style={styles.bodyFee}>
                             <Text style={styles.textBodyFee}>{state.amountFraction} {data.symbol}</Text>
-                            <Text style={styles.textBodyFee}>{state.fee} {data.symbol}</Text>
-                            <Text style={styles.textBodyFee}>{_.floor(state.amountFraction - state.fee, 8)} {data.symbol}</Text>
+                            <Text style={styles.textBodyFee}>{_.floor(state.amountFraction * state.fee, 8)} {data.symbol}</Text>
+                            <Text style={styles.textBodyFee}>{_.floor(state.amountFraction - (state.amountFraction * state.fee), 8)} {data.symbol}</Text>
                         </View>
                     </View>
                 }
