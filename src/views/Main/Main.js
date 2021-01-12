@@ -8,7 +8,7 @@ import Switch from "../../components/Switch/Switch"
 import Modal from "react-native-modal"
 import { SETFUNCTION } from "../../store/actionsTypes"
 import { RNCamera } from "react-native-camera"
-import { Text, StyleSheet, TouchableOpacity, View, TextInput, KeyboardAvoidingView, Platform } from "react-native"
+import { Text, StyleSheet, TouchableOpacity, View, TextInput, KeyboardAvoidingView, Platform, FlatList } from "react-native"
 import { Image } from "react-native-animatable"
 import { useNavigation } from '@react-navigation/native'
 
@@ -257,13 +257,6 @@ const Main = () => {
 
     const [state, dispatch] = useReducer(reducer, initialState)
 
-
-    const styles = StyleSheet.create({
-        containerWallets: {
-            marginHorizontal: RFValue(10),
-        }
-    })
-
     /**
      * Metodo que configura el componente, inicializando todas las tareas
      */
@@ -308,18 +301,15 @@ const Main = () => {
     return (
         <Container onRefreshEnd={configurateComponent} showLogo>
             <Switch onSwitch={setStateView} items={switchItems} indexActive={state.indexTabActive} />
+            {
+                stateView === TYPE_VIEW.WALLET &&
+                <FlatList data={state.wallets} keyExtractor={(_, i) => i} renderItem={({ item }) => <ItemWallet data={item} />} />
+            }
 
-            <KeyboardAvoidingView enabled behavior="padding" style={styles.containerWallets}>
-                {
-                    stateView === TYPE_VIEW.WALLET &&
-                    state.wallets.map((wallet, index) => <ItemWallet key={index} data={wallet} />)
-                }
-
-                {
-                    stateView === TYPE_VIEW.PAY &&
-                    <PayComponent />
-                }
-            </KeyboardAvoidingView>
+            {
+                stateView === TYPE_VIEW.PAY &&
+                <PayComponent />
+            }
 
         </Container>
     )

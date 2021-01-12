@@ -23,7 +23,7 @@ import { RNCamera } from "react-native-camera"
 
 // Import constanst and others things
 import { Colors, RFValue, GlobalStyles, CopyClipboard, reducer, http, errorMessage, getHeaders, loader, successMessage, CheckTouchIDPermission, configTouchIDAuth } from "../../utils/constants"
-import TouchID from "react-native-touch-id"
+import _ from "lodash"
 
 // store and actionTypes from redux
 import store from "../../store/index"
@@ -132,6 +132,11 @@ const initialStateSendComponent = {
     walletAccepted: false,
 
     showScaner: false,
+
+    fee: {
+        comission: 0,
+        symbol: "ALY"
+    },
 }
 
 /** Componente que renderiza los datos necesarios para ejecutar una transaccion a otra wallet */
@@ -243,6 +248,35 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
             paddingBottom: 5,
             textTransform: "uppercase",
         },
+        containerFee: {
+            // backgroundColor: "red",
+            flexDirection: "column",
+            marginVertical: RFValue(10),
+            marginHorizontal: RFValue(20),
+        },
+
+        headerFee: {
+            flexDirection: "row",
+            justifyContent: "space-between",
+            paddingVertical: 10,
+            borderBottomColor: Colors.colorYellow,
+            borderBottomWidth: 1,
+        },
+
+        textHeaderFee: {
+            color: Colors.colorYellow,
+            fontSize: RFValue(12),
+        },
+
+        bodyFee: {
+            paddingVertical: 15,
+            flexDirection: "row",
+            justifyContent: "space-between",
+        },
+
+        textBodyFee: {
+            color: "#FFF",
+        }
     })
 
     /** Metodo que se ejecuta para enviar los fondos */
@@ -330,6 +364,17 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
             // get data wallet
             const { data: payload } = await http.get(`/wallets/verify/${state.walletAdress}`, getHeaders())
 
+            const { data: dataFee } = await http.post("/fees-percentage/calculate", {
+                amount: state.amountFraction,
+                wallet_id: data.id,
+                transaction_type: 1
+            })
+
+            // verificamos si hay un error en la peticiones de los fee
+            if (dataFee.error) {
+                throw String(dataFee.message)
+            }
+
             // buscamos un error
             if (payload.error) {
                 throw String("Billetera no encontrada, intente nuevamente")
@@ -345,6 +390,14 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
             if (payload.symbol !== data.symbol) {
                 throw String(`Esta billetera no es de ${data.description}`)
             }
+
+            // guardamos el fee
+            dispatch({
+                type: "fee", payload: {
+                    amount: dataFee.amount,
+                    symbol: dataFee.symbol_fee
+                }
+            })
 
             dispatch({ type: "dataWallet", payload })
 
@@ -464,19 +517,40 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
 
             {
                 (state.walletAccepted && state.dataWallet !== null) &&
-                <ViewAnimate animation="fadeIn" style={styles.cardInfo}>
-                    <View style={styles.subCard}>
-                        <Image style={styles.avatar} source={defaultAvatar} />
+                <>
+                    <ViewAnimate animation="fadeIn" style={styles.cardInfo}>
+                        <View style={styles.subCard}>
+                            <Image style={styles.avatar} source={defaultAvatar} />
 
-                        <View>
-                            <Text style={styles.usernameCard}>@{state.dataWallet.username}</Text>
-                            <Text style={styles.textFromCard}>{state.dataWallet.city}</Text>
+                            <View>
+                                <Text style={styles.usernameCard}>@{state.dataWallet.username}</Text>
+                                <Text style={styles.textFromCard}>{state.dataWallet.city}</Text>
+                            </View>
+                        </View>
+
+
+                        <Lottie source={profileVerifedAnimation} style={styles.lottieVerifed} autoPlay />
+                    </ViewAnimate>
+
+
+                    <View style={styles.containerFee}>
+                        <View style={styles.headerFee}>
+                            <Text style={styles.textHeaderFee}>SubTotal</Text>
+                            <Text style={styles.textHeaderFee}>Comisión</Text>
+                            <Text style={styles.textHeaderFee}>Total</Text>
+                        </View>
+
+                        <View style={styles.bodyFee}>
+                            <Text style={styles.textBodyFee}>{state.amountFraction} {data.symbol}</Text>
+                            <Text style={styles.textBodyFee}>{_.floor(state.amountFraction * state.fee.amount, 8)} {state.fee.symbol}</Text>
+                            {
+                                state.fee.symbol === "ALY"
+                                    ? <Text style={styles.textBodyFee}>{state.amountFraction} {data.symbol}</Text>
+                                    : <Text style={styles.textBodyFee}>{_.floor(state.amountFraction - (state.amountFraction * state.fee.amount), 8)} {state.fee.symbol}</Text>
+                            }
                         </View>
                     </View>
-
-
-                    <Lottie source={profileVerifedAnimation} style={styles.lottieVerifed} autoPlay />
-                </ViewAnimate>
+                </>
             }
 
             {

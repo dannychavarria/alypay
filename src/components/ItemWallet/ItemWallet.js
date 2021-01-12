@@ -21,17 +21,8 @@ const ItemWallet = ({ data = {}, disabled = false }) => {
         ? `https://s2.coinmarketcap.com/static/img/coins/128x128/${data._id}.png`
         : urlAlyCoin
 
-    /**
- * Metodo que nos mueve de pantalla a wallet details
- * 
- * @param {Object} data 
- */
-    const onNavigate = () => {
-        navigate(ROUTES.WALLET, data)        
-    }
-
     return (
-        <TouchableOpacity disabled={disabled} onPress={onNavigate} style={styles.container}>
+        <TouchableOpacity disabled={disabled} onPress={_ => navigate(ROUTES.WALLET, data)} style={styles.container}>
             <Image style={styles.image} source={{ uri: urlImage }} />
 
             <View style={styles.subContainerInfo}>
@@ -69,6 +60,7 @@ const styles = StyleSheet.create({
         borderRadius: RFValue(5),
         padding: RFValue(10),
         marginVertical: RFValue(5),
+        marginHorizontal: RFValue(10),
         flexDirection: "row",
         elevation: 25,
     },

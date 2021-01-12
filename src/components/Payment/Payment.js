@@ -88,6 +88,8 @@ const Payment = ({ route, navigation }) => {
                 // Funcion que renderiza los precios de las billetera
                 const { functions } = store.getState()
                 functions?.reloadWallets()
+
+                goBack()
             }
 
         } catch (error) {
@@ -168,7 +170,7 @@ const Payment = ({ route, navigation }) => {
                 </TouchableOpacity>
 
                 <TouchableOpacity style={GlobalStyles.buttonPrimary}>
-                    <Text onPress={confirmPayment} style={{textTransform: "uppercase"}}>Confirmar</Text>
+                    <Text onPress={confirmPayment} style={{ textTransform: "uppercase" }}>Confirmar</Text>
                 </TouchableOpacity>
             </View>
         </Container >
