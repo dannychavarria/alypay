@@ -255,7 +255,7 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
             }
 
             // Ejecutamos una vibracion minima del dispositivo
-            await Vibration.vibrate(100)
+            Vibration.vibrate(100)
 
             // variables que se enviaran a una peticion
             const vars = {
@@ -317,36 +317,36 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
         try {
             // Loader on mode
 
-            // if (state.errorMessage.length > 0) {
-            //     throw state.errorMessage
-            // }
+            if (state.errorMessage.length > 0) {
+                throw state.errorMessage
+            }
 
-            // if (state.walletAdress.length < 90) {
-            //     throw "Direccion de billetera incorrecta"
-            // }
+            if (state.walletAdress.length < 90) {
+                throw String("Direccion de billetera incorrecta")
+            }
 
-            // loader(true)
+            loader(true)
 
-            // // get data wallet
-            // const { data: payload } = await http.get(`/wallets/verify/${state.walletAdress}`, getHeaders())
+            // get data wallet
+            const { data: payload } = await http.get(`/wallets/verify/${state.walletAdress}`, getHeaders())
 
-            // // buscamos un error
-            // if (payload.error) {
-            //     throw String("Billetera no encontrada, intente nuevamente")
-            // }
+            // buscamos un error
+            if (payload.error) {
+                throw String("Billetera no encontrada, intente nuevamente")
+            }
 
 
-            // // Verificamos que si la billetera es la misma
-            // if (payload.id === data.id) {
-            //     throw "Billetera incorrecta"
-            // }
+            // Verificamos que si la billetera es la misma
+            if (payload.id === data.id) {
+                throw String("Billetera incorrecta")
+            }
 
-            // // verificamos si ambas billetera son del mismo tipo
-            // if (payload.symbol !== data.symbol) {
-            //     throw `Esta billetera no es de ${data.description}`
-            // }
+            // verificamos si ambas billetera son del mismo tipo
+            if (payload.symbol !== data.symbol) {
+                throw String(`Esta billetera no es de ${data.description}`)
+            }
 
-            // dispatch({ type: "dataWallet", payload })
+            dispatch({ type: "dataWallet", payload })
 
             // wallet is accepted
             dispatch({ type: "walletAccepted", payload: true })
