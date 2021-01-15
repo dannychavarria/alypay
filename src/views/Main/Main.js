@@ -79,10 +79,10 @@ const PayComponent = () => {
                 setManual(false)
             }
 
-            // const { functions } = store.getState()
+             const { functions } = store.getState()
 
-            // reset tab default
-            // functions?.resetTab()
+             //reset tab default
+             functions?.resetTab()
 
         } catch (error) {
             errorMessage(error.toString())
