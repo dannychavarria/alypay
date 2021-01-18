@@ -52,6 +52,8 @@ const initialState = {
     // estados para terminos y condiciones
     showButtonTerms: true,
     showModalTerms: false,
+
+    showPassword: false,
 }
 
 const { height, width } = Dimensions.get("window")
@@ -447,7 +449,7 @@ const Register = ({ navigation }) => {
                                 <TextInput
                                     style={GlobalStyles.textInput}
                                     value={state.password}
-                                    secureTextEntry={true}
+                                    secureTextEntry={state.showPassword}
                                     keyboardAppearance="dark"
                                     onChangeText={payload => dispatch({ type: "password", payload })} />
                             </View>
@@ -458,19 +460,19 @@ const Register = ({ navigation }) => {
                                 <TextInput
                                     style={GlobalStyles.textInput}
                                     value={state.passwordConfirm}
-                                    secureTextEntry={true}
+                                    secureTextEntry={!state.showPassword}
                                     keyboardAppearance="dark"
                                     onChangeText={payload => dispatch({ type: "passwordConfirm", payload })} />
                             </View>
 
 
-                            <View style={styles.rowTerms}>
-                                <Text style={styles.textAccepTerms}>Acepto terminos y condiciones</Text>
+                            <View style={[styles.rowTerms, { justifyContent: "flex-end", width: "95%" }]}>
+                                <Text style={styles.textAccepTerms}>Mostrar Contraseña</Text>
 
                                 <CheckBox
                                     checkBoxColor={Colors.colorYellow}
-                                    onClick={_ => dispatch({ type: "readTerms", payload: !state.readTerms })}
-                                    isChecked={state.readTerms}
+                                    onClick={_ => dispatch({ type: "showPassword", payload: !state.showPassword })}
+                                    isChecked={!state.showPassword}
                                 />
                             </View>
 
@@ -493,9 +495,17 @@ const Register = ({ navigation }) => {
 
             {
                 state.showButtonTerms &&
-                <TouchableOpacity style={styles.buttonTerms} onPress={toggleModalTerms}>
-                    <Text style={styles.textTerms}>Terminos y condiciones</Text>
-                </TouchableOpacity>
+                <View style={styles.rowTerms}>
+                    <TouchableOpacity style={styles.buttonTerms} onPress={toggleModalTerms}>
+                        <Text style={styles.textTerms}>Acepto Terminos y condiciones</Text>
+                    </TouchableOpacity>
+
+                    <CheckBox
+                        checkBoxColor={Colors.colorYellow}
+                        onClick={_ => dispatch({ type: "readTerms", payload: !state.readTerms })}
+                        isChecked={state.readTerms}
+                    />
+                </View>
             }
 
 
@@ -664,7 +674,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "flex-end",
         marginVertical: RFValue(10),
-        paddingHorizontal: RFValue(25),
+        // paddingHorizontal: RFValue(25),
         width: '100%',
     },
 
@@ -674,6 +684,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: RFValue(25),
         width: '100%',
         flexDirection: "row"
+    },
+
+    rowTerms: {
+        alignItems: "center",
+        justifyContent: "center",
+        marginVertical: 10,
+        flexDirection: "row",
+        width: '100%',
     },
 
     rowPhoneNumber: {
@@ -765,8 +783,9 @@ const styles = StyleSheet.create({
 
     buttonTerms: {
         alignSelf: "center",
-        padding: RFValue(10),
-        marginBottom: 25,
+        marginRight: 5,
+        // padding: RFValue(10),
+        // marginBottom: 25,
     },
 
     textTerms: {

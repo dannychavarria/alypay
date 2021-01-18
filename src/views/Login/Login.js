@@ -6,6 +6,7 @@ import getPublicIp from "react-native-public-ip"
 
 // Import components
 import Video from "react-native-video"
+import CheckBox from "react-native-check-box"
 import { View as ViewAnimation } from "react-native-animatable"
 import { Text, TextInput, StyleSheet, Image, View, Dimensions, KeyboardAvoidingView, Platform, TouchableOpacity } from "react-native"
 
@@ -33,6 +34,7 @@ const initialState = {
     device: "",
     macAddress: "",
     systemName: "",
+    showPassword: false,
 }
 
 const { height } = Dimensions.get("window")
@@ -180,9 +182,20 @@ const Login = ({ navigation }) => {
                     <TextInput
                         style={GlobalStyles.textInput}
                         value={state.password}
-                        secureTextEntry={true}
+                        secureTextEntry={!state.showPassword}
                         keyboardAppearance="dark"
                         onChangeText={payload => dispatch({ type: "password", payload })} />
+                </View>
+
+
+                <View style={[styles.rowButtons, { justifyContent: "flex-end" }]}>
+                    <Text style={[styles.legend, { marginRight: 10 }]}>Mostar Contraseña</Text>
+
+                    <CheckBox
+                        checkBoxColor={Colors.colorYellow}
+                        isChecked={state.showPassword}
+                        onClick={_ => dispatch({ type: "showPassword", payload: !state.showPassword })}
+                    />
                 </View>
 
 
