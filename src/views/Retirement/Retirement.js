@@ -1,4 +1,4 @@
-import React, { useReducer } from "react"
+import React, { useReducer, useEffect } from "react"
 
 // import components from react native
 import { Text, StyleSheet, View, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView } from "react-native"
@@ -57,10 +57,6 @@ const Retirement = ({ route }) => {
         dispatch({ type: "amountFraction", payload })
 
         const newAmount = data.price * parseFloat(payload)
-
-        const { fee } = getFeePercentage(payload, 2, global.fee)
-
-        dispatch({ type: "fee", payload: fee })
 
         dispatch({ type: "amountUSD", payload: isNaN(newAmount) ? 0 : newAmount.toFixed(2) })
     }
@@ -123,6 +119,35 @@ const Retirement = ({ route }) => {
     /** Metodo que se ejcuta para activar/desactivar el scaner QR */
     const toggleScan = () => dispatch({ type: "showScaner", payload: !state.showScaner })
 
+    useEffect(() => {
+
+        const dataAly = global.wallets.find((item) => {
+            if (item.symbol === 'ALY') {
+                return item
+            }
+        })
+
+        const { fee, fee_aly } = getFeePercentage(state.amountUSD, 2, global.fee)
+
+        console.log('Fee', fee)
+        console.log('FeeAly', fee_aly)
+
+
+        const amountFee = state.amountUSD * fee
+        console.log('AmountFee', amountFee)
+
+
+        const amountFeeAly = state.amountUSD * fee_aly
+        console.log('AmountFeeAly', amountFeeAly)
+
+        if (dataAly.amount >= amountFeeAly) {
+            dispatch({ type: 'fee', payload: { amount: amountFeeAly, symbol: 'ALY' } })
+        } else {
+            dispatch({ type: 'fee', payload: { amount: amountFee / data.price, symbol: data.symbol } })
+        }
+
+    }, [state.amountUSD])
+
     return (
         <Container showLogo>
             <KeyboardAvoidingView enabled behavior="padding">
@@ -181,8 +206,8 @@ const Retirement = ({ route }) => {
 
                         <View style={styles.bodyFee}>
                             <Text style={styles.textBodyFee}>{state.amountFraction} {data.symbol}</Text>
-                            <Text style={styles.textBodyFee}>{_.floor(state.amountFraction * state.fee, 8)} {data.symbol}</Text>
-                            <Text style={styles.textBodyFee}>{_.floor(state.amountFraction - (state.amountFraction * state.fee), 8)} {data.symbol}</Text>
+                            <Text style={styles.textBodyFee}>{_.floor(state.fee.amount, 8)} {data.symbol}</Text>
+                            <Text style={styles.textBodyFee}>{_.floor(parseFloat(state.amountFraction) - state.fee.amount, 8)} {state.fee.symbol}</Text>
                         </View>
                     </View>
                 }

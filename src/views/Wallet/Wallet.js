@@ -22,7 +22,7 @@ import { RNCamera } from "react-native-camera"
 
 
 // Import constanst and others things
-import { Colors, RFValue, GlobalStyles, CopyClipboard, reducer, http, errorMessage, getHeaders, loader, successMessage, CheckTouchIDPermission, configTouchIDAuth } from "../../utils/constants"
+import { Colors, RFValue, GlobalStyles, CopyClipboard, reducer, http, errorMessage, getHeaders, loader, successMessage, CheckTouchIDPermission, configTouchIDAuth, getFeePercentage } from "../../utils/constants"
 import _ from "lodash"
 
 // store and actionTypes from redux
@@ -142,6 +142,8 @@ const initialStateSendComponent = {
 /** Componente que renderiza los datos necesarios para ejecutar una transaccion a otra wallet */
 const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
     const [state, dispatch] = useReducer(reducer, initialStateSendComponent)
+
+    const { global } = store.getState()
 
     const { navigate } = useNavigation()
 
@@ -364,17 +366,6 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
             // get data wallet
             const { data: payload } = await http.get(`/wallets/verify/${state.walletAdress}`, getHeaders())
 
-            const { data: dataFee } = await http.post("/fees-percentage/calculate", {
-                amount: state.amountFraction,
-                wallet_id: data.id,
-                transaction_type: 1
-            })
-
-            // verificamos si hay un error en la peticiones de los fee
-            if (dataFee.error) {
-                throw String(dataFee.message)
-            }
-
             // buscamos un error
             if (payload.error) {
                 throw String("Billetera no encontrada, intente nuevamente")
@@ -389,14 +380,6 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
             if (payload.symbol !== data.symbol) {
                 throw String(`Esta billetera no es de ${data.description}`)
             }
-
-            // guardamos el fee
-            dispatch({
-                type: "fee", payload: {
-                    amount: dataFee.amount_fee,
-                    symbol: dataFee.symbol_fee
-                }
-            })
 
             dispatch({ type: "dataWallet", payload })
 
@@ -461,6 +444,31 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
     /** Metodo que se ejcuta para activar/desactivar el scaner QR */
     const toggleScan = () => dispatch({ type: "showScaner", payload: !state.showScaner })
 
+    useEffect(() => {
+
+        const dataAly = global.wallets.find((item) => {
+            if (item.symbol === 'ALY') {
+                return item
+            }
+        })
+
+        const { fee, fee_aly } = getFeePercentage(state.amountUSD, 1, global.fee)
+
+        console.log('Fee',fee)
+
+        const amountFee = state.amountUSD * fee
+
+        const amountFeeAly = state.amountUSD * fee_aly
+
+
+        if (dataAly.amount >= amountFeeAly) {
+            dispatch({ type: 'fee', payload: { amount: amountFeeAly, symbol: 'ALY' } })
+        } else {
+            dispatch({ type: 'fee', payload: { amount: amountFee / data.price, symbol: data.symbol } })
+        }
+
+    }, [state.amountUSD])
+
     return (
         <ViewAnimate style={styles.container} animation="fadeIn">
             <View style={styles.row}>
@@ -514,6 +522,24 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
 
             <View style={{ height: RFValue(10) }} />
 
+            <View style={styles.containerFee}>
+                <View style={styles.headerFee}>
+                    <Text style={styles.textHeaderFee}>SubTotal</Text>
+                    <Text style={styles.textHeaderFee}>Comisión</Text>
+                    <Text style={styles.textHeaderFee}>Total</Text>
+                </View>
+
+                <View style={styles.bodyFee}>
+                    <Text style={styles.textBodyFee}>{state.amountFraction} {data.symbol}</Text>
+                    <Text style={styles.textBodyFee}>{_.floor(state.fee.amount, 8)} {state.fee.symbol}</Text>
+                    {
+                        state.fee.symbol !== data.symbol
+                            ? <Text style={styles.textBodyFee}>{state.amountFraction} {data.symbol}</Text>
+                            : <Text style={styles.textBodyFee}>{_.floor(parseFloat(state.amountFraction) + state.fee.amount, 8)} {state.fee.symbol}</Text>
+                    }
+                </View>
+            </View>
+
             {
                 (state.walletAccepted && state.dataWallet !== null) &&
                 <>
@@ -530,25 +556,6 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
 
                         <Lottie source={profileVerifedAnimation} style={styles.lottieVerifed} autoPlay />
                     </ViewAnimate>
-
-
-                    <View style={styles.containerFee}>
-                        <View style={styles.headerFee}>
-                            <Text style={styles.textHeaderFee}>SubTotal</Text>
-                            <Text style={styles.textHeaderFee}>Comisión</Text>
-                            <Text style={styles.textHeaderFee}>Total</Text>
-                        </View>
-
-                        <View style={styles.bodyFee}>
-                            <Text style={styles.textBodyFee}>{state.amountFraction} {data.symbol}</Text>
-                            <Text style={styles.textBodyFee}>{_.floor(state.fee.amount, 8)} {state.fee.symbol}</Text>
-                            {
-                                state.fee.symbol !== data.symbol  
-                                    ? <Text style={styles.textBodyFee}>{state.amountFraction} {data.symbol}</Text>
-                                    : <Text style={styles.textBodyFee}>{_.floor(state.amountFraction + state.fee.amount, 8)} {state.fee.symbol}</Text>
-                            }
-                        </View>
-                    </View>
                 </>
             }
 

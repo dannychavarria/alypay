@@ -6,7 +6,7 @@ import ItemWallet from "../../components/ItemWallet/ItemWallet"
 import QRCodeScanner from "react-native-qrcode-scanner"
 import Switch from "../../components/Switch/Switch"
 import Modal from "react-native-modal"
-import { SETFUNCTION } from "../../store/actionsTypes"
+import { SETFUNCTION, SETSTORAGE } from "../../store/actionsTypes"
 import { RNCamera } from "react-native-camera"
 import { Text, StyleSheet, TouchableOpacity, View, TextInput, KeyboardAvoidingView, Platform, FlatList } from "react-native"
 import { Image } from "react-native-animatable"
@@ -79,10 +79,10 @@ const PayComponent = () => {
                 setManual(false)
             }
 
-             const { functions } = store.getState()
+            const { functions } = store.getState()
 
-             //reset tab default
-             functions?.resetTab()
+            //reset tab default
+            functions?.resetTab()
 
         } catch (error) {
             errorMessage(error.toString())
@@ -246,7 +246,6 @@ const PayComponent = () => {
     )
 }
 
-/// ??????
 const initialState = {
     wallets: [],
     indexTabActive: 0,
@@ -256,6 +255,8 @@ const Main = () => {
     const [stateView, setStateView] = useState(TYPE_VIEW.WALLET)
 
     const [state, dispatch] = useReducer(reducer, initialState)
+
+    const { globalStorage } = store.getState()
 
     /**
      * Metodo que configura el componente, inicializando todas las tareas
@@ -271,6 +272,13 @@ const Main = () => {
             } else {
                 dispatch({ type: "wallets", payload: data })
             }
+
+            const dataStorage = {
+                ...globalStorage, 
+                wallets: data
+            }
+
+            store.dispatch({ type: SETSTORAGE, payload: dataStorage})
         } catch (error) {
             errorMessage(error.toString())
         } finally {
@@ -278,9 +286,30 @@ const Main = () => {
         }
     }
 
+    const feePercentage = async () => {
+        try {
+            const { data: fee } = await http.get('/fees-percentage')
+
+            const dataStore = {
+                ...global,
+                fee: {}
+            }
+
+            if (Object.values(fee).length > 0) {
+                dataStore.fee = fee
+            }
+
+            store.dispatch({ type: SETSTORAGE, payload: dataStore })
+        } catch (error) {
+            errorMessage(error.toString())
+        }
+    }
+
     useEffect(() => {
 
         configurateComponent()
+
+        feePercentage()
 
         CheckCameraPermission()
         // asignamos el reload de los datos de las wallets
