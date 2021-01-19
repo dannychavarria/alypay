@@ -380,7 +380,6 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
                 throw String("Billetera no encontrada, intente nuevamente")
             }
 
-
             // Verificamos que si la billetera es la misma
             if (payload.id === data.id) {
                 throw String("Billetera incorrecta")
@@ -394,7 +393,7 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
             // guardamos el fee
             dispatch({
                 type: "fee", payload: {
-                    amount: dataFee.amount,
+                    amount: dataFee.amount_fee,
                     symbol: dataFee.symbol_fee
                 }
             })
@@ -542,11 +541,11 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
 
                         <View style={styles.bodyFee}>
                             <Text style={styles.textBodyFee}>{state.amountFraction} {data.symbol}</Text>
-                            <Text style={styles.textBodyFee}>{_.floor(state.amountFraction * state.fee.amount, 8)} {state.fee.symbol}</Text>
+                            <Text style={styles.textBodyFee}>{_.floor(state.fee.amount, 8)} {state.fee.symbol}</Text>
                             {
-                                state.fee.symbol === "ALY"
+                                state.fee.symbol !== data.symbol  
                                     ? <Text style={styles.textBodyFee}>{state.amountFraction} {data.symbol}</Text>
-                                    : <Text style={styles.textBodyFee}>{_.floor(state.amountFraction - (state.amountFraction * state.fee.amount), 8)} {state.fee.symbol}</Text>
+                                    : <Text style={styles.textBodyFee}>{_.floor(state.amountFraction + state.fee.amount, 8)} {state.fee.symbol}</Text>
                             }
                         </View>
                     </View>
