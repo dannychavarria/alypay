@@ -261,10 +261,9 @@ const Register = ({ navigation }) => {
         dispatch({ type: "showCountries", payload })
     }
 
-    /**Funcion que ejecuta cuando el suuario se cambia la fecha de cumple */
-    const onChangeBirthday = (payload) => {
-        dispatch({ type: "birthday", payload })
-    }
+    /**Funcion que ejecuta cuando el: 1u},
+     * ario se cambia la fecha de cumple */
+    const onChangeBirthday = (payload) => dispatch({ type: "birthday", payload })
 
     /** Funcion que modifica el estado que muestra la ventana modal de terminos y condiciones */
     const toggleModalTerms = () => dispatch({ type: "showModalTerms", payload: !state.showModalTerms })
@@ -466,15 +465,34 @@ const Register = ({ navigation }) => {
                             </View>
 
 
-                            <View style={[styles.rowTerms, { justifyContent: "flex-end", width: "95%" }]}>
-                                <Text style={styles.textAccepTerms}>Mostrar Contraseña</Text>
+                            <View style={styles.containerCheckBoxFooterLastPage}>
+                                {
+                                    state.showButtonTerms &&
+                                    <View style={styles.rowTerms}>
+                                        <CheckBox
+                                            checkBoxColor={Colors.colorYellow}
+                                            onClick={_ => dispatch({ type: "readTerms", payload: !state.readTerms })}
+                                            isChecked={state.readTerms}
+                                        />
+                                        <TouchableOpacity style={styles.buttonTerms} onPress={toggleModalTerms}>
+                                            <Text style={styles.textTerms}>Acepto Terminos</Text>
+                                        </TouchableOpacity>
 
-                                <CheckBox
-                                    checkBoxColor={Colors.colorYellow}
-                                    onClick={_ => dispatch({ type: "showPassword", payload: !state.showPassword })}
-                                    isChecked={!state.showPassword}
-                                />
+                                    </View>
+                                }
+
+                                <View style={styles.rowTerms}>
+                                    <Text style={styles.textAccepTerms}>Ver Contraseña</Text>
+
+                                    <CheckBox
+                                        checkBoxColor={Colors.colorYellow}
+                                        onClick={_ => dispatch({ type: "showPassword", payload: !state.showPassword })}
+                                        isChecked={!state.showPassword}
+                                    />
+                                </View>
                             </View>
+
+
 
                             <View style={styles.rowButtons}>
                                 <TouchableOpacity onPress={previousPage} style={styles.registerButton}>
@@ -491,22 +509,6 @@ const Register = ({ navigation }) => {
                 </ViewAnimation>
 
             </ScrollView>
-
-
-            {
-                state.showButtonTerms &&
-                <View style={styles.rowTerms}>
-                    <TouchableOpacity style={styles.buttonTerms} onPress={toggleModalTerms}>
-                        <Text style={styles.textTerms}>Acepto Terminos y condiciones</Text>
-                    </TouchableOpacity>
-
-                    <CheckBox
-                        checkBoxColor={Colors.colorYellow}
-                        onClick={_ => dispatch({ type: "readTerms", payload: !state.readTerms })}
-                        isChecked={state.readTerms}
-                    />
-                </View>
-            }
 
 
             <Modal onBackButtonPress={toggleModalTerms} onBackdropPress={toggleModalTerms} backdropOpacity={0.95} isVisible={state.showModalTerms}>
@@ -672,10 +674,6 @@ const styles = StyleSheet.create({
     rowTerms: {
         alignItems: "center",
         flexDirection: "row",
-        justifyContent: "flex-end",
-        marginVertical: RFValue(10),
-        // paddingHorizontal: RFValue(25),
-        width: '100%',
     },
 
     rowButtons: {
@@ -684,14 +682,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: RFValue(25),
         width: '100%',
         flexDirection: "row"
-    },
-
-    rowTerms: {
-        alignItems: "center",
-        justifyContent: "center",
-        marginVertical: 10,
-        flexDirection: "row",
-        width: '100%',
     },
 
     rowPhoneNumber: {
@@ -783,7 +773,7 @@ const styles = StyleSheet.create({
 
     buttonTerms: {
         alignSelf: "center",
-        marginRight: 5,
+        marginLeft: 5,
         // padding: RFValue(10),
         // marginBottom: 25,
     },
@@ -807,7 +797,15 @@ const styles = StyleSheet.create({
         backgroundColor: "rgba(255, 255, 255, 0.2)",
         padding: 10,
         borderRadius: 5,
-        marginTop: 10,
+        marginTop: 10
+    },
+
+    containerCheckBoxFooterLastPage: {
+        alignSelf: "center",
+        marginVertical: RFValue(15),
+        flexDirection: "row",
+        justifyContent: "space-between",
+        width: "90%",
     }
 })
 
