@@ -95,8 +95,6 @@ const ReceiveComponent = ({ wallet = "" }) => {
         navigate("Recharge", { wallet })
     }
 
-    // console.log(store.getState())
-
     return (<ViewAnimate animation="fadeIn" style={styles.receivedViewContainer}>
         <View style={styles.qrContainer}>
             <QRCode
@@ -140,10 +138,10 @@ const initialStateSendComponent = {
 }
 
 /** Componente que renderiza los datos necesarios para ejecutar una transaccion a otra wallet */
-const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
+const SendComponent = ({ data = {}, onCompleteTrasanction = () => { }, }) => {
     const [state, dispatch] = useReducer(reducer, initialStateSendComponent)
 
-    const { global } = store.getState()
+    const { global, functions } = store.getState()
 
     const { navigate } = useNavigation()
 
@@ -313,8 +311,6 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
 
             const { data: response } = await http.post("/wallets/transaction", vars, getHeaders())
 
-            console.log(response)
-
             if (response.error) {
                 throw String(response.message)
             }
@@ -339,6 +335,9 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
             } else {
                 throw String("Tu transaccion no se ha completado, contacte a soporte")
             }
+
+            // actualizamos la wallets
+            functions?.reloadWallets()
 
             onCompleteTrasanction()
         } catch (error) {
@@ -453,8 +452,6 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { } }) => {
         })
 
         const { fee, fee_aly } = getFeePercentage(state.amountUSD, 1, global.fee)
-
-        console.log('Fee',fee)
 
         const amountFee = state.amountUSD * fee
 

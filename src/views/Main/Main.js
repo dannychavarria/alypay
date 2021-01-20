@@ -258,6 +258,8 @@ const Main = () => {
 
     const { globalStorage } = store.getState()
 
+
+
     /**
      * Metodo que configura el componente, inicializando todas las tareas
      */
@@ -274,11 +276,11 @@ const Main = () => {
             }
 
             const dataStorage = {
-                ...globalStorage, 
+                ...globalStorage,
                 wallets: data
             }
 
-            store.dispatch({ type: SETSTORAGE, payload: dataStorage})
+            store.dispatch({ type: SETSTORAGE, payload: dataStorage })
         } catch (error) {
             errorMessage(error.toString())
         } finally {
@@ -325,6 +327,7 @@ const Main = () => {
                 }
             }
         })
+
     }, [])
 
     return (

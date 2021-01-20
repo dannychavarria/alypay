@@ -39,11 +39,11 @@ const initialState = {
     fee: 0,
 }
 
-const Retirement = ({ route }) => {
+const Retirement = ({ route, navigation }) => {
     const [state, dispatch] = useReducer(reducer, initialState)
     const { params: data } = route
 
-    const { global } = store.getState()
+    const { global, functions } = store.getState()
 
     /** Metodo que se ejecuta cuando el lector QR lee el codigo */
     const onReadCodeQR = ({ data }) => {
@@ -109,6 +109,14 @@ const Retirement = ({ route }) => {
                 throw String("Tu solictud no se ha podido procesar, contacte a soporte")
             }
 
+
+            // actualizamos la wallets
+            functions?.reloadWallets()
+
+
+
+            // retornamos a la vista anterios
+            navigation.pop();
         } catch (error) {
             errorMessage(error.toString())
         } finally {
@@ -206,8 +214,12 @@ const Retirement = ({ route }) => {
 
                         <View style={styles.bodyFee}>
                             <Text style={styles.textBodyFee}>{state.amountFraction} {data.symbol}</Text>
-                            <Text style={styles.textBodyFee}>{_.floor(state.fee.amount, 8)} {data.symbol}</Text>
-                            <Text style={styles.textBodyFee}>{_.floor(parseFloat(state.amountFraction) - state.fee.amount, 8)} {state.fee.symbol}</Text>
+                            <Text style={styles.textBodyFee}>{_.floor(state.fee.amount, 8)} {state.fee.symbol}</Text>
+                            {
+                                state.fee.symbol !== data.symbol
+                                    ? <Text style={styles.textBodyFee}>{state.amountFraction} {data.symbol}</Text>
+                                    : <Text style={styles.textBodyFee}>{_.floor(parseFloat(state.amountFraction) + state.fee.amount, 8)} {state.fee.symbol}</Text>
+                            }
                         </View>
                     </View>
                 }
