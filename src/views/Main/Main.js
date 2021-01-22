@@ -293,7 +293,7 @@ const Main = () => {
             const { data: fee } = await http.get('/fees-percentage')
 
             const dataStore = {
-                ...global,
+                ...globalStorage,
                 fee: {}
             }
 

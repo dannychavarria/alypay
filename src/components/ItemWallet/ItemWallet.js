@@ -21,19 +21,25 @@ const ItemWallet = ({ data = {}, disabled = false }) => {
         ? `https://s2.coinmarketcap.com/static/img/coins/128x128/${data._id}.png`
         : urlAlyCoin
 
+    const isTherter = () => {
+        if (data.id !== -1) {
+            navigate(ROUTES.WALLET, data)
+        } else {
+            navigate(ROUTES.LIST)
+        }
+    }
+
     return (
-        <TouchableOpacity disabled={disabled} onPress={_ => navigate(ROUTES.WALLET, data)} style={styles.container}>
+        <TouchableOpacity disabled={disabled} onPress={isTherter} style={styles.container}>
             <Image style={styles.image} source={{ uri: urlImage }} />
 
             <View style={styles.subContainerInfo}>
                 <View style={styles.row}>
-                    <Text style={styles.superValue}>
-                        {data.name}
-                    </Text>
+                    <Text style={styles.superValue}>{data.name}</Text>
 
                     <View style={styles.lastCol}>
                         <Text style={styles.key}>Balance</Text>
-                        <Text style={styles.value}>{data.amount} {data.symbol}</Text>
+                        <Text style={styles.value}>{_.floor(data.amount, 8)} {data.symbol}</Text>
                     </View>
                 </View>
 

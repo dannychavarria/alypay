@@ -8,6 +8,7 @@ const ROUTES = {
     RETIREMENT: "Retirement",
     PAYMENT: "Payment",
     SEARCH: "Search",
+    LIST: "ListComerce"
 }
 
 export default ROUTES

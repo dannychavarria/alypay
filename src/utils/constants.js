@@ -82,10 +82,10 @@ export const Colors = {
 const PORT = "3085"
 
 /**Direction for server */
-export const serverAddress = "https://alypay.uc.r.appspot.com"
+//export const serverAddress = "https://alypay.uc.r.appspot.com"
 //export const serverAddress = "https://root-anvil-299019.uc.r.appspot.com"
 //export const serverAddress = "https://192.168.1.224:3000"
-//export const serverAddress = Platform.OS === "ios" ? `http://localhost:${PORT}` : `http://192.168.0.125:${PORT}`
+export const serverAddress = Platform.OS === "ios" ? `http://localhost:${PORT}` : `http://192.168.0.125:${PORT}`
 
 /**
  * Constante que almacena la url del preview image del simbolo alycoin
@@ -394,3 +394,14 @@ export const configTouchIDAuth = {
     passcodeFallback: true,
     cancelText: "CANCELAR",
 }
+
+// Convierete un blog en un archivo previsaulizable
+export const readFile = (fileId) => new Promise(async (resolve, _) => {
+    const { headers } = getHeaders()
+
+    const response = await RNFetchBlob.config({ fileCache: true, appendExt: 'jpg' })
+        .fetch('GET', `${serverAddress}/ecommerce/file/${fileId}`, headers)
+
+    const base64 = await response.base64()
+    resolve(`data:image/jpeg;base64,${base64}`)
+})
