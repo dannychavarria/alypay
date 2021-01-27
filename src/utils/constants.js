@@ -86,6 +86,7 @@ const PORT = "3085"
 //export const serverAddress = "https://root-anvil-299019.uc.r.appspot.com"
 //export const serverAddress = "https://192.168.1.224:3000"
 export const serverAddress = Platform.OS === "ios" ? `http://localhost:${PORT}` : `http://192.168.0.125:${PORT}`
+export const serverSpeedtradingsURL = "https://ardent-medley-272823.appspot.com";
 
 /**
  * Constante que almacena la url del preview image del simbolo alycoin
@@ -128,6 +129,7 @@ export const GlobalStyles = StyleSheet.create({
         backgroundColor: Colors.colorMain,
         borderRadius: 5,
         borderWidth: 2,
+        borderColor: Colors.colorYellow,
         elevation: 5,
     },
 

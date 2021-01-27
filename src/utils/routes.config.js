@@ -8,7 +8,10 @@ const ROUTES = {
     RETIREMENT: "Retirement",
     PAYMENT: "Payment",
     SEARCH: "Search",
-    LIST: "ListComerce"
+    LIST: "ListComerce",
+    WALLETCOMMERCE:"WalletCommerce",
+    RETIREMENTCOMMERCE:"RetirementCommerce"
 }
+
 
 export default ROUTES

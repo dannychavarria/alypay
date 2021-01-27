@@ -108,12 +108,9 @@ const Retirement = ({ route, navigation }) => {
             } else {
                 throw String("Tu solictud no se ha podido procesar, contacte a soporte")
             }
-
-
+            
             // actualizamos la wallets
             functions?.reloadWallets()
-
-
 
             // retornamos a la vista anterios
             navigation.pop();
@@ -137,16 +134,10 @@ const Retirement = ({ route, navigation }) => {
 
         const { fee, fee_aly } = getFeePercentage(state.amountUSD, 2, global.fee)
 
-        console.log('Fee', fee)
-        console.log('FeeAly', fee_aly)
-
-
         const amountFee = state.amountUSD * fee
-        console.log('AmountFee', amountFee)
-
 
         const amountFeeAly = state.amountUSD * fee_aly
-        console.log('AmountFeeAly', amountFeeAly)
+
 
         if (dataAly.amount >= amountFeeAly) {
             dispatch({ type: 'fee', payload: { amount: amountFeeAly, symbol: 'ALY' } })
