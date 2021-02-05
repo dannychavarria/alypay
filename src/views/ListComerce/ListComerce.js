@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Text, View, TouchableOpacity, Image, StyleSheet, FlatList } from 'react-native'
+import { FlatList } from 'react-native'
 
 // Import Components
 import Container from '../../components/Container/Container'

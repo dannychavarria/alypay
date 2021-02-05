@@ -10,7 +10,8 @@ const ROUTES = {
     SEARCH: "Search",
     LIST: "ListComerce",
     WALLETCOMMERCE:"WalletCommerce",
-    RETIREMENTCOMMERCE:"RetirementCommerce"
+    RETIREMENTCOMMERCE:"RetirementCommerce",
+    DESCRIPTION: "Description"
 }
 
 

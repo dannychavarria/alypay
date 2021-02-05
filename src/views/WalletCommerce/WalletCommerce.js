@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useReducer } from 'react'
-import { View, Text, StyleSheet, TextInput, Image, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, TextInput, Image, TouchableOpacity, FlatList } from 'react-native'
 
 // Import navigation functions
 import { useNavigation } from "@react-navigation/native"
@@ -12,6 +12,8 @@ import Container from '../../components/Container/Container'
 import Switch from '../../components/Switch/Switch'
 import ItemComerce from '../../components/ItemComerce/ItemComerce'
 import Loader from '../../components/Loader/Loader'
+import Search from '../../components/SearchCommerce/SearchCommerce'
+import HistoryElement from '../../components/HistoryElement/HisotreElement'
 
 // Import Other Components
 import { View as ViewAnimation } from 'react-native-animatable'
@@ -439,6 +441,34 @@ const SendComponent = ({ data = {}, onCompleteTransaction = () => { }, }) => {
     )
 }
 
+const History = ({ data = [] }) => {
+    const { navigate } = useNavigation()
+    const styles = StyleSheet.create({
+        container: {
+            paddingHorizontal: RFValue(10),
+        },
+    })
+    return (
+        <ViewAnimation style={styles.container} animation="fadeIn">
+            <Search />
+            {
+                (data.length === 0)
+                    ? <>
+                        <Lottie source={emptyAnimation} style={styles.lottieQRAnimation} autoPlay loop={false} />
+
+                        <Text style={styles.text}>Sin registros</Text>
+                    </>
+                    :
+                    <FlatList
+                        keyExtractor={(_, key) => (key = key.toString())}
+                        data={data}
+                        renderItem={({ item, index }) => <HistoryElement navigate={navigate} item={item} index={index} />}
+                    />
+            }
+        </ViewAnimation>
+    )
+}
+
 /**Estado general de componente `Wallet` */
 const intialState = {
     history: [],
@@ -516,10 +546,10 @@ const WalletCommerce = ({ route }) => {
                         <SendComponent data={state.information} onCompleteTrasanction={configurateComponent} />
                     }
 
-                    {/* {
+                    {
                         stateView === switchItems[2].state &&
                         <History data={state.history} />
-                    } */}
+                    }
                 </>
             }
         </Container>
