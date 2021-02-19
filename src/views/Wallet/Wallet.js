@@ -8,6 +8,7 @@ import Container from "../../components/Container/Container"
 import ItemWallet from "../../components/ItemWallet/ItemWallet"
 import StoreElement from "../../components/StoreElement/StoreElement"
 import Switch from "../../components/Switch/Switch"
+import Search from "../../components/Search/Search"
 
 // Import other components
 import QRCodeScanner from "react-native-qrcode-scanner"
@@ -16,7 +17,7 @@ import Lottie from "lottie-react-native"
 import QRCode from "react-native-qrcode-svg"
 
 // Import Others components from React-Native
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image, Vibration, Keyboard } from "react-native"
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image, Vibration, Keyboard, FlatList } from "react-native"
 import { View as ViewAnimate, Text as TextAnimate } from "react-native-animatable"
 import { RNCamera } from "react-native-camera"
 
@@ -592,9 +593,11 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { }, }) => {
 
 /**Componente que renderiza el historial de transacciones */
 const History = ({ data = [] }) => {
+    const { navigate } = useNavigation()
+
     const styles = StyleSheet.create({
         container: {
-            paddingHorizontal: RFValue(25),
+            paddingHorizontal: RFValue(10),
         },
         lottieQRAnimation: {
             alignSelf: "center",
@@ -611,7 +614,22 @@ const History = ({ data = [] }) => {
 
     return (
         <ViewAnimate style={styles.container} animation="fadeIn">
+            <Search />
             {
+                (data.length === 0)
+                    ?
+                    <>
+                        <Lottie source={emptyAnimation} style={styles.lottieQRAnimation} autoPlay loop={false} />
+                        <Text style={styles.text}>Sin registros</Text>
+                    </>
+                    :
+                    <FlatList
+                        keyExtractor={(_, key) => (key = key.toString())}
+                        data={data}
+                        renderItem={({ item, index }) => <StoreElement navigate={navigate} item={item} index={index} />}
+                    />
+            }
+            {/*  {
                 data.map(StoreElement)
             }
 
@@ -623,7 +641,7 @@ const History = ({ data = [] }) => {
 
                     <Text style={styles.text}>Sin registros</Text>
                 </>
-            }
+            } */}
         </ViewAnimate>
     )
 }

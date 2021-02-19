@@ -16,7 +16,7 @@ const SearchCommerce = () => {
                 throw String('Ingrese un hash de formato correcto')
             }
 
-            navigate("Description", { hash: searchText })
+            navigate("DescriptionCommerce", { hash: searchText })
 
         } catch (error) {
             errorMessage(error.toString())

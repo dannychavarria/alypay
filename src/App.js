@@ -26,6 +26,7 @@ import Register from "./views/Register/Register"
 import Payment from "./components/Payment/Payment"
 import Search from "./components/Search/Search"
 import List from "./views/ListComerce/ListComerce"
+import DescriptionCommerce from "./components/DescriptionCommerce/Description"
 import Description from "./components/Description/Description"
 
 // import assets and animation
@@ -115,6 +116,7 @@ const App = () => {
                             <Stack.Screen name={ROUTES.PAYMENT} component={Payment} />
                             <Stack.Screen name={ROUTES.SEARCH} component={Search} />
                             <Stack.Screen name={ROUTES.LIST} component={List} />
+                            <Stack.Screen name={ROUTES.DESCRIPTIONCOMMERCE} component={DescriptionCommerce} />
                             <Stack.Screen name={ROUTES.DESCRIPTION} component={Description} />
                         </>
                     }

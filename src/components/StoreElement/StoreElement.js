@@ -9,41 +9,60 @@ import { Colors, RFValue, CopyClipboard } from "../../utils/constants"
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native"
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 
-const StoreElement = (item, key) => (
-    <TouchableOpacity onPress={_ => CopyClipboard(item.hash)} key={key} style={styles.container}>
-        <View style={styles.subContainer}>
-            <Text style={styles.name}>{item.description}</Text>
+const StoreElement = ({ item, key, navigate }) => {
+    const proccessData = (value) => {
+        CopyClipboard(value)
+        navigate("Description", { hash: value })
+    }
 
-            <Text style={styles.hash}>
-                {item.hash?.substr(0, 10)}...{item.hash?.substr((item.hash.length - 10), (item.hash.length - 1))}
-            </Text>
+    return (
+        <View>
+            <TouchableOpacity onPress={_ => proccessData(item.hash)} key={key} style={styles.container}>
+                <View style={styles.subContainer}>
+                    <View style={{
+                        borderBottomColor: Colors.colorYellow,
+                        borderBottomWidth: 2,
+                        borderRadius: 3,
+                        flexDirection: 'row',
+                        justifyContent: 'space-between'
+                    }}>
+                        <Text style={styles.name}>{item.description}</Text>
+                        <Text style={styles.id}># {item.id}</Text>
+                    </View>
 
-            <View style={styles.detailsContain}>
-                <Text style={styles.id}># {item.id}</Text>
-                {/* <Text style={styles.date}>{item.date_create}</Text> */}
-                <Text style={styles.date}>
-                    {moment(item.date_create).format("DD/MM/YY | HH:mm a")}
-                </Text>
-            </View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <Text style={styles.legend}>Hash: </Text>
+                        <Text style={styles.hash}>
+                            {item.hash?.substr(0, 10)}...{item.hash?.substr((item.hash.length - 10), (item.hash.length - 1))}
+                        </Text>
+                    </View>
+
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <View style={styles.detailsContain}>
+                            <Text style={styles.legend}>Fecha: </Text>
+                            <Text style={styles.date}>{moment(item.date_create).format("DD/MM/YY - HH:mm a")}</Text>
+                        </View>
+
+                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                            <Icon name={item.debit ? "arrow-expand-up" : "arrow-collapse-down"} color={item.debit ? Colors.colorRed : Colors.colorGreen} size={RFValue(20)} />
+                            <Text style={[styles.amount, item.debit ? styles.debitAmount : styles.creditAmount]}>{item.amount} {item.symbol}</Text>
+                        </View>
+                    </View>
+                </View>
+            </TouchableOpacity>
         </View>
-
-        <Icon name={item.debit ? "arrow-expand-up" : "arrow-collapse-down"} color={item.debit ? Colors.colorRed : Colors.colorGreen} size={RFValue(12)} />
-
-        <Text style={[styles.amount, item.debit ? styles.debitAmount : styles.creditAmount]}>
-            {item.amount} {item.symbol}
-        </Text>
-    </TouchableOpacity>
-)
+    )
+}
 
 const styles = StyleSheet.create({
     container: {
         backgroundColor: Colors.colorBlack,
-        alignItems: "center",
+        alignItems: 'center',
         borderBottomWidth: 1,
-        borderRadius: RFValue(5),
-        flexDirection: "row",
-        elevation: 25,
+        borderRadius: RFValue(10),
+        flexDirection: 'row',
         padding: RFValue(10),
+        margin: RFValue(10),
     },
 
     subContainer: {
@@ -60,15 +79,15 @@ const styles = StyleSheet.create({
     hash: {
         color: "#FFF",
         // fontFamily: "whitrabt",
-        fontSize: RFValue(10),
+        fontSize: RFValue(12),
         marginVertical: 10,
     },
 
     detailsContain: {
-        alignItems: "center",
-        flexDirection: "row",
-        justifyContent: "flex-start",
-        width: "100%",
+        alignItems: 'center',
+        flexDirection: 'row',
+        //justifyContent: "flex-start",
+        //width: "100%",
     },
 
     id: {
@@ -94,6 +113,10 @@ const styles = StyleSheet.create({
 
     creditAmount: {
         color: Colors.colorGreen,
+    },
+    legend: {
+        color: Colors.colorYellow,
+        fontSize: RFValue(13)
     }
 })
 

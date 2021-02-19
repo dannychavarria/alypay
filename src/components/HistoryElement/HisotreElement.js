@@ -12,7 +12,7 @@ const HistoryElement = ({ item, index, navigate }) => {
 
     const proccessData = (value) => {
         CopyClipboard(value)
-        navigate("Description", { hash: value })
+        navigate("DescriptionCommerce", { hash: value })
     }
 
     return (
