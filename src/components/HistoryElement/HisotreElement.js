@@ -1,23 +1,23 @@
-import React from "react"
+import React from 'react'
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 
-// Import Functions and constanst
-import moment from "moment"
-import { Colors, RFValue, CopyClipboard } from "../../utils/constants"
+// Import Components
+import moment from 'moment'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
+// Import constants and funtions
+import { Colors, RFValue, CopyClipboard } from '../../utils/constants'
 
-// Import components
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native"
-import Icon from "react-native-vector-icons/MaterialCommunityIcons"
+const HistoryElement = ({ item, index, navigate }) => {
 
-const StoreElement = ({ item, key, navigate }) => {
     const proccessData = (value) => {
         CopyClipboard(value)
-        navigate("Description", { hash: value })
+        navigate("DescriptionCommerce", { hash: value })
     }
 
     return (
-        <View>
-            <TouchableOpacity onPress={_ => proccessData(item.hash)} key={key} style={styles.container}>
+        <View key={index}>
+            <TouchableOpacity onPress={_ => proccessData(item.hash)} style={styles.container}>
                 <View style={styles.subContainer}>
                     <View style={{
                         borderBottomColor: Colors.colorYellow,
@@ -26,29 +26,28 @@ const StoreElement = ({ item, key, navigate }) => {
                         flexDirection: 'row',
                         justifyContent: 'space-between'
                     }}>
-                        <Text style={styles.name}>{item.description}</Text>
-                        <Text style={styles.id}># {item.id}</Text>
+                        <Text style={styles.textTitle}>{item.description || 'Transacción'}</Text>
+                        <Text style={styles.textId}># {item.id}</Text>
                     </View>
 
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <Text style={styles.legend}>Hash: </Text>
-                        <Text style={styles.hash}>
-                            {item.hash?.substr(0, 10)}...{item.hash?.substr((item.hash.length - 10), (item.hash.length - 1))}
-                        </Text>
+                        <Text style={styles.textHash}>{item.hash.substr(0, 25) || ''}</Text>
                     </View>
 
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                         <View style={styles.detailsContain}>
                             <Text style={styles.legend}>Fecha: </Text>
-                            <Text style={styles.date}>{moment(item.date_create).format("DD/MM/YY - HH:mm a")}</Text>
+                            <Text style={styles.textDate}>{moment(item.date_create).format('DD/MM/YY - HH:mm a')}</Text>
                         </View>
 
                         <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                            <Icon name={item.debit ? "arrow-expand-up" : "arrow-collapse-down"} color={item.debit ? Colors.colorRed : Colors.colorGreen} size={RFValue(20)} />
+                            <Icon name={item.debit ? 'arrow-expand-up' : 'arrow-collapse-down'} color={item.debit ? Colors.colorRed : Colors.colorGreen} size={RFValue(20)} />
                             <Text style={[styles.amount, item.debit ? styles.debitAmount : styles.creditAmount]}>{item.amount} {item.symbol}</Text>
                         </View>
                     </View>
                 </View>
+
             </TouchableOpacity>
         </View>
     )
@@ -61,56 +60,47 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderRadius: RFValue(10),
         flexDirection: 'row',
+        // elevation: 25,
         padding: RFValue(10),
         margin: RFValue(10),
     },
-
     subContainer: {
         flex: 1,
-        flexDirection: "column",
+        flexDirection: 'column'
     },
-
-    name: {
+    textTitle: {
         color: Colors.colorYellow,
-        textTransform: "uppercase",
+        textTransform: 'uppercase',
         fontSize: RFValue(14),
     },
-
-    hash: {
-        color: "#FFF",
-        // fontFamily: "whitrabt",
+    textHash: {
+        color: '#FFF',
         fontSize: RFValue(12),
         marginVertical: 10,
     },
-
-    detailsContain: {
-        alignItems: 'center',
-        flexDirection: 'row',
-        //justifyContent: "flex-start",
-        //width: "100%",
-    },
-
-    id: {
+    textId: {
         color: Colors.colorYellow,
         fontSize: RFValue(12),
         marginRight: RFValue(10),
     },
-
-    date: {
-        color: "#CCC",
+    textDate: {
+        color: '#CCC',
         fontSize: RFValue(12),
     },
-
+    detailsContain: {
+        alignItems: 'center',
+        flexDirection: 'row',
+        // justifyContent: 'flex-start',
+        // width: '100%',
+    },
     amount: {
         fontSize: RFValue(16),
-        color: "#FFF",
+        color: '#FFF',
         marginLeft: 5,
     },
-
     debitAmount: {
         color: Colors.colorRed,
     },
-
     creditAmount: {
         color: Colors.colorGreen,
     },
@@ -120,4 +110,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default StoreElement
+export default HistoryElement

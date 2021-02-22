@@ -2,69 +2,67 @@ import React, { useState } from 'react'
 import { TextInput, TouchableOpacity, Text, View, StyleSheet, ScrollView } from "react-native"
 
 // import all components
-import Container from '../../components/Container/Container'
-import Icon from "react-native-vector-icons/Ionicons"
-import Lottie from 'lottie-react-native';
+import { useNavigation } from '@react-navigation/native'
+import Icon from "react-native-vector-icons/MaterialIcons"
 
 // import constants and functions
-import { GlobalStyles, http, loader, errorMessage, CopyClipboard, RFValue, Colors } from '../../utils/constants'
+import { GlobalStyles, http, loader, errorMessage, CopyClipboard, RFValue, Colors} from '../../utils/constants'
 import moment from "moment"
 
-// import assets
-import empty from '../../animations/empty.json';
+
 
 const stylesDescription = StyleSheet.create({
-        //Secciones de los detalles
-        facePost: {
-            backgroundColor: Colors.colorBlack,
-            margin: 10,
-            borderRadius: 5,
-        },
-        hashsec: {
-            backgroundColor: Colors.colorBlack,
-            margin: 10,
-            borderRadius: 5,
-        },
-        scroll: {
-            paddingHorizontal: RFValue(5),
-        },
-        text: {
-            padding: 5,
+    //Secciones de los detalles
+    facePost: {
+        backgroundColor: Colors.colorBlack,
+        margin: 10,
+        borderRadius: 5,
+    },
+    hashsec: {
+        backgroundColor: Colors.colorBlack,
+        margin: 10,
+        borderRadius: 5,
+    },
+    scroll: {
+        paddingHorizontal: RFValue(5),
+    },
+    text: {
+        padding: 5,
 
-        },
-        title: {
-            color: "#ffcb08",
-            fontSize: RFValue(14)
-        },
-        // Contenedor de los titulos principales estaticos
-        containertitle: {
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginVertical: RFValue(5),
-        },
-        //contenedor de los subtitulos 
-        containerPrinc: {
-            flexDirection: "column",
-            justifyContent: "space-between",
-            marginBottom: 20,
-            borderBottomColor: "#ffcb08",
-            borderBottomWidth: 2,
-            borderRadius: 3
-        },
-        //subtitulos de los textos
-        subtitle: {
-            color: "#6D6D6D",
-            fontSize: RFValue(16)
-        },
-        textInfoEmpty: {
-            alignSelf: "center",
-            color: Colors.colorMain,
-            flex: 1,
-            fontSize: RFValue(18),
-            textAlign: "center",
-            marginVertical: RFValue(10),
-        }
-    })
+    },
+    title: {
+        color: "#ffcb08",
+        fontSize: RFValue(14)
+    },
+    // Contenedor de los titulos principales estaticos
+    containertitle: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginVertical: RFValue(5),
+    },
+    //contenedor de los subtitulos 
+    containerPrinc: {
+        flexDirection: "column",
+        justifyContent: "space-between",
+        marginBottom: 20,
+        borderBottomColor: "#ffcb08",
+        borderBottomWidth: 2,
+        borderRadius: 3
+    },
+    //subtitulos de los textos
+    subtitle: {
+        color: "#6D6D6D",
+        fontSize: RFValue(16)
+    },
+    textInfoEmpty: {
+        alignSelf: "center",
+        color: Colors.colorMain,
+        flex: 1,
+        fontSize: RFValue(18),
+        textAlign: "center",
+        marginVertical: RFValue(10),
+    }
+})
 
 const Description = ({ item }) => {
     return (
@@ -161,9 +159,21 @@ const Description = ({ item }) => {
 
 
 const Search = () => {
-
     const [searchText, setSearchText] = useState("")
-    const [DescripReuslt, setDescripResult] = useState("")
+    const { navigate } = useNavigation()
+
+    const goToSearch = () => {
+        try {
+            if (searchText.length < 50) {
+                throw String('Ingrese un hash de formato correcto')
+            }
+
+            navigate("Description", { hash: searchText })
+
+        } catch (error) {
+            errorMessage(error.toString())
+        }
+    }
 
     const getAllData = async () => {
         try {
@@ -193,56 +203,64 @@ const Search = () => {
     }
 
     return (
-        <Container>
-            <View style={stylesComponent.containerSearch}>
-                <TextInput
-                    value={searchText}
-                    onChangeText={setSearchText}
-                    placeholder="Buscar hash, billetera.."
-                    placeholderTextColor="#ffff"
-                    returnKeyType="search"
-                    onSubmitEditing={getAllData}
-                    style={[GlobalStyles.textInput, stylesComponent.inputSearch]} />
+        <View style={styles.container}>
+            <View style={styles.row}>
+                <View style={styles.col}>
 
-                <TouchableOpacity style={stylesComponent.buttonSearch} onPress={getAllData}>
-                    <Text>
-                        <Icon name="ios-search" size={30} color={Colors.colorYellow} />
-                    </Text>
-                </TouchableOpacity>
+                    <View style={styles.rowInput}>
+                        <TextInput
+                            style={[GlobalStyles.textInput, { flex: 1 }]}
+                            value={searchText}
+                            onChangeText={setSearchText}
+                            placeholder="Buscar detalle de transaccion"
+                            placeholderTextColor='#CCC'
+                        />
+
+                        <TouchableOpacity onPress={goToSearch} style={styles.buttonSearch}>
+                            <Icon name='search' size={RFValue(40)} />
+                        </TouchableOpacity>
+                    </View>
+                </View>
             </View>
-            {
-                (DescripReuslt.hash)
-                    ? <Description item={DescripReuslt} />
-                    : <Lottie source={empty} style={stylesComponent.empty} loop={false} autoPlay />
-            }
-        </Container >
+        </View>
     )
 }
 
-const stylesComponent = StyleSheet.create({
-    containerSearch: {
-        alignItems: "center",
-        flexDirection: "row",
-        margin: 15
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        marginHorizontal: RFValue(10)
     },
-    buttonSearch: {
-        backgroundColor: "rgba(255, 255, 255, 0.2)",
-        borderRadius: 10,
-        paddingHorizontal: RFValue(10),
-        paddingVertical: RFValue(5),
-        justifyContent: "center",
-        margin: 5
+
+    textInput: {
+        backgroundColor: Colors.$colorBlack,
+        borderColor: Colors.$colorYellow,
+        borderRadius: 5,
+        borderWidth: 1.5,
+        color: '#FFF',
+        padding: RFValue(5),
     },
-    inputSearch: {
+    col: {
         flex: 1,
     },
-    empty: {
-        alignSelf: "center",
-        resizeMode: "contain",
-        height: RFValue(500),
-        width: RFValue(250),
-    }
 
+    row: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        // marginVertical: RFValue(10)
+    },
+    rowInput: {
+        alignItems: "center",
+        flexDirection: "row"
+    },
+    buttonSearch: {
+        backgroundColor: Colors.colorYellow,
+        borderRadius: RFValue(5),
+        padding: RFValue(5),
+        marginLeft: RFValue(10),
+        height: RFValue(50),
+        width: RFValue(50),
+    }
 })
 
 export default Search 
