@@ -22,7 +22,7 @@ const Description = ({ route }) => {
             setLoader(true)
 
             const { data } = await http.get(`/blockchain/transaction/${hash}`)
-            console.log('Data',data)
+            console.log('Description', data)
 
             if (data.error) {
                 throw String(data.message)
@@ -59,6 +59,13 @@ const Description = ({ route }) => {
                     </View>
                 </TouchableOpacity>
 
+                <View style={styles.hashsec}>
+                    <View style={styles.containertitle}>
+                        <Text style={styles.title}>Descripcion</Text>
+                        <Text style={styles.subtitle}>{details.description_transaction}</Text>
+                    </View>
+                </View>
+
                 <View style={[styles.facePost, styles.text]}>
                     <View style={styles.containerPrinc}>
 
@@ -93,8 +100,9 @@ const Description = ({ route }) => {
                         </View>
 
                         <View style={styles.containertitle}>
-                            <Text style={styles.subtitle}>{(details.name_coin_transaction ? details.name_coin_transaction : "")}</Text>
-                            <Text style={styles.subtitle}>{(`${details.amount_fee}  ${details.coin_fee}` ? `${details.amount_fee} ${details.coin_fee}` : "")}</Text>
+                            <Text style={styles.subtitle}>{(details.id_type >= 6 ? details.name_coin_to : details.name_coin_transaction)}</Text>
+                            <Text style={styles.subtitle}>{(`${details.amount_fee} ${details.coin_fee}`)}</Text>
+
                         </View>
                     </View>
 
@@ -102,7 +110,7 @@ const Description = ({ route }) => {
                         <Text style={styles.titleTotal}>Total: </Text>
 
                         <View style={{ justifyContent: 'center' }}>
-                            <Text style={{ color: '#FFF', fontSize: RFValue(20) }}>{_.floor(details.amount_usd + details.amount_fee,2)} USD</Text>
+                            <Text style={{ color: '#FFF', fontSize: RFValue(20) }}>{_.floor(details.amount_usd + details.amount_fee, 2)} USD</Text>
                         </View>
                     </View>
                 </View>

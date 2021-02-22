@@ -78,7 +78,6 @@ const SwitchCoin = ({ onSwitch = () => { }, items = {} }) => {
     })
 
     const ItemComponent = (item, key) => {
-        //console.log(item)
         return (
             <TouchableOpacity
                 disabled={!item.credit}
