@@ -82,10 +82,14 @@ export const Colors = {
 const PORT = "3085"
 
 /**Direction for server */
-//export const serverAddress = "https://alypay.uc.r.appspot.com"
-export const serverAddress = "https://root-anvil-299019.uc.r.appspot.com"
+export const serverAddress = "https://alypay.uc.r.appspot.com"
+//export const serverAddress = "https://root-anvil-299019.uc.r.appspot.com"
 //export const serverAddress = "https://192.168.1.224:3000"
+<<<<<<< HEAD
 //export const serverAddress = Platform.OS === "ios" ? `http://localhost:${PORT}` : `http://192.168.100.243:${PORT}`
+=======
+// export const serverAddress = Platform.OS === "ios" ? `http://localhost:${PORT}` : `http://192.168.0.125:${PORT}`
+>>>>>>> eac41b006c90b90ecbaca433e76c091d92812fd1
 export const serverSpeedtradingsURL = "https://ardent-medley-272823.appspot.com";
 
 /**

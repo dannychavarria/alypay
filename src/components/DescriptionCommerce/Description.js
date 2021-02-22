@@ -58,6 +58,13 @@ const Description = ({ route }) => {
                     </View>
                 </TouchableOpacity>
 
+                <View style={styles.hashsec}>
+                    <View style={styles.containertitle}>
+                        <Text style={styles.title}>Descripcion</Text>
+                        <Text style={styles.subtitle}>{details.description_transaction}</Text>
+                    </View>
+                </View>
+
                 <View style={[styles.facePost, styles.text]}>
                     <View style={styles.containerPrinc}>
 
@@ -92,8 +99,8 @@ const Description = ({ route }) => {
                         </View>
 
                         <View style={styles.containertitle}>
-                            <Text style={styles.subtitle}>{(details.name_coin_transaction ? details.name_coin_transaction : "")}</Text>
-                            <Text style={styles.subtitle}>{(`${details.amount_fee}  ${details.coin_fee}` ? `${details.commerce_fee} 'USDT'` : "")}</Text>
+                        <Text style={styles.subtitle}>{(details.name_coin_to ? details.name_coin_to : details.name_coin_transaction)}</Text>
+                            <Text style={styles.subtitle}>{(details.id_type === 6 ? `${details.commission_usd} ${details.symbol_fee}` : `${details.amount_fee} ${details.coin_fee}`)}</Text>
                         </View>
                     </View>
 
@@ -101,7 +108,7 @@ const Description = ({ route }) => {
                         <Text style={styles.titleTotal}>Total: </Text>
 
                         <View style={{ justifyContent: 'center' }}>
-                            <Text style={{ color: '#FFF', fontSize: RFValue(20) }}>{_.floor(details.amount_usd - details.commerce_fee,2)} USD</Text>
+                            <Text style={{ color: '#FFF', fontSize: RFValue(20) }}>{_.floor((details.id_type === 6 ? details.amount_usd - details.commission_usd : details.amount_usd + details.commission_usd), 2)}</Text>
                         </View>
                     </View>
                 </View>

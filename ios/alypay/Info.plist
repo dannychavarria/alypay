@@ -37,7 +37,21 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>NSCameraUsageDescription</key>
+  <key>NSContactsUsageDescription</key>
+  <string>AlyPay necesita acceder a tus contactos</string>
+  <key>NSCalendarsUsageDescription</key>
+  <string>AlyPay necesita acceder a la información del calendario</string>
+  <key>NSBluetoothPeripheralUsageDesc</key>
+  <string>AlyPay necesita acceder a la configuración de Bluetooth</string>
+  <key>NSAppleMusicUsageDescription</key>
+  <string>AlyPay necesita acceder la informacion de tu musica</string>
+  <key>NSMotionUsageDescription</key>
+  <string>AlyPay necesitar acceder a su uso de movimiento</string>
+  <key>NSSpeechRecognitionUsageDescri</key>
+  <string>AlyPay necesita acceder la informacion de tu musica</string>
+  <key>NSAppleMusicUsageDescription</key>
+  <string>AlyPay necesita acceder la informacion de tu musica</string>	
+  <key>NSCameraUsageDescription</key>
 	<string>Alypay necesita permiso a tu camara para escanear QR</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Permiso para usar el servicio de FaceID</string>
