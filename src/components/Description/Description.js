@@ -59,7 +59,7 @@ const Description = ({ route }) => {
                     </View>
                 </TouchableOpacity>
 
-                <View style={styles.hashsec}>
+                <View style={[styles.hashsec, styles.text]}>
                     <View style={styles.containertitle}>
                         <Text style={styles.title}>Descripcion</Text>
                         <Text style={styles.subtitle}>{details.description_transaction}</Text>

@@ -58,7 +58,7 @@ const Description = ({ route }) => {
                     </View>
                 </TouchableOpacity>
 
-                <View style={styles.hashsec}>
+                <View style={[styles.hashsec, styles.text]}>
                     <View style={styles.containertitle}>
                         <Text style={styles.title}>Descripcion</Text>
                         <Text style={styles.subtitle}>{details.description_transaction}</Text>
@@ -99,7 +99,7 @@ const Description = ({ route }) => {
                         </View>
 
                         <View style={styles.containertitle}>
-                        <Text style={styles.subtitle}>{(details.name_coin_to ? details.name_coin_to : details.name_coin_transaction)}</Text>
+                            <Text style={styles.subtitle}>{(details.name_coin_to ? details.name_coin_to : details.name_coin_transaction)}</Text>
                             <Text style={styles.subtitle}>{(details.id_type === 6 ? `${details.commission_usd} ${details.symbol_fee}` : `${details.amount_fee} ${details.coin_fee}`)}</Text>
                         </View>
                     </View>
