@@ -50,7 +50,7 @@ const Navbar = () => {
     * Funcion que envia a la vista de Buscaqueda
     */
     const onSearch = () => {
-        navigate("Search")
+        navigate('SearchGlobal')
     }
 
     useEffect(() => {
@@ -86,9 +86,9 @@ const Navbar = () => {
                         {/* <Image source={defaultImage} style={styles.imageProfile} />
                         </TouchableOpacity> * */}
 
-                       {/*  <TouchableOpacity onPress={onSearch} style={styles.button}>
+                        <TouchableOpacity onPress={onSearch} style={styles.button}>
                             <Icon name="ios-search" size={iconSize} color={Colors.colorYellow} />
-                        </TouchableOpacity> */}
+                        </TouchableOpacity>
 
                         <TouchableOpacity onPress={OpenSupport} style={styles.button}>
                             <Icon name="logo-whatsapp" size={iconSize} color={Colors.colorYellow} />

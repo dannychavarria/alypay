@@ -28,6 +28,7 @@ import Search from "./components/Search/Search"
 import List from "./views/ListComerce/ListComerce"
 import DescriptionCommerce from "./components/DescriptionCommerce/Description"
 import Description from "./components/Description/Description"
+import SearchGlobal from "./components/SearchGlobal/SearchGlobal"
 
 // import assets and animation
 import notConectionAnimation from "./animations/no-internet-connection.json"
@@ -118,6 +119,7 @@ const App = () => {
                             <Stack.Screen name={ROUTES.LIST} component={List} />
                             <Stack.Screen name={ROUTES.DESCRIPTIONCOMMERCE} component={DescriptionCommerce} />
                             <Stack.Screen name={ROUTES.DESCRIPTION} component={Description} />
+                            <Stack.Screen name={ROUTES.SEARCH_GLOBAL} component={SearchGlobal} />
                         </>
                     }
 
