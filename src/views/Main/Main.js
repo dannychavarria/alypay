@@ -105,6 +105,11 @@ const PayComponent = () => {
 
             navigate("Payment", { data: parsedData, scan: true })
 
+            const { functions } = store.getState()
+
+            //reset tab default
+            functions?.resetTab()
+
         } catch (error) {
             errorMessage(String("QR de pago incorrecto"))
 

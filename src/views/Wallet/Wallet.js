@@ -522,7 +522,7 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { }, }) => {
 
             <View style={styles.containerFee}>
                 <View style={styles.headerFee}>
-                    <Text style={styles.textHeaderFee}>SubTotal</Text>
+                    <Text style={styles.textHeaderFee}>Sub-Total</Text>
                     <Text style={styles.textHeaderFee}>Comisión</Text>
                     <Text style={styles.textHeaderFee}>Total</Text>
                 </View>
@@ -533,7 +533,7 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { }, }) => {
                     {
                         state.fee.symbol !== data.symbol
                             ? <Text style={styles.textBodyFee}>{state.amountFraction} {data.symbol}</Text>
-                            : <Text style={styles.textBodyFee}>{_.floor(state.amountFraction + state.fee.amount, 8)} {state.fee.symbol}</Text>
+                            : <Text style={styles.textBodyFee}>{_.floor(parseFloat(state.amountFraction) + parseFloat(state.fee.amount), 8)} {state.fee.symbol}</Text>
                     }
                 </View>
             </View>
@@ -673,7 +673,6 @@ const Wallet = ({ route }) => {
 
             const { data } = await http.get(`/wallets/details/${params.id}`, getHeaders())
 
-            console.log('Data',data.history)
             if (data.error) {
                 throw data.message
             }

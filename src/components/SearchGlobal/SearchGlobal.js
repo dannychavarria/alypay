@@ -64,6 +64,11 @@ const styles = StyleSheet.create({
         fontSize: RFValue(18),
         textAlign: "center",
         marginVertical: RFValue(10),
+    },
+    titleTotal: {
+        color: Colors.colorYellow,
+        fontSize: RFValue(20),
+        padding: RFValue(5)
     }
 })
 
@@ -208,7 +213,7 @@ const SearchGlobal = () => {
     }
 
     return (
-        <Container>
+        <Container showLogo>
             <View style={stylesComponent.containerSearch}>
                 <TextInput
                     value={searchText}
@@ -256,8 +261,7 @@ const stylesComponent = StyleSheet.create({
         resizeMode: "contain",
         height: RFValue(500),
         width: RFValue(250),
-    }
-
+    },
 })
 
 export default SearchGlobal

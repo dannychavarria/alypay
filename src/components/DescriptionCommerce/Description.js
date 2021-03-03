@@ -5,11 +5,15 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-nati
 import Container from '../Container/Container'
 import Icon from "react-native-vector-icons/Ionicons"
 import Loader from '../Loader/Loader'
+import Lottie from 'lottie-react-native';
 import _ from "lodash"
 
 // Import constants and functions
 import moment from "moment"
 import { http, showNotification, CopyClipboard, RFValue, Colors } from '../../utils/constants'
+
+// import assets
+import empty from '../../animations/empty.json';
 
 const Description = ({ route }) => {
     const [details, setDetails] = useState({})
@@ -47,7 +51,7 @@ const Description = ({ route }) => {
     return (
         <Container showLogo>
             <Loader isVisible={loader} />
-            
+
             {
                 (foundData) &&
                 <ScrollView>
@@ -158,7 +162,12 @@ const Description = ({ route }) => {
 
             {
                 !foundData &&
-                <Text style={{ color: "#FFF" }}>No hemos encontrado nada</Text>
+                <>
+                    <View style={styles.containerError}>
+                        <Lottie source={empty} style={styles.empty} loop={false} autoPlay />
+                        <Text style={styles.titlePrincipal}>No hay transacciones realizadas</Text>
+                    </View>
+                </>
             }
         </Container>
     )
@@ -199,7 +208,7 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         marginVertical: RFValue(5),
     },
-    //contenedor de los subtitulos 
+    //contenedor de los subtitulos
     containerPrinc: {
         flexDirection: "column",
         justifyContent: "space-between",
@@ -226,6 +235,15 @@ const styles = StyleSheet.create({
         color: Colors.colorYellow,
         fontSize: RFValue(20),
         padding: RFValue(5)
+    },
+    empty: {
+        alignSelf: "center",
+        resizeMode: "contain",
+        height: RFValue(250),
+        width: RFValue(250),
+    },
+    containerError: {
+        alignItems: 'center'
     }
 })
 
