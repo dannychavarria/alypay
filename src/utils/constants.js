@@ -6,6 +6,7 @@ import TouchID from "react-native-touch-id"
 import Clipboard from "@react-native-community/clipboard"
 import Toast from "react-native-simple-toast"
 import axios from "axios"
+import RNFetchBlob from 'rn-fetch-blob'
 import { check, PERMISSIONS, RESULTS, request } from "react-native-permissions"
 import { isIphoneX } from "react-native-iphone-x-helper"
 import { showMessage } from "react-native-flash-message"
