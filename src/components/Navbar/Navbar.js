@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
         resizeMode: "contain",
         width: iconSize,
         height: iconSize,
-        color:Colors.colorYellow
+        // color:Colors.colorYellow
     },
 })
 

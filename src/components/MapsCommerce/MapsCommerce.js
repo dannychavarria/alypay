@@ -9,44 +9,46 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import { errorMessage } from '../../utils/constants'
 
 const MapsCommerce = () => {
-    const [latitude, setLatitude] = useState(0)
-    const [longitude, setLongitude] = useState(0)
+  const [latitude, setLatitude] = useState(0)
+  const [longitude, setLongitude] = useState(0)
 
-    // Funcion que permite dar los permisos para la Geolocalizacion
-    const ConfigureLocation = async () => {
-        try {
-            if (Platform.OS === 'android') {
-                await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION)
-                const auth = await check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION)
+  // Funcion que permite dar los permisos para la Geolocalizacion
+  const ConfigureLocation = async () => {
+    try {
+      if (Platform.OS === 'android') {
+        await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION)
+        const auth = await check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION)
 
-                if (auth === 'granted') {
-                    positionMap()
-                }
-            }
-        } catch (error) {
-            errorMessage(error.toString())
+        if (auth === 'granted') {
+          positionMap()
         }
+      }
+    } catch (error) {
+      errorMessage(error.toString())
     }
+  }
 
-    // Funcion que almacena la posicion en el mapa
-    const positionMap = () => {
-        Geolocation.getCurrentPosition((position) => {
-            console.log('Posision', position)
-            if (position !== null && position !== undefined) {
-                setLatitude(position.coords.latitude)
-                setLongitude(position.coords.longitude)
-            }
-        }, (error) => {
-            console.log(error.message)
-        })
-    }
+  // Funcion que almacena la posicion en el mapa
+  const positionMap = () => {
+    const options = { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
 
-    useEffect(() => {
-        ConfigureLocation()
-    }, [])
+    Geolocation.getCurrentPosition((position) => {
+      console.log('Posision', position)
+      if (position !== null && position !== undefined) {
+        setLatitude(position.coords.latitude)
+        setLongitude(position.coords.longitude)
+      }
+    }, (error) => {
+      console.log(error.message)
+    }, options)
+  }
 
-    return (
-        <MapView
+  useEffect(() => {
+    ConfigureLocation()
+  }, [])
+
+  return (
+    <MapView
             provider={PROVIDER_GOOGLE}
             style={styles.map}
             initialRegion={{
@@ -68,15 +70,15 @@ const MapsCommerce = () => {
                 draggable={true}
             />
         </MapView>
-    )
+  )
 }
 
 const styles = StyleSheet.create({
-    map: {
-        height: '100%',
-        //width: '100%',
-        //...StyleSheet.absoluteFillObject,
-    },
+  map: {
+    height: '100%',
+    //width: '100%',
+    //...StyleSheet.absoluteFillObject,
+  },
 })
 
 export default MapsCommerce
