@@ -19,9 +19,11 @@ const ItemComerce = ({ data = {} }) => {
     const [source, setSource] = useState(null)
     const { navigate } = useNavigation()
 
+    console.log('Dara', data)
+
     // Funcion que permite extraer la imagen para visualizarla
     const read = async () => {
-        const blog = data.item.profile_picture
+        const blog = data?.item.profile_picture
 
         // verificamos si hay foto
         if (blog) {

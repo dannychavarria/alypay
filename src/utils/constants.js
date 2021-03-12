@@ -83,10 +83,10 @@ export const Colors = {
 const PORT = "3085"
 
 /**Direction for server */
-export const serverAddress = "https://alypay.uc.r.appspot.com"
+//export const serverAddress = "https://alypay.uc.r.appspot.com"
 //export const serverAddress = "https://root-anvil-299019.uc.r.appspot.com"
 //export const serverAddress = "https://192.168.1.224:3000"
-// export const serverAddress = Platform.OS === "ios" ? `http://localhost:${PORT}` : `http://192.168.0.125:${PORT}`
+export const serverAddress = Platform.OS === "ios" ? `http://localhost:${PORT}` : `http://192.168.0.125:${PORT}`
 export const serverSpeedtradingsURL = "https://ardent-medley-272823.appspot.com";
 
 /**
@@ -94,7 +94,7 @@ export const serverSpeedtradingsURL = "https://ardent-medley-272823.appspot.com"
  */
 export const urlAlyCoin = "https://lh3.googleusercontent.com/5LMKBulbDnGu4JBUYp4Ye4fX0MjH88xF7hMy5-4US3VSAkxK2XIWqNxXdqWZFnUZQoRDL3W7nKhrgWWHzM_eL-1nX4fnBPu7d9u7DyRv_miLRhFp6g38cDD32_H9UoZoh936cWUpUUOLx3qvx-_fBV-ZKQb_2TzVHhR19DKYhm_Zpl_Wczi1I73a6wBo7XDbtdNUrnzW8kC_Hv8J9tpv6wQhsTCr6l68UIVwth6rkpoFycZ2Gpzn6GL_7VSs9NlCj2V5v3NHCRcsZzptz2uxAa0HcsvnEqhtOirEmjBsT114hl3LWjT4Xf9dIxcmVcdt1usggqyuF6svD2VF_fdT6SjqfmVg3ifl5zf7zS1s7JfwrIvFDjXN3i1vYo43nzpt8ykabNqDjRuwMnroAvndk2lgIh1jLcDpjlLFtCvjBej6DQUmTR2MK75RLACot2kbfiA-S45pB9tHgBc77QmzWLLMgHIhQ_5d6OtZVdzbKoGS4eUTeemPo39HuWKAMCl_RiT_O2AOfDQZr9DKOFY780VbPBpryFhlG-8rRp6p7LSKRKbn3v2C0R5GNjUJ0tyOsLArAookarLr4437Tl4SkPavSqvFKK_9rmmdFdfb1Hg5_j9gXnYV_pkTMDjIUeN3awIuZhbBC8iKtafsouFqqsfvQVXsmmawCg4edY_NXg6_XPuVjxaJST5Z7fREYx_8obZJQA=w1600-h784-ft"
 
-export const http = axios.create({
+const http = axios.create({
     baseURL: serverAddress,
     validateStatus: (status) => {
         if (status === 401) {
@@ -110,6 +110,24 @@ export const http = axios.create({
             return (status >= 200 && status < 300)
         }
     }
+})
+
+http.interceptors.request.use(config => {
+    console.log(config.url)
+    return config
+})
+
+export { http }
+
+// Convierete un blog en un archivo previsaulizable
+export const readFile = (fileId) => new Promise(async (resolve, _) => {
+    const { headers } = getHeaders()
+
+    const response = await RNFetchBlob.config({ fileCache: true, appendExt: 'jpg' })
+        .fetch('GET', `${serverAddress}/ecommerce/file/${fileId}`, headers)
+
+    const base64 = await response.base64()
+    resolve(`data:image/jpeg;base64,${base64}`)
 })
 
 /**
@@ -336,7 +354,6 @@ export const successMessage = (description = "", title = "AlyPay") => {
 export const getHeaders = () => {
     const { token } = store.getState().global
 
-
     return {
         headers: {
             "x-auth-token": token
@@ -398,13 +415,3 @@ export const configTouchIDAuth = {
     cancelText: "CANCELAR",
 }
 
-// Convierete un blog en un archivo previsaulizable
-export const readFile = (fileId) => new Promise(async (resolve, _) => {
-    const { headers } = getHeaders()
-
-    const response = await RNFetchBlob.config({ fileCache: true, appendExt: 'jpg' })
-        .fetch('GET', `${serverAddress}/ecommerce/file/${fileId}`, headers)
-
-    const base64 = await response.base64()
-    resolve(`data:image/jpeg;base64,${base64}`)
-})
