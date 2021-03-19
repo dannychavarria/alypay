@@ -141,7 +141,7 @@ const initialStateSendComponent = {
 /** Componente que renderiza los datos necesarios para ejecutar una transaccion a otra wallet */
 const SendComponent = ({ data = {}, onCompleteTrasanction = () => { }, }) => {
     const [state, dispatch] = useReducer(reducer, initialStateSendComponent)
-
+    
     const { global, functions } = store.getState()
 
     const { navigate } = useNavigation()

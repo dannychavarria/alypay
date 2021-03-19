@@ -5,12 +5,13 @@ import { PERMISSIONS, request, check } from 'react-native-permissions'
 // Import Constans and Components
 import Container from '../Container/Container'
 import Geolocation from 'react-native-geolocation-service'
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
+import MapView, { Marker, PROVIDER_GOOGLE, Callout } from 'react-native-maps'
 import Carousel from 'react-native-snap-carousel'
 import { errorMessage, RFValue, http, getHeaders } from '../../utils/constants'
 
 // Import Assets 
-import logo from '../../static/Commerce.png'
+import User from '../../static/Ubication.png'
+import Commerce from '../../static/UbicationCommerce.png'
 
 
 const initialState = {
@@ -28,7 +29,7 @@ const reducer = (state, action) => {
 
 const MapsCommerce = () => {
     const [state, dispatch] = useReducer(reducer, initialState)
-    const [info, setInfo] = useState('')
+    const [info, setInfo] = useState([])
 
     // Funcion que permite dar los permisos para la Geolocalizacion
     const ConfigureLocation = async () => {
@@ -58,26 +59,24 @@ const MapsCommerce = () => {
         }, (error) => {
             console.log(error.message)
         }, options)
+
     }
 
+    // Hacemos la peticion al server para optener las lista de los comercios cercanos
     const informationCommerce = async () => {
         try {
 
             const dataSent = {
                 lat: state.latitude,
                 long: state.longitude,
-                acurrancy: 25
             }
-            console.log('DataSets',dataSent)
 
-            const { data } = await http.get("/ecommerce/company/list", dataSent, getHeaders())
-            console.log("data", data)
-            //console.log('Header', getHeaders())
+            const { data } = await http.post("/ecommerce/company/list/", dataSent, getHeaders())
 
             if (data.error) {
                 throw String(data.message)
             }
-
+            console.log('Data', data)
             setInfo(data)
 
         } catch (error) {
@@ -85,6 +84,7 @@ const MapsCommerce = () => {
         }
     }
 
+    // Funcion que rendecira las tarjetas de los commercios
     const renderCarouselItem = ({ item }) => {
         return (
             <View style={styles.cardContainer} >
@@ -94,10 +94,16 @@ const MapsCommerce = () => {
         )
     }
 
+
     useEffect(() => {
         ConfigureLocation()
-        //informationCommerce()
     }, [])
+
+    useEffect(() => {
+        if (state.latitude && state.longitude) {
+            informationCommerce()
+        }
+    }, [state.latitude, state.longitude])
 
     return (
         <View style={styles.container}>
@@ -115,19 +121,17 @@ const MapsCommerce = () => {
                         dispatch({ type: "longitude", payload: event.nativeEvent.coordinate.longitude })
                         dispatch({ type: "latitude", payload: event.nativeEvent.coordinate.latitude })
                     }}
-                    
+
                 >
                     <Marker
                         coordinate={{
                             longitude: state.longitude,
                             latitude: state.latitude,
-                        }}
-                        draggable={true}
-                        
-                    />
+                        }}>
+                    </Marker>
 
-                    {/*  {
-                        coordinates.map((item, index) => (
+                    {
+                        info.map((item, index) => (
                             <Marker
                                 key={item.name}
                                 ref={ref => item[index] = ref}
@@ -136,9 +140,12 @@ const MapsCommerce = () => {
                                     longitude: item.longitude
                                 }}
                             >
+                                <Callout>
+                                    <Text>{item.name_commerce}</Text>
+                                </Callout>
                             </Marker>
                         ))
-                    } */}
+                    }
 
                 </MapView>
             }
@@ -164,6 +171,10 @@ const styles = StyleSheet.create({
     },
     map: {
         ...StyleSheet.absoluteFillObject,
+    },
+    logo: {
+        width: RFValue(30),
+        height: RFValue(30)
     },
     carousel: {
         position: 'absolute',

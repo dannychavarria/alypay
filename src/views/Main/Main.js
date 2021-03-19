@@ -22,6 +22,7 @@ import { BlurView } from "@react-native-community/blur"
 
 // import assets
 import ExampleImage from "../../static/example-order.png"
+import CardExecutive from "../../components/CardExecutive/CardExecutive"
 
 /**
  * Constante que almacena el tipo de vista seleccionada del switch
@@ -263,8 +264,6 @@ const Main = () => {
 
     const { globalStorage } = store.getState()
 
-
-
     /**
      * Metodo que configura el componente, inicializando todas las tareas
      */
@@ -340,7 +339,11 @@ const Main = () => {
             <Switch onSwitch={setStateView} items={switchItems} indexActive={state.indexTabActive} />
             {
                 stateView === TYPE_VIEW.WALLET &&
-                <FlatList data={state.wallets} keyExtractor={(_, i) => i} renderItem={({ item }) => <ItemWallet data={item} />} />
+                <>
+                    <CardExecutive />
+                    <FlatList data={state.wallets} keyExtractor={(_, i) => i} renderItem={({ item }) => <ItemWallet data={item} />} />
+
+                </>
             }
 
             {

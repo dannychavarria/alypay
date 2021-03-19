@@ -22,8 +22,7 @@ const Description = ({ route }) => {
             setLoader(true)
 
             const { data } = await http.get(`/blockchain/transaction/${hash}`)
-            console.log('Description', data)
-
+            
             if (data.error) {
                 throw String(data.message)
             }
