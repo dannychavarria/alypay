@@ -14,7 +14,8 @@ const ROUTES = {
     RETIREMENTCOMMERCE: "RetirementCommerce",
     DESCRIPTIONCOMMERCE: "DescriptionCommerce",
     SEARCH_GLOBAL: "SearchGlobal",
-    MAPS: "Maps"
+    MAPS: "Maps",
+    EXCUTIVE_LIST: "ExcuteList"
 }
 
 

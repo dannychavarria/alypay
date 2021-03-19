@@ -1,12 +1,21 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 
+// Import navigation functions
+import { useNavigation } from "@react-navigation/native"
+
 // Import Constanst
-import { Colors, RFValue } from '../../utils/constants'
+import { Colors, RFValue, http, getHeaders, errorMessage } from '../../utils/constants'
 
 const CardExecutive = () => {
+    const { navigate } = useNavigation()
+
+    const onListCommerce = () => {
+        navigate('ExcuteList')
+    }
+
     return (
-        <TouchableOpacity style={styles.container}>
+        <TouchableOpacity style={styles.container} onPress={onListCommerce}>
             <View style={styles.subContainer} >
                 <View style={styles.row}>
                     <Text style={styles.legend}>Ganacia de ejecutivo</Text>
@@ -38,7 +47,7 @@ const styles = StyleSheet.create({
         width: "100%",
     },
     legend: {
-        fontSize: RFValue(20  ),
+        fontSize: RFValue(20),
         color: Colors.colorYellow
     }
 })
