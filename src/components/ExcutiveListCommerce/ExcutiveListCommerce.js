@@ -7,7 +7,8 @@ import Floor from "lodash/floor"
 
 // Import Components
 import Container from '../Container/Container'
-import Modal from 'react-native-modal'
+import Lottie from 'lottie-react-native'
+import Loader from '../Loader/Loader'
 
 // Import Styles
 import { ListExcuteStyle } from '../../Styles/Components/index'
@@ -18,15 +19,16 @@ import useStyles from '../../hooks/useStyles.hook'
 // Import Services
 import { ListCommerceService } from '../../Services/index'
 
-// Import Assets
+// Import Assetss
 import Commerce from '../../static/ecommerce-avatar.png'
+import empty from '../../animations/empty.json'
 
 
 const ExcutiveListCommerce = () => {
     const classes = useStyles(ListExcuteStyle)
     const [info, setInfo] = useState({})
     const [percentage, setPerecentage] = useState('')
-    const [show, setShow] = useState(false)
+    const [loader, setLoader] = useState(false)
 
     /**
      * Hacemos las peticion al server para optener la 
@@ -34,14 +36,14 @@ const ExcutiveListCommerce = () => {
      */
     const configureComponent = async () => {
         try {
-            loader(true)
+            setLoader(true)
             const response = await ListCommerceService.get()
             setInfo(response.companies)
             setPerecentage(response.percentage)
         } catch (error) {
             errorMessage(error)
         } finally {
-            loader(false)
+            setLoader(false)
         }
     }
 
@@ -77,6 +79,8 @@ const ExcutiveListCommerce = () => {
         )
     }
 
+    const foundData = (Object.keys(info).length > 0 && !loader)
+
 
     useEffect(() => {
         configureComponent()
@@ -84,26 +88,35 @@ const ExcutiveListCommerce = () => {
 
     return (
         <Container showLogo >
-            <View style={classes.containerTitle}>
-                <Text style={classes.title}>Listado de comercios</Text>
-            </View>
-            <FlatList
-                data={info}
-                keyExtractor={(_, i) => i}
-                renderItem={itemCommerce}
-            />
+            <Loader isVisible={loader} />
+            {
+                (foundData) &&
+                <>
+                    <View style={classes.containerTitle}>
+                        <Text style={classes.title}>Listado de comercios</Text>
+                    </View>
+                    <FlatList
+                        data={info}
+                        keyExtractor={(_, i) => i}
+                        renderItem={itemCommerce}
+                    />
+                    <View style={classes.containerButton}>
+                        <TouchableOpacity style={GlobalStyles.buttonPrimaryLine}>
+                            <Text style={GlobalStyles.textButtonPrimaryLine}>Retirar</Text>
+                        </TouchableOpacity>
+                    </View>
+                </>
+            }
 
-            <View style={classes.containerButton}>
-                <TouchableOpacity onPress={() => setShow(true)}  style={GlobalStyles.buttonPrimaryLine}>
-                    <Text style={GlobalStyles.textButtonPrimaryLine}>Retirar</Text>
-                </TouchableOpacity>
-            </View>
-
-            <Modal isVisible={show} onBackdropPress={() =>setShow(false)}>
-                <View style={classes.containerModal}>
-
-                </View>
-            </Modal>
+            {
+                (!foundData) &&
+                <>
+                    <View style={classes.containerError}>
+                        <Lottie source={empty} style={classes.empty} loop={false} autoPlay />
+                        <Text style={classes.title}>Sin comisiones para mostrar</Text>
+                    </View>
+                </>
+            }
         </Container>
     )
 }

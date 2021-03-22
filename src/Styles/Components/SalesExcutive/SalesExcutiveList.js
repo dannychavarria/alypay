@@ -2,11 +2,6 @@
 import { RFValue, Colors } from '../../../utils/constants'
 
 export default {
-    containerTitle: {
-        flex: 1,
-        marginHorizontal: RFValue(15),
-    },
-
     container: {
         alignItems: "center",
         backgroundColor: Colors.colorBlack,
@@ -16,6 +11,10 @@ export default {
         marginHorizontal: RFValue(10),
         flexDirection: "row",
         elevation: 25,
+    },
+    containerTitle: {
+        flex: 1,
+        marginHorizontal: RFValue(15),
     },
     cardInfo: {
         flexDirection: 'column',
@@ -53,15 +52,20 @@ export default {
         color: "#CCC",
         fontSize: RFValue(14),
     },
+    title: {
+        fontSize: RFValue(24),
+        color: Colors.colorYellow
+    },
     containerButton: {
         margin: RFValue(15),
     },
-    containerModal: {
+    containerError: {
+        alignItems: 'center',
+    },
+    empty: {
         alignSelf: "center",
-        backgroundColor: Colors.colorBlack,
-        borderRadius:10,
-        padding: 10,
-        height: "80%",
-        width: "90%",
-    }
+        resizeMode: "contain",
+        height: RFValue(250),
+        width: RFValue(250),
+    },
 }
