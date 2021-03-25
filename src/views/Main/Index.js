@@ -11,9 +11,9 @@ import Recharge from "../Recharge/Recharge"
 import Retirement from "../Retirement/Retirement"
 import RetirementCommerce from '../RetirementCommerce/RetirementCommerce'
 
+
 // Import components
 import Navbar from "../../components/Navbar/Navbar"
-import Maps from '../../components/MapsCommerce/MapsCommerce'
 
 // Import store from redux
 import store from "../../store/index"

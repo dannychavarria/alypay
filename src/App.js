@@ -33,6 +33,7 @@ import Description from "./components/Description/Description"
 import SearchGlobal from "./components/SearchGlobal/SearchGlobal"
 import Maps from './components/MapsCommerce/MapsCommerce'
 import ListCommerceExcute from './components/ExcutiveListCommerce/ExcutiveListCommerce'
+import RetirementExcutive from "./views/RetirementExcutive/RetirementExcutive"
 
 // import assets and animation
 import notConectionAnimation from "./animations/no-internet-connection.json"
@@ -126,6 +127,7 @@ const App = () => {
                             <Stack.Screen name={ROUTES.SEARCH_GLOBAL} component={SearchGlobal} />
                             <Stack.Screen name={ROUTES.MAPS} component={Maps} />
                             <Stack.Screen name={ROUTES.EXCUTIVE_LIST} component={ListCommerceExcute} />
+                            <Stack.Screen name={ROUTES.RETIREMENTEXCUTIVE} component={RetirementExcutive} />
                         </>
                     }
 
