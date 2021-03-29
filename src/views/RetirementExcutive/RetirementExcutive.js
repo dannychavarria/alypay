@@ -28,6 +28,7 @@ import store from "../../store"
 const RetirementExcutive = () => {
     const classes = useStyles(RetirementExcutiveStyles)
     const { global } = store.getState()
+    console.log(global)
 
     const {
         getListCoin,

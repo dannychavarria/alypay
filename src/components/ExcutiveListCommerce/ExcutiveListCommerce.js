@@ -25,7 +25,11 @@ import empty from "../../animations/empty.json"
 
 const ExcutiveListCommerce = ({ navigation }) => {
     const classes = useStyles(ListExcuteStyle)
+
+    // Estado que guarda la informacion de los comercios afiliados al ejecutivo
     const [info, setInfo] = useState({})
+
+    // Estado que guarda el poncentaje de ganacia de los comercios afiliados al ejecutivo
     const [percentage, setPerecentage] = useState("")
     const [loader, setLoader] = useState(false)
 
@@ -36,7 +40,9 @@ const ExcutiveListCommerce = ({ navigation }) => {
     const configureComponent = async () => {
         try {
             setLoader(true)
+
             const response = await ListCommerceService.get()
+
             setInfo(response.companies)
             setPerecentage(response.percentage)
         } catch (error) {
@@ -51,7 +57,7 @@ const ExcutiveListCommerce = ({ navigation }) => {
         const result = Floor(percentage * item.amount, 2)
 
         return (
-            <TouchableOpacity style={classes.container}>
+            <View style={classes.container}>
                 <Image source={Commerce} style={classes.image} />
 
                 <View style={classes.subContainerInfo}>
@@ -79,7 +85,7 @@ const ExcutiveListCommerce = ({ navigation }) => {
                         </View>
                     </View>
                 </View>
-            </TouchableOpacity>
+            </View>
         )
     }
 

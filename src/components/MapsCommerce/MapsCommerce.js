@@ -1,31 +1,36 @@
-import React, { useState, useEffect, useReducer } from 'react'
-import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions } from 'react-native'
-import { PERMISSIONS, request, check } from 'react-native-permissions'
+import React, { useState, useEffect, useReducer } from "react"
+import {
+    View,
+    Text,
+    TouchableOpacity,
+    StyleSheet,
+    Image,
+    Dimensions,
+} from "react-native"
+import { PERMISSIONS, request, check } from "react-native-permissions"
 
 // Import Constans and Components
-import Container from '../Container/Container'
-import Geolocation from 'react-native-geolocation-service'
-import MapView, { Marker, PROVIDER_GOOGLE, Callout } from 'react-native-maps'
-import Carousel from 'react-native-snap-carousel'
-import { errorMessage, RFValue, http, getHeaders } from '../../utils/constants'
+import Container from "../Container/Container"
+import Geolocation from "react-native-geolocation-service"
+import MapView, { Marker, PROVIDER_GOOGLE, Callout } from "react-native-maps"
+import Carousel from "react-native-snap-carousel"
+import { errorMessage, RFValue, http, getHeaders } from "../../utils/constants"
 
-// Import Assets 
-import User from '../../static/Ubication.png'
-import Commerce from '../../static/UbicationCommerce.png'
-
+// Import Assets
+import User from "../../static/Ubication.png"
+import Commerce from "../../static/UbicationCommerce.png"
 
 const initialState = {
     latitude: null,
-    longitude: null
+    longitude: null,
 }
 
 const reducer = (state, action) => {
     return {
         ...state,
-        [action.type]: action.payload
+        [action.type]: action.payload,
     }
 }
-
 
 const MapsCommerce = () => {
     const [state, dispatch] = useReducer(reducer, initialState)
@@ -34,11 +39,13 @@ const MapsCommerce = () => {
     // Funcion que permite dar los permisos para la Geolocalizacion
     const ConfigureLocation = async () => {
         try {
-            if (Platform.OS === 'android') {
+            if (Platform.OS === "android") {
                 await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION)
-                const auth = await check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION)
+                const auth = await check(
+                    PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+                )
 
-                if (auth === 'granted') {
+                if (auth === "granted") {
                     positionMap()
                 }
             }
@@ -49,36 +56,52 @@ const MapsCommerce = () => {
 
     // Funcion que almacena la posicion en el mapa
     const positionMap = () => {
-        const options = { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+        const options = {
+            enableHighAccuracy: false,
+            timeout: 15000,
+            maximumAge: 10000,
+        }
 
-        Geolocation.getCurrentPosition((position) => {
-            if (position !== null && position !== undefined) {
-                dispatch({ type: "latitude", payload: position.coords.latitude })
-                dispatch({ type: "longitude", payload: position.coords.longitude })
-            }
-        }, (error) => {
-            console.log(error.message)
-        }, options)
-
+        Geolocation.getCurrentPosition(
+            position => {
+                console.log("Posicion", position)
+                if (position !== null && position !== undefined) {
+                    dispatch({
+                        type: "latitude",
+                        payload: position.coords.latitude,
+                    })
+                    dispatch({
+                        type: "longitude",
+                        payload: position.coords.longitude,
+                    })
+                }
+            },
+            error => {
+                console.log(error.message)
+            },
+            options,
+        )
     }
 
     // Hacemos la peticion al server para optener las lista de los comercios cercanos
     const informationCommerce = async () => {
         try {
-
             const dataSent = {
                 lat: state.latitude,
                 long: state.longitude,
             }
 
-            const { data } = await http.post("/ecommerce/company/list/", dataSent, getHeaders())
+            const { data } = await http.post(
+                "/ecommerce/company/list/",
+                dataSent,
+                getHeaders(),
+            )
 
             if (data.error) {
                 throw String(data.message)
             }
-            console.log('Data', data)
+            console.log("Data", data)
             setInfo(data)
-
         } catch (error) {
             errorMessage(error.toString())
         }
@@ -87,13 +110,12 @@ const MapsCommerce = () => {
     // Funcion que rendecira las tarjetas de los commercios
     const renderCarouselItem = ({ item }) => {
         return (
-            <View style={styles.cardContainer} >
+            <View style={styles.cardContainer}>
                 <Text style={styles.cardTitle}>{item.name}</Text>
                 <Image style={styles.cardImage} source={item.image} />
-            </View >
+            </View>
         )
     }
-
 
     useEffect(() => {
         ConfigureLocation()
@@ -107,48 +129,47 @@ const MapsCommerce = () => {
 
     return (
         <View style={styles.container}>
-            {
-                (state.latitude !== null && state.longitude !== null) &&
+            {state.latitude !== null && state.longitude !== null && (
                 <MapView
                     style={styles.map}
                     initialRegion={{
                         longitude: state.longitude,
                         latitude: state.latitude,
-                        latitudeDelta: 0.050,
-                        longitudeDelta: 0.045
+                        latitudeDelta: 0.05,
+                        longitudeDelta: 0.045,
                     }}
-                    onMarkerDragEnd={(event) => {
-                        dispatch({ type: "longitude", payload: event.nativeEvent.coordinate.longitude })
-                        dispatch({ type: "latitude", payload: event.nativeEvent.coordinate.latitude })
-                    }}
-
-                >
+                    onMarkerDragEnd={event => {
+                        dispatch({
+                            type: "longitude",
+                            payload: event.nativeEvent.coordinate.longitude,
+                        })
+                        dispatch({
+                            type: "latitude",
+                            payload: event.nativeEvent.coordinate.latitude,
+                        })
+                    }}>
                     <Marker
                         coordinate={{
                             longitude: state.longitude,
                             latitude: state.latitude,
-                        }}>
-                    </Marker>
+                        }}
+                    />
 
-                    {
-                        info.map((item, index) => (
-                            <Marker
-                                key={item.name}
-                                ref={ref => item[index] = ref}
-                                coordinate={{
-                                    latitude: item.latitude,
-                                    longitude: item.longitude
-                                }}
-                            >
-                                <Callout>
-                                    <Text>{item.name_commerce}</Text>
-                                </Callout>
-                            </Marker>
-                        ))
-                    }
-
+                    {/*    {info.map((item, index) => (
+                        <Marker
+                            key={item.name}
+                            ref={ref => (item[index] = ref)}
+                            coordinate={{
+                                latitude: item.latitude,
+                                longitude: item.longitude,
+                            }}>
+                            <Callout>
+                                <Text>{item.name_commerce}</Text>
+                            </Callout>
+                        </Marker>
+                    ))} */}
                 </MapView>
-            }
+            )}
             {/*  {
                 (state.latitude !== null && state.longitude !== null) &&
                 <Carousel
@@ -167,28 +188,28 @@ const MapsCommerce = () => {
 
 const styles = StyleSheet.create({
     container: {
-        ...StyleSheet.absoluteFillObject
+        ...StyleSheet.absoluteFillObject,
     },
     map: {
         ...StyleSheet.absoluteFillObject,
     },
     logo: {
         width: RFValue(30),
-        height: RFValue(30)
+        height: RFValue(30),
     },
     carousel: {
-        position: 'absolute',
+        position: "absolute",
         bottom: 0,
-        marginBottom: 30
+        marginBottom: 30,
     },
     cardContainer: {
         //flexDirection: 'column',
-        backgroundColor: 'rgba(0, 0, 0, 0.6)',
-        height: '100%',
-        width: '100%',
+        backgroundColor: "rgba(0, 0, 0, 0.6)",
+        height: "100%",
+        width: "100%",
         //padding: 24,
         borderRadius: 15,
-        alignItems: 'center',
+        alignItems: "center",
     },
     cardImage: {
         height: RFValue(100),
@@ -197,13 +218,13 @@ const styles = StyleSheet.create({
         // position: 'absolute',
         // borderBottomLeftRadius: 24,
         //borderBottomRightRadius: 24,
-        resizeMode: 'contain',
-        padding: 50
+        resizeMode: "contain",
+        padding: 50,
     },
     cardTitle: {
-        color: 'white',
+        color: "white",
         fontSize: 22,
-    }
+    },
 })
 
 export default MapsCommerce
