@@ -8,7 +8,12 @@ import { useNavigation } from "@react-navigation/native"
 import { TouchableOpacity, Image, View, Text, StyleSheet } from "react-native"
 
 // import constants and function
-import { Colors, RFValue, urlAlyCoin, WithDecimals } from "../../utils/constants"
+import {
+    Colors,
+    RFValue,
+    urlAlyCoin,
+    WithDecimals,
+} from "../../utils/constants"
 import _ from "lodash"
 
 /**
@@ -17,41 +22,56 @@ import _ from "lodash"
 const ItemWallet = ({ data = {}, disabled = false }) => {
     const { navigate } = useNavigation()
 
-    const urlImage = data._id !== null
-        ? `https://s2.coinmarketcap.com/static/img/coins/128x128/${data._id}.png`
-        : urlAlyCoin
+    const urlImage =
+        data._id !== null
+            ? `https://s2.coinmarketcap.com/static/img/coins/128x128/${
+                  data._id
+              }.png`
+            : urlAlyCoin
 
     const isTherter = () => {
         if (data.id !== -1) {
             navigate(ROUTES.WALLET, data)
         } else {
-            navigate(ROUTES.LIST)
+            navigate(ROUTES.LIST, data)
         }
     }
 
     return (
-        <TouchableOpacity disabled={disabled} onPress={isTherter} style={styles.container}>
+        <TouchableOpacity
+            disabled={disabled}
+            onPress={isTherter}
+            style={styles.container}>
             <Image style={styles.image} source={{ uri: urlImage }} />
 
             <View style={styles.subContainerInfo}>
                 <View style={styles.row}>
-                    <Text style={styles.superValue}>{data.name}</Text>
+                    <Text style={styles.superValue}>{data.description}</Text>
 
                     <View style={styles.lastCol}>
                         <Text style={styles.key}>Balance</Text>
-                        <Text style={styles.value}>{_.floor(data.amount, 8)} {data.symbol}</Text>
+                        <Text style={styles.value}>
+                            {_.floor(data.amount, 8)} {data.symbol}
+                        </Text>
                     </View>
                 </View>
 
                 <View style={styles.row}>
                     <View>
                         <Text style={styles.key}>Precio del mercado</Text>
-                        <Text style={styles.value}>$ {WithDecimals(_.floor(data.price, 2))}</Text>
+                        <Text style={styles.value}>
+                            $ {WithDecimals(_.floor(data.price, 2))}
+                        </Text>
                     </View>
 
                     <View style={styles.lastCol}>
                         <Text style={styles.key}>Balance USD</Text>
-                        <Text style={styles.value}>$ {WithDecimals((data.price * data.amount).toFixed(2))}</Text>
+                        <Text style={styles.value}>
+                            ${" "}
+                            {WithDecimals(
+                                (data.price * data.amount).toFixed(2),
+                            )}
+                        </Text>
                     </View>
                 </View>
             </View>

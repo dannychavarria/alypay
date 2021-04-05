@@ -8,13 +8,32 @@ import Switch from "../../components/Switch/Switch"
 import Modal from "react-native-modal"
 import { SETFUNCTION, SETSTORAGE } from "../../store/actionsTypes"
 import { RNCamera } from "react-native-camera"
-import { Text, StyleSheet, TouchableOpacity, View, TextInput, KeyboardAvoidingView, Platform, FlatList } from "react-native"
+import {
+    Text,
+    StyleSheet,
+    TouchableOpacity,
+    View,
+    TextInput,
+    KeyboardAvoidingView,
+    Platform,
+    FlatList,
+} from "react-native"
 import { Image } from "react-native-animatable"
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation } from "@react-navigation/native"
 
 // Import constant and functions
-import * as CryptoJS from 'react-native-crypto-js';
-import { RFValue, CheckCameraPermission, http, reducer, errorMessage, getHeaders, loader, Colors, GlobalStyles } from "../../utils/constants"
+import * as CryptoJS from "react-native-crypto-js"
+import {
+    RFValue,
+    CheckCameraPermission,
+    http,
+    reducer,
+    errorMessage,
+    getHeaders,
+    loader,
+    Colors,
+    GlobalStyles,
+} from "../../utils/constants"
 
 // import redux store and configuration
 import store from "../../store/index"
@@ -30,7 +49,7 @@ import CardExecutive from "../../components/CardExecutive/CardExecutive"
  */
 const TYPE_VIEW = {
     WALLET: "wallet",
-    PAY: "pay"
+    PAY: "pay",
 }
 
 /**
@@ -39,18 +58,17 @@ const TYPE_VIEW = {
 const switchItems = [
     {
         text: "Billeteras",
-        state: TYPE_VIEW.WALLET
+        state: TYPE_VIEW.WALLET,
     },
     {
         text: "AlyPay",
-        state: TYPE_VIEW.PAY
-    }
+        state: TYPE_VIEW.PAY,
+    },
 ]
 
-
 /**
- * Vista componente que se renderiza cuando 
- * el usuario ejecuta el componente pagar en el switch 
+ * Vista componente que se renderiza cuando
+ * el usuario ejecuta el componente pagar en el switch
  */
 const PayComponent = () => {
     const { navigate } = useNavigation()
@@ -63,7 +81,7 @@ const PayComponent = () => {
 
     /**
      * Funcion que realiza el pago si la orden es escrita
-     * @param {*} orderId 
+     * @param {*} orderId
      */
     const submit = async _ => {
         try {
@@ -71,7 +89,9 @@ const PayComponent = () => {
 
             // Verificamos si hay un numero de orden para hacer el pago
             if (checkAmount.trim().length === 0) {
-                throw String("Ingresa el numero de orden para continuar el pago")
+                throw String(
+                    "Ingresa el numero de orden para continuar el pago",
+                )
             }
 
             navigate("Payment", { data: { order: checkAmount }, scan: false })
@@ -84,7 +104,6 @@ const PayComponent = () => {
 
             //reset tab default
             functions?.resetTab()
-
         } catch (error) {
             errorMessage(error.toString())
         } finally {
@@ -94,14 +113,17 @@ const PayComponent = () => {
 
     /**
      *  Fucnion que hace la lectura del QR
-     * @param {*} response 
+     * @param {*} response
      */
-    const onReadCodeQR = async (response) => {
+    const onReadCodeQR = async response => {
         try {
             loader(true)
 
-            const splitData = response.data.split(',')
-            const bytes = CryptoJS.AES.decrypt(splitData[0], splitData[1]).toString(CryptoJS.enc.Utf8)
+            const splitData = response.data.split(",")
+            const bytes = CryptoJS.AES.decrypt(
+                splitData[0],
+                splitData[1],
+            ).toString(CryptoJS.enc.Utf8)
             const parsedData = JSON.parse(bytes)
 
             navigate("Payment", { data: parsedData, scan: true })
@@ -110,10 +132,8 @@ const PayComponent = () => {
 
             //reset tab default
             functions?.resetTab()
-
         } catch (error) {
             errorMessage(String("QR de pago incorrecto"))
-
         } finally {
             loader(false)
         }
@@ -135,15 +155,15 @@ const PayComponent = () => {
         row: {
             flexDirection: "row",
             justifyContent: "space-between",
-            marginVertical: RFValue(10)
+            marginVertical: RFValue(10),
         },
 
         legend: {
-            color: Colors.colorYellow
+            color: Colors.colorYellow,
         },
         rowInput: {
             alignItems: "center",
-            flexDirection: "row"
+            flexDirection: "row",
         },
         buttonPay: {
             backgroundColor: Colors.colorYellow,
@@ -169,7 +189,7 @@ const PayComponent = () => {
             alignSelf: "center",
             height: RFValue(128),
             width: RFValue(128),
-        }
+        },
     })
 
     /**Constante que almacena los props del componente Modal */
@@ -180,10 +200,10 @@ const PayComponent = () => {
         backdropOpacity: Platform.OS === "ios" ? 0 : 0.8,
         style: {
             padding: 0,
-            margin: 0
+            margin: 0,
         },
         animationIn: "fadeIn",
-        animationOut: "fadeOut"
+        animationOut: "fadeOut",
     }
 
     return (
@@ -199,30 +219,46 @@ const PayComponent = () => {
                 />
             </View>
 
-
             <View>
-                <TouchableOpacity onPress={_ => setManual(true)} style={styles.butonManual}>
-                    <Text style={GlobalStyles.textButtonPrimaryLine}>Ingresar Orden Manualmente</Text>
+                <TouchableOpacity
+                    onPress={_ => setManual(true)}
+                    style={styles.butonManual}>
+                    <Text style={GlobalStyles.textButtonPrimaryLine}>
+                        Ingresar Orden Manualmente
+                    </Text>
                 </TouchableOpacity>
             </View>
 
             <Modal {...propsModalComponent}>
                 <>
-                    <BlurView
-                        style={StyleSheet.absoluteFill}
-                        blurType="dark"
+                    <BlurView style={StyleSheet.absoluteFill} blurType="dark" />
+
+                    <Image
+                        animation="pulse"
+                        easing="ease-out"
+                        iterationCount="infinite"
+                        source={ExampleImage}
+                        style={styles.imageExample}
                     />
 
-                    <Image animation="pulse" easing="ease-out" iterationCount="infinite" source={ExampleImage} style={styles.imageExample} />
-
-                    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+                    <View
+                        style={{
+                            flex: 1,
+                            justifyContent: "center",
+                            alignItems: "center",
+                        }}>
                         <View style={styles.row}>
                             <View style={styles.col}>
-                                <Text style={styles.legend}>Numero de Orden</Text>
+                                <Text style={styles.legend}>
+                                    Numero de Orden
+                                </Text>
 
                                 <View style={styles.rowInput}>
                                     <TextInput
-                                        style={[GlobalStyles.textInput, { flex: 1 }]}
+                                        style={[
+                                            GlobalStyles.textInput,
+                                            { flex: 1 },
+                                        ]}
                                         placeholder="Ingrese el numero de orden"
                                         placeholderTextColor="#FFF"
                                         keyboardType="numeric"
@@ -232,23 +268,29 @@ const PayComponent = () => {
                                         onChangeText={setCheckAmount}
                                     />
 
-                                    <TouchableOpacity style={styles.buttonPay} onPress={submit}>
+                                    <TouchableOpacity
+                                        style={styles.buttonPay}
+                                        onPress={submit}>
                                         <Text>PAGAR</Text>
                                     </TouchableOpacity>
                                 </View>
 
-                                <TouchableOpacity onPress={_ => setManual(false)} style={styles.butonManual}>
-                                    <Text style={GlobalStyles.textButtonPrimaryLine}>Cancelar</Text>
+                                <TouchableOpacity
+                                    onPress={_ => setManual(false)}
+                                    style={styles.butonManual}>
+                                    <Text
+                                        style={
+                                            GlobalStyles.textButtonPrimaryLine
+                                        }>
+                                        Cancelar
+                                    </Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
-
                     </View>
                 </>
             </Modal>
-
         </>
-
     )
 }
 
@@ -281,7 +323,7 @@ const Main = () => {
 
             const dataStorage = {
                 ...globalStorage,
-                wallets: data
+                wallets: data,
             }
 
             store.dispatch({ type: SETSTORAGE, payload: dataStorage })
@@ -294,11 +336,11 @@ const Main = () => {
 
     const feePercentage = async () => {
         try {
-            const { data: fee } = await http.get('/fees-percentage')
+            const { data: fee } = await http.get("/fees-percentage")
 
             const dataStore = {
                 ...globalStorage,
-                fee: {}
+                fee: {},
             }
 
             if (Object.values(fee).length > 0) {
@@ -312,7 +354,6 @@ const Main = () => {
     }
 
     useEffect(() => {
-
         configurateComponent()
 
         feePercentage()
@@ -328,29 +369,30 @@ const Main = () => {
                     setStateView(TYPE_VIEW.WALLET)
 
                     state.dispatch({ type: "indexTabActive", payload: 0 })
-                }
-            }
+                },
+            },
         })
-
     }, [])
 
     return (
         <Container onRefreshEnd={configurateComponent} showLogo>
-            <Switch onSwitch={setStateView} items={switchItems} indexActive={state.indexTabActive} />
-            {
-                stateView === TYPE_VIEW.WALLET &&
+            <Switch
+                onSwitch={setStateView}
+                items={switchItems}
+                indexActive={state.indexTabActive}
+            />
+            {stateView === TYPE_VIEW.WALLET && (
                 <>
                     <CardExecutive />
-                    <FlatList data={state.wallets} keyExtractor={(_, i) => i} renderItem={({ item }) => <ItemWallet data={item} />} />
-
+                    <FlatList
+                        data={state.wallets}
+                        keyExtractor={(_, i) => i}
+                        renderItem={({ item }) => <ItemWallet data={item} />}
+                    />
                 </>
-            }
+            )}
 
-            {
-                stateView === TYPE_VIEW.PAY &&
-                <PayComponent />
-            }
-
+            {stateView === TYPE_VIEW.PAY && <PayComponent />}
         </Container>
     )
 }

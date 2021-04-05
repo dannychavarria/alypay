@@ -1,37 +1,36 @@
-import React, { useEffect, useState } from 'react'
-import { View, Text, TouchableOpacity, FlatList, Image } from 'react-native'
+import React, { useEffect, useState } from "react"
+import { View, Text, TouchableOpacity, FlatList, Image } from "react-native"
 
 // Import Constanst
-import { errorMessage, loader, GlobalStyles } from '../../utils/constants'
+import { errorMessage, loader, GlobalStyles } from "../../utils/constants"
 import Floor from "lodash/floor"
 
 // Import Components
-import Container from '../Container/Container'
-import Lottie from 'lottie-react-native'
-import Loader from '../Loader/Loader'
+import Container from "../Container/Container"
+import Lottie from "lottie-react-native"
+import Loader from "../Loader/Loader"
 
 // Import Styles
-import { ListExcuteStyle } from '../../Styles/Components/index'
+import { ListExcuteStyle } from "../../Styles/Components/index"
 
 // Import Hooks
-import useStyles from '../../hooks/useStyles.hook'
+import useStyles from "../../hooks/useStyles.hook"
 
 // Import Services
-import { ListCommerceService } from '../../Services/index'
+import { ListCommerceService } from "../../Services/index"
 
 // Import Assetss
-import Commerce from '../../static/ecommerce-avatar.png'
-import empty from '../../animations/empty.json'
-
+import Commerce from "../../static/ecommerce-avatar.png"
+import empty from "../../animations/empty.json"
 
 const ExcutiveListCommerce = () => {
     const classes = useStyles(ListExcuteStyle)
     const [info, setInfo] = useState({})
-    const [percentage, setPerecentage] = useState('')
+    const [percentage, setPerecentage] = useState("")
     const [loader, setLoader] = useState(false)
 
     /**
-     * Hacemos las peticion al server para optener la 
+     * Hacemos las peticion al server para optener la
      * lista de los comercios referidos
      */
     const configureComponent = async () => {
@@ -49,48 +48,51 @@ const ExcutiveListCommerce = () => {
 
     // Renderizamos las tarjetas de los comercios asociados
     const itemCommerce = ({ item }) => {
-
         const result = Floor(percentage * item.amount, 2)
 
         return (
-            <TouchableOpacity style={classes.container}>
+            <View style={classes.container}>
                 <Image source={Commerce} style={classes.image} />
 
                 <View style={classes.subContainerInfo}>
                     <View style={classes.cardInfo}>
                         <View style={classes.headerTableTitle}>
-                            <Text style={classes.titleCard}>{item.company}</Text>
+                            <Text style={classes.titleCard}>
+                                {item.company}
+                            </Text>
                         </View>
 
                         <View style={classes.row}>
                             <View style={classes.headerTable}>
                                 <Text style={classes.titleCard}>Comisión</Text>
-                                <Text style={classes.subTitle}>{percentage}%</Text>
+                                <Text style={classes.subTitle}>
+                                    {percentage}%
+                                </Text>
                             </View>
 
                             <View style={classes.headerTable}>
                                 <Text style={classes.titleCard}>Ganacias</Text>
-                                <Text style={classes.subTitle}>{result} USDT</Text>
+                                <Text style={classes.subTitle}>
+                                    {result} USDT
+                                </Text>
                             </View>
                         </View>
                     </View>
                 </View>
-            </TouchableOpacity>
+            </View>
         )
     }
 
-    const foundData = (Object.keys(info).length > 0 && !loader)
-
+    const foundData = Object.keys(info).length > 0 && !loader
 
     useEffect(() => {
         configureComponent()
     }, [])
 
     return (
-        <Container showLogo >
+        <View style={classes.main}>
             <Loader isVisible={loader} />
-            {
-                (foundData) &&
+            {foundData && (
                 <>
                     <View style={classes.containerTitle}>
                         <Text style={classes.title}>Listado de comercios</Text>
@@ -101,23 +103,32 @@ const ExcutiveListCommerce = () => {
                         renderItem={itemCommerce}
                     />
                     <View style={classes.containerButton}>
-                        <TouchableOpacity style={GlobalStyles.buttonPrimaryLine}>
-                            <Text style={GlobalStyles.textButtonPrimaryLine}>Retirar</Text>
+                        <TouchableOpacity
+                            style={GlobalStyles.buttonPrimaryLine}>
+                            <Text style={GlobalStyles.textButtonPrimaryLine}>
+                                Retirar
+                            </Text>
                         </TouchableOpacity>
                     </View>
                 </>
-            }
+            )}
 
-            {
-                (!foundData) &&
+            {!foundData && (
                 <>
                     <View style={classes.containerError}>
-                        <Lottie source={empty} style={classes.empty} loop={false} autoPlay />
-                        <Text style={classes.title}>Sin comisiones para mostrar</Text>
+                        <Lottie
+                            source={empty}
+                            style={classes.empty}
+                            loop={false}
+                            autoPlay
+                        />
+                        <Text style={classes.title}>
+                            Sin comisiones para mostrar
+                        </Text>
                     </View>
                 </>
-            }
-        </Container>
+            )}
+        </View>
     )
 }
 
