@@ -12,13 +12,15 @@ import { PERMISSIONS, request, check } from "react-native-permissions"
 // Import Constans and Components
 import Container from "../Container/Container"
 import Geolocation from "react-native-geolocation-service"
-import MapView, { Marker, PROVIDER_GOOGLE, Callout } from "react-native-maps"
+import MapView, { Marker, PROVIDER_GOOGLE, Callout, fitToCoordinates } from "react-native-maps"
 import Carousel from "react-native-snap-carousel"
 import { errorMessage, RFValue, http, getHeaders } from "../../utils/constants"
 
 // Import Assets
 import User from "../../static/Ubication.png"
 import Commerce from "../../static/UbicationCommerce.png"
+import Search from "../Search/Search"
+import SearchMap from "../SearchMap/SearchMap"
 
 const initialState = {
     latitude: null,
@@ -36,6 +38,11 @@ const MapsCommerce = () => {
     const [state, dispatch] = useReducer(reducer, initialState)
     const [info, setInfo] = useState([])
 
+    const [newLongitude, setNewLongitude] = useState(999)
+    const [newLatitude, setNewLatitude] = useState(999)
+
+    const [ref, setRef] = useState()
+    
     // Funcion que permite dar los permisos para la Geolocalizacion
     const ConfigureLocation = async () => {
         try {
@@ -127,11 +134,22 @@ const MapsCommerce = () => {
         }
     }, [state.latitude, state.longitude])
 
+    // const irComercio = () => {
+    //     ref.fitToCoordinates([newLatitude, newLongitude])
+    //     console.log('irComercio: ',ref.fitToCoordinates)
+    // }
+
+    // useEffect(() => {
+    //     irComercio()
+    // }, [newLatitude, newLongitude])
+
     return (
         <View style={styles.container}>
             {state.latitude !== null && state.longitude !== null && (
-                <MapView
+                <MapView showsUserLocation={true}
                     style={styles.map}
+                    ref={ ref => setRef(ref) }
+                    onLayout={ref.fitToCoordinates([state.latitude, state.longitude])}
                     initialRegion={{
                         longitude: state.longitude,
                         latitude: state.latitude,
@@ -148,15 +166,22 @@ const MapsCommerce = () => {
                             payload: event.nativeEvent.coordinate.latitude,
                         })
                     }}>
-                    <Marker
+                    {/* <Marker
                         coordinate={{
                             longitude: state.longitude,
                             latitude: state.latitude,
                         }}
-                    />
-
-                    {/*    {info.map((item, index) => (
+                    /> */}
+                    {newLongitude != 999 && newLatitude != 999 && 
                         <Marker
+                        coordinate={{
+                            longitude: newLongitude,
+                            latitude: newLatitude,
+                        }}
+                    />}
+
+                    {info.map((item, index) => (
+                        <Marker image={Commerce}
                             key={item.name}
                             ref={ref => (item[index] = ref)}
                             coordinate={{
@@ -167,7 +192,8 @@ const MapsCommerce = () => {
                                 <Text>{item.name_commerce}</Text>
                             </Callout>
                         </Marker>
-                    ))} */}
+                    ))}
+
                 </MapView>
             )}
             {/*  {
@@ -182,6 +208,7 @@ const MapsCommerce = () => {
                     layout={'default'}
                 />
             } */}
+            <SearchMap data={info} setNewLongitude={setNewLongitude} setNewLatitude={setNewLatitude} />
         </View>
     )
 }
