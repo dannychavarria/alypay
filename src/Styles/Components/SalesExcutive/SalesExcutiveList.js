@@ -72,4 +72,42 @@ export default {
         height: RFValue(250),
         width: RFValue(250),
     },
+    bodyRowTable: {
+        borderBottomColor: "#FFF",
+        borderBottomWidth: 1,
+        paddingVertical: 10,
+        // marginTop: 10,
+        flexDirection: "row",
+        justifyContent: "space-between",
+    },
+    card: {
+        backgroundColor: Colors.colorBlack,
+        borderRadius: 10,
+        marginHorizontal: RFValue(10),
+        padding: RFValue(10),
+        marginTop: RFValue(10),
+        //height: "90%",
+    },
+    headerTable: {
+        borderBottomColor: Colors.colorYellow,
+        borderBottomWidth: 2,
+        paddingVertical: 10,
+        // marginTop: 10,
+        flexDirection: "row",
+        justifyContent: "space-between",
+    },
+    textHeaderTable: {
+        color: Colors.colorYellow,
+        fontSize: RFValue(14),
+        textAlign: "center",
+    },
+    textRowTable: {
+        color: "#FFF",
+        fontSize: RFValue(12),
+        textAlign: "center",
+    },
+    textRowTableCompany: {
+        color: "#FFF",
+        fontSize: RFValue(11),
+    },
 }

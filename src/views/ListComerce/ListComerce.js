@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useReducer } from "react"
-import { FlatList } from "react-native"
+import { FlatList, View, Text, Image } from "react-native"
 
 // Import Components
 import Container from "../../components/Container/Container"
@@ -14,6 +14,14 @@ import {
     reducer,
 } from "../../utils/constants"
 
+// Import Styles
+import { ListCommerceStyles } from "../../Styles/Views/index"
+
+// Import Hooks
+import useStyles from "../../hooks/useStyles.hook"
+
+// Import Assets
+import logo from "../../static/alypay.png"
 // Import redux
 import store from "../../store/index"
 import { SETFUNCTION, SETSTORAGE } from "../../store/actionsTypes"
@@ -47,14 +55,15 @@ const initialState = {
 }
 
 const ListComerce = ({ route }) => {
-    const [data, setData] = useState({})
+    const classes = useStyles(ListCommerceStyles)
+
+    const [data, setData] = useState([])
     const { globalStorage } = store.getState()
+
     // Params passed from router
     const { params } = route
 
-    console.log("Params", params)
-
-    const [stateView, setStateView] = useState(TYPE_VIEW.WALLET)
+    const [stateView, setStateView] = useState(TYPE_VIEW.COMMERCE)
 
     const [state, dispatch] = useReducer(reducer, initialState)
 
@@ -93,18 +102,21 @@ const ListComerce = ({ route }) => {
     }, [])
 
     return (
-        <Container showLogo onRefreshEnd={configureComponent}>
+        <View style={classes.main}>
+            <Image source={logo} style={classes.logo} />
             <Switch
                 onSwitch={setStateView}
                 items={switchItems}
                 indexActive={state.indexTabActive}
             />
             {stateView === TYPE_VIEW.COMMERCE && (
-                <FlatList
-                    data={data}
-                    keyExtractor={(_, i) => i}
-                    renderItem={item => <ItemComerce data={item} />}
-                />
+                <View style={classes.contenList}>
+                    <FlatList
+                        data={data}
+                        keyExtractor={(_, i) => i}
+                        renderItem={item => <ItemComerce data={item} />}
+                    />
+                </View>
             )}
 
             {stateView === TYPE_VIEW.EXCUTIVE_LIST && (
@@ -112,7 +124,7 @@ const ListComerce = ({ route }) => {
                     <ExcutiveListCommerce />
                 </>
             )}
-        </Container>
+        </View>
     )
 }
 

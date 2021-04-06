@@ -46,7 +46,7 @@ const ExcutiveListCommerce = () => {
         }
     }
 
-    // Renderizamos las tarjetas de los comercios asociados
+    /*  // Renderizamos las tarjetas de los comercios asociados
     const itemCommerce = ({ item }) => {
         const result = Floor(percentage * item.amount, 2)
 
@@ -82,7 +82,7 @@ const ExcutiveListCommerce = () => {
             </View>
         )
     }
-
+ */
     const foundData = Object.keys(info).length > 0 && !loader
 
     useEffect(() => {
@@ -97,11 +97,38 @@ const ExcutiveListCommerce = () => {
                     <View style={classes.containerTitle}>
                         <Text style={classes.title}>Listado de comercios</Text>
                     </View>
-                    <FlatList
-                        data={info}
-                        keyExtractor={(_, i) => i}
-                        renderItem={itemCommerce}
-                    />
+
+                    <View style={classes.card}>
+                        <View style={classes.headerTable}>
+                            <Text style={classes.textHeaderTable}>
+                                Comercio
+                            </Text>
+                            <Text style={classes.textHeaderTable}>
+                                Comisión
+                            </Text>
+                            <Text style={classes.textHeaderTable}>
+                                Ganacias(Tether)
+                            </Text>
+                        </View>
+                        <FlatList
+                            data={info}
+                            keyExtractor={(_, key) => key.toString()}
+                            renderItem={({ item }) => (
+                                <View style={classes.bodyRowTable}>
+                                    <Text style={classes.textRowTableCompany}>
+                                        {item.company}
+                                    </Text>
+                                    <Text style={classes.textRowTable}>
+                                        {percentage}
+                                    </Text>
+                                    <Text style={classes.textRowTable}>
+                                        {Floor(percentage * item.amount, 2)}{" "}
+                                        USDT
+                                    </Text>
+                                </View>
+                            )}
+                        />
+                    </View>
                     <View style={classes.containerButton}>
                         <TouchableOpacity
                             style={GlobalStyles.buttonPrimaryLine}>
