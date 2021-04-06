@@ -1,24 +1,76 @@
-import React, { useState, useEffect } from 'react'
-import { FlatList } from 'react-native'
+import React, { useState, useEffect, useReducer } from "react"
+import { FlatList, View, Text, Image } from "react-native"
 
 // Import Components
-import Container from '../../components/Container/Container'
-import ItemComerce from '../../components/ItemComerce/ItemComerce'
-import { http, getHeaders, errorMessage, loader } from '../../utils/constants'
+import Container from "../../components/Container/Container"
+import ItemComerce from "../../components/ItemComerce/ItemComerce"
+import Switch from "../../components/Switch/Switch"
+import ExcutiveListCommerce from "../../components/ExcutiveListCommerce/ExcutiveListCommerce"
+import {
+    http,
+    getHeaders,
+    errorMessage,
+    loader,
+    reducer,
+} from "../../utils/constants"
 
+// Import Styles
+import { ListCommerceStyles } from "../../Styles/Views/index"
+
+// Import Hooks
+import useStyles from "../../hooks/useStyles.hook"
+
+// Import Assets
+import logo from "../../static/alypay.png"
 // Import redux
-import store from '../../store/index'
+import store from "../../store/index"
 import { SETFUNCTION, SETSTORAGE } from "../../store/actionsTypes"
 
-const ListComerce = () => {
-    const [data, setData] = useState({})
+/**
+ * Constante que almacena el tipo de vista seleccionada del switch
+ * Types: `wallet` or `pay`
+ */
+const TYPE_VIEW = {
+    COMMERCE: "wallet",
+    EXCUTIVE_LIST: "pay",
+}
+
+/**
+ * Constante que almacena los datos a mostrar en el switch
+ */
+const switchItems = [
+    {
+        text: "Comercios",
+        state: TYPE_VIEW.COMMERCE,
+    },
+    {
+        text: "Ejecutivo",
+        state: TYPE_VIEW.EXCUTIVE_LIST,
+    },
+]
+
+const initialState = {
+    wallets: [],
+    indexTabActive: 0,
+}
+
+const ListComerce = ({ route }) => {
+    const classes = useStyles(ListCommerceStyles)
+
+    const [data, setData] = useState([])
     const { globalStorage } = store.getState()
+
+    // Params passed from router
+    const { params } = route
+
+    const [stateView, setStateView] = useState(TYPE_VIEW.COMMERCE)
+
+    const [state, dispatch] = useReducer(reducer, initialState)
 
     const configureComponent = async () => {
         try {
-
             loader(true)
-            const { data } = await http.get('/wallets/commerces', getHeaders())
+            const { data } = await http.get("/wallets/commerces", getHeaders())
 
             if (data.error) {
                 throw String(data.message)
@@ -27,11 +79,10 @@ const ListComerce = () => {
 
             const dataStorage = {
                 ...globalStorage,
-                wallets: data
+                wallets: data,
             }
 
             store.dispatch({ type: SETSTORAGE, payload: dataStorage })
-
         } catch (error) {
             errorMessage(error.toSting())
         } finally {
@@ -43,20 +94,37 @@ const ListComerce = () => {
         configureComponent()
 
         store.dispatch({
-            type: SETFUNCTION, payload: {
+            type: SETFUNCTION,
+            payload: {
                 reloadWallets: configureComponent,
-            }
+            },
         })
     }, [])
 
     return (
-        <Container showLogo onRefreshEnd={configureComponent}>
-            <FlatList
-                data={data}
-                keyExtractor={(_, i) => i}
-                renderItem={(item) => <ItemComerce data={item} />}
+        <View style={classes.main}>
+            <Image source={logo} style={classes.logo} />
+            <Switch
+                onSwitch={setStateView}
+                items={switchItems}
+                indexActive={state.indexTabActive}
             />
-        </Container>
+            {stateView === TYPE_VIEW.COMMERCE && (
+                <View style={classes.contenList}>
+                    <FlatList
+                        data={data}
+                        keyExtractor={(_, i) => i}
+                        renderItem={item => <ItemComerce data={item} />}
+                    />
+                </View>
+            )}
+
+            {stateView === TYPE_VIEW.EXCUTIVE_LIST && (
+                <>
+                    <ExcutiveListCommerce />
+                </>
+            )}
+        </View>
     )
 }
 

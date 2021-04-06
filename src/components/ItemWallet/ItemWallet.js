@@ -36,7 +36,7 @@ const ItemWallet = ({ data = {}, disabled = false }) => {
         if (data.id !== -1 && data.wallet_type !== 3) {
             navigate(ROUTES.WALLET, data)
         } else {
-            navigate(ROUTES.LIST)
+            navigate(ROUTES.LIST, data)
         }
     }
 
