@@ -11,6 +11,9 @@ import { RFValue, Colors, logOutApp, OpenSupport } from "../../utils/constants"
 import { useNavigation, StackActions } from "@react-navigation/native"
 import { isIphoneX } from "react-native-iphone-x-helper"
 
+// Import assets
+import Commerce from "../../static/Commerce.png"
+
 const iconSize = RFValue(32)
 
 const Navbar = () => {
@@ -50,7 +53,14 @@ const Navbar = () => {
     * Funcion que envia a la vista de Buscaqueda
     */
     const onSearch = () => {
-        navigate("Search")
+        navigate('SearchGlobal')
+    }
+
+    /**
+     * Funcion que envia a la lista de los comercios en el mapa
+    */
+    const MapsCommerce = () => {
+        navigate('Maps')
     }
 
     useEffect(() => {
@@ -81,14 +91,13 @@ const Navbar = () => {
                             <Icon name="ios-home" size={iconSize} color={Colors.colorYellow} />
                         </TouchableOpacity>
 
-                        {/* <TouchableOpacity style={styles.button}>
-                            {/* <Icon name="user" size={iconSize} color={Colors.colorYellow} /> */}
-                        {/* <Image source={defaultImage} style={styles.imageProfile} />
-                        </TouchableOpacity> * */}
+                        <TouchableOpacity style={styles.button} onPress={MapsCommerce}>
+                            <Image source={Commerce} style={styles.imageCommerce} />
+                        </TouchableOpacity>
 
-                       {/*  <TouchableOpacity onPress={onSearch} style={styles.button}>
+                        <TouchableOpacity onPress={onSearch} style={styles.button}>
                             <Icon name="ios-search" size={iconSize} color={Colors.colorYellow} />
-                        </TouchableOpacity> */}
+                        </TouchableOpacity>
 
                         <TouchableOpacity onPress={OpenSupport} style={styles.button}>
                             <Icon name="logo-whatsapp" size={iconSize} color={Colors.colorYellow} />
@@ -147,11 +156,12 @@ const styles = StyleSheet.create({
         flex: 1,
     },
 
-    imageProfile: {
-        borderRadius: iconSize * 2,
+    imageCommerce: {
+        //borderRadius: iconSize * 2,
         resizeMode: "contain",
         width: iconSize,
         height: iconSize,
+        // color:Colors.colorYellow
     },
 })
 

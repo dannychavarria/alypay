@@ -139,8 +139,6 @@ const Register = ({ navigation }) => {
 
             const { data } = await http.post("/register", dataArgs)
 
-            // console.log(data)
-
             if (data.error) {
                 throw data.message
             }

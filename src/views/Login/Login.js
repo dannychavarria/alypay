@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from "react"
+import React, { useEffect, useReducer, useState } from "react"
 
 // Import config get info device
 import { getBrand, getDeviceId, getMacAddress, getSystemName } from "react-native-device-info"
@@ -7,6 +7,7 @@ import getPublicIp from "react-native-public-ip"
 // Import components
 import Video from "react-native-video"
 import CheckBox from "react-native-check-box"
+import Icon from "react-native-vector-icons/MaterialIcons"
 import { View as ViewAnimation } from "react-native-animatable"
 import { Text, TextInput, StyleSheet, Image, View, Dimensions, KeyboardAvoidingView, Platform, TouchableOpacity } from "react-native"
 
@@ -34,13 +35,13 @@ const initialState = {
     device: "",
     macAddress: "",
     systemName: "",
-    showPassword: false,
 }
 
 const { height } = Dimensions.get("window")
 
 const Login = ({ navigation }) => {
     const [state, dispatch] = useReducer(reducer, initialState)
+    const [showPassword, setShowPassword] = useState(false)
 
     const { navigate } = useNavigation()
 
@@ -179,16 +180,23 @@ const Login = ({ navigation }) => {
                 <View style={styles.row}>
                     <Text style={styles.legend}>Contraseña</Text>
 
-                    <TextInput
-                        style={GlobalStyles.textInput}
-                        value={state.password}
-                        secureTextEntry={!state.showPassword}
-                        keyboardAppearance="dark"
-                        onChangeText={payload => dispatch({ type: "password", payload })} />
+                    <View style={[styles.textInputWithImage, GlobalStyles.textInput]}>
+                        <TextInput
+                            style={styles.textInputCol}
+                            value={state.password}
+                            secureTextEntry={!showPassword}
+                            keyboardAppearance="dark"
+                            onChangeText={payload => dispatch({ type: "password", payload })} />
+
+                        <TouchableOpacity onPress={_ => setShowPassword(!showPassword)} style={styles.touchableCol}>
+                            <Icon name={showPassword ? 'visibility-off' : 'visibility'} color={Colors.colorYellow} size={20} />
+                        </TouchableOpacity>
+                    </View>
+
                 </View>
 
 
-                <View style={[styles.rowButtons, { justifyContent: "flex-end" }]}>
+                {/*  <View style={[styles.rowButtons, { justifyContent: "flex-end" }]}>
                     <Text style={[styles.legend, { marginRight: 10 }]}>Mostar Contraseña</Text>
 
                     <CheckBox
@@ -197,7 +205,7 @@ const Login = ({ navigation }) => {
                         onClick={_ => dispatch({ type: "showPassword", payload: !state.showPassword })}
                     />
                 </View>
-
+ */}
 
                 <View style={styles.rowButtons}>
                     <TouchableOpacity onPress={toRegister} style={styles.registerButton}>
@@ -275,6 +283,21 @@ const styles = StyleSheet.create({
         textTransform: "uppercase",
         fontSize: RFValue(14),
         color: Colors.colorYellow,
+    },
+    textInputWithImage: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    textInputCol: {
+        flex: 0.9,
+        paddingLeft: 5,
+        padding: 0,
+        color: 'white',
+    },
+    touchableCol: {
+        flex: 0.1,
+        alignItems: 'flex-end',
     },
 })
 

@@ -17,13 +17,39 @@ import Lottie from "lottie-react-native"
 import QRCode from "react-native-qrcode-svg"
 
 // Import Others components from React-Native
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Image, Vibration, Keyboard, FlatList } from "react-native"
-import { View as ViewAnimate, Text as TextAnimate } from "react-native-animatable"
+import {
+    View,
+    Text,
+    StyleSheet,
+    TouchableOpacity,
+    TextInput,
+    Image,
+    Vibration,
+    Keyboard,
+    FlatList,
+} from "react-native"
+import {
+    View as ViewAnimate,
+    Text as TextAnimate,
+} from "react-native-animatable"
 import { RNCamera } from "react-native-camera"
 
-
 // Import constanst and others things
-import { Colors, RFValue, GlobalStyles, CopyClipboard, reducer, http, errorMessage, getHeaders, loader, successMessage, CheckTouchIDPermission, configTouchIDAuth, getFeePercentage } from "../../utils/constants"
+import {
+    Colors,
+    RFValue,
+    GlobalStyles,
+    CopyClipboard,
+    reducer,
+    http,
+    errorMessage,
+    getHeaders,
+    loader,
+    successMessage,
+    CheckTouchIDPermission,
+    configTouchIDAuth,
+    getFeePercentage,
+} from "../../utils/constants"
 import _ from "lodash"
 
 // store and actionTypes from redux
@@ -39,17 +65,17 @@ import defaultAvatar from "../../static/profile-default.png"
 const switchItems = [
     {
         text: "Recibir",
-        state: "RECEIVE"
+        state: "RECEIVE",
     },
 
     {
         text: "Enviar",
-        state: "SEND"
+        state: "SEND",
     },
 
     {
         text: "Historial",
-        state: "HISTORY"
+        state: "HISTORY",
     },
 ]
 
@@ -89,33 +115,39 @@ const ReceiveComponent = ({ wallet = "" }) => {
             fontSize: RFValue(16),
             color: Colors.colorYellow,
             textTransform: "uppercase",
-        }
+        },
     })
 
     const toRecharge = () => {
         navigate("Recharge", { wallet })
     }
 
-    return (<ViewAnimate animation="fadeIn" style={styles.receivedViewContainer}>
-        <View style={styles.qrContainer}>
-            <QRCode
-                size={RFValue(256)}
-                backgroundColor="transparent"
-                value={wallet} />
-        </View>
+    return (
+        <ViewAnimate animation="fadeIn" style={styles.receivedViewContainer}>
+            <View style={styles.qrContainer}>
+                <QRCode
+                    size={RFValue(256)}
+                    backgroundColor="transparent"
+                    value={wallet}
+                />
+            </View>
 
-        <ViewAnimate style={styles.toUpBalanceContainer}>
-            <TouchableOpacity onPress={_ => CopyClipboard(wallet)}>
-                <Text style={styles.textButtonToUpBalance}>Copiar direccion</Text>
-            </TouchableOpacity>
+            <ViewAnimate style={styles.toUpBalanceContainer}>
+                <TouchableOpacity onPress={_ => CopyClipboard(wallet)}>
+                    <Text style={styles.textButtonToUpBalance}>
+                        Copiar direccion
+                    </Text>
+                </TouchableOpacity>
 
-            <View style={styles.line} />
+                <View style={styles.line} />
 
-            <TouchableOpacity onPress={toRecharge}>
-                <Text style={styles.textButtonToUpBalance}>Recargar billetera</Text>
-            </TouchableOpacity>
+                <TouchableOpacity onPress={toRecharge}>
+                    <Text style={styles.textButtonToUpBalance}>
+                        Recargar billetera
+                    </Text>
+                </TouchableOpacity>
+            </ViewAnimate>
         </ViewAnimate>
-    </ViewAnimate>
     )
 }
 
@@ -134,12 +166,12 @@ const initialStateSendComponent = {
 
     fee: {
         comission: 0,
-        symbol: "ALY"
+        symbol: "ALY",
     },
 }
 
 /** Componente que renderiza los datos necesarios para ejecutar una transaccion a otra wallet */
-const SendComponent = ({ data = {}, onCompleteTrasanction = () => { }, }) => {
+const SendComponent = ({ data = {}, onCompleteTrasanction = () => {} }) => {
     const [state, dispatch] = useReducer(reducer, initialStateSendComponent)
 
     const { global, functions } = store.getState()
@@ -160,16 +192,16 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { }, }) => {
         row: {
             flexDirection: "row",
             justifyContent: "space-between",
-            marginVertical: RFValue(10)
+            marginVertical: RFValue(10),
         },
 
         legend: {
-            color: Colors.colorYellow
+            color: Colors.colorYellow,
         },
 
         rowInput: {
             alignItems: "center",
-            flexDirection: "row"
+            flexDirection: "row",
         },
 
         buttonScan: {
@@ -277,7 +309,7 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { }, }) => {
 
         textBodyFee: {
             color: "#FFF",
-        }
+        },
     })
 
     /** Metodo que se ejecuta para enviar los fondos */
@@ -310,7 +342,11 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { }, }) => {
 
             loader(true)
 
-            const { data: response } = await http.post("/wallets/transaction", vars, getHeaders())
+            const { data: response } = await http.post(
+                "/wallets/transaction",
+                vars,
+                getHeaders(),
+            )
 
             if (response.error) {
                 throw String(response.message)
@@ -332,9 +368,10 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { }, }) => {
                 // limpiamos la direccion de wallet
                 dispatch({ type: "walletAdress", payload: "" })
                 dispatch({ type: "walletAccepted", payload: false })
-
             } else {
-                throw String("Tu transaccion no se ha completado, contacte a soporte")
+                throw String(
+                    "Tu transaccion no se ha completado, contacte a soporte",
+                )
             }
 
             // actualizamos la wallets
@@ -364,7 +401,10 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { }, }) => {
             loader(true)
 
             // get data wallet
-            const { data: payload } = await http.get(`/wallets/verify/${state.walletAdress}`, getHeaders())
+            const { data: payload } = await http.get(
+                `/wallets/verify/${state.walletAdress}`,
+                getHeaders(),
+            )
 
             // buscamos un error
             if (payload.error) {
@@ -391,7 +431,6 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { }, }) => {
             // Wallet is not accepted
             dispatch({ type: "walletAccepted", payload: false })
 
-
             // clear data if is necesary
             dispatch({ type: "dataWallet", payload: null })
         } finally {
@@ -406,12 +445,18 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { }, }) => {
         const newAmount = data.price * parseFloat(payload)
 
         if (parseFloat(payload) > data.amount) {
-            dispatch({ type: "errorMessage", payload: "No tienes suficientes fondos" })
+            dispatch({
+                type: "errorMessage",
+                payload: "No tienes suficientes fondos",
+            })
         } else {
             dispatch({ type: "errorMessage", payload: "" })
         }
 
-        dispatch({ type: "amountUSD", payload: isNaN(newAmount) ? "" : newAmount.toString() })
+        dispatch({
+            type: "amountUSD",
+            payload: isNaN(newAmount) ? "" : newAmount.toString(),
+        })
     }
 
     /** Metodo que se ejecuta cuando el usuario escribe el monot */
@@ -421,12 +466,18 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { }, }) => {
         const newFractions = (parseFloat(payload) / data.price).toFixed(8)
 
         if (newFractions > data.amount) {
-            dispatch({ type: "errorMessage", payload: "No tienes suficientes fondos" })
+            dispatch({
+                type: "errorMessage",
+                payload: "No tienes suficientes fondos",
+            })
         } else {
             dispatch({ type: "errorMessage", payload: "" })
         }
 
-        dispatch({ type: "amountFraction", payload: isNaN(newFractions) ? "" : newFractions.toString() })
+        dispatch({
+            type: "amountFraction",
+            payload: isNaN(newFractions) ? "" : newFractions.toString(),
+        })
     }
 
     /** Metodo que envia a la pantalla de retiros  */
@@ -442,29 +493,40 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { }, }) => {
     }
 
     /** Metodo que se ejcuta para activar/desactivar el scaner QR */
-    const toggleScan = () => dispatch({ type: "showScaner", payload: !state.showScaner })
+    const toggleScan = () =>
+        dispatch({ type: "showScaner", payload: !state.showScaner })
 
     useEffect(() => {
-
-        const dataAly = global.wallets.find((item) => {
-            if (item.symbol === 'ALY') {
+        const dataAly = global.wallets.find(item => {
+            if (item.symbol === "ALY") {
                 return item
             }
         })
 
-        const { fee, fee_aly } = getFeePercentage(state.amountUSD, 1, global.fee)
+        const { fee, fee_aly } = getFeePercentage(
+            state.amountUSD,
+            1,
+            global.fee,
+        )
 
         const amountFee = state.amountUSD * fee
 
         const amountFeeAly = state.amountUSD * fee_aly
 
-
         if (dataAly.amount >= amountFeeAly) {
-            dispatch({ type: 'fee', payload: { amount: amountFeeAly, symbol: 'ALY' } })
+            dispatch({
+                type: "fee",
+                payload: { amount: amountFeeAly, symbol: "ALY" },
+            })
         } else {
-            dispatch({ type: 'fee', payload: { amount: amountFee / data.price, symbol: data.symbol } })
+            dispatch({
+                type: "fee",
+                payload: {
+                    amount: amountFee / data.price,
+                    symbol: data.symbol,
+                },
+            })
         }
-
     }, [state.amountUSD])
 
     return (
@@ -476,14 +538,23 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { }, }) => {
                     <View style={styles.rowInput}>
                         <TextInput
                             value={state.walletAdress}
-                            onChangeText={payload => dispatch({ type: "walletAdress", payload })}
-                            style={[GlobalStyles.textInput, { flex: 1 }]} />
+                            onChangeText={payload =>
+                                dispatch({ type: "walletAdress", payload })
+                            }
+                            style={[GlobalStyles.textInput, { flex: 1 }]}
+                        />
 
-                        <TouchableOpacity onPress={toggleScan} style={styles.buttonScan}>
-                            <Lottie source={scanQRAnimation} style={styles.lottieQRAnimation} autoPlay loop />
+                        <TouchableOpacity
+                            onPress={toggleScan}
+                            style={styles.buttonScan}>
+                            <Lottie
+                                source={scanQRAnimation}
+                                style={styles.lottieQRAnimation}
+                                autoPlay
+                                loop
+                            />
                         </TouchableOpacity>
                     </View>
-
                 </View>
             </View>
 
@@ -496,7 +567,8 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { }, }) => {
                         onChangeText={onChangeFractions}
                         keyboardType="numeric"
                         returnKeyType="done"
-                        style={GlobalStyles.textInput} />
+                        style={GlobalStyles.textInput}
+                    />
                 </View>
 
                 <View style={styles.col}>
@@ -507,79 +579,114 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => { }, }) => {
                         onChangeText={onChangeAmount}
                         keyboardType="numeric"
                         returnKeyType="done"
-                        style={GlobalStyles.textInput} />
+                        style={GlobalStyles.textInput}
+                    />
                 </View>
             </View>
 
             <View style={{ height: RFValue(5) }} />
 
-            {
-                (state.errorMessage !== "") &&
-                <TextAnimate animation="fadeIn" style={styles.erroMessage}>{state.errorMessage}</TextAnimate>
-            }
+            {state.errorMessage !== "" && (
+                <TextAnimate animation="fadeIn" style={styles.erroMessage}>
+                    {state.errorMessage}
+                </TextAnimate>
+            )}
 
             <View style={{ height: RFValue(10) }} />
 
             <View style={styles.containerFee}>
                 <View style={styles.headerFee}>
-                    <Text style={styles.textHeaderFee}>SubTotal</Text>
+                    <Text style={styles.textHeaderFee}>Sub-Total</Text>
                     <Text style={styles.textHeaderFee}>Comisión</Text>
                     <Text style={styles.textHeaderFee}>Total</Text>
                 </View>
 
                 <View style={styles.bodyFee}>
-                    <Text style={styles.textBodyFee}>{state.amountFraction} {data.symbol}</Text>
-                    <Text style={styles.textBodyFee}>{_.floor(state.fee.amount, 8)} {state.fee.symbol}</Text>
-                    {
-                        state.fee.symbol !== data.symbol
-                            ? <Text style={styles.textBodyFee}>{state.amountFraction} {data.symbol}</Text>
-                            : <Text style={styles.textBodyFee}>{_.floor(parseFloat(state.amountFraction) + state.fee.amount, 8)} {state.fee.symbol}</Text>
-                    }
+                    <Text style={styles.textBodyFee}>
+                        {state.amountFraction} {data.symbol}
+                    </Text>
+                    <Text style={styles.textBodyFee}>
+                        {_.floor(state.fee.amount, 8)} {state.fee.symbol}
+                    </Text>
+                    {state.fee.symbol !== data.symbol ? (
+                        <Text style={styles.textBodyFee}>
+                            {state.amountFraction} {data.symbol}
+                        </Text>
+                    ) : (
+                        <Text style={styles.textBodyFee}>
+                            {_.floor(
+                                parseFloat(state.amountFraction) +
+                                    parseFloat(state.fee.amount),
+                                8,
+                            )}{" "}
+                            {state.fee.symbol}
+                        </Text>
+                    )}
                 </View>
             </View>
 
-            {
-                (state.walletAccepted && state.dataWallet !== null) &&
+            {state.walletAccepted && state.dataWallet !== null && (
                 <>
                     <ViewAnimate animation="fadeIn" style={styles.cardInfo}>
                         <View style={styles.subCard}>
-                            <Image style={styles.avatar} source={defaultAvatar} />
+                            <Image
+                                style={styles.avatar}
+                                source={defaultAvatar}
+                            />
 
                             <View>
-                                <Text style={styles.usernameCard}>@{state.dataWallet.username}</Text>
-                                <Text style={styles.textFromCard}>{state.dataWallet.city}</Text>
+                                <Text style={styles.usernameCard}>
+                                    @{state.dataWallet.username}
+                                </Text>
+                                <Text style={styles.textFromCard}>
+                                    {state.dataWallet.city}
+                                </Text>
                             </View>
                         </View>
 
-
-                        <Lottie source={profileVerifedAnimation} style={styles.lottieVerifed} autoPlay />
+                        <Lottie
+                            source={profileVerifedAnimation}
+                            style={styles.lottieVerifed}
+                            autoPlay
+                        />
                     </ViewAnimate>
                 </>
-            }
+            )}
 
-            {
-                !state.walletAccepted &&
+            {!state.walletAccepted && (
                 <View style={styles.retirementContainer}>
                     <TouchableOpacity onPress={onRetirement}>
-                        <Text style={styles.retirementText}>Retirar fondos</Text>
+                        <Text style={styles.retirementText}>
+                            Retirar fondos
+                        </Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={onComprobateWallet} style={[GlobalStyles.buttonPrimary, { flex: 1, marginLeft: 25 }]}>
+                    <TouchableOpacity
+                        onPress={onComprobateWallet}
+                        style={[
+                            GlobalStyles.buttonPrimary,
+                            { flex: 1, marginLeft: 25 },
+                        ]}>
                         <Text style={GlobalStyles.textButton}>siguiente</Text>
                     </TouchableOpacity>
                 </View>
-            }
+            )}
 
-            {
-                state.walletAccepted &&
-                <TouchableOpacity onPress={submit} style={GlobalStyles.buttonPrimary}>
+            {state.walletAccepted && (
+                <TouchableOpacity
+                    onPress={submit}
+                    style={GlobalStyles.buttonPrimary}>
                     <Text style={GlobalStyles.textButton}>Enviar</Text>
                 </TouchableOpacity>
-            }
+            )}
 
-
-
-            <Modal backdropOpacity={0.9} animationIn="fadeIn" onBackButtonPress={toggleScan} onBackdropPress={toggleScan} animationOut="fadeOut" isVisible={state.showScaner}>
+            <Modal
+                backdropOpacity={0.9}
+                animationIn="fadeIn"
+                onBackButtonPress={toggleScan}
+                onBackdropPress={toggleScan}
+                animationOut="fadeOut"
+                isVisible={state.showScaner}>
                 <View style={styles.constainerQR}>
                     <QRCodeScanner
                         onRead={onReadCodeQR}
@@ -609,26 +716,35 @@ const History = ({ data = [] }) => {
             fontSize: RFValue(24),
             textAlign: "center",
             textTransform: "uppercase",
-        }
+        },
     })
 
     return (
         <ViewAnimate style={styles.container} animation="fadeIn">
             <Search />
-            {
-                (data.length === 0)
-                    ?
-                    <>
-                        <Lottie source={emptyAnimation} style={styles.lottieQRAnimation} autoPlay loop={false} />
-                        <Text style={styles.text}>Sin registros</Text>
-                    </>
-                    :
-                    <FlatList
-                        keyExtractor={(_, key) => (key = key.toString())}
-                        data={data}
-                        renderItem={({ item, index }) => <StoreElement navigate={navigate} item={item} index={index} />}
+            {data.length === 0 ? (
+                <>
+                    <Lottie
+                        source={emptyAnimation}
+                        style={styles.lottieQRAnimation}
+                        autoPlay
+                        loop={false}
                     />
-            }
+                    <Text style={styles.text}>Sin registros</Text>
+                </>
+            ) : (
+                <FlatList
+                    keyExtractor={(_, key) => (key = key.toString())}
+                    data={data}
+                    renderItem={({ item, index }) => (
+                        <StoreElement
+                            navigate={navigate}
+                            item={item}
+                            index={index}
+                        />
+                    )}
+                />
+            )}
             {/*  {
                 data.map(StoreElement)
             }
@@ -663,6 +779,7 @@ const Wallet = ({ route }) => {
 
     // Params passed from router
     const { params } = route
+    console.log("Params", route)
     /**
      * Funcion que se encarga de configurar todo el componente
      */
@@ -671,13 +788,19 @@ const Wallet = ({ route }) => {
             // Loader on mode
             loader(true)
 
-            const { data } = await http.get(`/wallets/details/${params.id}`, getHeaders())
+            const { data } = await http.get(
+                `/wallets/details/${params.id}`,
+                getHeaders(),
+            )
 
             if (data.error) {
                 throw data.message
             }
 
-            store.dispatch({ type: SETWALLET, payload: { ...data, reloadInfo: configurateComponent } })
+            store.dispatch({
+                type: SETWALLET,
+                payload: { ...data, reloadInfo: configurateComponent },
+            })
 
             // Guardamos la direccion wallet
             dispatch({ type: "wallet", payload: data.wallet })
@@ -705,33 +828,36 @@ const Wallet = ({ route }) => {
 
     return (
         <Container onRefreshEnd={configurateComponent}>
-
             <View style={styles.containerWallet}>
-                <ItemWallet data={state.information === null ? params : state.information} disabled />
+                <ItemWallet
+                    data={
+                        state.information === null ? params : state.information
+                    }
+                    disabled
+                />
             </View>
 
             <Switch onSwitch={setStateView} items={switchItems} />
 
-            {
-                (state.information !== null) &&
+            {state.information !== null && (
                 <>
-                    {
-                        // Verificamos si esta en la pantalla de Recibir
-                        stateView === switchItems[0].state &&
+                    {// Verificamos si esta en la pantalla de Recibir
+                    stateView === switchItems[0].state && (
                         <ReceiveComponent wallet={state.wallet} />
-                    }
+                    )}
 
-                    {
-                        stateView === switchItems[1].state &&
-                        <SendComponent data={state.information} onCompleteTrasanction={configurateComponent} />
-                    }
+                    {stateView === switchItems[1].state && (
+                        <SendComponent
+                            data={state.information}
+                            onCompleteTrasanction={configurateComponent}
+                        />
+                    )}
 
-                    {
-                        stateView === switchItems[2].state &&
+                    {stateView === switchItems[2].state && (
                         <History data={state.history} />
-                    }
+                    )}
                 </>
-            }
+            )}
         </Container>
     )
 }

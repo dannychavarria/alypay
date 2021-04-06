@@ -1,11 +1,19 @@
 import Asyncstorage from "@react-native-community/async-storage"
-import { Platform, StatusBar, Dimensions, StyleSheet, Alert, Linking } from "react-native"
+import {
+    Platform,
+    StatusBar,
+    Dimensions,
+    StyleSheet,
+    Alert,
+    Linking,
+} from "react-native"
 
 // Import Functions
 import TouchID from "react-native-touch-id"
 import Clipboard from "@react-native-community/clipboard"
 import Toast from "react-native-simple-toast"
 import axios from "axios"
+import RNFetchBlob from "rn-fetch-blob"
 import { check, PERMISSIONS, RESULTS, request } from "react-native-permissions"
 import { isIphoneX } from "react-native-iphone-x-helper"
 import { showMessage } from "react-native-flash-message"
@@ -45,7 +53,8 @@ export const logOutApp = async () => {
 /**
  *  Funcion que activa/desactiva precarga general de la aplicacion
  */
-export const loader = (payload = false) => store.dispatch({ type: SETLOADER, payload })
+export const loader = (payload = false) =>
+    store.dispatch({ type: SETLOADER, payload })
 
 /**Setea los datos de api storage modo encriptado */
 export const setStorage = async (json = {}) => {
@@ -82,34 +91,59 @@ export const Colors = {
 const PORT = "3085"
 
 /**Direction for server */
-export const serverAddress = "https://alypay.uc.r.appspot.com"
+//export const serverAddress = "https://alypay.uc.r.appspot.com"
 //export const serverAddress = "https://root-anvil-299019.uc.r.appspot.com"
 //export const serverAddress = "https://192.168.1.224:3000"
-// export const serverAddress = Platform.OS === "ios" ? `http://localhost:${PORT}` : `http://192.168.0.125:${PORT}`
-export const serverSpeedtradingsURL = "https://ardent-medley-272823.appspot.com";
+export const serverAddress =
+    Platform.OS === "ios"
+        ? `http://localhost:${PORT}`
+        : `http://192.168.0.140:${PORT}`
+export const serverSpeedtradingsURL = "https://ardent-medley-272823.appspot.com"
 
 /**
  * Constante que almacena la url del preview image del simbolo alycoin
  */
-export const urlAlyCoin = "https://lh3.googleusercontent.com/5LMKBulbDnGu4JBUYp4Ye4fX0MjH88xF7hMy5-4US3VSAkxK2XIWqNxXdqWZFnUZQoRDL3W7nKhrgWWHzM_eL-1nX4fnBPu7d9u7DyRv_miLRhFp6g38cDD32_H9UoZoh936cWUpUUOLx3qvx-_fBV-ZKQb_2TzVHhR19DKYhm_Zpl_Wczi1I73a6wBo7XDbtdNUrnzW8kC_Hv8J9tpv6wQhsTCr6l68UIVwth6rkpoFycZ2Gpzn6GL_7VSs9NlCj2V5v3NHCRcsZzptz2uxAa0HcsvnEqhtOirEmjBsT114hl3LWjT4Xf9dIxcmVcdt1usggqyuF6svD2VF_fdT6SjqfmVg3ifl5zf7zS1s7JfwrIvFDjXN3i1vYo43nzpt8ykabNqDjRuwMnroAvndk2lgIh1jLcDpjlLFtCvjBej6DQUmTR2MK75RLACot2kbfiA-S45pB9tHgBc77QmzWLLMgHIhQ_5d6OtZVdzbKoGS4eUTeemPo39HuWKAMCl_RiT_O2AOfDQZr9DKOFY780VbPBpryFhlG-8rRp6p7LSKRKbn3v2C0R5GNjUJ0tyOsLArAookarLr4437Tl4SkPavSqvFKK_9rmmdFdfb1Hg5_j9gXnYV_pkTMDjIUeN3awIuZhbBC8iKtafsouFqqsfvQVXsmmawCg4edY_NXg6_XPuVjxaJST5Z7fREYx_8obZJQA=w1600-h784-ft"
+export const urlAlyCoin =
+    "https://lh3.googleusercontent.com/5LMKBulbDnGu4JBUYp4Ye4fX0MjH88xF7hMy5-4US3VSAkxK2XIWqNxXdqWZFnUZQoRDL3W7nKhrgWWHzM_eL-1nX4fnBPu7d9u7DyRv_miLRhFp6g38cDD32_H9UoZoh936cWUpUUOLx3qvx-_fBV-ZKQb_2TzVHhR19DKYhm_Zpl_Wczi1I73a6wBo7XDbtdNUrnzW8kC_Hv8J9tpv6wQhsTCr6l68UIVwth6rkpoFycZ2Gpzn6GL_7VSs9NlCj2V5v3NHCRcsZzptz2uxAa0HcsvnEqhtOirEmjBsT114hl3LWjT4Xf9dIxcmVcdt1usggqyuF6svD2VF_fdT6SjqfmVg3ifl5zf7zS1s7JfwrIvFDjXN3i1vYo43nzpt8ykabNqDjRuwMnroAvndk2lgIh1jLcDpjlLFtCvjBej6DQUmTR2MK75RLACot2kbfiA-S45pB9tHgBc77QmzWLLMgHIhQ_5d6OtZVdzbKoGS4eUTeemPo39HuWKAMCl_RiT_O2AOfDQZr9DKOFY780VbPBpryFhlG-8rRp6p7LSKRKbn3v2C0R5GNjUJ0tyOsLArAookarLr4437Tl4SkPavSqvFKK_9rmmdFdfb1Hg5_j9gXnYV_pkTMDjIUeN3awIuZhbBC8iKtafsouFqqsfvQVXsmmawCg4edY_NXg6_XPuVjxaJST5Z7fREYx_8obZJQA=w1600-h784-ft"
 
-export const http = axios.create({
+const http = axios.create({
     baseURL: serverAddress,
-    validateStatus: (status) => {
+    validateStatus: status => {
         if (status === 401) {
             Alert.alert("AlyPay", "Tu sesion ha caducado", [
                 {
                     text: "Ok",
-                    onPress: () => logOutApp()
-                }
+                    onPress: () => logOutApp(),
+                },
             ])
 
             return true
         } else {
-            return (status >= 200 && status < 300)
+            return status >= 200 && status < 300
         }
-    }
+    },
 })
+
+http.interceptors.request.use(config => {
+    console.log(config.url)
+    return config
+})
+
+export { http }
+
+// Convierete un blog en un archivo previsaulizable
+export const readFile = fileId =>
+    new Promise(async (resolve, _) => {
+        const { headers } = getHeaders()
+
+        const response = await RNFetchBlob.config({
+            fileCache: true,
+            appendExt: "jpg",
+        }).fetch("GET", `${serverAddress}/ecommerce/file/${fileId}`, headers)
+
+        const base64 = await response.base64()
+        resolve(`data:image/jpeg;base64,${base64}`)
+    })
 
 /**
  * general button
@@ -143,7 +177,7 @@ export const GlobalStyles = StyleSheet.create({
         borderRadius: 5,
         borderWidth: 2,
         borderColor: Colors.colorYellow + "55",
-        color: '#FFF',
+        color: "#FFF",
         elevation: 5,
         padding: RFValue(10),
         zIndex: 50,
@@ -191,50 +225,57 @@ export const CheckCameraPermission = async () => {
         const { permissions } = store.getState()
 
         // Check permission of camera
-        const checkPermission = await check(Platform.OS === "android" ? PERMISSIONS.ANDROID.CAMERA : PERMISSIONS.IOS.CAMERA)
+        const checkPermission = await check(
+            Platform.OS === "android"
+                ? PERMISSIONS.ANDROID.CAMERA
+                : PERMISSIONS.IOS.CAMERA,
+        )
 
         if (checkPermission === RESULTS.DENIED) {
             // El permiso no se ha solicitado / se ha denegado pero se puede solicitar
 
             // Solicitamos permiso para ocupar la camara del dispositivo
-            const requestPermission = await request(Platform.OS === "android" ? PERMISSIONS.ANDROID.CAMERA : PERMISSIONS.IOS.CAMERA)
+            const requestPermission = await request(
+                Platform.OS === "android"
+                    ? PERMISSIONS.ANDROID.CAMERA
+                    : PERMISSIONS.IOS.CAMERA,
+            )
 
             if (requestPermission === RESULTS.GRANTED) {
                 // El usuario acepto el permiso de la camara
                 const payload = {
-                    camera: true
+                    camera: true,
                 }
 
                 store.dispatch({ type: SETPERMISSIONS, payload })
             }
 
             if (requestPermission === RESULTS.DENIED) {
-                // Si el usuario 
+                // Si el usuario
                 throw "No podrás escanear códigos de pago"
             }
 
             if (requestPermission === RESULTS.BLOCKED) {
-                // Si el usuario 
+                // Si el usuario
                 throw "No podrás escanear códigos de pago en el futuro"
             }
         }
 
         if (checkPermission === RESULTS.BLOCKED) {
             // El permiso es denegado y ya no se puede solicitar.
-            throw 'Configura el permiso de tu camara a Alypay'
+            throw "Configura el permiso de tu camara a Alypay"
         }
 
         if (checkPermission === RESULTS.GRANTED) {
             // El usuario acepto el permiso de la camara
             const payload = {
                 ...permissions,
-                camera: true
+                camera: true,
             }
 
             store.dispatch({ type: SETPERMISSIONS, payload })
         }
     } catch (description) {
-
         showMessage({
             backgroundColor: Colors.colorRed,
             color: "#FFF",
@@ -247,7 +288,7 @@ export const CheckCameraPermission = async () => {
 }
 
 /**
- * Funcion que se ejecuta cuando el 
+ * Funcion que se ejecuta cuando el
  * usuario no tiene ningun tipo de autenticacion TouchID/FaceID
  */
 const securityNotification = () => {
@@ -255,20 +296,23 @@ const securityNotification = () => {
         icon: "info",
         message: "Sugerencia de Seguridad",
         backgroundColor: "#2f3542",
-        description: "Te sugerimos proteger tu cuenta con autenticacion TouchID/FaceID. Toca para abrir Preferencias.",
+        description:
+            "Te sugerimos proteger tu cuenta con autenticacion TouchID/FaceID. Toca para abrir Preferencias.",
         textStyle: {
-            fontSize: RFValue(10)
+            fontSize: RFValue(10),
         },
         onPress: () => Linking.openSettings(),
         floating: true,
-        duration: 10000
+        duration: 10000,
     })
 }
 
 /** Funcion que verifica que si el dispositivo tiene touchID */
 export const CheckTouchIDPermission = async _ => {
     try {
-        const biometricType = await TouchID.isSupported().catch(securityNotification)
+        const biometricType = await TouchID.isSupported().catch(
+            securityNotification,
+        )
 
         if (biometricType) {
             await TouchID.authenticate("Para continuar", configTouchIDAuth)
@@ -277,7 +321,6 @@ export const CheckTouchIDPermission = async _ => {
         } else {
             return true
         }
-
     } catch (error) {
         return false
     }
@@ -285,7 +328,7 @@ export const CheckTouchIDPermission = async _ => {
 
 /**
  * Funcion que copia un texto al portapeles
- * 
+ *
  * @param {String} text
  */
 export const CopyClipboard = async (text = "") => {
@@ -297,12 +340,12 @@ export const CopyClipboard = async (text = "") => {
 export const reducer = (state, action) => {
     return {
         ...state,
-        [action.type]: action.payload
+        [action.type]: action.payload,
     }
 }
 
 /**
- * Funcion que ejeucta un mensaje de error solamente para errores de peticion 
+ * Funcion que ejeucta un mensaje de error solamente para errores de peticion
  */
 export const errorMessage = (description = "") => {
     showMessage({
@@ -311,12 +354,12 @@ export const errorMessage = (description = "") => {
         color: "#FFF",
         backgroundColor: Colors.colorRed,
         icon: "danger",
-        duration: 5000
+        duration: 5000,
     })
 }
 
 /**
- * Funcion que ejeucta un mensaje de exito 
+ * Funcion que ejeucta un mensaje de exito
  */
 export const successMessage = (description = "", title = "AlyPay") => {
     showMessage({
@@ -335,38 +378,38 @@ export const successMessage = (description = "", title = "AlyPay") => {
 export const getHeaders = () => {
     const { token } = store.getState().global
 
-
     return {
         headers: {
-            "x-auth-token": token
-        }
+            "x-auth-token": token,
+        },
     }
 }
 
 /**
  * Format number with decimal miles separator
- * example: 
+ * example:
  *  * 10000 *(INPUT)*
- *  * 10,000 *(OUTPUT)* 
- * 
+ *  * 10,000 *(OUTPUT)*
+ *
  * @param {Number} number
- * 
+ *
  * `return string` */
-export const WithDecimals = (number = 0) => number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+export const WithDecimals = (number = 0) =>
+    number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
 /**Abre la app de whatsapp para soporte */
-export const OpenSupport = () => Linking.openURL('https://wa.me/+50585570529')
+export const OpenSupport = () => Linking.openURL("https://wa.me/+50585570529")
 
 /**
-* Obtiene el porcentaje del fee según el monto ingresado y el tipo de fee a verificar
-* @param {Number} amount - Monto actual
-* @param {Number} feeType - tipo de fee (1=transacción, 2=retiro, 3=exchange)
-*/
+ * Obtiene el porcentaje del fee según el monto ingresado y el tipo de fee a verificar
+ * @param {Number} amount - Monto actual
+ * @param {Number} feeType - tipo de fee (1=transacción, 2=retiro, 3=exchange)
+ */
 export const getFeePercentage = (amount, feeType, fees) => {
     const enableFees = {
-        1: 'transaction',
-        2: 'retirement',
-        3: 'exchange'
+        1: "transaction",
+        2: "retirement",
+        3: "exchange",
     }
 
     const currentFeeType = enableFees[feeType]
@@ -396,14 +439,3 @@ export const configTouchIDAuth = {
     passcodeFallback: true,
     cancelText: "CANCELAR",
 }
-
-// Convierete un blog en un archivo previsaulizable
-export const readFile = (fileId) => new Promise(async (resolve, _) => {
-    const { headers } = getHeaders()
-
-    const response = await RNFetchBlob.config({ fileCache: true, appendExt: 'jpg' })
-        .fetch('GET', `${serverAddress}/ecommerce/file/${fileId}`, headers)
-
-    const base64 = await response.base64()
-    resolve(`data:image/jpeg;base64,${base64}`)
-})
