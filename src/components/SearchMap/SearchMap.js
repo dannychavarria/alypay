@@ -7,7 +7,7 @@ import { SearchMapStyle } from "../../Styles/Components/index"
 const SearchMap = ({ data, setNewLongitude, setNewLatitude}) => {
     const [value, setValue] = useState('')
     const classes = useStyles(SearchMapStyle)
-
+    //Funcion de filtro para el buscador 
     const filteredList = useMemo(_ => {
         if (value.length > 0) {
             return data.filter(item => {
@@ -19,22 +19,12 @@ const SearchMap = ({ data, setNewLongitude, setNewLatitude}) => {
         return ''
     }, [value, data])
 
-
+    //Seteo de la nueva longitud y latitud a la que se dirigira
     const positionCommerce = (longitude, latitude) => {
         setNewLongitude(longitude)
         setNewLatitude(latitude)
+        setValue('')//Para que se quite el flatlist al momento de tocar algun elemento de este
     }
-
-    // useEffect(() => {
-    //     if (setValue.length > 0) {
-    //         name_commerce.filter(item => {
-    //             const { name_commerce } = item
-    //             name_commerce.toLowerCase()
-    //                 .includes(() => setValue.toLowerCase())
-    //         })
-    //     }
-    //     return data
-    // }, [setValue])
 
     return (
         <View style={classes.container}>
