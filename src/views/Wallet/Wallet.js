@@ -503,8 +503,6 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => {} }) => {
             }
         })
 
-        console.log("DataAly", dataAly)
-
         const { fee, fee_aly } = getFeePercentage(
             state.amountUSD,
             1,
@@ -785,6 +783,7 @@ const Wallet = ({ route }) => {
 
     // Params passed from router
     const { params } = route
+    console.log("Params", route)
     /**
      * Funcion que se encarga de configurar todo el componente
      */
