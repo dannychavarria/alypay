@@ -31,14 +31,14 @@ import List from "./views/ListComerce/ListComerce"
 import DescriptionCommerce from "./components/DescriptionCommerce/Description"
 import Description from "./components/Description/Description"
 import SearchGlobal from "./components/SearchGlobal/SearchGlobal"
-import Maps from './components/MapsCommerce/MapsCommerce'
-import ListCommerceExcute from './components/ExcutiveListCommerce/ExcutiveListCommerce'
+import Maps from "./components/MapsCommerce/MapsCommerce"
+import ListCommerceExcute from "./components/ExcutiveListCommerce/ExcutiveListCommerce"
 import RetirementExcutive from "./views/RetirementExcutive/RetirementExcutive"
+import WalletCommerce from "./views/WalletCommerce/WalletCommerce"
 
 // import assets and animation
 import notConectionAnimation from "./animations/no-internet-connection.json"
 import ButtonSupport from "./components/ButtonSupport/ButtonSupport.component"
-
 
 const Stack = createStackNavigator()
 
@@ -56,10 +56,8 @@ const App = () => {
     const ConfigurateComponent = async () => {
         const payload = await getStorage()
 
-
         // disabled all yellow messagge
         console.disableYellowBox = true
-
 
         // Comprueba si hay datos retornados en el payload
         if (Object.keys(payload).length > 0) {
@@ -95,7 +93,6 @@ const App = () => {
             if (Object.keys(global).length > 0) {
                 // Le decimos que el usuario esta logueado
                 dispatch({ type: "loged", payload: true })
-
             } else {
                 dispatch({ type: "loged", payload: false })
             }
@@ -104,9 +101,10 @@ const App = () => {
             dispatch({ type: "loader", payload: loader })
         })
 
-
         // agregamos un escuchador de evento cuando cambie el estado del interne
-        NetInfo.addEventListener(({ isConnected: payload }) => dispatch({ type: "internet", payload }))
+        NetInfo.addEventListener(({ isConnected: payload }) =>
+            dispatch({ type: "internet", payload }),
+        )
     }, [])
 
     return (
@@ -114,45 +112,79 @@ const App = () => {
             <StatusBar hidden={true} />
 
             <NavigationContainer>
-                <Stack.Navigator initialRouteName={ROUTES.MAIN} headerMode={null}>
-                    {
-                        state.loged &&
+                <Stack.Navigator
+                    initialRouteName={ROUTES.MAIN}
+                    headerMode={null}>
+                    {state.loged && (
                         <>
                             <Stack.Screen name={ROUTES.MAIN} component={Main} />
-                            <Stack.Screen name={ROUTES.PAYMENT} component={Payment} />
-                            <Stack.Screen name={ROUTES.SEARCH} component={Search} />
+                            <Stack.Screen
+                                name={ROUTES.PAYMENT}
+                                component={Payment}
+                            />
+                            <Stack.Screen
+                                name={ROUTES.SEARCH}
+                                component={Search}
+                            />
                             <Stack.Screen name={ROUTES.LIST} component={List} />
-                            <Stack.Screen name={ROUTES.DESCRIPTIONCOMMERCE} component={DescriptionCommerce} />
-                            <Stack.Screen name={ROUTES.DESCRIPTION} component={Description} />
-                            <Stack.Screen name={ROUTES.SEARCH_GLOBAL} component={SearchGlobal} />
+                            <Stack.Screen
+                                name={ROUTES.DESCRIPTIONCOMMERCE}
+                                component={DescriptionCommerce}
+                            />
+                            <Stack.Screen
+                                name={ROUTES.DESCRIPTION}
+                                component={Description}
+                            />
+                            <Stack.Screen
+                                name={ROUTES.SEARCH_GLOBAL}
+                                component={SearchGlobal}
+                            />
                             <Stack.Screen name={ROUTES.MAPS} component={Maps} />
-                            <Stack.Screen name={ROUTES.EXCUTIVE_LIST} component={ListCommerceExcute} />
-                            <Stack.Screen name={ROUTES.RETIREMENTEXCUTIVE} component={RetirementExcutive} />
+                            <Stack.Screen
+                                name={ROUTES.EXCUTIVE_LIST}
+                                component={ListCommerceExcute}
+                            />
+                            <Stack.Screen
+                                name={ROUTES.RETIREMENTEXCUTIVE}
+                                component={RetirementExcutive}
+                            />
+                            <Stack.Screen
+                                name={ROUTES.WALLETCOMMERCE}
+                                component={WalletCommerce}
+                            />
                         </>
-                    }
+                    )}
 
-                    {
-                        !state.loged &&
+                    {!state.loged && (
                         <>
-                            <Stack.Screen name={ROUTES.MAIN} component={Login} />
-                            <Stack.Screen name={ROUTES.REGISTER} component={Register} />
+                            <Stack.Screen
+                                name={ROUTES.MAIN}
+                                component={Login}
+                            />
+                            <Stack.Screen
+                                name={ROUTES.REGISTER}
+                                component={Register}
+                            />
                         </>
-                    }
+                    )}
                 </Stack.Navigator>
             </NavigationContainer>
 
-
             <Modal backdropOpacity={0.95} isVisible={!state.internet}>
-                <Text style={styles.textInternet}>no estas conectado a internet</Text>
+                <Text style={styles.textInternet}>
+                    no estas conectado a internet
+                </Text>
 
-                <Lottie source={notConectionAnimation} resizeMode="cover" style={styles.conectionAnimation} loop autoPlay />
+                <Lottie
+                    source={notConectionAnimation}
+                    resizeMode="cover"
+                    style={styles.conectionAnimation}
+                    loop
+                    autoPlay
+                />
             </Modal>
 
-
-            {
-                !state.loged &&
-                <ButtonSupport />
-            }
+            {!state.loged && <ButtonSupport />}
 
             <Loader isVisible={state.loader} />
 

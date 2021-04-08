@@ -60,9 +60,15 @@ export default {
         fontSize: RFValue(24),
         color: Colors.colorYellow,
     },
-    containerButton: {
-        margin: RFValue(15),
+
+    rowButtons: {
+        alignItems: "center",
+        marginVertical: RFValue(10),
+        paddingHorizontal: RFValue(25),
+        width: "100%",
+        flexDirection: "row",
     },
+
     containerError: {
         alignItems: "center",
     },
@@ -76,7 +82,6 @@ export default {
         borderBottomColor: "#FFF",
         borderBottomWidth: 1,
         paddingVertical: 10,
-        // marginTop: 10,
         flexDirection: "row",
         justifyContent: "space-between",
     },
@@ -86,7 +91,6 @@ export default {
         marginHorizontal: RFValue(10),
         padding: RFValue(10),
         marginTop: RFValue(10),
-        //height: "90%",
     },
     headerTable: {
         borderBottomColor: Colors.colorYellow,
@@ -99,15 +103,23 @@ export default {
     textHeaderTable: {
         color: Colors.colorYellow,
         fontSize: RFValue(14),
-        textAlign: "center",
     },
     textRowTable: {
         color: "#FFF",
         fontSize: RFValue(12),
-        textAlign: "center",
+        justifyContent: "center",
     },
     textRowTableCompany: {
         color: "#FFF",
         fontSize: RFValue(11),
+    },
+    retirementText: {
+        fontSize: RFValue(16),
+        color: Colors.colorYellow,
+        textDecorationLine: "underline",
+        textDecorationColor: Colors.colorYellow,
+        textDecorationStyle: "double",
+        paddingBottom: 5,
+        textTransform: "uppercase",
     },
 }

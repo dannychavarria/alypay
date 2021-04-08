@@ -39,47 +39,49 @@ const ItemComerce = ({ data = {} }) => {
     }, [])
 
     return (
-        <TouchableOpacity style={styles.container} onPress={onInformacion}>
-            <Image
-                style={styles.logo}
-                source={source === null ? avatar : { uri: source }}
-            />
+        <>
+            <TouchableOpacity style={styles.container} onPress={onInformacion}>
+                <Image
+                    style={styles.logo}
+                    source={source === null ? avatar : { uri: source }}
+                />
 
-            <View style={styles.cardInformation}>
-                <View style={styles.headerTableTitle}>
-                    <Text style={styles.textHeaderTableTitle}>
-                        {data.item?.commerce_name}
-                    </Text>
-                    <Image source={tether} style={styles.icon} />
-                </View>
-
-                <View style={styles.lineTitle} />
-
-                <View style={styles.dataDetailsInfoContainer}>
-                    <View style={styles.headerTable}>
-                        <Text
-                            style={[
-                                styles.textHeaderTable,
-                                { alignSelf: "flex-start" },
-                            ]}>
-                            Dirección
+                <View style={styles.cardInformation}>
+                    <View style={styles.headerTableTitle}>
+                        <Text style={styles.textHeaderTableTitle}>
+                            {data.item?.commerce_name}
                         </Text>
-                        <Text style={styles.textRowTable}>
-                            {data.item?.physical_address}
-                        </Text>
+                        <Image source={tether} style={styles.icon} />
                     </View>
-                    <View style={styles.bodyRowTable}>
-                        <Text style={styles.textHeaderTable}>Balance</Text>
-                        <Text style={styles.textRowTable}>
-                            {_.floor(data.item?.amount, 2)}
-                            <Text style={{ fontSize: RFValue(9) }}>
-                                {data.item?.symbol}
+
+                    <View style={styles.lineTitle} />
+
+                    <View style={styles.dataDetailsInfoContainer}>
+                        <View style={styles.headerTable}>
+                            <Text
+                                style={[
+                                    styles.textHeaderTable,
+                                    { alignSelf: "flex-start" },
+                                ]}>
+                                Dirección
                             </Text>
-                        </Text>
+                            <Text style={styles.textRowTable}>
+                                {data.item?.physical_address}
+                            </Text>
+                        </View>
+                        <View style={styles.bodyRowTable}>
+                            <Text style={styles.textHeaderTable}>Balance</Text>
+                            <Text style={styles.textRowTable}>
+                                {_.floor(data.item?.amount, 2)}
+                                <Text style={{ fontSize: RFValue(9) }}>
+                                    {data.item?.symbol}
+                                </Text>
+                            </Text>
+                        </View>
                     </View>
                 </View>
-            </View>
-        </TouchableOpacity>
+            </TouchableOpacity>
+        </>
     )
 }
 

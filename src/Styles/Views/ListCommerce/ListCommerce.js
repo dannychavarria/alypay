@@ -12,6 +12,16 @@ export default {
         width: RFValue(256),
     },
     contenList: {
+        flex: 1,
         marginVertical: RFValue(10),
+    },
+    containerTitle: {
+        //flex: 1,
+        marginHorizontal: RFValue(15),
+        padding: RFValue(10),
+    },
+    title: {
+        fontSize: RFValue(24),
+        color: Colors.colorYellow,
     },
 }
