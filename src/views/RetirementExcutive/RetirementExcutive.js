@@ -25,10 +25,11 @@ import scanQRAnimation from "../../animations/scan-qr.json"
 // Import redux store
 import store from "../../store"
 
-const RetirementExcutive = () => {
+const RetirementExcutive = ({ route }) => {
     const classes = useStyles(RetirementExcutiveStyles)
-    const { global } = store.getState()
-    console.log(global)
+
+    const { params: data } = route
+    console.log("Data", data)
 
     const {
         getListCoin,
@@ -62,11 +63,12 @@ const RetirementExcutive = () => {
     const submit = () => {
         const dataSet = {
             wallet: walletAddress,
-            id_wallet: 51,
+            id_wallet: data.id_sale_wallet,
             amount: amountSatochi,
             amountOriginal: parseFloat(amount) || 0,
             symbol: infoCoin[coinIndexSelected].symbol,
         }
+        console.log("DataSent", dataSet)
         submintInformation(dataSet)
     }
 

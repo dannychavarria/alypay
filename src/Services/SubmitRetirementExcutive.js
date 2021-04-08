@@ -19,8 +19,10 @@ export default async function submitInformation({ dataSent }) {
             throw String("El monto minimo para retirar es de 20 USD")
         }
 
+        console.log(getHeaders())
+
         const { data: response } = await http.post(
-            "/sales-executive/retirement",
+            "/sales-executive/withdrawals",
             dataSent,
             getHeaders(),
         )

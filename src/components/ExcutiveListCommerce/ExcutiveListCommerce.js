@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react"
 import { View, Text, TouchableOpacity, FlatList, Image } from "react-native"
 
+// Import navigation functions
+import { useNavigation } from "@react-navigation/native"
+
 // Import Constanst
 import { errorMessage, loader, GlobalStyles } from "../../utils/constants"
 import Floor from "lodash/floor"
@@ -23,8 +26,9 @@ import { ListCommerceService } from "../../Services/index"
 import Commerce from "../../static/ecommerce-avatar.png"
 import empty from "../../animations/empty.json"
 
-const ExcutiveListCommerce = ({ navigation }) => {
+const ExcutiveListCommerce = ({ data = {} }) => {
     const classes = useStyles(ListExcuteStyle)
+    const { navigate } = useNavigation()
 
     // Estado que guarda la informacion de los comercios afiliados al ejecutivo
     const [info, setInfo] = useState({})
@@ -52,43 +56,10 @@ const ExcutiveListCommerce = ({ navigation }) => {
         }
     }
 
-    /*  // Renderizamos las tarjetas de los comercios asociados
-    const itemCommerce = ({ item }) => {
-        const result = Floor(percentage * item.amount, 2)
-
-        return (
-            <View style={classes.container}>
-                <Image source={Commerce} style={classes.image} />
-
-                <View style={classes.subContainerInfo}>
-                    <View style={classes.cardInfo}>
-                        <View style={classes.headerTableTitle}>
-                            <Text style={classes.titleCard}>
-                                {item.company}
-                            </Text>
-                        </View>
-
-                        <View style={classes.row}>
-                            <View style={classes.headerTable}>
-                                <Text style={classes.titleCard}>Comisión</Text>
-                                <Text style={classes.subTitle}>
-                                    {percentage}%
-                                </Text>
-                            </View>
-
-                            <View style={classes.headerTable}>
-                                <Text style={classes.titleCard}>Ganacias</Text>
-                                <Text style={classes.subTitle}>
-                                    {result} USDT
-                                </Text>
-                            </View>
-                        </View>
-                    </View>
-                </View>
-            </View>
-        )
+    const onRetirementEjecutive = () => {
+        navigate("RetirementExcutive", data)
     }
- */
+
     const foundData = Object.keys(info).length > 0 && !loader
 
     useEffect(() => {
@@ -101,19 +72,21 @@ const ExcutiveListCommerce = ({ navigation }) => {
             {foundData && (
                 <>
                     <View style={classes.containerTitle}>
-                        <Text style={classes.title}>Listado de comercios</Text>
+                        <Text style={classes.title}>Lista de ganacias</Text>
                     </View>
 
                     <View style={classes.card}>
                         <View style={classes.headerTable}>
-                            <Text style={classes.textHeaderTable}>
-                                Comercio
-                            </Text>
+                            <View style={{ width: "35%" }}>
+                                <Text style={classes.textHeaderTable}>
+                                    Comercio
+                                </Text>
+                            </View>
                             <Text style={classes.textHeaderTable}>
                                 Comisión
                             </Text>
                             <Text style={classes.textHeaderTable}>
-                                Ganacias(Tether)
+                                Ganacias
                             </Text>
                         </View>
                         <FlatList
@@ -121,9 +94,12 @@ const ExcutiveListCommerce = ({ navigation }) => {
                             keyExtractor={(_, key) => key.toString()}
                             renderItem={({ item }) => (
                                 <View style={classes.bodyRowTable}>
-                                    <Text style={classes.textRowTableCompany}>
-                                        {item.company}
-                                    </Text>
+                                    <View style={{ width: "30%" }}>
+                                        <Text
+                                            style={classes.textRowTableCompany}>
+                                            {item.company}
+                                        </Text>
+                                    </View>
                                     <Text style={classes.textRowTable}>
                                         {percentage}
                                     </Text>
@@ -135,9 +111,20 @@ const ExcutiveListCommerce = ({ navigation }) => {
                             )}
                         />
                     </View>
-                    <View style={classes.containerButton}>
+                    <View style={classes.rowButtons}>
                         <TouchableOpacity
-                            style={GlobalStyles.buttonPrimaryLine}>
+                            style={[GlobalStyles.textButton, { flex: 1 }]}>
+                            <Text style={classes.retirementText}>
+                                Historial
+                            </Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            onPress={onRetirementEjecutive}
+                            style={[
+                                GlobalStyles.buttonPrimaryLine,
+                                { flex: 1, marginLeft: 25 },
+                            ]}>
                             <Text style={GlobalStyles.textButtonPrimaryLine}>
                                 Retirar
                             </Text>
