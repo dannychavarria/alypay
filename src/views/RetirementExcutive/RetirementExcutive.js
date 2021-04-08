@@ -13,7 +13,7 @@ import { View as ViewAnimation } from "react-native-animatable"
 
 // Import Styles
 import { RetirementExcutiveStyles } from "../../Styles/Views/index"
-import { GlobalStyles, Colors, errorMessage } from "../../utils/constants"
+import { GlobalStyles, Colors } from "../../utils/constants"
 
 // Import Hooks
 import useStyles from "../../hooks/useStyles.hook"
@@ -22,14 +22,10 @@ import useRetreats from "../../hooks/Retreats/useRetreats.hook"
 // Import Assets
 import scanQRAnimation from "../../animations/scan-qr.json"
 
-// Import redux store
-import store from "../../store"
-
-const RetirementExcutive = ({ route }) => {
+const RetirementExcutive = ({ route, navigation }) => {
     const classes = useStyles(RetirementExcutiveStyles)
 
     const { params: data } = route
-    console.log("Data", data)
 
     const {
         getListCoin,
@@ -68,8 +64,10 @@ const RetirementExcutive = ({ route }) => {
             amountOriginal: parseFloat(amount) || 0,
             symbol: infoCoin[coinIndexSelected].symbol,
         }
-        console.log("DataSent", dataSet)
-        submintInformation(dataSet)
+
+        submintInformation(dataSet, () => {
+            navigation.pop()
+        })
     }
 
     useEffect(() => {
