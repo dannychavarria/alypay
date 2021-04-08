@@ -98,6 +98,7 @@ export const serverAddress =
     Platform.OS === "ios"
         ? `http://localhost:${PORT}`
         : `http://192.168.0.140:${PORT}`
+//export const serverAddress = "https://alypay-backend-test.herokuapp.com/"
 export const serverSpeedtradingsURL = "https://ardent-medley-272823.appspot.com"
 
 /**

@@ -594,36 +594,40 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => {} }) => {
 
             <View style={{ height: RFValue(10) }} />
 
-            <View style={styles.containerFee}>
-                <View style={styles.headerFee}>
-                    <Text style={styles.textHeaderFee}>Sub-Total</Text>
-                    <Text style={styles.textHeaderFee}>Comisión</Text>
-                    <Text style={styles.textHeaderFee}>Total</Text>
-                </View>
+            {state.amountUSD.trim() !== "" &&
+                state.amountFraction.trim() !== "" && (
+                    <View style={styles.containerFee}>
+                        <View style={styles.headerFee}>
+                            <Text style={styles.textHeaderFee}>Sub-Total</Text>
+                            <Text style={styles.textHeaderFee}>Comisión</Text>
+                            <Text style={styles.textHeaderFee}>Total</Text>
+                        </View>
 
-                <View style={styles.bodyFee}>
-                    <Text style={styles.textBodyFee}>
-                        {state.amountFraction} {data.symbol}
-                    </Text>
-                    <Text style={styles.textBodyFee}>
-                        {_.floor(state.fee.amount, 8)} {state.fee.symbol}
-                    </Text>
-                    {state.fee.symbol !== data.symbol ? (
-                        <Text style={styles.textBodyFee}>
-                            {state.amountFraction} {data.symbol}
-                        </Text>
-                    ) : (
-                        <Text style={styles.textBodyFee}>
-                            {_.floor(
-                                parseFloat(state.amountFraction) +
-                                    parseFloat(state.fee.amount),
-                                8,
-                            )}{" "}
-                            {state.fee.symbol}
-                        </Text>
-                    )}
-                </View>
-            </View>
+                        <View style={styles.bodyFee}>
+                            <Text style={styles.textBodyFee}>
+                                {state.amountFraction} {data.symbol}
+                            </Text>
+                            <Text style={styles.textBodyFee}>
+                                {_.floor(state.fee.amount, 8)}{" "}
+                                {state.fee.symbol}
+                            </Text>
+                            {state.fee.symbol !== data.symbol ? (
+                                <Text style={styles.textBodyFee}>
+                                    {state.amountFraction} {data.symbol}
+                                </Text>
+                            ) : (
+                                <Text style={styles.textBodyFee}>
+                                    {_.floor(
+                                        parseFloat(state.amountFraction) +
+                                            parseFloat(state.fee.amount),
+                                        8,
+                                    )}{" "}
+                                    {state.fee.symbol}
+                                </Text>
+                            )}
+                        </View>
+                    </View>
+                )}
 
             {state.walletAccepted && state.dataWallet !== null && (
                 <>

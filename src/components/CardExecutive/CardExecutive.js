@@ -1,24 +1,32 @@
-import React, { useEffect } from 'react'
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
+import React, { useEffect } from "react"
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native"
 
 // Import navigation functions
 import { useNavigation } from "@react-navigation/native"
 
 // Import Constanst
-import { Colors, RFValue, http, getHeaders, errorMessage } from '../../utils/constants'
+import { Colors, RFValue } from "../../utils/constants"
+
+// Import Assets
+import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 
 const CardExecutive = () => {
     const { navigate } = useNavigation()
 
     const onListCommerce = () => {
-        navigate('ExcuteList')
+        navigate("ExcuteList")
     }
 
     return (
         <TouchableOpacity style={styles.container} onPress={onListCommerce}>
-            <View style={styles.subContainer} >
+            <View style={styles.subContainerInfo}>
                 <View style={styles.row}>
                     <Text style={styles.legend}>Ganacia de ejecutivo</Text>
+                    <Icon
+                        name="arrow-right"
+                        size={20}
+                        color={Colors.colorYellow}
+                    />
                 </View>
             </View>
         </TouchableOpacity>
@@ -48,8 +56,8 @@ const styles = StyleSheet.create({
     },
     legend: {
         fontSize: RFValue(20),
-        color: Colors.colorYellow
-    }
+        color: Colors.colorYellow,
+    },
 })
 
 export default CardExecutive

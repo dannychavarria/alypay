@@ -110,18 +110,23 @@ const ListComerce = ({ route }) => {
                 indexActive={state.indexTabActive}
             />
             {stateView === TYPE_VIEW.COMMERCE && (
-                <View style={classes.contenList}>
-                    <FlatList
-                        data={data}
-                        keyExtractor={(_, i) => i}
-                        renderItem={item => <ItemComerce data={item} />}
-                    />
-                </View>
+                <>
+                    <View style={classes.containerTitle}>
+                        <Text style={classes.title}>Listado de comercios</Text>
+                    </View>
+                    <View style={classes.contenList}>
+                        <FlatList
+                            data={data}
+                            keyExtractor={(_, i) => i}
+                            renderItem={item => <ItemComerce data={item} />}
+                        />
+                    </View>
+                </>
             )}
 
             {stateView === TYPE_VIEW.EXCUTIVE_LIST && (
                 <>
-                    <ExcutiveListCommerce />
+                    <ExcutiveListCommerce data={params} />
                 </>
             )}
         </View>

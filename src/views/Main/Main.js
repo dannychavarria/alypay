@@ -315,6 +315,8 @@ const Main = () => {
 
             const { data } = await http.get("/wallets", getHeaders())
 
+            console.log("Main", data)
+
             if (data.error) {
                 throw String(data.message)
             } else {
@@ -383,7 +385,6 @@ const Main = () => {
             />
             {stateView === TYPE_VIEW.WALLET && (
                 <>
-                    <CardExecutive />
                     <FlatList
                         data={state.wallets}
                         keyExtractor={(_, i) => i}

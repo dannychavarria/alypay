@@ -14,7 +14,7 @@ import {
     urlAlyCoin,
     WithDecimals,
 } from "../../utils/constants"
-import _ from "lodash"
+import Floor from "lodash/floor"
 
 /**
  * Componente que representa la billetera del usuario
@@ -29,8 +29,11 @@ const ItemWallet = ({ data = {}, disabled = false }) => {
               }.png`
             : urlAlyCoin
 
+    /**
+     * Funcion que verifica si tiene es dueño de compañia
+     */
     const isTherter = () => {
-        if (data.id !== -1) {
+        if (data.id !== -1 && data.wallet_type !== 3) {
             navigate(ROUTES.WALLET, data)
         } else {
             navigate(ROUTES.LIST, data)
@@ -51,7 +54,7 @@ const ItemWallet = ({ data = {}, disabled = false }) => {
                     <View style={styles.lastCol}>
                         <Text style={styles.key}>Balance</Text>
                         <Text style={styles.value}>
-                            {_.floor(data.amount, 8)} {data.symbol}
+                            {Floor(data.amount, 8)} {data.symbol}
                         </Text>
                     </View>
                 </View>
@@ -60,7 +63,7 @@ const ItemWallet = ({ data = {}, disabled = false }) => {
                     <View>
                         <Text style={styles.key}>Precio del mercado</Text>
                         <Text style={styles.value}>
-                            $ {WithDecimals(_.floor(data.price, 2))}
+                            $ {WithDecimals(Floor(data.price, 2))}
                         </Text>
                     </View>
 
