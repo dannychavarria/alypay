@@ -60,6 +60,10 @@ const ExcutiveListCommerce = ({ data = {} }) => {
         navigate("RetirementExcutive", data)
     }
 
+    const onHistory = () => {
+        navigate("HistoryRetirementExcutive")
+    }
+
     const foundData = Object.keys(info).length > 0 && !loader
 
     useEffect(() => {
@@ -113,6 +117,7 @@ const ExcutiveListCommerce = ({ data = {} }) => {
                     </View>
                     <View style={classes.rowButtons}>
                         <TouchableOpacity
+                            onPress={onHistory}
                             style={[GlobalStyles.textButton, { flex: 1 }]}>
                             <Text style={classes.retirementText}>
                                 Historial

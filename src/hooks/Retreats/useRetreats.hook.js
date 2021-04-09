@@ -63,9 +63,12 @@ export default function useRetreats() {
         setAmountFeeUSD(_amountFeeUSD)
     }
 
-    const submintInformation = async data => {
+    const submintInformation = async (data, successCallback) => {
         try {
-            await SubmitRetirementExcutiveServices({ dataSent: data })
+            await SubmitRetirementExcutiveServices({
+                dataSent: data,
+                successCallback,
+            })
         } catch (error) {
             errorMessage(error.toString())
         }
