@@ -93,13 +93,15 @@ const PORT = "3085"
 /**Direction for server */
 //export const serverAddress = "https://alypay.uc.r.appspot.com"
 //export const serverAddress = "https://root-anvil-299019.uc.r.appspot.com"
-//export const serverAddress = "https://172.29.96.1:3085"
-export const serverAddress =
-    Platform.OS === "ios"
-        ? `http://localhost:${PORT}`
-        : `http://192.168.0.140:${PORT}`
-//export const serverAddress = "https://alypay-backend-test.herokuapp.com/"
-//export const serverAddress = "https://alypay-backend-test-marcia.herokuapp.com/"
+//export const serverAddress = "https://192.168.1.224:3000"
+// export const serverAddress =
+//     Platform.OS === "ios"
+//         ? `http://localhost:${PORT}`
+//         : `http://192.168.0.140:${PORT}`
+export const serverAddress = "https://alypay-backend-test.herokuapp.com/"
+
+
+>>>>> 
 export const serverSpeedtradingsURL = "https://ardent-medley-272823.appspot.com"
 
 /**
