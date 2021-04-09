@@ -16,8 +16,8 @@ const ROUTES = {
     SEARCH_GLOBAL: "SearchGlobal",
     MAPS: "Maps",
     EXCUTIVE_LIST: "ExcuteList",
-    RETIREMENTEXCUTIVE: "RetirementExcutive"
+    RETIREMENTEXCUTIVE: "RetirementExcutive",
+    HISTORYRETIREMENTEXCUTIVE: "HistoryRetirementExcutive",
 }
-
 
 export default ROUTES
