@@ -245,24 +245,6 @@ const ECommerRegister = () => {
                     <View style={classes.row}>
                         <View style={classes.labelsRow}>
                             <Text style={classes.legendRow}>
-                                Nacionalidad
-                                </Text>
-                            <Text style={classes.required}>Requerido</Text>
-                        </View>
-                        <View style={GlobalStyles.containerPicker}>
-                            <Picker style={GlobalStyles.picker}>
-                                <Picker.Item
-                                    label="Seleccione país de origen"
-                                    value={1}
-                                />
-                                <Picker.Item label="Cedula" value={2} />
-                            </Picker>
-                        </View>
-                    </View>
-
-                    <View style={classes.row}>
-                        <View style={classes.labelsRow}>
-                            <Text style={classes.legendRow}>
                                 Pais de residencia
                                 </Text>
                             <Text style={classes.required}>Requerido</Text>
@@ -291,16 +273,6 @@ const ECommerRegister = () => {
                     <View style={classes.row}>
                         <View style={classes.labelsRow}>
                             <Text style={classes.legendRow}>
-                                Ciudad
-                                </Text>
-                            <Text style={classes.required}>Requerido</Text>
-                        </View>
-                        <TextInput style={GlobalStyles.textInput} />
-                    </View>
-
-                    <View style={classes.row}>
-                        <View style={classes.labelsRow}>
-                            <Text style={classes.legendRow}>
                                 Dirección (Línea 1)
                                 </Text>
                             <Text style={classes.required}>Requerido</Text>
@@ -312,16 +284,6 @@ const ECommerRegister = () => {
                         <View style={classes.labelsRow}>
                             <Text style={classes.legendRow}>
                                 Dirección (Línea 2)
-                                </Text>
-                            <Text style={classes.required}>Requerido</Text>
-                        </View>
-                        <TextInput style={GlobalStyles.textInput} />
-                    </View>
-
-                    <View style={classes.row}>
-                        <View style={classes.labelsRow}>
-                            <Text style={classes.legendRow}>
-                                Codigo postal
                                 </Text>
                             <Text style={classes.required}>Requerido</Text>
                         </View>
