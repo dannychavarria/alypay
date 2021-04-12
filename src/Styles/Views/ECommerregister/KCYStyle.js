@@ -126,6 +126,10 @@ export default {
         textTransform: "uppercase",
         fontSize: RFValue(16)
     },
+    textImage: {
+        color: Colors.colorYellow,
+        fontSize: RFValue(15)
+    },
     SubContainerPicker: {
         borderColor: Colors.colorSecondary,
         backgroundColor: Colors.colorMain,
@@ -170,7 +174,7 @@ export default {
         right: 0,
     },
     legendSeePassword: {
-        color: Colors.colorSecondary,
+        color: Colors.colorYellow,
         marginRight: 10,
     },
     checkContainer: {

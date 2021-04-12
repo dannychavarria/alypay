@@ -6,8 +6,8 @@ import { RFValue, Colors } from "../../utils/constants"
 import { Image, View as ViewAnimation } from 'react-native-animatable'
 
 // Import Assets
-import images from "../../static/images/Recurso.png"
-import pdf from "../../static/images/uploadPdf.png"
+import images from "../../static/Recurso-2.png"
+import pdf from "../../static/UPLOAD_PDF.png"
 
 
 const UploadImage = ({ onChange, value, isPdf = false }) => (
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.colorMain,
         borderRadius: 10,
         borderWidth: 1.5,
-        borderColor: Colors.colorSecondary,
+        borderColor: Colors.colorYellow,
         borderStyle: "dashed",
         padding: 15
     },
@@ -63,10 +63,10 @@ const styles = StyleSheet.create({
     },
     legendImage: {
         fontSize: RFValue(15),
-        color: Colors.colorSecondary
+        color: Colors.colorYellow
     },
     legendTitle: {
-        color: Colors.colorSecondary,
+        color: Colors.colorYellow,
         fontSize: RFValue(16),
         padding: 10,
     },
