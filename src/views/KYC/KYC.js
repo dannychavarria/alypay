@@ -1,5 +1,5 @@
-import React from "react"
-import { View, Text, TextInput, TouchableOpacity } from "react-native"
+import React, { useReducer, useState } from "react"
+import { View, Text, TextInput, TouchableOpacity, FlatList } from "react-native"
 
 // Import Hook
 import useStyles from "../../hooks/useStyles.hook"
@@ -8,13 +8,14 @@ import useStyles from "../../hooks/useStyles.hook"
 import { ECommerRegisterS } from "../../Styles/Views/index"
 
 // Import Constans
-import { GlobalStyles, errorMessage } from "../../utils/constants"
+import { GlobalStyles, errorMessage, Colors } from "../../utils/constants"
 import countries from "../../utils/countries.json"
 
 // Import Components
 import Container from "../../components/Container/Container"
 import { View as ViewAnimation } from "react-native-animatable"
 import { Picker } from "@react-native-picker/picker"
+import Modal from "react-native-modal"
 
 const initialState = {
     country: countries[0],
@@ -52,11 +53,11 @@ const ECommerRegister = () => {
         if (
             item.name.length > 0 &&
             item.name.toLowerCase().search(state.filter.toLocaleLowerCase()) >
-                -1
+            -1
         ) {
             return (
                 <TouchableOpacity
-                    style={styles.itemCountry}
+                    style={classes.itemCountry}
                     onPress={_ => selectedCountry(item)}>
                     <Text style={{ color: "#FFF" }}>{item.name}</Text>
                     <Text style={{ color: Colors.colorYellow }}>
@@ -155,7 +156,7 @@ const ECommerRegister = () => {
 
                         <View style={classes.row}>
                             <Text style={classes.legendRow}>
-                                Numero de telefono alternativo
+                                Numero de telefono principal
                             </Text>
 
                             <View style={classes.rowPhoneNumber}>
@@ -170,7 +171,7 @@ const ECommerRegister = () => {
                                     onPress={_ => setModalCountry(true)}>
                                     <Text
                                         style={{
-                                            color: Colors.colorSecondary,
+                                            color: Colors.colorYellow,
                                         }}>
                                         {state.country.phoneCode}
                                     </Text>
@@ -191,50 +192,224 @@ const ECommerRegister = () => {
                         </View>
 
                         <View style={classes.row}>
-                            <View style={classes.labelsColumn}>
-                                <Text style={classes.legendColumn}>
-                                    Código de país
-                                </Text>
-                                <Text style={classes.required}>Requerido</Text>
-                            </View>
-                            <View style={GlobalStyles.containerPicker}>
-                                <Picker style={GlobalStyles.picker}>
-                                    <Picker.Item label="Ni +(505)" value={1} />
-                                    <Picker.Item label="No :v" value={2} />
-                                </Picker>
+                            <Text style={classes.legendRow}>
+                                Numero de telefono alternativo
+                            </Text>
+
+                            <View style={classes.rowPhoneNumber}>
+                                <TouchableOpacity
+                                    style={[
+                                        GlobalStyles.textInput,
+                                        {
+                                            marginRight: 10,
+                                            justifyContent: "center",
+                                        },
+                                    ]}
+                                    onPress={_ => setModalCountry(true)}>
+                                    <Text
+                                        style={{
+                                            color: Colors.colorYellow,
+                                        }}>
+                                        {state.country.phoneCode}
+                                    </Text>
+                                </TouchableOpacity>
+
+                                <TextInput
+                                    style={[
+                                        GlobalStyles.textInput,
+                                        { flex: 1 },
+                                    ]}
+                                    placeholder="Ingrese numero de telefono"
+                                    placeholderTextColor="#CCC"
+                                    autoCorrect={false}
+                                    keyboardType="numeric"
+                                    keyboardAppearance="dark"
+                                />
                             </View>
                         </View>
 
-                        <View style={classes.row}>
-                            <View style={classes.labelsColumn}>
-                                <Text style={classes.legendColumn}>
-                                    Número de teléfono alternativo
-                                </Text>
-                                <Text style={classes.required}>Requerido</Text>
-                            </View>
-                            <TextInput style={GlobalStyles.textInput} />
-                        </View>
 
-                        <View style={classes.rowButtons}>
-                            <TouchableOpacity>
-                                <Text style={classes.textBack}>Atras</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={GlobalStyles.buttonPrimary}>
-                                <Text style={GlobalStyles.textButton}>
-                                    Siguiente
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
                     </ViewAnimation>
                 )}
+                {state.tab === 1 && <ViewAnimation style={classes.tab} animation="fadeIn">
+
+                    <View style={classes.containerTitle}>
+                        <Text style={classes.textTitle}>
+                            3. Nacionalidad residencia
+                            </Text>
+                    </View>
+
+                    <View style={classes.row}>
+                        <View style={classes.labelsRow}>
+                            <Text style={classes.legendRow}>
+                                Nacionalidad
+                                </Text>
+                            <Text style={classes.required}>Requerido</Text>
+                        </View>
+                        <View style={GlobalStyles.containerPicker}>
+                            <Picker style={GlobalStyles.picker}>
+                                <Picker.Item
+                                    label="Seleccione país de origen"
+                                    value={1}
+                                />
+                                <Picker.Item label="Cedula" value={2} />
+                            </Picker>
+                        </View>
+                    </View>
+
+                    <View style={classes.row}>
+                        <View style={classes.labelsRow}>
+                            <Text style={classes.legendRow}>
+                                Pais de residencia
+                                </Text>
+                            <Text style={classes.required}>Requerido</Text>
+                        </View>
+                        <View style={GlobalStyles.containerPicker}>
+                            <Picker style={GlobalStyles.picker}>
+                                <Picker.Item
+                                    label="Seleccione país de residencia"
+                                    value={1}
+                                />
+                                <Picker.Item label="Cedula" value={2} />
+                            </Picker>
+                        </View>
+                    </View>
+
+                    <View style={classes.row}>
+                        <View style={classes.labelsRow}>
+                            <Text style={classes.legendRow}>
+                                Estado/Provincia/Región
+                                </Text>
+                            <Text style={classes.required}>Requerido</Text>
+                        </View>
+                        <TextInput style={GlobalStyles.textInput} />
+                    </View>
+
+                    <View style={classes.row}>
+                        <View style={classes.labelsRow}>
+                            <Text style={classes.legendRow}>
+                                Ciudad
+                                </Text>
+                            <Text style={classes.required}>Requerido</Text>
+                        </View>
+                        <TextInput style={GlobalStyles.textInput} />
+                    </View>
+
+                    <View style={classes.row}>
+                        <View style={classes.labelsRow}>
+                            <Text style={classes.legendRow}>
+                                Dirección (Línea 1)
+                                </Text>
+                            <Text style={classes.required}>Requerido</Text>
+                        </View>
+                        <TextInput style={GlobalStyles.textInput} />
+                    </View>
+
+                    <View style={classes.row}>
+                        <View style={classes.labelsRow}>
+                            <Text style={classes.legendRow}>
+                                Dirección (Línea 2)
+                                </Text>
+                            <Text style={classes.required}>Requerido</Text>
+                        </View>
+                        <TextInput style={GlobalStyles.textInput} />
+                    </View>
+
+                    <View style={classes.row}>
+                        <View style={classes.labelsRow}>
+                            <Text style={classes.legendRow}>
+                                Codigo postal
+                                </Text>
+                            <Text style={classes.required}>Requerido</Text>
+                        </View>
+                        <TextInput style={GlobalStyles.textInput} />
+                    </View>
+
+
+
+                </ViewAnimation>}
+
+                {state.tab === 2 && <ViewAnimation style={classes.tab} animation="fadeIn">
+
+                    <View style={classes.row}>
+
+                        <View style={classes.containerTitle}>
+                            <Text style={classes.textTitle}>
+                                4. Preguntas de control
+                            </Text>
+                        </View>
+
+                    </View>
+
+                    <View style={classes.row}>
+                        <View style={classes.labelsRow}>
+                            <Text style={classes.legendRow}>
+                                ¿De dónde proviene su capital?
+                                </Text>
+                            <Text style={classes.required}>Requerido</Text>
+                        </View>
+                        <View style={GlobalStyles.containerPicker}>
+                            <Picker style={GlobalStyles.picker}>
+                                <Picker.Item
+                                    label="seleccionar respuesta"
+                                    value={1}
+                                />
+                                <Picker.Item label="Cedula" value={2} />
+                            </Picker>
+                        </View>
+                    </View>
+
+                    <View style={classes.row}>
+                        <View style={classes.labelsRow}>
+                            <Text style={classes.legendRow}>
+                                Monto de inversion estimado mensual
+                                </Text>
+                            <Text style={classes.required}>Requerido</Text>
+                        </View>
+                        <TextInput style={GlobalStyles.textInput} />
+                    </View>
+
+                    <View style={classes.row}>
+                        <View style={classes.labelsRow}>
+                            <Text style={classes.legendRow}>
+                                ¿Cuál es su profesión actualmente?
+                                </Text>
+                            <Text style={classes.required}>Requerido</Text>
+                        </View>
+                        <TextInput style={GlobalStyles.textInput} />
+                    </View>
+
+                    <View style={classes.containerTitle}>
+                        <Text style={classes.textTitle}>
+                            5. Foto de perfil y verificación
+                            </Text>
+                    </View>
+
+
+
+                </ViewAnimation>}
+
+            </View>
+
+            <View style={classes.rowButtons}>
+                <TouchableOpacity
+                    onPress={previousPage}>
+                    <Text style={classes.textBack}>Atras</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={nextPage}
+                    style={GlobalStyles.buttonPrimary}>
+                    <Text style={GlobalStyles.textButton}>
+                        Siguiente
+                                </Text>
+                </TouchableOpacity>
             </View>
 
             <Modal
                 onBackdropPress={_ => setModalCountry(false)}
                 onBackButtonPress={_ => setModalCountry(false)}
                 isVisible={modalCoutry}>
-                <View style={styles.containerModal}>
+                <View style={classes.containerModal}>
                     <TextInput
                         style={GlobalStyles.textInput}
                         placeholder="Buscar"

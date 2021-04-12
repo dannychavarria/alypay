@@ -147,8 +147,9 @@ export default {
     },
     rowButtons: {
         alignItems: "center",
-        marginHorizontal: RFValue(15),
-        marginVertical: RFValue(25),
+        // paddingTop: RFValue(15),
+        marginHorizontal: RFValue(25),
+        // marginVertical: RFValue(30),
         flexDirection: "row",
         justifyContent: "space-between",
     },
