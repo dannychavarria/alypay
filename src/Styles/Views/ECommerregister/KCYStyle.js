@@ -24,12 +24,12 @@ export default {
     },
     containerTitle: {
         flex: 1,
-        padding: 10,
-        marginLeft: 10
+        marginLeft: RFValue(10),
+        paddingTop: RFValue(10)
     },
     containerTitleText: {
         color: Colors.colorYellow,
-        fontSize: RFValue(20)
+        fontSize: RFValue(23.8)
     },
     containerModal: {
         alignSelf: "center",
@@ -81,7 +81,7 @@ export default {
     },
     textTitle: {
         color: Colors.colorYellow,
-        fontSize: RFValue(18)
+        fontSize: RFValue(22)
     },
     containerIcon: {
         justifyContent: "center"

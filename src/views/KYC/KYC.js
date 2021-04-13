@@ -116,7 +116,7 @@ const ECommerRegister = () => {
                         <View style={classes.row}>
                             <View style={classes.labelsRow}>
                                 <Text style={classes.legendRow}>
-                                    Nombre completo
+                                    Contraseña de seguridad
                                 </Text>
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
@@ -155,43 +155,6 @@ const ECommerRegister = () => {
                             <Text style={classes.textTitle}>
                                 2. Información de contacto
                             </Text>
-                        </View>
-
-                        <View style={classes.row}>
-                            <Text style={classes.legendRow}>
-                                Numero de telefono principal
-                            </Text>
-
-                            <View style={classes.rowPhoneNumber}>
-                                <TouchableOpacity
-                                    style={[
-                                        GlobalStyles.textInput,
-                                        {
-                                            marginRight: 10,
-                                            justifyContent: "center",
-                                        },
-                                    ]}
-                                    onPress={_ => setModalCountry(true)}>
-                                    <Text
-                                        style={{
-                                            color: Colors.colorYellow,
-                                        }}>
-                                        {state.country.phoneCode}
-                                    </Text>
-                                </TouchableOpacity>
-
-                                <TextInput
-                                    style={[
-                                        GlobalStyles.textInput,
-                                        { flex: 1 },
-                                    ]}
-                                    placeholder="Ingrese numero de telefono"
-                                    placeholderTextColor="#CCC"
-                                    autoCorrect={false}
-                                    keyboardType="numeric"
-                                    keyboardAppearance="dark"
-                                />
-                            </View>
                         </View>
 
                         <View style={classes.row}>
@@ -240,24 +203,6 @@ const ECommerRegister = () => {
                         <Text style={classes.textTitle}>
                             3. Nacionalidad y residencia
                             </Text>
-                    </View>
-
-                    <View style={classes.row}>
-                        <View style={classes.labelsRow}>
-                            <Text style={classes.legendRow}>
-                                Pais de residencia
-                                </Text>
-                            <Text style={classes.required}>Requerido</Text>
-                        </View>
-                        <View style={GlobalStyles.containerPicker}>
-                            <Picker style={GlobalStyles.picker}>
-                                <Picker.Item
-                                    label="Seleccione país de residencia"
-                                    value={1}
-                                />
-                                <Picker.Item label="Cedula" value={2} />
-                            </Picker>
-                        </View>
                     </View>
 
                     <View style={classes.row}>
@@ -325,16 +270,6 @@ const ECommerRegister = () => {
                     <View style={classes.row}>
                         <View style={classes.labelsRow}>
                             <Text style={classes.legendRow}>
-                                Monto de inversion estimado mensual
-                                </Text>
-                            <Text style={classes.required}>Requerido</Text>
-                        </View>
-                        <TextInput style={GlobalStyles.textInput} />
-                    </View>
-
-                    <View style={classes.row}>
-                        <View style={classes.labelsRow}>
-                            <Text style={classes.legendRow}>
                                 ¿Cuál es su profesión actualmente?
                                 </Text>
                             <Text style={classes.required}>Requerido</Text>
@@ -377,9 +312,7 @@ const ECommerRegister = () => {
 
                 </ViewAnimation>}
 
-                {state.tab === 3 &&
-
-                    <ViewAnimation style={classes.tab} animation="fadeIn">
+                {state.tab === 3 && <ViewAnimation style={classes.tab} animation="fadeIn">
                         <View style={classes.containerTitle}>
                             <Text style={classes.containerTitleText}>
                                 Información del representante legal
@@ -521,9 +454,8 @@ const ECommerRegister = () => {
                             <TextInput style={GlobalStyles.textInput} />
                         </View>
 
-                    </ViewAnimation>
-
-                }
+                    </ViewAnimation>}
+                    
                 {state.tab === 4 && <ViewAnimation style={classes.tab} animation="fadeIn">
 
                     <View style={classes.containerTitle}>
@@ -619,7 +551,6 @@ const ECommerRegister = () => {
                     </View>
 
                 </ViewAnimation>}
-
                 
                 {state.tab === 5 && <ViewAnimation style={classes.tab} animation="fadeIn">
 
