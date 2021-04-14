@@ -13,13 +13,28 @@ import countries from "../../utils/countries.json"
 
 // Import Components
 import Container from "../../components/Container/Container"
-import { View as ViewAnimation } from "react-native-animatable"
-import { Picker } from "@react-native-picker/picker"
+import CheckBox from "react-native-check-box"
 import Modal from "react-native-modal"
 import UploadImage from "../../components/UploadImage/UploadImage"
-import CheckBox from "react-native-check-box"
+import { View as ViewAnimation } from "react-native-animatable"
+import { Picker } from "@react-native-picker/picker"
+import Icon from "react-native-vector-icons/MaterialIcons"
 
 const initialState = {
+    identificationType: 1,
+    identificationNumber: "",
+    alternativeNumber: "",
+    nationality: "",
+    phoneCodeNationality: "",
+    currencyNationality: "",
+    province: "",
+    direction1: "",
+    direction2: "",
+    foundsOrigin: 1,
+    profession: "",
+    profilePictureId: null,
+    identificationPictureId: null,
+
     country: countries[0],
     filter: "",
 
@@ -41,6 +56,32 @@ const ECommerRegister = () => {
     // Estado que indica si muestra la modal de paises
     const [modalCoutry, setModalCountry] = useState(false)
 
+    // Estados que permiten previsualizar las contraseñas
+    const [showPassword, setShowPassword] = useState(false)
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+    const [confirmPassword, setConfirmPassword] = useState("")
+
+    // Hacemos la peticion al server
+    const submitInformation = async () => {
+        try {
+            const dataSent = {
+                identificationType: state.identificationType,
+                identificationNumber: state.identificationNumber,
+                alternativeNumber: state.alternativeNumber,
+                nationality: state.nationality,
+                phoneCodeNationality: state.phoneCodeNationality,
+                currencyNationality: state.currencyNationality,
+                province: state.province,
+                direction1: state.direction1,
+                direction2: state.direction2,
+                foundsOrigin: state.foundsOrigin,
+                profession: state.profession,
+            }
+        } catch (error) {
+            errorMessage(error.toString())
+        }
+    }
+
     /**
      * Funcion que permite guardar la seleccion del pais
      * @param {*} item
@@ -56,7 +97,7 @@ const ECommerRegister = () => {
         if (
             item.name.length > 0 &&
             item.name.toLowerCase().search(state.filter.toLocaleLowerCase()) >
-            -1
+                -1
         ) {
             return (
                 <TouchableOpacity
@@ -118,9 +159,79 @@ const ECommerRegister = () => {
                                 <Text style={classes.legendRow}>
                                     Contraseña de seguridad
                                 </Text>
-                                <Text style={classes.required}>Requerido</Text>
                             </View>
-                            <TextInput style={GlobalStyles.textInput} />
+                            <View
+                                style={[
+                                    classes.textInputWithImage,
+                                    GlobalStyles.textInput,
+                                ]}>
+                                <TextInput
+                                    secureTextEntry={!showPassword}
+                                    value={state.password}
+                                    onChangeText={payload =>
+                                        dispatch({ type: "password", payload })
+                                    }
+                                    placeholder="Contraseña"
+                                    placeholderTextColor="#CCC"
+                                    style={classes.textInputCol}
+                                />
+                                <TouchableOpacity
+                                    onPress={e =>
+                                        setShowPassword(!showPassword)
+                                    }
+                                    style={classes.touchableCol}>
+                                    <Icon
+                                        name={
+                                            showPassword
+                                                ? "visibility-off"
+                                                : "visibility"
+                                        }
+                                        color={Colors.colorYellow}
+                                        size={18}
+                                    />
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+
+                        <View style={classes.row}>
+                            <View style={classes.labelsRow}>
+                                <Text style={classes.legendRow}>
+                                    Repetir contraseña de seguridad
+                                </Text>
+                            </View>
+                            <View
+                                style={[
+                                    classes.textInputWithImage,
+                                    GlobalStyles.textInput,
+                                ]}>
+                                <TextInput
+                                    secureTextEntry={!showConfirmPassword}
+                                    value={confirmPassword}
+                                    onChangeText={value =>
+                                        setConfirmPassword(value)
+                                    }
+                                    placeholder="Contraseña"
+                                    placeholderTextColor="#CCC"
+                                    style={classes.textInputCol}
+                                />
+                                <TouchableOpacity
+                                    onPress={e =>
+                                        setShowConfirmPassword(
+                                            !showConfirmPassword,
+                                        )
+                                    }
+                                    style={classes.touchableCol}>
+                                    <Icon
+                                        name={
+                                            showConfirmPassword
+                                                ? "visibility-off"
+                                                : "visibility"
+                                        }
+                                        color={Colors.colorYellow}
+                                        size={18}
+                                    />
+                                </TouchableOpacity>
+                            </View>
                         </View>
 
                         <View style={classes.row}>
@@ -193,126 +304,132 @@ const ECommerRegister = () => {
                                 />
                             </View>
                         </View>
-
-
                     </ViewAnimation>
                 )}
-                {state.tab === 1 && <ViewAnimation style={classes.tab} animation="fadeIn">
-
-                    <View style={classes.containerTitle}>
-                        <Text style={classes.textTitle}>
-                            3. Nacionalidad y residencia
+                {state.tab === 1 && (
+                    <ViewAnimation style={classes.tab} animation="fadeIn">
+                        <View style={classes.containerTitle}>
+                            <Text style={classes.textTitle}>
+                                3. Nacionalidad y residencia
                             </Text>
-                    </View>
-
-                    <View style={classes.row}>
-                        <View style={classes.labelsRow}>
-                            <Text style={classes.legendRow}>
-                                Estado/Provincia/Región
-                                </Text>
-                            <Text style={classes.required}>Requerido</Text>
                         </View>
-                        <TextInput style={GlobalStyles.textInput} />
-                    </View>
 
-                    <View style={classes.row}>
-                        <View style={classes.labelsRow}>
-                            <Text style={classes.legendRow}>
-                                Dirección (Línea 1)
+                        <View style={classes.row}>
+                            <View style={classes.labelsRow}>
+                                <Text style={classes.legendRow}>
+                                    Estado/Provincia/Región
                                 </Text>
-                            <Text style={classes.required}>Requerido</Text>
+                                <Text style={classes.required}>Requerido</Text>
+                            </View>
+                            <TextInput style={GlobalStyles.textInput} />
                         </View>
-                        <TextInput style={GlobalStyles.textInput} />
-                    </View>
 
-                    <View style={classes.row}>
-                        <View style={classes.labelsRow}>
-                            <Text style={classes.legendRow}>
-                                Dirección (Línea 2)
+                        <View style={classes.row}>
+                            <View style={classes.labelsRow}>
+                                <Text style={classes.legendRow}>
+                                    Dirección (Línea 1)
                                 </Text>
-                            <Text style={classes.required}>Requerido</Text>
+                                <Text style={classes.required}>Requerido</Text>
+                            </View>
+                            <TextInput style={GlobalStyles.textInput} />
                         </View>
-                        <TextInput style={GlobalStyles.textInput} />
-                    </View>
 
-                </ViewAnimation>}
+                        <View style={classes.row}>
+                            <View style={classes.labelsRow}>
+                                <Text style={classes.legendRow}>
+                                    Dirección (Línea 2)
+                                </Text>
+                                <Text style={classes.required}>Requerido</Text>
+                            </View>
+                            <TextInput style={GlobalStyles.textInput} />
+                        </View>
+                    </ViewAnimation>
+                )}
 
-                {state.tab === 2 && <ViewAnimation style={classes.tab} animation="fadeIn">
+                {state.tab === 2 && (
+                    <ViewAnimation style={classes.tab} animation="fadeIn">
+                        <View style={classes.row}>
+                            <View style={classes.containerTitle}>
+                                <Text style={classes.textTitle}>
+                                    4. Preguntas de control
+                                </Text>
+                            </View>
+                        </View>
 
-                    <View style={classes.row}>
+                        <View style={classes.row}>
+                            <View style={classes.labelsRow}>
+                                <Text style={classes.legendRow}>
+                                    ¿De dónde proviene su capital?
+                                </Text>
+                                <Text style={classes.required}>Requerido</Text>
+                            </View>
+                            <View style={GlobalStyles.containerPicker}>
+                                <Picker style={GlobalStyles.picker}>
+                                    <Picker.Item
+                                        label="seleccionar respuesta"
+                                        value={1}
+                                    />
+                                    <Picker.Item label="Cedula" value={2} />
+                                </Picker>
+                            </View>
+                        </View>
+
+                        <View style={classes.row}>
+                            <View style={classes.labelsRow}>
+                                <Text style={classes.legendRow}>
+                                    ¿Cuál es su profesión actualmente?
+                                </Text>
+                                <Text style={classes.required}>Requerido</Text>
+                            </View>
+                            <TextInput style={GlobalStyles.textInput} />
+                        </View>
 
                         <View style={classes.containerTitle}>
                             <Text style={classes.textTitle}>
-                                4. Preguntas de control
+                                5. Foto de perfil y verificación
                             </Text>
                         </View>
 
-                    </View>
-
-                    <View style={classes.row}>
-                        <View style={classes.labelsRow}>
-                            <Text style={classes.legendRow}>
-                                ¿De dónde proviene su capital?
+                        <View style={classes.position}>
+                            <View style={classes.labelsRow}>
+                                <Text style={classes.textImage}>
+                                    Subir foto de perfil
                                 </Text>
-                            <Text style={classes.required}>Requerido</Text>
+                            </View>
+                            <UploadImage />
                         </View>
-                        <View style={GlobalStyles.containerPicker}>
-                            <Picker style={GlobalStyles.picker}>
-                                <Picker.Item
-                                    label="seleccionar respuesta"
-                                    value={1}
+
+                        <View style={classes.position}>
+                            <View style={classes.labelsRow}>
+                                <Text style={classes.textImage}>
+                                    Subir foto frontal sosteniendo su ID
+                                </Text>
+                            </View>
+                            <UploadImage />
+                        </View>
+
+                        <View style={classes.containerTitle}>
+                            <Text style={classes.textTitle}>
+                                6. Beneficiario
+                            </Text>
+                        </View>
+                        <View style={classes.row}>
+                            <View style={classes.checkContainer}>
+                                <Text style={classes.legendSeePassword}>
+                                    Añadir Beneficiario
+                                </Text>
+                                <CheckBox
+                                    checkBoxColor={Colors.colorYellow}
+                                    isChecked={checkState}
+                                    onClick={_ => setCheckState(!checkState)}
                                 />
-                                <Picker.Item label="Cedula" value={2} />
-                            </Picker>
+                            </View>
                         </View>
-                    </View>
+                    </ViewAnimation>
+                )}
 
-                    <View style={classes.row}>
-                        <View style={classes.labelsRow}>
-                            <Text style={classes.legendRow}>
-                                ¿Cuál es su profesión actualmente?
-                                </Text>
-                            <Text style={classes.required}>Requerido</Text>
-                        </View>
-                        <TextInput style={GlobalStyles.textInput} />
-                    </View>
-
-                    <View style={classes.containerTitle}>
-                        <Text style={classes.textTitle}>
-                            5. Foto de perfil y verificación
-                            </Text>
-                    </View>
-
-                    <View style={classes.position}>
-                        <View style={classes.labelsRow}>
-                            <Text style={classes.textImage}>Subir foto de perfil</Text>
-                        </View>
-                        <UploadImage />
-                    </View>
-                    <View style={classes.position}>
-                        <View style={classes.labelsRow}>
-                            <Text style={classes.textImage}>Subir foto frontal sosteniendo su ID</Text>
-                        </View>
-                        <UploadImage />
-                    </View>
-
-                    <View style={classes.containerTitle} >
-                        <Text style={classes.textTitle}>6. Beneficiario</Text>
-                    </View>
-                    <View style={classes.row}>
-                        <View style={classes.checkContainer}>
-                            <Text style={classes.legendSeePassword}>Añadir Beneficiario</Text>
-                            <CheckBox
-                                checkBoxColor={Colors.colorYellow}
-                                isChecked={checkState}
-                                onClick={_ => setCheckState(!checkState)}
-                            />
-                        </View>
-                    </View>
-
-                </ViewAnimation>}
-
-                {state.tab === 3 && <ViewAnimation style={classes.tab} animation="fadeIn">
+                {state.tab === 3 && (
+                    <ViewAnimation style={classes.tab} animation="fadeIn">
                         <View style={classes.containerTitle}>
                             <Text style={classes.containerTitleText}>
                                 Información del representante legal
@@ -441,7 +558,6 @@ const ECommerRegister = () => {
                                     keyboardAppearance="dark"
                                 />
                             </View>
-
                         </View>
 
                         <View style={classes.row}>
@@ -453,208 +569,202 @@ const ECommerRegister = () => {
                             </View>
                             <TextInput style={GlobalStyles.textInput} />
                         </View>
-
-                    </ViewAnimation>}
-                    
-                {state.tab === 4 && <ViewAnimation style={classes.tab} animation="fadeIn">
-
-                    <View style={classes.containerTitle}>
-                        <Text style={classes.textTitle}>
-                            3. Nacionalidad y residencia
-                        </Text>
-                    </View>
-
-                    <View style={classes.row}>
-                        <View style={classes.labelsRow}>
-                            <Text style={classes.legendRow}>
-                                Nacionalidad
-                        </Text>
-                            <Text style={classes.required}>Requerido</Text>
-                        </View>
-                        <View style={GlobalStyles.containerPicker}>
-                            <Picker style={GlobalStyles.picker}>
-                                <Picker.Item
-                                    label="Seleccione país de origen"
-                                    value={1}
-                                />
-                                <Picker.Item label="Cedula" value={2} />
-                            </Picker>
-                        </View>
-                    </View>
-
-                    <View style={classes.row}>
-                        <View style={classes.labelsRow}>
-                            <Text style={classes.legendRow}>
-                                Pais de residencia
+                    </ViewAnimation>
+                )}
+                {state.tab === 4 && (
+                    <ViewAnimation style={classes.tab} animation="fadeIn">
+                        <View style={classes.containerTitle}>
+                            <Text style={classes.textTitle}>
+                                3. Nacionalidad y residencia
                             </Text>
-                            <Text style={classes.required}>Requerido</Text>
                         </View>
-                        <View style={GlobalStyles.containerPicker}>
-                            <Picker style={GlobalStyles.picker}>
-                                <Picker.Item
-                                    label="Seleccione país de residencia"
-                                    value={1}
-                                />
-                                <Picker.Item label="Cedula" value={2} />
-                            </Picker>
+
+                        <View style={classes.row}>
+                            <View style={classes.labelsRow}>
+                                <Text style={classes.legendRow}>
+                                    Nacionalidad
+                                </Text>
+                                <Text style={classes.required}>Requerido</Text>
+                            </View>
+                            <View style={GlobalStyles.containerPicker}>
+                                <Picker style={GlobalStyles.picker}>
+                                    <Picker.Item
+                                        label="Seleccione país de origen"
+                                        value={1}
+                                    />
+                                    <Picker.Item label="Cedula" value={2} />
+                                </Picker>
+                            </View>
                         </View>
-                    </View>
 
-                    <View style={classes.row}>
-                        <View style={classes.labelsRow}>
-                            <Text style={classes.legendRow}>
-                                Estado/Provincia/Región
-                            </Text>
-                            <Text style={classes.required}>Requerido</Text>
+                        <View style={classes.row}>
+                            <View style={classes.labelsRow}>
+                                <Text style={classes.legendRow}>
+                                    Pais de residencia
+                                </Text>
+                                <Text style={classes.required}>Requerido</Text>
+                            </View>
+                            <View style={GlobalStyles.containerPicker}>
+                                <Picker style={GlobalStyles.picker}>
+                                    <Picker.Item
+                                        label="Seleccione país de residencia"
+                                        value={1}
+                                    />
+                                    <Picker.Item label="Cedula" value={2} />
+                                </Picker>
+                            </View>
                         </View>
-                        <TextInput style={GlobalStyles.textInput} />
-                    </View>
 
-                    <View style={classes.row}>
-                        <View style={classes.labelsRow}>
-                            <Text style={classes.legendRow}>
-                                Ciudad
-                            </Text>
-                            <Text style={classes.required}>Requerido</Text>
+                        <View style={classes.row}>
+                            <View style={classes.labelsRow}>
+                                <Text style={classes.legendRow}>
+                                    Estado/Provincia/Región
+                                </Text>
+                                <Text style={classes.required}>Requerido</Text>
+                            </View>
+                            <TextInput style={GlobalStyles.textInput} />
                         </View>
-                        <TextInput style={GlobalStyles.textInput} />
-                    </View>
 
-                    <View style={classes.row}>
-                        <View style={classes.labelsRow}>
-                            <Text style={classes.legendRow}>
-                                Dirección (Línea 1)
-                            </Text>
-                            <Text style={classes.required}>Requerido</Text>
+                        <View style={classes.row}>
+                            <View style={classes.labelsRow}>
+                                <Text style={classes.legendRow}>Ciudad</Text>
+                                <Text style={classes.required}>Requerido</Text>
+                            </View>
+                            <TextInput style={GlobalStyles.textInput} />
                         </View>
-                        <TextInput style={GlobalStyles.textInput} />
-                    </View>
 
-                    <View style={classes.row}>
-                        <View style={classes.labelsRow}>
-                            <Text style={classes.legendRow}>
-                                Dirección (Línea 2)
-                            </Text>
-                            <Text style={classes.required}>Requerido</Text>
+                        <View style={classes.row}>
+                            <View style={classes.labelsRow}>
+                                <Text style={classes.legendRow}>
+                                    Dirección (Línea 1)
+                                </Text>
+                                <Text style={classes.required}>Requerido</Text>
+                            </View>
+                            <TextInput style={GlobalStyles.textInput} />
                         </View>
-                        <TextInput style={GlobalStyles.textInput} />
-                    </View>
 
-                    <View style={classes.row}>
-                        <View style={classes.labelsRow}>
-                            <Text style={classes.legendRow}>
-                                Codigo postal
-                            </Text>
-                            <Text style={classes.required}>Requerido</Text>
+                        <View style={classes.row}>
+                            <View style={classes.labelsRow}>
+                                <Text style={classes.legendRow}>
+                                    Dirección (Línea 2)
+                                </Text>
+                                <Text style={classes.required}>Requerido</Text>
+                            </View>
+                            <TextInput style={GlobalStyles.textInput} />
                         </View>
-                        <TextInput style={GlobalStyles.textInput} />
-                    </View>
 
-                </ViewAnimation>}
-                
-                {state.tab === 5 && <ViewAnimation style={classes.tab} animation="fadeIn">
+                        <View style={classes.row}>
+                            <View style={classes.labelsRow}>
+                                <Text style={classes.legendRow}>
+                                    Codigo postal
+                                </Text>
+                                <Text style={classes.required}>Requerido</Text>
+                            </View>
+                            <TextInput style={GlobalStyles.textInput} />
+                        </View>
+                    </ViewAnimation>
+                )}
 
-                    <View style={classes.row}>
+                {state.tab === 5 && (
+                    <ViewAnimation style={classes.tab} animation="fadeIn">
+                        <View style={classes.row}>
+                            <View style={classes.containerTitle}>
+                                <Text style={classes.textTitle}>
+                                    4. Preguntas de control
+                                </Text>
+                            </View>
+                        </View>
+
+                        <View style={classes.row}>
+                            <View style={classes.labelsRow}>
+                                <Text style={classes.legendRow}>
+                                    ¿De dónde proviene su capital?
+                                </Text>
+                                <Text style={classes.required}>Requerido</Text>
+                            </View>
+                            <View style={GlobalStyles.containerPicker}>
+                                <Picker style={GlobalStyles.picker}>
+                                    <Picker.Item
+                                        label="seleccionar respuesta"
+                                        value={1}
+                                    />
+                                    <Picker.Item label="Cedula" value={2} />
+                                </Picker>
+                            </View>
+                        </View>
+
+                        <View style={classes.row}>
+                            <View style={classes.labelsRow}>
+                                <Text style={classes.legendRow}>
+                                    Monto de inversion estimado mensual
+                                </Text>
+                                <Text style={classes.required}>Requerido</Text>
+                            </View>
+                            <TextInput style={GlobalStyles.textInput} />
+                        </View>
+
+                        <View style={classes.row}>
+                            <View style={classes.labelsRow}>
+                                <Text style={classes.legendRow}>
+                                    ¿Cuál es su profesión actualmente?
+                                </Text>
+                                <Text style={classes.required}>Requerido</Text>
+                            </View>
+                            <TextInput style={GlobalStyles.textInput} />
+                        </View>
+
+                        <View style={classes.row}>
+                            <View style={classes.labelsRow}>
+                                <Text style={classes.legendRow}>
+                                    Parentesco con el titular de la cuenta
+                                </Text>
+                                <Text style={classes.required}>Requerido</Text>
+                            </View>
+                            <View style={GlobalStyles.containerPicker}>
+                                <Picker style={GlobalStyles.picker}>
+                                    <Picker.Item
+                                        label="seleccionar respuesta"
+                                        value={1}
+                                    />
+                                    <Picker.Item label="Cedula" value={2} />
+                                </Picker>
+                            </View>
+                        </View>
 
                         <View style={classes.containerTitle}>
                             <Text style={classes.textTitle}>
-                                4. Preguntas de control
+                                5. Foto de perfil y verificación
                             </Text>
                         </View>
 
-                    </View>
-
-                    <View style={classes.row}>
-                        <View style={classes.labelsRow}>
-                            <Text style={classes.legendRow}>
-                                ¿De dónde proviene su capital?
+                        <View style={classes.position}>
+                            <View style={classes.labelsRow}>
+                                <Text style={classes.textImage}>
+                                    Subir foto de perfil
                                 </Text>
-                            <Text style={classes.required}>Requerido</Text>
+                            </View>
+                            <UploadImage />
                         </View>
-                        <View style={GlobalStyles.containerPicker}>
-                            <Picker style={GlobalStyles.picker}>
-                                <Picker.Item
-                                    label="seleccionar respuesta"
-                                    value={1}
-                                />
-                                <Picker.Item label="Cedula" value={2} />
-                            </Picker>
-                        </View>
-                    </View>
-
-                    <View style={classes.row}>
-                        <View style={classes.labelsRow}>
-                            <Text style={classes.legendRow}>
-                                Monto de inversion estimado mensual
+                        <View style={classes.position}>
+                            <View style={classes.labelsRow}>
+                                <Text style={classes.textImage}>
+                                    Subir foto frontal sosteniendo su ID
                                 </Text>
-                            <Text style={classes.required}>Requerido</Text>
+                            </View>
+                            <UploadImage />
                         </View>
-                        <TextInput style={GlobalStyles.textInput} />
-                    </View>
-
-                    <View style={classes.row}>
-                        <View style={classes.labelsRow}>
-                            <Text style={classes.legendRow}>
-                                ¿Cuál es su profesión actualmente?
-                                </Text>
-                            <Text style={classes.required}>Requerido</Text>
-                        </View>
-                        <TextInput style={GlobalStyles.textInput} />
-                    </View>
-
-                    <View style={classes.row}>
-                        <View style={classes.labelsRow}>
-                            <Text style={classes.legendRow}>
-                                Parentesco con el titular de la cuenta
-                                </Text>
-                            <Text style={classes.required}>Requerido</Text>
-                        </View>
-                        <View style={GlobalStyles.containerPicker}>
-                            <Picker style={GlobalStyles.picker}>
-                                <Picker.Item
-                                    label="seleccionar respuesta"
-                                    value={1}
-                                />
-                                <Picker.Item label="Cedula" value={2} />
-                            </Picker>
-                        </View>
-                    </View>
-
-                    <View style={classes.containerTitle}>
-                        <Text style={classes.textTitle}>
-                            5. Foto de perfil y verificación
-                            </Text>
-                    </View>
-
-                    <View style={classes.position}>
-                        <View style={classes.labelsRow}>
-                            <Text style={classes.textImage}>Subir foto de perfil</Text>
-                        </View>
-                        <UploadImage />
-                    </View>
-                    <View style={classes.position}>
-                        <View style={classes.labelsRow}>
-                            <Text style={classes.textImage}>Subir foto frontal sosteniendo su ID</Text>
-                        </View>
-                        <UploadImage />
-                    </View>
-
-                </ViewAnimation>}
-
-
+                    </ViewAnimation>
+                )}
             </View>
 
             <View style={classes.rowButtons}>
-                <TouchableOpacity
-                    onPress={previousPage}>
+                <TouchableOpacity onPress={previousPage}>
                     <Text style={classes.textBack}>Atras</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     onPress={nextPage}
                     style={GlobalStyles.buttonPrimary}>
-                    <Text style={GlobalStyles.textButton}>
-                        Siguiente
-                                </Text>
+                    <Text style={GlobalStyles.textButton}>Siguiente</Text>
                 </TouchableOpacity>
             </View>
 
