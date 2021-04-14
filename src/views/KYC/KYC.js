@@ -8,7 +8,7 @@ import useStyles from "../../hooks/useStyles.hook"
 import { ECommerRegisterS } from "../../Styles/Views/index"
 
 // Import Constans
-import { GlobalStyles, errorMessage, Colors } from "../../utils/constants"
+import { GlobalStyles, errorMessage, Colors, RFValue } from "../../utils/constants"
 import countries from "../../utils/countries.json"
 
 // Import Components
@@ -19,6 +19,8 @@ import UploadImage from "../../components/UploadImage/UploadImage"
 import { View as ViewAnimation } from "react-native-animatable"
 import { Picker } from "@react-native-picker/picker"
 import Icon from "react-native-vector-icons/MaterialIcons"
+import DateTimePicker from '@react-native-community/datetimepicker';
+import moment from "moment"
 
 const initialState = {
     identificationType: 1,
@@ -52,6 +54,9 @@ const ECommerRegister = () => {
     const classes = useStyles(ECommerRegisterS)
     const [state, dispatch] = useReducer(reducer, initialState)
     const [checkState, setCheckState] = useState(false)
+    const [showDate, setShowDate] = useState(false)
+    const [birthday, setBirthday] = useState(new Date())
+
 
     // Estado que indica si muestra la modal de paises
     const [modalCoutry, setModalCountry] = useState(false)
@@ -97,7 +102,7 @@ const ECommerRegister = () => {
         if (
             item.name.length > 0 &&
             item.name.toLowerCase().search(state.filter.toLocaleLowerCase()) >
-                -1
+            -1
         ) {
             return (
                 <TouchableOpacity
@@ -135,6 +140,12 @@ const ECommerRegister = () => {
         const { tab } = state
 
         dispatch({ type: "tab", payload: tab === 0 ? tab : tab - 1 })
+    }
+
+    const changeDate = (event, selectedDate) => {
+        const currentDate = selectedDate || birthday
+        setBirthday(currentDate)
+        setShowDate(false)
     }
 
     return (
@@ -259,7 +270,10 @@ const ECommerRegister = () => {
                                 </Text>
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
-                            <TextInput style={GlobalStyles.textInput} />
+                            <TextInput
+                                placeholder={'Ingrese número de identificación'}
+                                placeholderTextColor={'#CCC'}
+                                style={GlobalStyles.textInput} />
                         </View>
 
                         <View style={classes.containerTitle}>
@@ -321,7 +335,10 @@ const ECommerRegister = () => {
                                 </Text>
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
-                            <TextInput style={GlobalStyles.textInput} />
+                            <TextInput
+                                placeholder={'Ingrese estado, provincia o región'}
+                                placeholderTextColor={'#CCC'}
+                                style={GlobalStyles.textInput} />
                         </View>
 
                         <View style={classes.row}>
@@ -331,7 +348,10 @@ const ECommerRegister = () => {
                                 </Text>
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
-                            <TextInput style={GlobalStyles.textInput} />
+                            <TextInput
+                                placeholder={'Ingrese dirección'}
+                                placeholderTextColor={'#CCC'}
+                                style={GlobalStyles.textInput} />
                         </View>
 
                         <View style={classes.row}>
@@ -341,7 +361,10 @@ const ECommerRegister = () => {
                                 </Text>
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
-                            <TextInput style={GlobalStyles.textInput} />
+                            <TextInput
+                                placeholder={'Ingrese dirección'}
+                                placeholderTextColor={'#CCC'}
+                                style={GlobalStyles.textInput} />
                         </View>
                     </ViewAnimation>
                 )}
@@ -381,7 +404,10 @@ const ECommerRegister = () => {
                                 </Text>
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
-                            <TextInput style={GlobalStyles.textInput} />
+                            <TextInput
+                                placeholder={'Ingrese profesión'}
+                                placeholderTextColor={'#CCC'}
+                                style={GlobalStyles.textInput} />
                         </View>
 
                         <View style={classes.containerTitle}>
@@ -445,11 +471,54 @@ const ECommerRegister = () => {
                         <View style={classes.row}>
                             <View style={classes.labelsRow}>
                                 <Text style={classes.legendRow}>
-                                    Nombre completo
+                                    Nombre(s)
                                 </Text>
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
-                            <TextInput style={GlobalStyles.textInput} />
+                            <TextInput
+                                placeholder={'Ingrese nombre(s)'}
+                                placeholderTextColor={'#CCC'}
+                                style={GlobalStyles.textInput} />
+                        </View>
+
+                        <View style={classes.row}>
+                            <View style={classes.labelsRow}>
+                                <Text style={classes.legendRow}>
+                                    Apellido(s)
+                                </Text>
+                                <Text style={classes.required}>Requerido</Text>
+                            </View>
+                            <TextInput
+                                placeholder={'Ingrese apellido(s)'}
+                                placeholderTextColor={'#CCC'}
+                                style={GlobalStyles.textInput} />
+                        </View>
+
+                        <View style={classes.row}>
+                            <View style={classes.labelsRow}>
+                                <Text style={classes.legendRow}>
+                                    Fecha de nacimiento
+                                </Text>
+                                <Text style={classes.required}>Requerido</Text>
+                            </View>
+                            <View style={classes.column}>
+
+                                <TouchableOpacity onPress={_=>setShowDate(true)} >
+                                    <Icon name='perm-contact-calendar' size={RFValue(40)} color={Colors.colorYellow} />
+                                </TouchableOpacity>
+
+                                <View style={classes.borderLeft}>
+                                    <Text style={classes.legendRow}>{moment(birthday).format('DD.MM.YYYY')}</Text>
+                                </View>
+
+                                {showDate && (<DateTimePicker
+                                    testID='datetimepicker'
+                                    value={birthday}
+                                    onChange={changeDate}
+                                    mode="date"
+                                    display='spinner'
+                                />)}
+                            </View>
                         </View>
 
                         <View style={classes.row}>
@@ -477,7 +546,10 @@ const ECommerRegister = () => {
                                 </Text>
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
-                            <TextInput style={GlobalStyles.textInput} />
+                            <TextInput 
+                            placeholder={'Ingrese número de identificación'}
+                            placeholderTextColor={'#CCC'}
+                            style={GlobalStyles.textInput} />
                         </View>
 
                         <View style={classes.containerTitle}>
@@ -488,7 +560,7 @@ const ECommerRegister = () => {
 
                         <View style={classes.row}>
                             <Text style={classes.legendRow}>
-                                Numero de telefono principal
+                                Número de telefono principal
                             </Text>
 
                             <View style={classes.rowPhoneNumber}>
@@ -514,7 +586,7 @@ const ECommerRegister = () => {
                                         GlobalStyles.textInput,
                                         { flex: 1 },
                                     ]}
-                                    placeholder="Ingrese numero de telefono"
+                                    placeholder="Ingrese número de telefono"
                                     placeholderTextColor="#CCC"
                                     autoCorrect={false}
                                     keyboardType="numeric"
@@ -525,7 +597,7 @@ const ECommerRegister = () => {
 
                         <View style={classes.row}>
                             <Text style={classes.legendRow}>
-                                Numero de telefono alternativo
+                                Número de telefono alternativo
                             </Text>
 
                             <View style={classes.rowPhoneNumber}>
@@ -551,7 +623,7 @@ const ECommerRegister = () => {
                                         GlobalStyles.textInput,
                                         { flex: 1 },
                                     ]}
-                                    placeholder="Ingrese numero de telefono"
+                                    placeholder="Ingrese número de telefono"
                                     placeholderTextColor="#CCC"
                                     autoCorrect={false}
                                     keyboardType="numeric"
@@ -567,7 +639,10 @@ const ECommerRegister = () => {
                                 </Text>
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
-                            <TextInput style={GlobalStyles.textInput} />
+                            <TextInput 
+                            placeholder={'Ingrese correo'}
+                            placeholderTextColor={'#CCC'}
+                            style={GlobalStyles.textInput} />
                         </View>
                     </ViewAnimation>
                 )}
@@ -622,7 +697,10 @@ const ECommerRegister = () => {
                                 </Text>
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
-                            <TextInput style={GlobalStyles.textInput} />
+                            <TextInput
+                                placeholder={'Ingrese estado, provincia o región'}
+                                placeholderTextColor={'#ccc'}
+                                style={GlobalStyles.textInput} />
                         </View>
 
                         <View style={classes.row}>
@@ -630,7 +708,10 @@ const ECommerRegister = () => {
                                 <Text style={classes.legendRow}>Ciudad</Text>
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
-                            <TextInput style={GlobalStyles.textInput} />
+                            <TextInput
+                                placeholder={'Ingrese ciudad'}
+                                placeholderTextColor={'#ccc'}
+                                style={GlobalStyles.textInput} />
                         </View>
 
                         <View style={classes.row}>
@@ -640,7 +721,10 @@ const ECommerRegister = () => {
                                 </Text>
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
-                            <TextInput style={GlobalStyles.textInput} />
+                            <TextInput
+                                placeholder={'Ingrese dirección'}
+                                placeholderTextColor={'#ccc'}
+                                style={GlobalStyles.textInput} />
                         </View>
 
                         <View style={classes.row}>
@@ -650,7 +734,10 @@ const ECommerRegister = () => {
                                 </Text>
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
-                            <TextInput style={GlobalStyles.textInput} />
+                            <TextInput
+                                placeholder={'Ingrese dirección'}
+                                placeholderTextColor={'#ccc'}
+                                style={GlobalStyles.textInput} />
                         </View>
 
                         <View style={classes.row}>
@@ -660,7 +747,10 @@ const ECommerRegister = () => {
                                 </Text>
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
-                            <TextInput style={GlobalStyles.textInput} />
+                            <TextInput
+                                placeholder={'Ingrese dirección'}
+                                placeholderTextColor={'#ccc'}
+                                style={GlobalStyles.textInput} />
                         </View>
                     </ViewAnimation>
                 )}
@@ -696,21 +786,14 @@ const ECommerRegister = () => {
                         <View style={classes.row}>
                             <View style={classes.labelsRow}>
                                 <Text style={classes.legendRow}>
-                                    Monto de inversion estimado mensual
-                                </Text>
-                                <Text style={classes.required}>Requerido</Text>
-                            </View>
-                            <TextInput style={GlobalStyles.textInput} />
-                        </View>
-
-                        <View style={classes.row}>
-                            <View style={classes.labelsRow}>
-                                <Text style={classes.legendRow}>
                                     ¿Cuál es su profesión actualmente?
                                 </Text>
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
-                            <TextInput style={GlobalStyles.textInput} />
+                            <TextInput
+                                placeholder={'Ingrese profesión'}
+                                placeholderTextColor={'#ccc'}
+                                style={GlobalStyles.textInput} />
                         </View>
 
                         <View style={classes.row}>

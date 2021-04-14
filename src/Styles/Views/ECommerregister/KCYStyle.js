@@ -1,6 +1,14 @@
 import { Colors, RFValue } from "../../../utils/constants"
 
 export default {
+
+    borderLeft: { 
+        borderLeftWidth: 2, 
+        borderColor: Colors.colorYellow,
+        paddingLeft: RFValue(20),
+        marginLeft: RFValue(20),
+    },
+
     textInput: {
         paddingHorizontal: RFValue(10),
         height: RFValue(47),
@@ -41,7 +49,7 @@ export default {
     column: {
         flexDirection: "row",
         width: "100%",
-        marginVertical: 10,
+        alignItems: "center",
     },
     logo: {
         alignContent: "center",
