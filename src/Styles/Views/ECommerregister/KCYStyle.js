@@ -1,9 +1,8 @@
 import { Colors, RFValue } from "../../../utils/constants"
 
 export default {
-
-    borderLeft: { 
-        borderLeftWidth: 2, 
+    borderLeft: {
+        borderLeftWidth: 2,
         borderColor: Colors.colorYellow,
         paddingLeft: RFValue(20),
         marginLeft: RFValue(20),
@@ -158,9 +157,8 @@ export default {
     },
     rowButtons: {
         alignItems: "center",
-        // paddingTop: RFValue(15),
-        marginHorizontal: RFValue(25),
-        // marginVertical: RFValue(30),
+        marginHorizontal: RFValue(15),
+        marginVertical: RFValue(25),
         flexDirection: "row",
         justifyContent: "space-between",
     },

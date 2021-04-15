@@ -371,6 +371,21 @@ export const successMessage = (description = "", title = "AlyPay") => {
     })
 }
 
+/**Muestra una notificacion con estilo global */
+export const showNotification = (
+    message = "",
+    type = "info" | "error" | "warning",
+) => {
+    showMessage({
+        message: "Speed Tradings",
+        description: message,
+        color: "#FFF",
+        backgroundColor: "#EE5A24",
+        icon: "warning",
+        duration: 10000,
+    })
+}
+
 /**
  * Funcion que retorna las cabeceras de la peticions
  */

@@ -8,7 +8,12 @@ import useStyles from "../../hooks/useStyles.hook"
 import { ECommerRegisterS } from "../../Styles/Views/index"
 
 // Import Constans
-import { GlobalStyles, errorMessage, Colors, RFValue } from "../../utils/constants"
+import {
+    GlobalStyles,
+    errorMessage,
+    Colors,
+    RFValue,
+} from "../../utils/constants"
 import countries from "../../utils/countries.json"
 
 // Import Components
@@ -19,8 +24,9 @@ import UploadImage from "../../components/UploadImage/UploadImage"
 import { View as ViewAnimation } from "react-native-animatable"
 import { Picker } from "@react-native-picker/picker"
 import Icon from "react-native-vector-icons/MaterialIcons"
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker from "@react-native-community/datetimepicker"
 import moment from "moment"
+import validator from "validator"
 
 const initialState = {
     identificationType: 1,
@@ -36,11 +42,44 @@ const initialState = {
     profession: "",
     profilePictureId: null,
     identificationPictureId: null,
+    password: "",
 
     country: countries[0],
     filter: "",
 
-    tab: 0,
+    tab: 5,
+}
+
+const beneficiaryStateReducer = {
+    beneficiaryRelationship: 1,
+    beneficiaryFirstname: "",
+    beneficiaryLastname: "",
+    beneficiaryIdentificationType: 1,
+    beneficiarybirthday: new Date(),
+    beneficiaryIdentificationNumber: "",
+    beneficiaryPrincipalNumber: "",
+    beneficiaryAlternativeNumber: "",
+    beneficiaryEmail: "",
+    beneficiaryNationality: "",
+    beneficiaryPhoneCodeNationality: "",
+    beneficiaryCurrencyNationality: "",
+    beneficiaryResidence: "",
+    beneficiaryPhoneCodeResidence: "",
+    beneficiaryCurrencyResidence: "",
+    beneficiaryProvince: "",
+    beneficiaryCity: "",
+    beneficiaryTutor: 0,
+    beneficiaryDirection1: "",
+    beneficiaryDirection2: "",
+    beneficiaryPostalCode: "",
+    beneficiaryFoundsOrigin: 1,
+    beneficiaryEstimateMonthlyAmount: 0,
+    beneficiaryProfession: "",
+    beneficiaryProfilePictureId: null,
+    beneficiaryIdentificationPictureId: null,
+
+    beneficiaryCountry: countries[0],
+    beneticiaryFilter: "",
 }
 
 const reducer = (state, action) => {
@@ -52,11 +91,19 @@ const reducer = (state, action) => {
 
 const ECommerRegister = () => {
     const classes = useStyles(ECommerRegisterS)
+
+    // Estados iniciales de los impust
     const [state, dispatch] = useReducer(reducer, initialState)
-    const [checkState, setCheckState] = useState(false)
+    const [beneficiaryState, dispatchBeneficiary] = useReducer(
+        reducer,
+        beneficiaryStateReducer,
+    )
+
+    // Estado hace el cambio del CheckBox para el Cambio de leyenda cuando hay beneficiario
+    const [CheckState, setCheckState] = useState(false)
+
     const [showDate, setShowDate] = useState(false)
     const [birthday, setBirthday] = useState(new Date())
-
 
     // Estado que indica si muestra la modal de paises
     const [modalCoutry, setModalCountry] = useState(false)
@@ -102,7 +149,7 @@ const ECommerRegister = () => {
         if (
             item.name.length > 0 &&
             item.name.toLowerCase().search(state.filter.toLocaleLowerCase()) >
-            -1
+                -1
         ) {
             return (
                 <TouchableOpacity
@@ -119,17 +166,123 @@ const ECommerRegister = () => {
 
     const nextPage = () => {
         const { tab } = state
+
         try {
             switch (tab) {
                 case 0: {
+                    // Validamos que ahiga ingresado una contraseña
+                    if (state.password.trim().length === 0) {
+                        throw String("Ingrese una contraseña")
+                    }
+
+                    // Validamos que las contraseña sean igual
+                    if (state.password !== confirmPassword) {
+                        throw String("Las contraseñas no coinciden")
+                    }
+
+                    // Validamos que ahiga ingresado el numero de identificacion
+                    if (state.identificationNumber.trim().length === 0) {
+                        throw String("Ingrese un numero de identificacion")
+                    }
                     break
                 }
 
                 case 1: {
+                    // Validmos el Estado/Provincia/Region
+                    if (state.province.trim().length === 0) {
+                        throw String("Ingrese un Estado/Provincia/Region")
+                    }
+
+                    // Validamos la direccion principal
+                    if (state.direction1.trim().length === 0) {
+                        throw String("La Direccion es requerida")
+                    }
+                    break
+                }
+
+                case 2: {
+                    if (state.profession.trim().length === 0) {
+                        throw String("Es requerido su profesion actual")
+                    }
+                    break
+                }
+
+                case 3: {
+                    // Validamos el nombre del benificiario/Tutor
+                    if (
+                        beneficiaryState.beneficiaryFirstname.trim().length ===
+                        0
+                    ) {
+                        throw String("Ingresa un nombre")
+                    }
+
+                    // Validamos el apellido
+                    if (
+                        beneficiaryState.beneficiaryLastname.trim().length === 0
+                    ) {
+                        throw String("Ingrese un apellido")
+                    }
+
+                    // Validamos que ahiga ingresado el numero de identificacion
+                    if (
+                        beneficiaryState.beneficiaryIdentificationNumber.trim()
+                            .length <= 7
+                    ) {
+                        throw String("Ingrese un numero de identificacion")
+                    }
+
+                    // Validamos el numero de telefono
+                    if (
+                        beneficiaryState.beneficiaryPrincipalNumber.length <= 7
+                    ) {
+                        throw String("Ingrese numero de telefono")
+                    }
+
+                    // Validamos el Email
+                    if (!validator.isEmail(beneficiaryState.beneficiaryEmail)) {
+                        throw String("Ingrese un email valido")
+                    }
+                }
+
+                case 4: {
+                    // Validmos el Estado/Provincia/Region
+                    if (
+                        beneficiaryState.beneficiaryProvince.trim().length === 0
+                    ) {
+                        throw String("Ingrese un Estado/Provincia/Region")
+                    }
+
+                    // Validamos la ciudad en la que reside
+                    if (beneficiaryState.beneficiaryCity.trim().length === 0) {
+                        throw String("Ciudad es requerida")
+                    }
+
+                    // Validamos la direccion principal
+                    if (
+                        beneficiaryState.beneficiaryDirection1.trim().length ===
+                        0
+                    ) {
+                        throw String("La Direccion es requerida")
+                    }
+
+                    // Validamos el codigo postal de donde reside
+                    if (beneficiaryState.beneficiaryPostalCode.length < 3) {
+                        throw String("El codigo postal es requerido")
+                    }
+                    break
+                }
+
+                case 5: {
+                    if (
+                        beneficiaryState.beneficiaryProfession.trim().length ===
+                        0
+                    ) {
+                        throw String("Es requerido su profesion actual")
+                    }
                     break
                 }
             }
-            dispatch({ type: "tab", payload: tab === 5 ? tab : tab + 1 })
+            dispatch({ type: "tab", payload: tab + 1 })
         } catch (error) {
             errorMessage(error.toString())
         }
@@ -139,7 +292,7 @@ const ECommerRegister = () => {
     const previousPage = () => {
         const { tab } = state
 
-        dispatch({ type: "tab", payload: tab === 0 ? tab : tab - 1 })
+        dispatch({ type: "tab", payload: tab - 1 })
     }
 
     const changeDate = (event, selectedDate) => {
@@ -271,9 +424,17 @@ const ECommerRegister = () => {
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
                             <TextInput
-                                placeholder={'Ingrese número de identificación'}
-                                placeholderTextColor={'#CCC'}
-                                style={GlobalStyles.textInput} />
+                                placeholder={"Ingrese número de identificación"}
+                                placeholderTextColor={"#CCC"}
+                                style={GlobalStyles.textInput}
+                                value={state.identificationNumber}
+                                onChangeText={str =>
+                                    dispatch({
+                                        type: "identificationNumber",
+                                        payload: str,
+                                    })
+                                }
+                            />
                         </View>
 
                         <View style={classes.containerTitle}>
@@ -312,11 +473,31 @@ const ECommerRegister = () => {
                                     ]}
                                     placeholder="Ingrese numero de telefono"
                                     placeholderTextColor="#CCC"
+                                    value={state.alternativeNumber}
                                     autoCorrect={false}
                                     keyboardType="numeric"
                                     keyboardAppearance="dark"
+                                    onChangeText={payload =>
+                                        dispatch({
+                                            type: "alternativeNumber",
+                                            payload,
+                                        })
+                                    }
                                 />
                             </View>
+                        </View>
+
+                        <View style={classes.rowButtons}>
+                            <TouchableOpacity onPress={previousPage}>
+                                <Text style={classes.textBack}>Atras</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={nextPage}
+                                style={GlobalStyles.buttonPrimary}>
+                                <Text style={GlobalStyles.textButton}>
+                                    Siguiente
+                                </Text>
+                            </TouchableOpacity>
                         </View>
                     </ViewAnimation>
                 )}
@@ -336,9 +517,14 @@ const ECommerRegister = () => {
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
                             <TextInput
-                                placeholder={'Ingrese estado, provincia o región'}
-                                placeholderTextColor={'#CCC'}
-                                style={GlobalStyles.textInput} />
+                                style={GlobalStyles.textInput}
+                                placeholder="Estado/Provincia/Region"
+                                placeholderTextColor="#CCC"
+                                value={state.province}
+                                onChangeText={str =>
+                                    dispatch({ type: "province", payload: str })
+                                }
+                            />
                         </View>
 
                         <View style={classes.row}>
@@ -349,9 +535,17 @@ const ECommerRegister = () => {
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
                             <TextInput
-                                placeholder={'Ingrese dirección'}
-                                placeholderTextColor={'#CCC'}
-                                style={GlobalStyles.textInput} />
+                                style={GlobalStyles.textInput}
+                                placeholder="Ingrece Direccion"
+                                placeholderTextColor="#CCC"
+                                value={state.direction1}
+                                onChangeText={str =>
+                                    dispatch({
+                                        type: "direction1",
+                                        payload: str,
+                                    })
+                                }
+                            />
                         </View>
 
                         <View style={classes.row}>
@@ -359,12 +553,32 @@ const ECommerRegister = () => {
                                 <Text style={classes.legendRow}>
                                     Dirección (Línea 2)
                                 </Text>
-                                <Text style={classes.required}>Requerido</Text>
                             </View>
                             <TextInput
-                                placeholder={'Ingrese dirección'}
-                                placeholderTextColor={'#CCC'}
-                                style={GlobalStyles.textInput} />
+                                style={GlobalStyles.textInput}
+                                placeholder="Ingrece Direccion"
+                                placeholderTextColor="#CCC"
+                                value={state.direction2}
+                                onChangeText={str =>
+                                    dispatch({
+                                        type: "direction2",
+                                        payload: str,
+                                    })
+                                }
+                            />
+                        </View>
+
+                        <View style={classes.rowButtons}>
+                            <TouchableOpacity onPress={previousPage}>
+                                <Text style={classes.textBack}>Atras</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={nextPage}
+                                style={GlobalStyles.buttonPrimary}>
+                                <Text style={GlobalStyles.textButton}>
+                                    Siguiente
+                                </Text>
+                            </TouchableOpacity>
                         </View>
                     </ViewAnimation>
                 )}
@@ -405,9 +619,17 @@ const ECommerRegister = () => {
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
                             <TextInput
-                                placeholder={'Ingrese profesión'}
-                                placeholderTextColor={'#CCC'}
-                                style={GlobalStyles.textInput} />
+                                style={GlobalStyles.textInput}
+                                placeholder="Cual es tu profesion"
+                                placeholderTextColor="#CCC"
+                                value={state.profession}
+                                onChangeText={str =>
+                                    dispatch({
+                                        type: "profession",
+                                        payload: str,
+                                    })
+                                }
+                            />
                         </View>
 
                         <View style={classes.containerTitle}>
@@ -446,10 +668,23 @@ const ECommerRegister = () => {
                                 </Text>
                                 <CheckBox
                                     checkBoxColor={Colors.colorYellow}
-                                    isChecked={checkState}
-                                    onClick={_ => setCheckState(!checkState)}
+                                    isChecked={CheckState}
+                                    onClick={_ => setCheckState(!CheckState)}
                                 />
                             </View>
+                        </View>
+
+                        <View style={classes.rowButtons}>
+                            <TouchableOpacity onPress={previousPage}>
+                                <Text style={classes.textBack}>Atras</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={nextPage}
+                                style={GlobalStyles.buttonPrimary}>
+                                <Text style={GlobalStyles.textButton}>
+                                    Siguiente
+                                </Text>
+                            </TouchableOpacity>
                         </View>
                     </ViewAnimation>
                 )}
@@ -458,7 +693,7 @@ const ECommerRegister = () => {
                     <ViewAnimation style={classes.tab} animation="fadeIn">
                         <View style={classes.containerTitle}>
                             <Text style={classes.containerTitleText}>
-                                Información del representante legal
+                                Información del Beneficiario
                             </Text>
                         </View>
 
@@ -470,15 +705,21 @@ const ECommerRegister = () => {
 
                         <View style={classes.row}>
                             <View style={classes.labelsRow}>
-                                <Text style={classes.legendRow}>
-                                    Nombre(s)
-                                </Text>
+                                <Text style={classes.legendRow}>Nombre</Text>
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
                             <TextInput
-                                placeholder={'Ingrese nombre(s)'}
-                                placeholderTextColor={'#CCC'}
-                                style={GlobalStyles.textInput} />
+                                placeholder={"Ingrese nombre(s)"}
+                                placeholderTextColor={"#CCC"}
+                                style={GlobalStyles.textInput}
+                                value={beneficiaryState.beneficiaryFirstname}
+                                onChangeText={str =>
+                                    dispatchBeneficiary({
+                                        type: "beneficiaryFirstname",
+                                        payload: str,
+                                    })
+                                }
+                            />
                         </View>
 
                         <View style={classes.row}>
@@ -489,9 +730,17 @@ const ECommerRegister = () => {
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
                             <TextInput
-                                placeholder={'Ingrese apellido(s)'}
-                                placeholderTextColor={'#CCC'}
-                                style={GlobalStyles.textInput} />
+                                placeholder={"Ingrese apellido(s)"}
+                                placeholderTextColor={"#CCC"}
+                                style={GlobalStyles.textInput}
+                                value={beneficiaryState.beneficiaryLastname}
+                                onChangeText={str =>
+                                    dispatchBeneficiary({
+                                        type: "beneficiaryLastname",
+                                        payload: str,
+                                    })
+                                }
+                            />
                         </View>
 
                         <View style={classes.row}>
@@ -502,22 +751,30 @@ const ECommerRegister = () => {
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
                             <View style={classes.column}>
-
-                                <TouchableOpacity onPress={_=>setShowDate(true)} >
-                                    <Icon name='perm-contact-calendar' size={RFValue(40)} color={Colors.colorYellow} />
+                                <TouchableOpacity
+                                    onPress={_ => setShowDate(true)}>
+                                    <Icon
+                                        name="perm-contact-calendar"
+                                        size={RFValue(40)}
+                                        color={Colors.colorYellow}
+                                    />
                                 </TouchableOpacity>
 
                                 <View style={classes.borderLeft}>
-                                    <Text style={classes.legendRow}>{moment(birthday).format('DD.MM.YYYY')}</Text>
+                                    <Text style={classes.legendRow}>
+                                        {moment(birthday).format("DD.MM.YYYY")}
+                                    </Text>
                                 </View>
 
-                                {showDate && (<DateTimePicker
-                                    testID='datetimepicker'
-                                    value={birthday}
-                                    onChange={changeDate}
-                                    mode="date"
-                                    display='spinner'
-                                />)}
+                                {showDate && (
+                                    <DateTimePicker
+                                        testID="datetimepicker"
+                                        value={birthday}
+                                        onChange={changeDate}
+                                        mode="date"
+                                        display="spinner"
+                                    />
+                                )}
                             </View>
                         </View>
 
@@ -546,10 +803,18 @@ const ECommerRegister = () => {
                                 </Text>
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
-                            <TextInput 
-                            placeholder={'Ingrese número de identificación'}
-                            placeholderTextColor={'#CCC'}
-                            style={GlobalStyles.textInput} />
+                            <TextInput
+                                placeholder={"Ingrese número de identificación"}
+                                placeholderTextColor={"#CCC"}
+                                style={GlobalStyles.textInput}
+                                value={beneficiaryState.identificationNumber}
+                                onChangeText={str =>
+                                    dispatchBeneficiary({
+                                        type: "beneficiaryIdentificationNumber",
+                                        payload: str,
+                                    })
+                                }
+                            />
                         </View>
 
                         <View style={classes.containerTitle}>
@@ -586,11 +851,20 @@ const ECommerRegister = () => {
                                         GlobalStyles.textInput,
                                         { flex: 1 },
                                     ]}
-                                    placeholder="Ingrese número de telefono"
+                                    placeholder="Ingrese numero de telefono"
                                     placeholderTextColor="#CCC"
+                                    value={
+                                        beneficiaryState.beneficiaryPrincipalNumber
+                                    }
                                     autoCorrect={false}
                                     keyboardType="numeric"
                                     keyboardAppearance="dark"
+                                    onChangeText={payload =>
+                                        dispatchBeneficiary({
+                                            type: "beneficiaryPrincipalNumber",
+                                            payload,
+                                        })
+                                    }
                                 />
                             </View>
                         </View>
@@ -623,11 +897,21 @@ const ECommerRegister = () => {
                                         GlobalStyles.textInput,
                                         { flex: 1 },
                                     ]}
-                                    placeholder="Ingrese número de telefono"
+                                    placeholder="Ingrese numero de telefono"
                                     placeholderTextColor="#CCC"
+                                    value={
+                                        beneficiaryState.beneficiaryAlternativeNumber
+                                    }
                                     autoCorrect={false}
                                     keyboardType="numeric"
                                     keyboardAppearance="dark"
+                                    onChangeText={payload =>
+                                        dispatchBeneficiary({
+                                            type:
+                                                "beneficiaryAlternativeNumber",
+                                            payload,
+                                        })
+                                    }
                                 />
                             </View>
                         </View>
@@ -639,10 +923,32 @@ const ECommerRegister = () => {
                                 </Text>
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
-                            <TextInput 
-                            placeholder={'Ingrese correo'}
-                            placeholderTextColor={'#CCC'}
-                            style={GlobalStyles.textInput} />
+                            <TextInput
+                                style={GlobalStyles.textInput}
+                                placeholder="Ingrese correo electronico"
+                                placeholderTextColor="#CCC"
+                                value={beneficiaryState.beneficiaryEmail}
+                                keyboardType="email-address"
+                                onChangeText={str =>
+                                    dispatchBeneficiary({
+                                        type: "beneficiaryEmail",
+                                        payload: str,
+                                    })
+                                }
+                            />
+                        </View>
+
+                        <View style={classes.rowButtons}>
+                            <TouchableOpacity onPress={previousPage}>
+                                <Text style={classes.textBack}>Atras</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={nextPage}
+                                style={GlobalStyles.buttonPrimary}>
+                                <Text style={GlobalStyles.textButton}>
+                                    Siguiente
+                                </Text>
+                            </TouchableOpacity>
                         </View>
                     </ViewAnimation>
                 )}
@@ -662,12 +968,40 @@ const ECommerRegister = () => {
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
                             <View style={GlobalStyles.containerPicker}>
-                                <Picker style={GlobalStyles.picker}>
-                                    <Picker.Item
-                                        label="Seleccione país de origen"
-                                        value={1}
-                                    />
-                                    <Picker.Item label="Cedula" value={2} />
+                                <Picker
+                                    style={GlobalStyles.picker}
+                                    selectedValue={
+                                        beneficiaryState.beneficiaryNationality
+                                    }
+                                    onValueChange={value => {
+                                        dispatchBeneficiary({
+                                            type: "beneficiaryNationality",
+                                            payload: value,
+                                        })
+
+                                        const selectedNationality = countries.find(
+                                            item => item.name === value,
+                                        )
+
+                                        dispatchBeneficiary({
+                                            type:
+                                                "beneficiaryPhoneCodeNationality",
+                                            payload:
+                                                selectedNationality.phoneCode,
+                                        })
+                                        dispatchBeneficiary({
+                                            type:
+                                                "beneficiaryCurrencyNationality",
+                                            payload: selectedNationality.code,
+                                        })
+                                    }}>
+                                    {countries.map((item, index) => (
+                                        <Picker.Item
+                                            key={index}
+                                            label={item.name}
+                                            value={item.name}
+                                        />
+                                    ))}
                                 </Picker>
                             </View>
                         </View>
@@ -680,12 +1014,40 @@ const ECommerRegister = () => {
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
                             <View style={GlobalStyles.containerPicker}>
-                                <Picker style={GlobalStyles.picker}>
-                                    <Picker.Item
-                                        label="Seleccione país de residencia"
-                                        value={1}
-                                    />
-                                    <Picker.Item label="Cedula" value={2} />
+                                <Picker
+                                    style={GlobalStyles.picker}
+                                    selectedValue={
+                                        beneficiaryState.beneficiaryResidence
+                                    }
+                                    onValueChange={value => {
+                                        dispatchBeneficiary({
+                                            type: "beneficiaryResidence",
+                                            payload: value,
+                                        })
+
+                                        const selectedNationality = countries.find(
+                                            item => item.name === value,
+                                        )
+
+                                        dispatchBeneficiary({
+                                            type:
+                                                "beneficiaryPhoneCodeResidence",
+                                            payload:
+                                                selectedNationality.phoneCode,
+                                        })
+                                        dispatchBeneficiary({
+                                            type:
+                                                "beneficiaryCurrencyResidence",
+                                            payload: selectedNationality.code,
+                                        })
+                                    }}>
+                                    {countries.map((item, index) => (
+                                        <Picker.Item
+                                            key={index}
+                                            label={item.name}
+                                            value={item.name}
+                                        />
+                                    ))}
                                 </Picker>
                             </View>
                         </View>
@@ -698,9 +1060,17 @@ const ECommerRegister = () => {
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
                             <TextInput
-                                placeholder={'Ingrese estado, provincia o región'}
-                                placeholderTextColor={'#ccc'}
-                                style={GlobalStyles.textInput} />
+                                style={GlobalStyles.textInput}
+                                placeholder="Estado/Provincia/Region"
+                                placeholderTextColor="#CCC"
+                                value={beneficiaryState.beneficiaryProvince}
+                                onChangeText={str =>
+                                    dispatchBeneficiary({
+                                        type: "beneficiaryProvince",
+                                        payload: str,
+                                    })
+                                }
+                            />
                         </View>
 
                         <View style={classes.row}>
@@ -709,9 +1079,17 @@ const ECommerRegister = () => {
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
                             <TextInput
-                                placeholder={'Ingrese ciudad'}
-                                placeholderTextColor={'#ccc'}
-                                style={GlobalStyles.textInput} />
+                                style={GlobalStyles.textInput}
+                                placeholder="Ingresa Ciudad"
+                                placeholderTextColor="#CCC"
+                                value={beneficiaryState.beneficiaryCity}
+                                onChangeText={str =>
+                                    dispatchBeneficiary({
+                                        type: "beneficiaryCity",
+                                        payload: str,
+                                    })
+                                }
+                            />
                         </View>
 
                         <View style={classes.row}>
@@ -722,9 +1100,17 @@ const ECommerRegister = () => {
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
                             <TextInput
-                                placeholder={'Ingrese dirección'}
-                                placeholderTextColor={'#ccc'}
-                                style={GlobalStyles.textInput} />
+                                style={GlobalStyles.textInput}
+                                placeholder="Ingrece Direccion"
+                                placeholderTextColor="#CCC"
+                                value={beneficiaryState.beneficiaryDirection1}
+                                onChangeText={str =>
+                                    dispatchBeneficiary({
+                                        type: "beneficiaryDirection1",
+                                        payload: str,
+                                    })
+                                }
+                            />
                         </View>
 
                         <View style={classes.row}>
@@ -735,9 +1121,17 @@ const ECommerRegister = () => {
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
                             <TextInput
-                                placeholder={'Ingrese dirección'}
-                                placeholderTextColor={'#ccc'}
-                                style={GlobalStyles.textInput} />
+                                style={GlobalStyles.textInput}
+                                placeholder="Ingrece Direccion"
+                                placeholderTextColor="#CCC"
+                                value={beneficiaryState.beneficiaryDirection2}
+                                onChangeText={str =>
+                                    dispatchBeneficiary({
+                                        type: "beneficiaryDirection2",
+                                        payload: str,
+                                    })
+                                }
+                            />
                         </View>
 
                         <View style={classes.row}>
@@ -748,9 +1142,33 @@ const ECommerRegister = () => {
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
                             <TextInput
-                                placeholder={'Ingrese dirección'}
-                                placeholderTextColor={'#ccc'}
-                                style={GlobalStyles.textInput} />
+                                style={GlobalStyles.textInput}
+                                placeholder="Ingrece Codigo Postal"
+                                placeholderTextColor="#CCC"
+                                value={beneficiaryState.beneficiaryPostalCode}
+                                autoCorrect={false}
+                                keyboardType="numeric"
+                                keyboardAppearance="dark"
+                                onChangeText={str =>
+                                    dispatchBeneficiary({
+                                        type: "beneficiaryPostalCode",
+                                        payload: str,
+                                    })
+                                }
+                            />
+                        </View>
+
+                        <View style={classes.rowButtons}>
+                            <TouchableOpacity onPress={previousPage}>
+                                <Text style={classes.textBack}>Atras</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={nextPage}
+                                style={GlobalStyles.buttonPrimary}>
+                                <Text style={GlobalStyles.textButton}>
+                                    Siguiente
+                                </Text>
+                            </TouchableOpacity>
                         </View>
                     </ViewAnimation>
                 )}
@@ -791,9 +1209,17 @@ const ECommerRegister = () => {
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
                             <TextInput
-                                placeholder={'Ingrese profesión'}
-                                placeholderTextColor={'#ccc'}
-                                style={GlobalStyles.textInput} />
+                                style={GlobalStyles.textInput}
+                                placeholder="Cual es tu profesion"
+                                placeholderTextColor="#CCC"
+                                value={beneficiaryState.beneficiaryProfession}
+                                onChangeText={str =>
+                                    dispatchBeneficiary({
+                                        type: "beneficiaryProfession",
+                                        payload: str,
+                                    })
+                                }
+                            />
                         </View>
 
                         <View style={classes.row}>
@@ -836,19 +1262,21 @@ const ECommerRegister = () => {
                             </View>
                             <UploadImage />
                         </View>
+
+                        <View style={classes.rowButtons}>
+                            <TouchableOpacity onPress={previousPage}>
+                                <Text style={classes.textBack}>Atras</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={nextPage}
+                                style={GlobalStyles.buttonPrimary}>
+                                <Text style={GlobalStyles.textButton}>
+                                    Siguiente
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
                     </ViewAnimation>
                 )}
-            </View>
-
-            <View style={classes.rowButtons}>
-                <TouchableOpacity onPress={previousPage}>
-                    <Text style={classes.textBack}>Atras</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    onPress={nextPage}
-                    style={GlobalStyles.buttonPrimary}>
-                    <Text style={GlobalStyles.textButton}>Siguiente</Text>
-                </TouchableOpacity>
             </View>
 
             <Modal

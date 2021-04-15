@@ -18,6 +18,7 @@ const ROUTES = {
     EXCUTIVE_LIST: "ExcuteList",
     RETIREMENTEXCUTIVE: "RetirementExcutive",
     HISTORYRETIREMENTEXCUTIVE: "HistoryRetirementExcutive",
+    KYC: "Kyc",
 }
 
 export default ROUTES
