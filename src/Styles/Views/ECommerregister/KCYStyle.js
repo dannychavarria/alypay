@@ -9,13 +9,14 @@ export default {
     },
 
     textInput: {
-        paddingHorizontal: RFValue(10),
-        height: RFValue(47),
-        color: "#fff",
         backgroundColor: Colors.colorBlack,
-        borderRadius: RFValue(25),
-        borderWidth: RFValue(1),
+        borderRadius: 5,
+        borderWidth: 2,
         borderColor: Colors.colorYellow,
+        color: "#FFF",
+        elevation: 5,
+        padding: RFValue(10),
+        zIndex: 50,
     },
 
     scrollView: {
@@ -39,11 +40,17 @@ export default {
     },
     containerModal: {
         alignSelf: "center",
-        backgroundColor: Colors.colorMain,
+        backgroundColor: Colors.colorBlack,
         borderRadius: 10,
         padding: 10,
         height: "80%",
         width: "90%",
+    },
+    itemCountry: {
+        borderRadius: 10,
+        borderBottomWidth: 2,
+        borderColor: Colors.colorYellow,
+        padding: 10
     },
     column: {
         flexDirection: "row",
