@@ -8,14 +8,32 @@ export default {
         marginLeft: RFValue(20),
     },
 
-    textInput: {
-        paddingHorizontal: RFValue(10),
-        height: RFValue(47),
-        color: "#fff",
-        backgroundColor: Colors.colorBlack,
-        borderRadius: RFValue(25),
-        borderWidth: RFValue(1),
+    borderYellow: {
+        borderWidth: 2,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: Colors.colorMain,
+        width: '82%',
         borderColor: Colors.colorYellow,
+        paddingHorizontal: RFValue(20),
+        marginLeft: 10,
+    },
+
+    textDate: {
+        fontSize: RFValue(20),
+        marginHorizontal: 20,
+        color: Colors.colorYellow,
+    },
+
+    textInput: {
+        backgroundColor: Colors.colorBlack,
+        borderRadius: 5,
+        borderWidth: 2,
+        borderColor: Colors.colorYellow,
+        color: "#FFF",
+        elevation: 5,
+        padding: RFValue(10),
+        zIndex: 50,
     },
 
     scrollView: {
@@ -45,10 +63,14 @@ export default {
         height: "80%",
         width: "90%",
     },
+    itemCountry: {
+        borderRadius: 10,
+        borderBottomWidth: 2,
+        borderColor: Colors.colorYellow,
+        padding: 10
+    },
     column: {
         flexDirection: "row",
-        width: "100%",
-        alignItems: "center",
     },
     logo: {
         alignContent: "center",

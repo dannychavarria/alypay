@@ -17,6 +17,8 @@ import {
     calcAge,
 } from "../../utils/constants"
 import countries from "../../utils/countries.json"
+import professions from "../../utils/profession.json"
+
 
 // Import Components
 import Container from "../../components/Container/Container"
@@ -27,9 +29,11 @@ import { View as ViewAnimation } from "react-native-animatable"
 import { launchCamera } from "react-native-image-picker"
 import { Picker } from "@react-native-picker/picker"
 import Icon from "react-native-vector-icons/MaterialIcons"
+import AntDesign from "react-native-vector-icons/AntDesign"
 import DateTimePicker from "@react-native-community/datetimepicker"
 import moment from "moment"
 import validator from "validator"
+import { startDetecting } from "react-native/Libraries/Utilities/PixelRatio"
 
 const initialState = {
     identificationType: 1,
@@ -41,7 +45,7 @@ const initialState = {
     province: "",
     direction1: "",
     direction2: "",
-    foundsOrigin: 1,
+    foundsOrigin: "",
     profession: "",
     profilePictureId: null,
     identificationPictureId: null,
@@ -50,7 +54,11 @@ const initialState = {
     country: countries[0],
     filter: "",
 
+<<<<<<< HEAD
     tab: 3,
+=======
+    tab: 2,
+>>>>>>> bab397d3294759aa64dd018310aeaec4cde81e95
 }
 
 const beneficiaryStateReducer = {
@@ -135,9 +143,13 @@ const ECommerRegister = () => {
             const dataSent = {
                 identificationType: state.identificationType,
                 identificationNumber: state.identificationNumber,
+<<<<<<< HEAD
                 alternativeNumber: `${state.country.phoneCode} ``${
                     state.alternativeNumber
                 }`,
+=======
+                alternativeNumber: `${state.country.phoneCode} ${state.alternativeNumber}`,
+>>>>>>> bab397d3294759aa64dd018310aeaec4cde81e95
                 nationality: state.nationality,
                 phoneCodeNationality: state.phoneCodeNationality,
                 currencyNationality: state.currencyNationality,
@@ -167,7 +179,7 @@ const ECommerRegister = () => {
         if (
             item.name.length > 0 &&
             item.name.toLowerCase().search(state.filter.toLocaleLowerCase()) >
-                -1
+            -1
         ) {
             return (
                 <TouchableOpacity
@@ -378,6 +390,8 @@ const ECommerRegister = () => {
         }
     }
 
+    console.log(state.foundsOrigin)
+
     return (
         <Container showLogo>
             <View style={classes.container}>
@@ -404,7 +418,7 @@ const ECommerRegister = () => {
                             <View
                                 style={[
                                     classes.textInputWithImage,
-                                    GlobalStyles.textInput,
+                                    classes.textInput,
                                 ]}>
                                 <TextInput
                                     secureTextEntry={!showPassword}
@@ -443,7 +457,7 @@ const ECommerRegister = () => {
                             <View
                                 style={[
                                     classes.textInputWithImage,
-                                    GlobalStyles.textInput,
+                                    classes.textInput,
                                 ]}>
                                 <TextInput
                                     secureTextEntry={!showConfirmPassword}
@@ -503,7 +517,7 @@ const ECommerRegister = () => {
                             <TextInput
                                 placeholder={"Ingrese número de identificación"}
                                 placeholderTextColor={"#CCC"}
-                                style={GlobalStyles.textInput}
+                                style={classes.textInput}
                                 value={state.identificationNumber}
                                 onChangeText={str =>
                                     dispatch({
@@ -528,13 +542,16 @@ const ECommerRegister = () => {
                             <View style={classes.rowPhoneNumber}>
                                 <TouchableOpacity
                                     style={[
-                                        GlobalStyles.textInput,
+                                        classes.textInput,
                                         {
                                             marginRight: 10,
                                             justifyContent: "center",
                                         },
                                     ]}
-                                    onPress={_ => setModalCountry(true)}>
+                                    onPress={_ => {
+                                        setModalCountry(true)
+                                        console.log(`beneficiario: ${beneficiaryStateReducer.beneticiaryFilter} no beneficiario: ${initialState.filter}`)
+                                    }}>
                                     <Text
                                         style={{
                                             color: Colors.colorYellow,
@@ -545,7 +562,7 @@ const ECommerRegister = () => {
 
                                 <TextInput
                                     style={[
-                                        GlobalStyles.textInput,
+                                        classes.textInput,
                                         { flex: 1 },
                                     ]}
                                     placeholder="Ingrese numero de telefono"
@@ -594,7 +611,7 @@ const ECommerRegister = () => {
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
                             <TextInput
-                                style={GlobalStyles.textInput}
+                                style={classes.textInput}
                                 placeholder="Estado/Provincia/Region"
                                 placeholderTextColor="#CCC"
                                 value={state.province}
@@ -612,8 +629,8 @@ const ECommerRegister = () => {
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
                             <TextInput
-                                style={GlobalStyles.textInput}
-                                placeholder="Ingrece Direccion"
+                                style={classes.textInput}
+                                placeholder="ingrese Direccion"
                                 placeholderTextColor="#CCC"
                                 value={state.direction1}
                                 onChangeText={str =>
@@ -632,8 +649,8 @@ const ECommerRegister = () => {
                                 </Text>
                             </View>
                             <TextInput
-                                style={GlobalStyles.textInput}
-                                placeholder="Ingrece Direccion"
+                                style={classes.textInput}
+                                placeholder="ingrese Direccion"
                                 placeholderTextColor="#CCC"
                                 value={state.direction2}
                                 onChangeText={str =>
@@ -678,12 +695,20 @@ const ECommerRegister = () => {
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
                             <View style={GlobalStyles.containerPicker}>
-                                <Picker style={GlobalStyles.picker}>
-                                    <Picker.Item
-                                        label="seleccionar respuesta"
-                                        value={1}
-                                    />
-                                    <Picker.Item label="Cedula" value={2} />
+                                <Picker style={GlobalStyles.picker}
+                                    onValueChange={ value => {
+                                        dispatch({
+                                            type: 'foundsOrigin',
+                                            payload: value
+                                        })
+                                    }}
+                                    selectedValue={state.foundsOrigin}>
+                                    {professions.map((item, index) => (
+                                        <Picker.Item
+                                            key={index}
+                                            label={item.profession}
+                                            value={item.profession}
+                                        />)) }
                                 </Picker>
                             </View>
                         </View>
@@ -696,7 +721,7 @@ const ECommerRegister = () => {
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
                             <TextInput
-                                style={GlobalStyles.textInput}
+                                style={classes.textInput}
                                 placeholder="Cual es tu profesion"
                                 placeholderTextColor="#CCC"
                                 value={state.profession}
@@ -798,7 +823,7 @@ const ECommerRegister = () => {
                             <TextInput
                                 placeholder={"Ingrese nombre(s)"}
                                 placeholderTextColor={"#CCC"}
-                                style={GlobalStyles.textInput}
+                                style={classes.textInput}
                                 value={beneficiaryState.beneficiaryFirstname}
                                 onChangeText={str =>
                                     dispatchBeneficiary({
@@ -819,7 +844,7 @@ const ECommerRegister = () => {
                             <TextInput
                                 placeholder={"Ingrese apellido(s)"}
                                 placeholderTextColor={"#CCC"}
-                                style={GlobalStyles.textInput}
+                                style={classes.textInput}
                                 value={beneficiaryState.beneficiaryLastname}
                                 onChangeText={str =>
                                     dispatchBeneficiary({
@@ -840,16 +865,22 @@ const ECommerRegister = () => {
                             <View style={classes.column}>
                                 <TouchableOpacity
                                     onPress={_ => setShowDate(true)}>
+<<<<<<< HEAD
                                     <Icon
                                         name="perm-contact-calendar"
                                         size={40}
+=======
+                                    <AntDesign
+                                        name="calendar"
+                                        size={RFValue(40)}
+>>>>>>> bab397d3294759aa64dd018310aeaec4cde81e95
                                         color={Colors.colorYellow}
                                     />
                                 </TouchableOpacity>
 
-                                <View style={classes.borderLeft}>
-                                    <Text style={classes.legendRow}>
-                                        {moment(birthday).format("DD.MM.YYYY")}
+                                <View style={classes.borderYellow}>
+                                    <Text style={classes.textDate}>
+                                        {moment(birthday).format("DD/MM/YYYY")}
                                     </Text>
                                 </View>
 
@@ -893,7 +924,7 @@ const ECommerRegister = () => {
                             <TextInput
                                 placeholder={"Ingrese número de identificación"}
                                 placeholderTextColor={"#CCC"}
-                                style={GlobalStyles.textInput}
+                                style={classes.textInput}
                                 value={beneficiaryState.identificationNumber}
                                 onChangeText={str =>
                                     dispatchBeneficiary({
@@ -915,10 +946,12 @@ const ECommerRegister = () => {
                                 Número de telefono principal
                             </Text>
 
+                            <Text style={classes.required}>Requerido</Text>
+
                             <View style={classes.rowPhoneNumber}>
                                 <TouchableOpacity
                                     style={[
-                                        GlobalStyles.textInput,
+                                        classes.textInput,
                                         {
                                             marginRight: 10,
                                             justifyContent: "center",
@@ -935,7 +968,7 @@ const ECommerRegister = () => {
 
                                 <TextInput
                                     style={[
-                                        GlobalStyles.textInput,
+                                        classes.textInput,
                                         { flex: 1 },
                                     ]}
                                     placeholder="Ingrese numero de telefono"
@@ -964,7 +997,7 @@ const ECommerRegister = () => {
                             <View style={classes.rowPhoneNumber}>
                                 <TouchableOpacity
                                     style={[
-                                        GlobalStyles.textInput,
+                                        classes.textInput,
                                         {
                                             marginRight: 10,
                                             justifyContent: "center",
@@ -981,7 +1014,7 @@ const ECommerRegister = () => {
 
                                 <TextInput
                                     style={[
-                                        GlobalStyles.textInput,
+                                        classes.textInput,
                                         { flex: 1 },
                                     ]}
                                     placeholder="Ingrese numero de telefono"
@@ -1011,7 +1044,7 @@ const ECommerRegister = () => {
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
                             <TextInput
-                                style={GlobalStyles.textInput}
+                                style={classes.textInput}
                                 placeholder="Ingrese correo electronico"
                                 placeholderTextColor="#CCC"
                                 value={beneficiaryState.beneficiaryEmail}
@@ -1147,7 +1180,7 @@ const ECommerRegister = () => {
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
                             <TextInput
-                                style={GlobalStyles.textInput}
+                                style={classes.textInput}
                                 placeholder="Estado/Provincia/Region"
                                 placeholderTextColor="#CCC"
                                 value={beneficiaryState.beneficiaryProvince}
@@ -1166,7 +1199,7 @@ const ECommerRegister = () => {
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
                             <TextInput
-                                style={GlobalStyles.textInput}
+                                style={classes.textInput}
                                 placeholder="Ingresa Ciudad"
                                 placeholderTextColor="#CCC"
                                 value={beneficiaryState.beneficiaryCity}
@@ -1187,8 +1220,8 @@ const ECommerRegister = () => {
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
                             <TextInput
-                                style={GlobalStyles.textInput}
-                                placeholder="Ingrece Direccion"
+                                style={classes.textInput}
+                                placeholder="ingrese Direccion"
                                 placeholderTextColor="#CCC"
                                 value={beneficiaryState.beneficiaryDirection1}
                                 onChangeText={str =>
@@ -1208,8 +1241,8 @@ const ECommerRegister = () => {
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
                             <TextInput
-                                style={GlobalStyles.textInput}
-                                placeholder="Ingrece Direccion"
+                                style={classes.textInput}
+                                placeholder="ingrese Direccion"
                                 placeholderTextColor="#CCC"
                                 value={beneficiaryState.beneficiaryDirection2}
                                 onChangeText={str =>
@@ -1229,8 +1262,8 @@ const ECommerRegister = () => {
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
                             <TextInput
-                                style={GlobalStyles.textInput}
-                                placeholder="Ingrece Codigo Postal"
+                                style={classes.textInput}
+                                placeholder="ingrese Codigo Postal"
                                 placeholderTextColor="#CCC"
                                 value={beneficiaryState.beneficiaryPostalCode}
                                 autoCorrect={false}
@@ -1296,7 +1329,7 @@ const ECommerRegister = () => {
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
                             <TextInput
-                                style={GlobalStyles.textInput}
+                                style={classes.textInput}
                                 placeholder="Cual es tu profesion"
                                 placeholderTextColor="#CCC"
                                 value={beneficiaryState.beneficiaryProfession}
@@ -1390,7 +1423,7 @@ const ECommerRegister = () => {
                 isVisible={modalCoutry}>
                 <View style={classes.containerModal}>
                     <TextInput
-                        style={GlobalStyles.textInput}
+                        style={classes.textInput}
                         placeholder="Buscar"
                         placeholderTextColor="#FFF"
                         value={state.filter}
