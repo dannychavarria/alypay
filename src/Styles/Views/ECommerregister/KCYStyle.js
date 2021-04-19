@@ -39,7 +39,7 @@ export default {
     },
     containerModal: {
         alignSelf: "center",
-        backgroundColor: Colors.colorMain,
+        backgroundColor: Colors.colorBlack,
         borderRadius: 10,
         padding: 10,
         height: "80%",

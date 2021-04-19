@@ -286,6 +286,36 @@ export const CheckCameraPermission = async () => {
     }
 }
 
+/**Metodo tradicional para verificar los permisos de la camara */
+export const checkPermissionCamera = () =>
+    new Promise(async (resolve, reject) => {
+        try {
+            await request(PERMISSIONS.ANDROID.CAMERA)
+            const result = await check(PERMISSIONS.ANDROID.CAMERA)
+
+            // verificamos los tres posibles errores de permisos
+            switch (result) {
+                case RESULTS.DENIED: {
+                    throw String("Permiso de camara denegado")
+                }
+
+                case RESULTS.BLOCKED: {
+                    throw String(
+                        "El permiso está denegado y ya no se puede solicitar",
+                    )
+                }
+
+                case RESULTS.UNAVAILABLE: {
+                    throw String("Esta función no está disponible")
+                }
+            }
+
+            resolve()
+        } catch (error) {
+            reject(error)
+        }
+    })
+
 /**
  * Funcion que se ejecuta cuando el
  * usuario no tiene ningun tipo de autenticacion TouchID/FaceID
@@ -443,6 +473,15 @@ export const getFeePercentage = (amount, feeType, fees) => {
         return lastFee
     }
     return {}
+}
+
+export const calcAge = birthDate => {
+    const NOW = moment(new Date(), "DD/MM/YYYY")
+    const fromDate = moment(birthDate, "DD/MM/YYYY")
+
+    // Se calcula la edad
+    const age = moment.duration(NOW.diff(fromDate)).asYears()
+    return age
 }
 
 /**
