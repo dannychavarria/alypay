@@ -8,6 +8,23 @@ export default {
         marginLeft: RFValue(20),
     },
 
+    borderYellow: {
+        borderWidth: 2,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: Colors.colorMain,
+        width: '82%',
+        borderColor: Colors.colorYellow,
+        paddingHorizontal: RFValue(20),
+        marginLeft: 10,
+    },
+
+    textDate: {
+        fontSize: RFValue(20),
+        marginHorizontal: 20,
+        color: Colors.colorYellow,
+    },
+
     textInput: {
         backgroundColor: Colors.colorBlack,
         borderRadius: 5,
@@ -54,8 +71,6 @@ export default {
     },
     column: {
         flexDirection: "row",
-        width: "100%",
-        alignItems: "center",
     },
     logo: {
         alignContent: "center",

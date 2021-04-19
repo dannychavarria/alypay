@@ -15,6 +15,8 @@ import {
     RFValue,
 } from "../../utils/constants"
 import countries from "../../utils/countries.json"
+import professions from "../../utils/profession.json"
+
 
 // Import Components
 import Container from "../../components/Container/Container"
@@ -28,6 +30,7 @@ import AntDesign from "react-native-vector-icons/AntDesign"
 import DateTimePicker from "@react-native-community/datetimepicker"
 import moment from "moment"
 import validator from "validator"
+import { startDetecting } from "react-native/Libraries/Utilities/PixelRatio"
 
 const initialState = {
     identificationType: 1,
@@ -39,7 +42,7 @@ const initialState = {
     province: "",
     direction1: "",
     direction2: "",
-    foundsOrigin: 1,
+    foundsOrigin: "",
     profession: "",
     profilePictureId: null,
     identificationPictureId: null,
@@ -48,7 +51,7 @@ const initialState = {
     country: countries[0],
     filter: "",
 
-    tab: 0,
+    tab: 2,
 }
 
 const beneficiaryStateReducer = {
@@ -302,6 +305,8 @@ const ECommerRegister = () => {
         setShowDate(false)
     }
 
+    console.log(state.foundsOrigin)
+
     return (
         <Container showLogo>
             <View style={classes.container}>
@@ -461,7 +466,7 @@ const ECommerRegister = () => {
                                     onPress={_ => {
                                         setModalCountry(true)
                                         console.log(`beneficiario: ${beneficiaryStateReducer.beneticiaryFilter} no beneficiario: ${initialState.filter}`)
-                                        }}>
+                                    }}>
                                     <Text
                                         style={{
                                             color: Colors.colorYellow,
@@ -605,12 +610,20 @@ const ECommerRegister = () => {
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
                             <View style={GlobalStyles.containerPicker}>
-                                <Picker style={GlobalStyles.picker}>
-                                    <Picker.Item
-                                        label="seleccionar respuesta"
-                                        value={1}
-                                    />
-                                    <Picker.Item label="Cedula" value={2} />
+                                <Picker style={GlobalStyles.picker}
+                                    onValueChange={ value => {
+                                        dispatch({
+                                            type: 'foundsOrigin',
+                                            payload: value
+                                        })
+                                    }}
+                                    selectedValue={state.foundsOrigin}>
+                                    {professions.map((item, index) => (
+                                        <Picker.Item
+                                            key={index}
+                                            label={item.profession}
+                                            value={item.profession}
+                                        />)) }
                                 </Picker>
                             </View>
                         </View>
@@ -764,9 +777,9 @@ const ECommerRegister = () => {
                                     />
                                 </TouchableOpacity>
 
-                                <View style={classes.borderLeft}>
-                                    <Text style={classes.legendRow}>
-                                        {moment(birthday).format("DD.MM.YYYY")}
+                                <View style={classes.borderYellow}>
+                                    <Text style={classes.textDate}>
+                                        {moment(birthday).format("DD/MM/YYYY")}
                                     </Text>
                                 </View>
 
@@ -1296,7 +1309,7 @@ const ECommerRegister = () => {
                         placeholderTextColor="#FFF"
                         value={state.filter}
                         onChangeText={str =>
-                            dispatch({type: "filter", payload: str})
+                            dispatch({ type: "filter", payload: str })
                         }
                     />
 
