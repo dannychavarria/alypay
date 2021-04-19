@@ -107,6 +107,7 @@ const ListComerce = ({ route }) => {
         <View style={classes.main}>
             <Image source={logo} style={classes.logo} />
 
+<<<<<<< Updated upstream
             {params.id !== -1
                 ?
                 <ExcutiveListCommerce data={params} />
@@ -158,6 +159,33 @@ const ListComerce = ({ route }) => {
                         : ''
             }
 
+=======
+            <Switch
+                onSwitch={setStateView}
+                items={switchItems}
+                indexActive={state.indexTabActive}
+            />
+            {stateView === TYPE_VIEW.COMMERCE && (
+                <>
+                    <View style={classes.containerTitle}>
+                        <Text style={classes.title}>Listado de comercios</Text>
+                    </View>
+                    <View style={classes.contenList}>
+                        <FlatList
+                            data={data}
+                            keyExtractor={(_, i) => i}
+                            renderItem={item => <ItemComerce data={item} />}
+                        />
+                    </View>
+                </>
+            )}
+
+            {stateView === TYPE_VIEW.EXCUTIVE_LIST && (
+                <>
+                    <ExcutiveListCommerce data={params} />
+                </>
+            )}
+>>>>>>> Stashed changes
         </View>
     )
 }

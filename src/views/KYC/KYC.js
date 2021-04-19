@@ -19,7 +19,6 @@ import {
 import countries from "../../utils/countries.json"
 import professions from "../../utils/profession.json"
 
-
 // Import Components
 import Container from "../../components/Container/Container"
 import CheckBox from "react-native-check-box"
@@ -54,11 +53,7 @@ const initialState = {
     country: countries[0],
     filter: "",
 
-<<<<<<< HEAD
     tab: 3,
-=======
-    tab: 2,
->>>>>>> bab397d3294759aa64dd018310aeaec4cde81e95
 }
 
 const beneficiaryStateReducer = {
@@ -143,20 +138,16 @@ const ECommerRegister = () => {
             const dataSent = {
                 identificationType: state.identificationType,
                 identificationNumber: state.identificationNumber,
-<<<<<<< HEAD
                 alternativeNumber: `${state.country.phoneCode} ``${
                     state.alternativeNumber
                 }`,
-=======
-                alternativeNumber: `${state.country.phoneCode} ${state.alternativeNumber}`,
->>>>>>> bab397d3294759aa64dd018310aeaec4cde81e95
                 nationality: state.nationality,
                 phoneCodeNationality: state.phoneCodeNationality,
                 currencyNationality: state.currencyNationality,
                 province: state.province,
                 direction1: state.direction1,
                 direction2: state.direction2,
-                foundsOrigin: state.foundsOrigin,
+                answer1: state.foundsOrigin,
                 profession: state.profession,
             }
         } catch (error) {
@@ -179,7 +170,7 @@ const ECommerRegister = () => {
         if (
             item.name.length > 0 &&
             item.name.toLowerCase().search(state.filter.toLocaleLowerCase()) >
-            -1
+                -1
         ) {
             return (
                 <TouchableOpacity
@@ -550,7 +541,13 @@ const ECommerRegister = () => {
                                     ]}
                                     onPress={_ => {
                                         setModalCountry(true)
-                                        console.log(`beneficiario: ${beneficiaryStateReducer.beneticiaryFilter} no beneficiario: ${initialState.filter}`)
+                                        console.log(
+                                            `beneficiario: ${
+                                                beneficiaryStateReducer.beneticiaryFilter
+                                            } no beneficiario: ${
+                                                initialState.filter
+                                            }`,
+                                        )
                                     }}>
                                     <Text
                                         style={{
@@ -561,10 +558,7 @@ const ECommerRegister = () => {
                                 </TouchableOpacity>
 
                                 <TextInput
-                                    style={[
-                                        classes.textInput,
-                                        { flex: 1 },
-                                    ]}
+                                    style={[classes.textInput, { flex: 1 }]}
                                     placeholder="Ingrese numero de telefono"
                                     placeholderTextColor="#CCC"
                                     value={state.alternativeNumber}
@@ -695,11 +689,12 @@ const ECommerRegister = () => {
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
                             <View style={GlobalStyles.containerPicker}>
-                                <Picker style={GlobalStyles.picker}
-                                    onValueChange={ value => {
+                                <Picker
+                                    style={GlobalStyles.picker}
+                                    onValueChange={value => {
                                         dispatch({
-                                            type: 'foundsOrigin',
-                                            payload: value
+                                            type: "foundsOrigin",
+                                            payload: value,
                                         })
                                     }}
                                     selectedValue={state.foundsOrigin}>
@@ -708,7 +703,8 @@ const ECommerRegister = () => {
                                             key={index}
                                             label={item.profession}
                                             value={item.profession}
-                                        />)) }
+                                        />
+                                    ))}
                                 </Picker>
                             </View>
                         </View>
@@ -865,15 +861,9 @@ const ECommerRegister = () => {
                             <View style={classes.column}>
                                 <TouchableOpacity
                                     onPress={_ => setShowDate(true)}>
-<<<<<<< HEAD
-                                    <Icon
-                                        name="perm-contact-calendar"
-                                        size={40}
-=======
                                     <AntDesign
                                         name="calendar"
                                         size={RFValue(40)}
->>>>>>> bab397d3294759aa64dd018310aeaec4cde81e95
                                         color={Colors.colorYellow}
                                     />
                                 </TouchableOpacity>
@@ -967,10 +957,7 @@ const ECommerRegister = () => {
                                 </TouchableOpacity>
 
                                 <TextInput
-                                    style={[
-                                        classes.textInput,
-                                        { flex: 1 },
-                                    ]}
+                                    style={[classes.textInput, { flex: 1 }]}
                                     placeholder="Ingrese numero de telefono"
                                     placeholderTextColor="#CCC"
                                     value={
@@ -1013,10 +1000,7 @@ const ECommerRegister = () => {
                                 </TouchableOpacity>
 
                                 <TextInput
-                                    style={[
-                                        classes.textInput,
-                                        { flex: 1 },
-                                    ]}
+                                    style={[classes.textInput, { flex: 1 }]}
                                     placeholder="Ingrese numero de telefono"
                                     placeholderTextColor="#CCC"
                                     value={
