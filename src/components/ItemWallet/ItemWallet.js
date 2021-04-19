@@ -24,10 +24,10 @@ const ItemWallet = ({ data = {}, disabled = false }) => {
 
     const urlImage =
         data._id !== null
-            ? `https://s2.coinmarketcap.com/static/img/coins/128x128/${
-                  data._id
-              }.png`
+            ? `https://s2.coinmarketcap.com/static/img/coins/128x128/${data._id}.png`
             : urlAlyCoin
+
+    console.log(data)
 
     /**
      * Funcion que verifica si tiene es dueño de compañia
@@ -49,7 +49,7 @@ const ItemWallet = ({ data = {}, disabled = false }) => {
 
             <View style={styles.subContainerInfo}>
                 <View style={styles.row}>
-                    <Text style={styles.superValue}>{data.description}</Text>
+                    <Text style={styles.superValue}>{data.name}</Text>
 
                     <View style={styles.lastCol}>
                         <Text style={styles.key}>Balance</Text>

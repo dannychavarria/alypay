@@ -94,11 +94,8 @@ const PORT = "3085"
 //export const serverAddress = "https://alypay.uc.r.appspot.com"
 //export const serverAddress = "https://root-anvil-299019.uc.r.appspot.com"
 //export const serverAddress = "https://192.168.1.224:3000"
-export const serverAddress =
-    Platform.OS === "ios"
-        ? `http://localhost:${PORT}`
-        : `http://192.168.0.140:${PORT}`
-//xport const serverAddress = "https://alypay-backend-test.herokuapp.com/"
+export const serverAddress =Platform.OS === "ios"? `http://localhost:${PORT}`: `http://192.168.0.161:${PORT}`
+// export const serverAddress = "https://alypay-backend-test.herokuapp.com/"
 
 export const serverSpeedtradingsURL = "https://ardent-medley-272823.appspot.com"
 
@@ -289,6 +286,36 @@ export const CheckCameraPermission = async () => {
     }
 }
 
+/**Metodo tradicional para verificar los permisos de la camara */
+export const checkPermissionCamera = () =>
+    new Promise(async (resolve, reject) => {
+        try {
+            await request(PERMISSIONS.ANDROID.CAMERA)
+            const result = await check(PERMISSIONS.ANDROID.CAMERA)
+
+            // verificamos los tres posibles errores de permisos
+            switch (result) {
+                case RESULTS.DENIED: {
+                    throw String("Permiso de camara denegado")
+                }
+
+                case RESULTS.BLOCKED: {
+                    throw String(
+                        "El permiso está denegado y ya no se puede solicitar",
+                    )
+                }
+
+                case RESULTS.UNAVAILABLE: {
+                    throw String("Esta función no está disponible")
+                }
+            }
+
+            resolve()
+        } catch (error) {
+            reject(error)
+        }
+    })
+
 /**
  * Funcion que se ejecuta cuando el
  * usuario no tiene ningun tipo de autenticacion TouchID/FaceID
@@ -374,6 +401,21 @@ export const successMessage = (description = "", title = "AlyPay") => {
     })
 }
 
+/**Muestra una notificacion con estilo global */
+export const showNotification = (
+    message = "",
+    type = "info" | "error" | "warning",
+) => {
+    showMessage({
+        message: "Speed Tradings",
+        description: message,
+        color: "#FFF",
+        backgroundColor: "#EE5A24",
+        icon: "warning",
+        duration: 10000,
+    })
+}
+
 /**
  * Funcion que retorna las cabeceras de la peticions
  */
@@ -431,6 +473,15 @@ export const getFeePercentage = (amount, feeType, fees) => {
         return lastFee
     }
     return {}
+}
+
+export const calcAge = birthDate => {
+    const NOW = moment(new Date(), "DD/MM/YYYY")
+    const fromDate = moment(birthDate, "DD/MM/YYYY")
+
+    // Se calcula la edad
+    const age = moment.duration(NOW.diff(fromDate)).asYears()
+    return age
 }
 
 /**

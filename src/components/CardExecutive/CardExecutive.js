@@ -14,7 +14,7 @@ const CardExecutive = () => {
     const { navigate } = useNavigation()
 
     const onListCommerce = () => {
-        navigate("ExcuteList")
+        navigate("Kyc")
     }
 
     return (
