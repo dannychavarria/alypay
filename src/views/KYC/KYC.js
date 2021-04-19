@@ -13,6 +13,8 @@ import {
     errorMessage,
     Colors,
     RFValue,
+    checkPermissionCamera,
+    calcAge,
 } from "../../utils/constants"
 import countries from "../../utils/countries.json"
 import professions from "../../utils/profession.json"
@@ -24,6 +26,7 @@ import CheckBox from "react-native-check-box"
 import Modal from "react-native-modal"
 import UploadImage from "../../components/UploadImage/UploadImage"
 import { View as ViewAnimation } from "react-native-animatable"
+import { launchCamera } from "react-native-image-picker"
 import { Picker } from "@react-native-picker/picker"
 import Icon from "react-native-vector-icons/MaterialIcons"
 import AntDesign from "react-native-vector-icons/AntDesign"
@@ -51,7 +54,11 @@ const initialState = {
     country: countries[0],
     filter: "",
 
+<<<<<<< HEAD
+    tab: 3,
+=======
     tab: 2,
+>>>>>>> bab397d3294759aa64dd018310aeaec4cde81e95
 }
 
 const beneficiaryStateReducer = {
@@ -84,6 +91,19 @@ const beneficiaryStateReducer = {
 
     beneficiaryCountry: countries[0],
     beneticiaryFilter: "",
+}
+
+const optionsOpenCamera = {
+    noData: true,
+    maxHeight: 1024,
+    maxWidth: 1024,
+    quality: 0.6,
+    mediaType: "photo",
+    storageOptions: {
+        skipBackup: true,
+        path: "Pictures/myAppPicture/", //-->this is FUCK neccesary
+        privateDirectory: true,
+    },
 }
 
 const reducer = (state, action) => {
@@ -123,7 +143,13 @@ const ECommerRegister = () => {
             const dataSent = {
                 identificationType: state.identificationType,
                 identificationNumber: state.identificationNumber,
+<<<<<<< HEAD
+                alternativeNumber: `${state.country.phoneCode} ``${
+                    state.alternativeNumber
+                }`,
+=======
                 alternativeNumber: `${state.country.phoneCode} ${state.alternativeNumber}`,
+>>>>>>> bab397d3294759aa64dd018310aeaec4cde81e95
                 nationality: state.nationality,
                 phoneCodeNationality: state.phoneCodeNationality,
                 currencyNationality: state.currencyNationality,
@@ -208,6 +234,13 @@ const ECommerRegister = () => {
                     if (state.profession.trim().length === 0) {
                         throw String("Es requerido su profesion actual")
                     }
+                    if (state.profilePictureId === null) {
+                        throw String("Imagen de perfil es requerida")
+                    }
+
+                    if (state.identificationPictureId === null) {
+                        throw String("Imagen de identificacion es requerida")
+                    }
                     break
                 }
 
@@ -283,6 +316,21 @@ const ECommerRegister = () => {
                     ) {
                         throw String("Es requerido su profesion actual")
                     }
+
+                    if (beneficiaryState.beneficiaryProfilePictureId === null) {
+                        throw String(
+                            "Imagen de perfil de beneficiario es requerida",
+                        )
+                    }
+
+                    if (
+                        beneficiaryState.beneficiaryIdentificationPictureId ===
+                        null
+                    ) {
+                        throw String(
+                            "Imagen de identificacion de beneficiario es requerida",
+                        )
+                    }
                     break
                 }
             }
@@ -303,6 +351,43 @@ const ECommerRegister = () => {
         const currentDate = selectedDate || birthday
         setBirthday(currentDate)
         setShowDate(false)
+
+        const result = calcAge()
+    }
+
+    /**
+     * Funcion que permite escoger si tomer una foto/cargar una imagen
+     * Para previsualizarla
+     * @param {*} ImageOption
+     */
+    const uploadImageView = async ImageOption => {
+        try {
+            await checkPermissionCamera()
+
+            launchCamera(optionsOpenCamera, response => {
+                if (response.error) {
+                    throw String(response.error)
+                }
+                dispatch({ type: ImageOption, payload: response })
+            })
+        } catch (error) {
+            showNotification(error.toString())
+        }
+    }
+
+    const uploadImageViewBeneficiary = async ImageOption => {
+        try {
+            await checkPermissionCamera()
+
+            launchCamera(optionsOpenCamera, response => {
+                if (response.error) {
+                    throw String(response.error)
+                }
+                dispatchBeneficiary({ type: ImageOption, payload: response })
+            })
+        } catch (error) {
+            showNotification(error.toString())
+        }
     }
 
     console.log(state.foundsOrigin)
@@ -661,7 +746,12 @@ const ECommerRegister = () => {
                                     Subir foto de perfil
                                 </Text>
                             </View>
-                            <UploadImage />
+                            <UploadImage
+                                value={state.profilePictureId}
+                                onChange={_ =>
+                                    uploadImageView("profilePictureId")
+                                }
+                            />
                         </View>
 
                         <View style={classes.position}>
@@ -670,7 +760,12 @@ const ECommerRegister = () => {
                                     Subir foto frontal sosteniendo su ID
                                 </Text>
                             </View>
-                            <UploadImage />
+                            <UploadImage
+                                value={state.identificationPictureId}
+                                onChange={_ =>
+                                    uploadImageView("identificationPictureId")
+                                }
+                            />
                         </View>
 
                         <View style={classes.containerTitle}>
@@ -770,9 +865,15 @@ const ECommerRegister = () => {
                             <View style={classes.column}>
                                 <TouchableOpacity
                                     onPress={_ => setShowDate(true)}>
+<<<<<<< HEAD
+                                    <Icon
+                                        name="perm-contact-calendar"
+                                        size={40}
+=======
                                     <AntDesign
                                         name="calendar"
                                         size={RFValue(40)}
+>>>>>>> bab397d3294759aa64dd018310aeaec4cde81e95
                                         color={Colors.colorYellow}
                                     />
                                 </TouchableOpacity>
@@ -1271,7 +1372,16 @@ const ECommerRegister = () => {
                                     Subir foto de perfil
                                 </Text>
                             </View>
-                            <UploadImage />
+                            <UploadImage
+                                value={
+                                    beneficiaryState.beneficiaryProfilePictureId
+                                }
+                                onChange={_ =>
+                                    uploadImageViewBeneficiary(
+                                        "beneficiaryProfilePictureId",
+                                    )
+                                }
+                            />
                         </View>
                         <View style={classes.position}>
                             <View style={classes.labelsRow}>
@@ -1279,7 +1389,16 @@ const ECommerRegister = () => {
                                     Subir foto frontal sosteniendo su ID
                                 </Text>
                             </View>
-                            <UploadImage />
+                            <UploadImage
+                                value={
+                                    beneficiaryState.beneficiaryIdentificationPictureId
+                                }
+                                onChange={_ =>
+                                    uploadImageViewBeneficiary(
+                                        "beneficiaryIdentificationPictureId",
+                                    )
+                                }
+                            />
                         </View>
 
                         <View style={classes.rowButtons}>

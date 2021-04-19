@@ -49,7 +49,7 @@ const ItemWallet = ({ data = {}, disabled = false }) => {
 
             <View style={styles.subContainerInfo}>
                 <View style={styles.row}>
-                    <Text style={styles.superValue}>{data.description}</Text>
+                    <Text style={styles.superValue}>{data.name}</Text>
 
                     <View style={styles.lastCol}>
                         <Text style={styles.key}>Balance</Text>
