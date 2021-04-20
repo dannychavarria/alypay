@@ -163,14 +163,8 @@ const MapsCommerce = () => {
 
     return (
         <View style={styles.container}>
-
-            <Image source={logo}
-                style={{ resizeMode: "contain", height: RFValue(128), width: RFValue(256), }}
-                animation="fadeIn" />
-
             {state.latitude !== null && state.longitude !== null && (
                 <>
-                    <SearchMap data={info} setNewLongitude={setNewLongitude} setNewLatitude={setNewLatitude} />
 
                     <MapView showsUserLocation={true}
                         style={styles.map}
@@ -217,7 +211,10 @@ const MapsCommerce = () => {
                         onSnapToItem={(index) => onChangeTap(index)}//mandar el index de la targeta actual a la funcion
                     />
 
+                    <SearchMap data={info} setNewLongitude={setNewLongitude} setNewLatitude={setNewLatitude} />
+
                 </>
+
             )}
         </View>
     )
@@ -225,9 +222,6 @@ const MapsCommerce = () => {
 
 const styles = StyleSheet.create({
     container: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        flexDirection: 'row',
         backgroundColor: 'black',
         ...StyleSheet.absoluteFillObject,
     },

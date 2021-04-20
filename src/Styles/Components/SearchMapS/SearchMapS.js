@@ -2,9 +2,6 @@ import { RFValue, Colors } from '../../../utils/constants'
 
 export default {
     container:{
-        position: "absolute",
-        top: 0,
-        width: "100%",
         padding: RFValue(20),
     },
     textInput: {
