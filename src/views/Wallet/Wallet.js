@@ -134,7 +134,7 @@ const ReceiveComponent = ({ wallet = "" }) => {
 
             <ViewAnimate style={styles.toUpBalanceContainer}>
                 <TouchableOpacity onPress={_ => CopyClipboard(wallet)}>
-                    <Text style={styles.textButtonToUpBalance}>
+                    <Text style={[styles.textButtonToUpBalance, {textDecorationLine: 'underline'}]}>
                         Copiar direccion
                     </Text>
                 </TouchableOpacity>

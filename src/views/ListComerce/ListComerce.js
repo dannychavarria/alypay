@@ -90,6 +90,8 @@ const ListComerce = ({ route }) => {
         }
     }
 
+    console.log('data: '+data)
+
     useEffect(() => {
         configureComponent()
 

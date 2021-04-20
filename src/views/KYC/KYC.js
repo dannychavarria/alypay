@@ -54,11 +54,7 @@ const initialState = {
     country: countries[0],
     filter: "",
 
-<<<<<<< HEAD
-    tab: 3,
-=======
     tab: 2,
->>>>>>> bab397d3294759aa64dd018310aeaec4cde81e95
 }
 
 const beneficiaryStateReducer = {
@@ -143,13 +139,7 @@ const ECommerRegister = () => {
             const dataSent = {
                 identificationType: state.identificationType,
                 identificationNumber: state.identificationNumber,
-<<<<<<< HEAD
-                alternativeNumber: `${state.country.phoneCode} ``${
-                    state.alternativeNumber
-                }`,
-=======
                 alternativeNumber: `${state.country.phoneCode} ${state.alternativeNumber}`,
->>>>>>> bab397d3294759aa64dd018310aeaec4cde81e95
                 nationality: state.nationality,
                 phoneCodeNationality: state.phoneCodeNationality,
                 currencyNationality: state.currencyNationality,
@@ -865,15 +855,9 @@ const ECommerRegister = () => {
                             <View style={classes.column}>
                                 <TouchableOpacity
                                     onPress={_ => setShowDate(true)}>
-<<<<<<< HEAD
-                                    <Icon
-                                        name="perm-contact-calendar"
-                                        size={40}
-=======
                                     <AntDesign
                                         name="calendar"
                                         size={RFValue(40)}
->>>>>>> bab397d3294759aa64dd018310aeaec4cde81e95
                                         color={Colors.colorYellow}
                                     />
                                 </TouchableOpacity>

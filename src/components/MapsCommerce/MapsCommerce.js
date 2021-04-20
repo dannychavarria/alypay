@@ -20,6 +20,7 @@ import SearchMap from "../SearchMap/SearchMap"//Importacion del buscador
 // Import Assets
 import User from "../../static/Ubication.png"
 import Commerce from "../../static/UbicationCommerce.png"
+import logo from "../../static/alypay.png"
 import Search from "../Search/Search"
 
 const initialState = {
@@ -125,8 +126,6 @@ const MapsCommerce = () => {
         )
     }
 
-
-
     useEffect(() => {
         ConfigureLocation()
     }, [])
@@ -149,7 +148,7 @@ const MapsCommerce = () => {
                 longitudeDelta: 0.045,
             })
         }
-    }, [ newLatitude, newLongitude])
+    }, [newLatitude, newLongitude])
     /**Funcion para setear la ubicacion de lal item que se muestra en el carrusel
      * 
      * @param {newLatitude, newLongitude} index 
@@ -164,47 +163,49 @@ const MapsCommerce = () => {
 
     return (
         <View style={styles.container}>
+
+            <Image source={logo}
+                style={{ resizeMode: "contain", height: RFValue(128), width: RFValue(256), }}
+                animation="fadeIn" />
+
             {state.latitude !== null && state.longitude !== null && (
-                <MapView showsUserLocation={true}
-                    style={styles.map}
-                    ref={(map) => setRef(map)}//setear "ref" para tener una referencia del MapView y usar sus metodos
-                    initialRegion={{
-                        longitude: state.longitude,
-                        latitude: state.latitude,
-                        latitudeDelta: 0.05,
-                        longitudeDelta: 0.045,
-                    }}
-                    onMarkerDragEnd={event => {
-                        dispatch({
-                            type: "longitude",
-                            payload: event.nativeEvent.coordinate.longitude,
-                        })
-                        dispatch({
-                            type: "latitude",
-                            payload: event.nativeEvent.coordinate.latitude,
-                        })
-                    }}>
-
-
-                    {info.map((item, index) => (
-                        <Marker image={Commerce}
-                            key={item.name}
-                            ref={ref => (item[index] = ref)}
-                            coordinate={{
-                                latitude: item.latitude,
-                                longitude: item.longitude,
-                            }}>
-                            <Callout>
-                                <Text>{item.name_commerce}</Text>
-                            </Callout>
-                        </Marker>
-                    ))}
-
-                </MapView>
-            )}
-            {
-                (state.latitude !== null && state.longitude !== null) &&
                 <>
+                    <SearchMap data={info} setNewLongitude={setNewLongitude} setNewLatitude={setNewLatitude} />
+
+                    <MapView showsUserLocation={true}
+                        style={styles.map}
+                        ref={(map) => setRef(map)}//setear "ref" para tener una referencia del MapView y usar sus metodos
+                        initialRegion={{
+                            longitude: state.longitude,
+                            latitude: state.latitude,
+                            latitudeDelta: 0.05,
+                            longitudeDelta: 0.045,
+                        }}
+                        onMarkerDragEnd={event => {
+                            dispatch({
+                                type: "longitude",
+                                payload: event.nativeEvent.coordinate.longitude,
+                            })
+                            dispatch({
+                                type: "latitude",
+                                payload: event.nativeEvent.coordinate.latitude,
+                            })
+                        }}>
+                        {info.map((item, index) => (
+                            <Marker image={Commerce}
+                                key={item.name}
+                                ref={ref => (item[index] = ref)}
+                                coordinate={{
+                                    latitude: item.latitude,
+                                    longitude: item.longitude,
+                                }}>
+                                <Callout>
+                                    <Text>{item.name_commerce}</Text>
+                                </Callout>
+                            </Marker>
+                        ))}
+                    </MapView>
+
                     <Carousel
                         data={info}
                         renderItem={renderCarouselItem}
@@ -215,15 +216,19 @@ const MapsCommerce = () => {
                         layout={'default'}
                         onSnapToItem={(index) => onChangeTap(index)}//mandar el index de la targeta actual a la funcion
                     />
-                    <SearchMap data={info} setNewLongitude={setNewLongitude} setNewLatitude={setNewLatitude} />
+
                 </>
-            }
+            )}
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'row',
+        backgroundColor: 'black',
         ...StyleSheet.absoluteFillObject,
     },
     map: {
