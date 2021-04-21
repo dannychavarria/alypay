@@ -15,11 +15,12 @@ import Geolocation from "react-native-geolocation-service"
 import MapView, { Marker, PROVIDER_GOOGLE, Callout } from "react-native-maps"
 import Carousel from "react-native-snap-carousel"
 import { errorMessage, RFValue, http, getHeaders } from "../../utils/constants"
-import SearchMap from "../SearchMap/SearchMap"//Importacion del buscador
+import SearchMap from "../SearchMap/SearchMap" //Importacion del buscador
 
 // Import Assets
 import User from "../../static/Ubication.png"
 import Commerce from "../../static/UbicationCommerce.png"
+import logo from "../../static/alypay.png"
 import Search from "../Search/Search"
 
 const initialState = {
@@ -71,7 +72,6 @@ const MapsCommerce = () => {
 
         Geolocation.getCurrentPosition(
             position => {
-                console.log("Posicion", position)
                 if (position !== null && position !== undefined) {
                     dispatch({
                         type: "latitude",
@@ -125,8 +125,6 @@ const MapsCommerce = () => {
         )
     }
 
-
-
     useEffect(() => {
         ConfigureLocation()
     }, [])
@@ -138,7 +136,7 @@ const MapsCommerce = () => {
     }, [state.latitude, state.longitude])
     /**
      * useEffect para cambiar la posicion de la camara si cambian los estados de:
-     * @param {newLongitude, newLatitude} index 
+     * @param {newLongitude, newLatitude} index
      */
     useEffect(() => {
         if (ref) {
@@ -149,81 +147,96 @@ const MapsCommerce = () => {
                 longitudeDelta: 0.045,
             })
         }
-    }, [ newLatitude, newLongitude])
+    }, [newLatitude, newLongitude])
     /**Funcion para setear la ubicacion de lal item que se muestra en el carrusel
-     * 
-     * @param {newLatitude, newLongitude} index 
+     *
+     * @param {newLatitude, newLongitude} index
      */
-    const onChangeTap = (index) => {
+    const onChangeTap = index => {
         var commerce = info[index]
 
         setNewLatitude(commerce.latitude)
         setNewLongitude(commerce.longitude)
     }
 
-
     return (
         <View style={styles.container}>
+            <Image
+                source={logo}
+                style={{
+                    resizeMode: "contain",
+                    height: RFValue(128),
+                    width: RFValue(256),
+                }}
+                animation="fadeIn"
+            />
+
             {state.latitude !== null && state.longitude !== null && (
-                <MapView showsUserLocation={true}
-                    style={styles.map}
-                    ref={(map) => setRef(map)}//setear "ref" para tener una referencia del MapView y usar sus metodos
-                    initialRegion={{
-                        longitude: state.longitude,
-                        latitude: state.latitude,
-                        latitudeDelta: 0.05,
-                        longitudeDelta: 0.045,
-                    }}
-                    onMarkerDragEnd={event => {
-                        dispatch({
-                            type: "longitude",
-                            payload: event.nativeEvent.coordinate.longitude,
-                        })
-                        dispatch({
-                            type: "latitude",
-                            payload: event.nativeEvent.coordinate.latitude,
-                        })
-                    }}>
-
-
-                    {info.map((item, index) => (
-                        <Marker image={Commerce}
-                            key={item.name}
-                            ref={ref => (item[index] = ref)}
-                            coordinate={{
-                                latitude: item.latitude,
-                                longitude: item.longitude,
-                            }}>
-                            <Callout>
-                                <Text>{item.name_commerce}</Text>
-                            </Callout>
-                        </Marker>
-                    ))}
-
-                </MapView>
-            )}
-            {
-                (state.latitude !== null && state.longitude !== null) &&
                 <>
+                    <MapView
+                        showsUserLocation={true}
+                        style={styles.map}
+                        ref={map => setRef(map)} //setear "ref" para tener una referencia del MapView y usar sus metodos
+                        initialRegion={{
+                            longitude: state.longitude,
+                            latitude: state.latitude,
+                            latitudeDelta: 0.05,
+                            longitudeDelta: 0.045,
+                        }}
+                        onMarkerDragEnd={event => {
+                            dispatch({
+                                type: "longitude",
+                                payload: event.nativeEvent.coordinate.longitude,
+                            })
+                            dispatch({
+                                type: "latitude",
+                                payload: event.nativeEvent.coordinate.latitude,
+                            })
+                        }}>
+                        {info.map((item, index) => (
+                            <Marker
+                                image={Commerce}
+                                key={item.name}
+                                ref={ref => (item[index] = ref)}
+                                coordinate={{
+                                    latitude: item.latitude,
+                                    longitude: item.longitude,
+                                }}>
+                                <Callout>
+                                    <Text>{item.name_commerce}</Text>
+                                </Callout>
+                            </Marker>
+                        ))}
+                    </MapView>
+
                     <Carousel
                         data={info}
                         renderItem={renderCarouselItem}
                         containerCustomStyle={styles.carousel}
                         itemWidth={300}
-                        sliderWidth={Dimensions.get('window').width}
+                        sliderWidth={Dimensions.get("window").width}
                         removeClippedSubviews={false}
-                        layout={'default'}
-                        onSnapToItem={(index) => onChangeTap(index)}//mandar el index de la targeta actual a la funcion
+                        layout={"default"}
+                        onSnapToItem={index => onChangeTap(index)} //mandar el index de la targeta actual a la funcion
                     />
-                    <SearchMap data={info} setNewLongitude={setNewLongitude} setNewLatitude={setNewLatitude} />
+
+                    <SearchMap
+                        data={info}
+                        setNewLongitude={setNewLongitude}
+                        setNewLatitude={setNewLatitude}
+                    />
                 </>
-            }
+            )}
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "row",
+        backgroundColor: "black",
         ...StyleSheet.absoluteFillObject,
     },
     map: {

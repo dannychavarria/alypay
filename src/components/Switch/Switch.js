@@ -12,12 +12,13 @@ import { SETFUNCTION } from "../../store/actionsTypes"
 
 /**
  * Componente de switch wallet/sell
- * 
- * @param {Function} onChange 
+ *
+ * @param {Function} onChange
  * @param {Array} items
  * @param {Number} indexActive
  */
-const Switch = ({ onSwitch = () => { }, items = [] }) => {
+const Switch = ({ onSwitch = () => {}, items = [], indexActive = 0 }) => {
+    console.log("Items", onSwitch, items)
     const [state, setState] = useState(items[0].state)
 
     // Esperamos que el estado cambie para saber cuando el usuario cambia de estado
@@ -36,10 +37,15 @@ const Switch = ({ onSwitch = () => { }, items = [] }) => {
             type: SETFUNCTION,
             payload: {
                 ...functions,
-                resetTab: () => setState(items[0].state)
-            }
+                resetTab: () => setState(items[0].state),
+            },
         })
     }, [state])
+
+    useEffect(() => {
+        console.log("change indexActive")
+        setState(items[indexActive].state)
+    }, [indexActive])
 
     const styles = StyleSheet.create({
         container: {
@@ -57,7 +63,7 @@ const Switch = ({ onSwitch = () => { }, items = [] }) => {
             alignItems: "center",
             padding: RFValue(10),
             borderRadius: RFValue(50),
-            width: `${itemWidth}%`
+            width: `${itemWidth}%`,
         },
 
         buttonActive: {
@@ -84,21 +90,29 @@ const Switch = ({ onSwitch = () => { }, items = [] }) => {
 
     const ItemComponent = (item, key) => {
         return (
-            <TouchableOpacity onPress={_ => setState(item.state)} key={key} style={[state === item.state ? styles.buttonActive : styles.buttonDisactive, styles.buttons]}>
-                <Text style={[state === item.state ? styles.textButtonActive : styles.textButtonDisactive, styles.textButton]}>
+            <TouchableOpacity
+                onPress={_ => setState(item.state)}
+                key={key}
+                style={[
+                    state === item.state
+                        ? styles.buttonActive
+                        : styles.buttonDisactive,
+                    styles.buttons,
+                ]}>
+                <Text
+                    style={[
+                        state === item.state
+                            ? styles.textButtonActive
+                            : styles.textButtonDisactive,
+                        styles.textButton,
+                    ]}>
                     {item.text}
                 </Text>
             </TouchableOpacity>
         )
     }
 
-    return (
-        <View style={styles.container}>
-            {
-                items.map(ItemComponent)
-            }
-        </View>
-    )
+    return <View style={styles.container}>{items.map(ItemComponent)}</View>
 }
 
 export default Switch

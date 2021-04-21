@@ -134,7 +134,11 @@ const ReceiveComponent = ({ wallet = "" }) => {
 
             <ViewAnimate style={styles.toUpBalanceContainer}>
                 <TouchableOpacity onPress={_ => CopyClipboard(wallet)}>
-                    <Text style={styles.textButtonToUpBalance}>
+                    <Text
+                        style={[
+                            styles.textButtonToUpBalance,
+                            { textDecorationLine: "underline" },
+                        ]}>
                         Copiar direccion
                     </Text>
                 </TouchableOpacity>
@@ -783,7 +787,6 @@ const Wallet = ({ route }) => {
 
     // Params passed from router
     const { params } = route
-    console.log("Params", route)
     /**
      * Funcion que se encarga de configurar todo el componente
      */

@@ -195,7 +195,7 @@ const App = () => {
 
             <Loader isVisible={state.loader} />
 
-            <Splash isVisible={state.splash} />
+            {/*  <Splash isVisible={state.splash} /> */}
 
             <FlashMessage position="top" floating={true} />
         </>

@@ -14,8 +14,9 @@ import {
     TouchableOpacity,
     View,
     TextInput,
-    KeyboardAvoidingView,
+    BackHandler,
     Platform,
+    Alert,
     FlatList,
 } from "react-native"
 import { Image } from "react-native-animatable"
@@ -66,11 +67,16 @@ const switchItems = [
     },
 ]
 
+const initialState = {
+    wallets: [],
+    indexTabActive: 0,
+}
+
 /**
  * Vista componente que se renderiza cuando
  * el usuario ejecuta el componente pagar en el switch
  */
-const PayComponent = () => {
+const PayComponent = ({ onGoBack = () => {} }) => {
     const { navigate } = useNavigation()
     const scanerCamera = useRef(null)
 
@@ -138,6 +144,37 @@ const PayComponent = () => {
             loader(false)
         }
     }
+
+    /**Metodo que confirma la salida del usuario a la pantalla de inicio */
+    const goBack = () => {
+        Alert.alert(
+            "Estas a punto de salir",
+            "Estas seguro que quieres salir de la ventana",
+            [
+                {
+                    text: "Cancelar",
+                    onPress: () => {},
+                },
+                {
+                    text: "Salir",
+                    onPress: () => onGoBack(),
+                },
+            ],
+        )
+
+        return true
+    }
+
+    useEffect(() => {
+        const backHanldedEvent = BackHandler.addEventListener(
+            "hardwareBackPress",
+            goBack,
+        )
+
+        return () => {
+            backHanldedEvent.remove()
+        }
+    }, [])
 
     const styles = StyleSheet.create({
         constainerQR: {
@@ -294,16 +331,11 @@ const PayComponent = () => {
     )
 }
 
-const initialState = {
-    wallets: [],
-    indexTabActive: 0,
-}
-
 const Main = () => {
     const [stateView, setStateView] = useState(TYPE_VIEW.WALLET)
 
     const [state, dispatch] = useReducer(reducer, initialState)
-
+    const [indexActive, setIndexActive] = useState(0)
     const { globalStorage } = store.getState()
 
     /**
@@ -383,7 +415,6 @@ const Main = () => {
             />
             {stateView === TYPE_VIEW.WALLET && (
                 <>
-                    <CardExecutive />
                     <FlatList
                         data={state.wallets}
                         keyExtractor={(_, i) => i}
@@ -392,7 +423,14 @@ const Main = () => {
                 </>
             )}
 
-            {stateView === TYPE_VIEW.PAY && <PayComponent />}
+            {stateView === TYPE_VIEW.PAY && (
+                <PayComponent
+                    onGoBack={() => {
+                        setStateView(TYPE_VIEW.WALLET)
+                        dispatch({ type: "indexTabActive", payload: 0 })
+                    }}
+                />
+            )}
         </Container>
     )
 }

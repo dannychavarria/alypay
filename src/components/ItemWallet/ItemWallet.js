@@ -24,10 +24,10 @@ const ItemWallet = ({ data = {}, disabled = false }) => {
 
     const urlImage =
         data._id !== null
-            ? `https://s2.coinmarketcap.com/static/img/coins/128x128/${data._id}.png`
+            ? `https://s2.coinmarketcap.com/static/img/coins/128x128/${
+                  data._id
+              }.png`
             : urlAlyCoin
-
-    console.log(data)
 
     /**
      * Funcion que verifica si tiene es dueño de compañia
