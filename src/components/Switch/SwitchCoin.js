@@ -8,12 +8,12 @@ import { Colors, RFValue } from "../../utils/constants"
 
 /**
  * Componente de switch wallet/sell
- * 
- * @param {Function} onChange 
+ *
+ * @param {Function} onChange
  * @param {Array} items
  * @param {Number} indexActive
  */
-const SwitchCoin = ({ onSwitch = () => { }, items = {} }) => {
+const SwitchCoin = ({ onSwitch = () => {}, items = {} }) => {
     const [coins, setCoins] = useState([])
     const [state, setState] = useState({})
     const [indexActive, setIndexActive] = useState(0)
@@ -52,7 +52,7 @@ const SwitchCoin = ({ onSwitch = () => { }, items = {} }) => {
             alignItems: "center",
             padding: RFValue(10),
             borderRadius: RFValue(50),
-            width: `${itemWidth}%`
+            width: `${itemWidth}%`,
         },
 
         buttonActive: {
@@ -86,39 +86,29 @@ const SwitchCoin = ({ onSwitch = () => { }, items = {} }) => {
                     setState(item)
                 }}
                 key={key}
-                style={
-                    [
-                        indexActive === key
-                            ? styles.buttonActive
-                            : styles.buttonDisactive,
-                        styles.buttons,
-                    ]
-                }>
-                <Text style={
-                    [
+                style={[
+                    indexActive === key
+                        ? styles.buttonActive
+                        : styles.buttonDisactive,
+                    styles.buttons,
+                ]}>
+                <Text
+                    style={[
                         indexActive === key
                             ? styles.textButtonActive
                             : styles.textButtonDisactive,
                         styles.textButton,
                         {
-                            opacity: item.credit ? 1 : 0.3
-                        }
-                    ]
-                }>
+                            opacity: item.credit ? 1 : 0.3,
+                        },
+                    ]}>
                     {item.symbol}
                 </Text>
             </TouchableOpacity>
         )
     }
 
-    return (
-        <View style={styles.container}>
-            {
-                coins.map(ItemComponent)
-            }
-        </View >
-
-    )
+    return <View style={styles.container}>{coins.map(ItemComponent)}</View>
 }
 
 export default SwitchCoin

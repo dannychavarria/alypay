@@ -401,6 +401,7 @@ const Main = () => {
                     setStateView(TYPE_VIEW.WALLET)
 
                     state.dispatch({ type: "indexTabActive", payload: 0 })
+                    setIndexActive(0)
                 },
             },
         })
@@ -411,7 +412,7 @@ const Main = () => {
             <Switch
                 onSwitch={setStateView}
                 items={switchItems}
-                indexActive={state.indexTabActive}
+                indexActive={stateView}
             />
             {stateView === TYPE_VIEW.WALLET && (
                 <>
@@ -426,8 +427,9 @@ const Main = () => {
             {stateView === TYPE_VIEW.PAY && (
                 <PayComponent
                     onGoBack={() => {
-                        setStateView(TYPE_VIEW.WALLET)
                         dispatch({ type: "indexTabActive", payload: 0 })
+                        setIndexActive(0)
+                        setStateView(TYPE_VIEW.WALLET)
                     }}
                 />
             )}

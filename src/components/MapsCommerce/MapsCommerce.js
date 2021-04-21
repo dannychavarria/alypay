@@ -65,7 +65,7 @@ const MapsCommerce = () => {
     // Funcion que almacena la posicion en el mapa
     const positionMap = () => {
         const options = {
-            enableHighAccuracy: false,
+            enableHighAccuracy: true,
             timeout: 15000,
             maximumAge: 10000,
         }
@@ -163,7 +163,6 @@ const MapsCommerce = () => {
 
     return (
         <View style={styles.container}>
-
             {state.latitude !== null && state.longitude !== null && (
                 <>
                     <MapView
@@ -252,7 +251,7 @@ const styles = StyleSheet.create({
     },
     cardImage: {
         height: RFValue(150),
-        width: '100%',
+        width: "100%",
         // bottom: 0,
         // position: 'absolute',
         // borderBottomLeftRadius: 24,
@@ -261,7 +260,6 @@ const styles = StyleSheet.create({
         padding: 50,
         borderBottomRightRadius: 15,
         borderBottomLeftRadius: 15,
-
     },
     cardTitle: {
         color: "white",

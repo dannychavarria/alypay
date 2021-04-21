@@ -17,8 +17,7 @@ import { SETFUNCTION } from "../../store/actionsTypes"
  * @param {Array} items
  * @param {Number} indexActive
  */
-const Switch = ({ onSwitch = () => {}, items = [], indexActive = 0 }) => {
-    console.log("Items", onSwitch, items)
+const Switch = ({ onSwitch = () => {}, items = [], indexActive }) => {
     const [state, setState] = useState(items[0].state)
 
     // Esperamos que el estado cambie para saber cuando el usuario cambia de estado
@@ -26,6 +25,13 @@ const Switch = ({ onSwitch = () => {}, items = [], indexActive = 0 }) => {
 
     /**Constante que define el ancho de cada item */
     const itemWidth = 100 / items.length
+
+    useEffect(() => {
+        if (state !== indexActive) {
+            const current = items.find(item => item.state === indexActive)
+            setState(current.state)
+        }
+    }, [indexActive])
 
     // Esperamos que se actualice el estado para ejecutar el callback
     useEffect(() => {
@@ -41,11 +47,6 @@ const Switch = ({ onSwitch = () => {}, items = [], indexActive = 0 }) => {
             },
         })
     }, [state])
-
-    useEffect(() => {
-        console.log("change indexActive")
-        setState(items[indexActive].state)
-    }, [indexActive])
 
     const styles = StyleSheet.create({
         container: {
@@ -91,7 +92,9 @@ const Switch = ({ onSwitch = () => {}, items = [], indexActive = 0 }) => {
     const ItemComponent = (item, key) => {
         return (
             <TouchableOpacity
-                onPress={_ => setState(item.state)}
+                onPress={_ => {
+                    setState(item.state)
+                }}
                 key={key}
                 style={[
                     state === item.state
