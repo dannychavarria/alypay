@@ -19,9 +19,12 @@ import { errorMessage, loader } from "../../utils/constants"
 // Import Assets
 import logo from "../../static/alypay.png"
 
+import { useNavigation } from "@react-navigation/native"
+
 const HistoryRetirementExcutive = () => {
     const classes = useStyles(HistoryExcutiveStyles)
     const [info, setInfo] = useState([])
+    const { navigate } = useNavigation()
 
     const configurateComponent = async () => {
         try {
@@ -34,6 +37,10 @@ const HistoryRetirementExcutive = () => {
         } finally {
             loader(false)
         }
+    }
+
+    const onDetails = (value) => {
+        navigate("Description", { hash: value })
     }
 
     useEffect(() => {
@@ -60,22 +67,26 @@ const HistoryRetirementExcutive = () => {
                     data={info}
                     keyExtractor={(_, i) => i.toString()}
                     renderItem={({ item }) => (
-                        <View style={classes.bodyRowTable}>
-                            <Text style={classes.textRowTable}>
-                                {item.id_transaction}
-                            </Text>
-                            <Text style={classes.textRowTable}>
-                                {item.hash}
-                            </Text>
-                            <Text style={classes.textRowTable}>
-                                {moment(item.date_create).format(
-                                    "MMM. D, YYYY",
-                                )}
-                            </Text>
-                            <Text style={classes.textRowTable}>
-                                {item.amount_usd} {item.coin_fee}
-                            </Text>
-                        </View>
+                        <TouchableOpacity
+                            onPress={() => onDetails(item.hash)}
+                        >
+                            <View style={classes.bodyRowTable}>
+                                <Text style={classes.textRowTable}>
+                                    {item.id_transaction}
+                                </Text>
+                                <Text style={classes.textRowTable}>
+                                    {item.hash}
+                                </Text>
+                                <Text style={classes.textRowTable}>
+                                    {moment(item.date_create).format(
+                                        "MMM. D, YYYY",
+                                    )}
+                                </Text>
+                                <Text style={classes.textRowTable}>
+                                    {item.amount_usd} {item.coin_fee}
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
                     )}
                 />
             </View>

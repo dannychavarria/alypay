@@ -381,8 +381,6 @@ const ECommerRegister = () => {
         }
     }
 
-    console.log(state.foundsOrigin)
-
     return (
         <Container showLogo>
             <View style={classes.container}>

@@ -16,19 +16,7 @@ import avatar from "../../static/ecommerce-avatar.png"
 import tether from "../../static/tether.png"
 
 const ItemComerce = ({ data = {} }) => {
-    const [source, setSource] = useState(null)
     const { navigate } = useNavigation()
-
-    // Funcion que permite extraer la imagen para visualizarla
-    const read = async () => {
-        const blog = data?.item.profile_picture
-
-        // verificamos si hay foto
-        if (blog) {
-            const file = await readFile(blog)
-            setSource(file)
-        }
-    }
 
     const onInformacion = () => {
         navigate(ROUTES.WALLETCOMMERCE, data)
@@ -43,7 +31,11 @@ const ItemComerce = ({ data = {} }) => {
             <TouchableOpacity style={styles.container} onPress={onInformacion}>
                 <Image
                     style={styles.logo}
-                    source={source === null ? avatar : { uri: source }}
+                    source={
+                        { uri: data.item.profile_picture } === null
+                            ? avatar
+                            : { uri: data.item?.profile_picture }
+                    }
                 />
 
                 <View style={styles.cardInformation}>

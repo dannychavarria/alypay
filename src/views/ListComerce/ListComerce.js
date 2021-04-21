@@ -101,71 +101,13 @@ const ListComerce = ({ route }) => {
         })
     }, [])
 
-    console.log(params.wallet_type)
-
     return (
         <View style={classes.main}>
             <Image source={logo} style={classes.logo} />
 
-<<<<<<< Updated upstream
-            {params.id !== -1
-                ?
+            {params.id !== -1 ? (
                 <ExcutiveListCommerce data={params} />
-                :
-                (params.id === -1 && params.wallet_type === 2)
-                    ?
-                    <>
-                        <View style={classes.containerTitle}>
-                            <Text style={classes.title}>Listado de comercios</Text>
-                        </View>
-                        <View style={classes.contenList}>
-                            <FlatList
-                                data={data}
-                                keyExtractor={(_, i) => i}
-                                renderItem={item => <ItemComerce data={item} />}
-                            />
-                        </View>
-                    </>
-                    :
-                    (params.id === -1 && params.wallet_type === 3)
-                        ?
-                        <>
-                            <Switch
-                                onSwitch={setStateView}
-                                items={switchItems}
-                                indexActive={state.indexTabActive}
-                            />
-                            {stateView === TYPE_VIEW.COMMERCE && (
-                                <>
-                                    <View style={classes.containerTitle}>
-                                        <Text style={classes.title}>Listado de comercios</Text>
-                                    </View>
-                                    <View style={classes.contenList}>
-                                        <FlatList
-                                            data={data}
-                                            keyExtractor={(_, i) => i}
-                                            renderItem={item => <ItemComerce data={item} />}
-                                        />
-                                    </View>
-                                </>
-                            )}
-
-                            {stateView === TYPE_VIEW.EXCUTIVE_LIST && (
-                                <>
-                                    <ExcutiveListCommerce data={params} />
-                                </>
-                            )}
-                        </>
-                        : ''
-            }
-
-=======
-            <Switch
-                onSwitch={setStateView}
-                items={switchItems}
-                indexActive={state.indexTabActive}
-            />
-            {stateView === TYPE_VIEW.COMMERCE && (
+            ) : params.id === -1 && params.wallet_type === 2 ? (
                 <>
                     <View style={classes.containerTitle}>
                         <Text style={classes.title}>Listado de comercios</Text>
@@ -178,54 +120,41 @@ const ListComerce = ({ route }) => {
                         />
                     </View>
                 </>
-            )}
-
-            {stateView === TYPE_VIEW.EXCUTIVE_LIST && (
+            ) : params.id === -1 && params.wallet_type === 3 ? (
                 <>
-                    <ExcutiveListCommerce data={params} />
+                    <Switch
+                        onSwitch={setStateView}
+                        items={switchItems}
+                        indexActive={state.indexTabActive}
+                    />
+                    {stateView === TYPE_VIEW.COMMERCE && (
+                        <>
+                            <View style={classes.containerTitle}>
+                                <Text style={classes.title}>
+                                    Listado de comercios
+                                </Text>
+                            </View>
+                            <View style={classes.contenList}>
+                                <FlatList
+                                    data={data}
+                                    keyExtractor={(_, i) => i}
+                                    renderItem={item => (
+                                        <ItemComerce data={item} />
+                                    )}
+                                />
+                            </View>
+                        </>
+                    )}
+
+                    {stateView === TYPE_VIEW.EXCUTIVE_LIST && (
+                        <>
+                            <ExcutiveListCommerce data={params} />
+                        </>
+                    )}
                 </>
-            )}
->>>>>>> Stashed changes
+            ) : null}
         </View>
     )
 }
-
-{/* <>
-    <View style={classes.containerTitle}>
-        <Text style={classes.title}>Listado de comercios</Text>
-    </View>
-    <View style={classes.contenList}>
-        <FlatList
-            data={data}
-            keyExtractor={(_, i) => i}
-            renderItem={item => <ItemComerce data={item} />}
-        />
-    </View>
-</>
-}{<Switch
-    onSwitch={setStateView}
-    items={switchItems}
-    indexActive={state.indexTabActive}
-/>
-{stateView === TYPE_VIEW.COMMERCE && (
-<>
-    <View style={classes.containerTitle}>
-        <Text style={classes.title}>Listado de comercios</Text>
-    </View>
-    <View style={classes.contenList}>
-        <FlatList
-            data={data}
-            keyExtractor={(_, i) => i}
-            renderItem={item => <ItemComerce data={item} />}
-        />
-    </View>
-</> 
-)}
-
-{stateView === TYPE_VIEW.EXCUTIVE_LIST && (
-<>
-    <ExcutiveListCommerce data={params} />
-</>
-)}} */}
 
 export default ListComerce

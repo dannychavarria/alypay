@@ -7,6 +7,7 @@ import { SearchMapStyle } from "../../Styles/Components/index"
 const SearchMap = ({ data, setNewLongitude, setNewLatitude}) => {
     const [value, setValue] = useState('')
     const classes = useStyles(SearchMapStyle)
+
     //Funcion de filtro para el buscador 
     const filteredList = useMemo(_ => {
         if (value.length > 0) {
@@ -26,6 +27,8 @@ const SearchMap = ({ data, setNewLongitude, setNewLatitude}) => {
         setValue('')//Para que se quite el flatlist al momento de tocar algun elemento de este
     }
 
+    console.log(data)
+
     return (
         <View style={classes.container}>
             <TextInput
@@ -37,6 +40,7 @@ const SearchMap = ({ data, setNewLongitude, setNewLatitude}) => {
             />
             
             <FlatList
+                keyExtractor={(_, i)=>i=i}
                 data={filteredList.slice(0, 5)}
                 renderItem={({ item }) => (
                     <TouchableOpacity style={classes.cardContainer}
