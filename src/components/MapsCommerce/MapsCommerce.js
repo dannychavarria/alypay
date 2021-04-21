@@ -104,6 +104,8 @@ const MapsCommerce = () => {
                 getHeaders(),
             )
 
+            console.log(data)
+
             if (data.error) {
                 throw String(data.message)
             }
@@ -120,7 +122,7 @@ const MapsCommerce = () => {
         return (
             <View style={styles.cardContainer}>
                 <Text style={styles.cardTitle}>{item.name_commerce}</Text>
-                <Image style={styles.cardImage} source={item.image} />
+                <Image style={styles.cardImage} source={{ uri: item.image }} />
             </View>
         )
     }
@@ -161,15 +163,6 @@ const MapsCommerce = () => {
 
     return (
         <View style={styles.container}>
-            <Image
-                source={logo}
-                style={{
-                    resizeMode: "contain",
-                    height: RFValue(128),
-                    width: RFValue(256),
-                }}
-                animation="fadeIn"
-            />
 
             {state.latitude !== null && state.longitude !== null && (
                 <>
@@ -233,9 +226,6 @@ const MapsCommerce = () => {
 
 const styles = StyleSheet.create({
     container: {
-        justifyContent: "center",
-        alignItems: "center",
-        flexDirection: "row",
         backgroundColor: "black",
         ...StyleSheet.absoluteFillObject,
     },
@@ -261,14 +251,17 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     cardImage: {
-        height: RFValue(100),
-        width: RFValue(140),
+        height: RFValue(150),
+        width: '100%',
         // bottom: 0,
         // position: 'absolute',
         // borderBottomLeftRadius: 24,
         //borderBottomRightRadius: 24,
-        resizeMode: "contain",
+        resizeMode: "cover",
         padding: 50,
+        borderBottomRightRadius: 15,
+        borderBottomLeftRadius: 15,
+
     },
     cardTitle: {
         color: "white",
