@@ -104,12 +104,10 @@ const ListComerce = ({ route }) => {
     return (
         <View style={classes.main}>
             <Image source={logo} style={classes.logo} />
-            <Switch
-                onSwitch={setStateView}
-                items={switchItems}
-                indexActive={state.indexTabActive}
-            />
-            {stateView === TYPE_VIEW.COMMERCE && (
+
+            {params.id !== -1 ? (
+                <ExcutiveListCommerce data={params} />
+            ) : params.id === -1 && params.wallet_type === 2 ? (
                 <>
                     <View style={classes.containerTitle}>
                         <Text style={classes.title}>Listado de comercios</Text>
@@ -122,13 +120,39 @@ const ListComerce = ({ route }) => {
                         />
                     </View>
                 </>
-            )}
-
-            {stateView === TYPE_VIEW.EXCUTIVE_LIST && (
+            ) : params.id === -1 && params.wallet_type === 3 ? (
                 <>
-                    <ExcutiveListCommerce data={params} />
+                    <Switch
+                        onSwitch={setStateView}
+                        items={switchItems}
+                        indexActive={state.indexTabActive}
+                    />
+                    {stateView === TYPE_VIEW.COMMERCE && (
+                        <>
+                            <View style={classes.containerTitle}>
+                                <Text style={classes.title}>
+                                    Listado de comercios
+                                </Text>
+                            </View>
+                            <View style={classes.contenList}>
+                                <FlatList
+                                    data={data}
+                                    keyExtractor={(_, i) => i}
+                                    renderItem={item => (
+                                        <ItemComerce data={item} />
+                                    )}
+                                />
+                            </View>
+                        </>
+                    )}
+
+                    {stateView === TYPE_VIEW.EXCUTIVE_LIST && (
+                        <>
+                            <ExcutiveListCommerce data={params} />
+                        </>
+                    )}
                 </>
-            )}
+            ) : null}
         </View>
     )
 }

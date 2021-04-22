@@ -35,7 +35,8 @@ import Maps from "./components/MapsCommerce/MapsCommerce"
 import ListCommerceExcute from "./components/ExcutiveListCommerce/ExcutiveListCommerce"
 import RetirementExcutive from "./views/RetirementExcutive/RetirementExcutive"
 import WalletCommerce from "./views/WalletCommerce/WalletCommerce"
-
+import HistoryRetirementExcutive from "./components/HistoryRetirementExcutive/HistoryRetirementExcutive"
+import Kyc from "./views/KYC/KYC"
 // import assets and animation
 import notConectionAnimation from "./animations/no-internet-connection.json"
 import ButtonSupport from "./components/ButtonSupport/ButtonSupport.component"
@@ -152,6 +153,11 @@ const App = () => {
                                 name={ROUTES.WALLETCOMMERCE}
                                 component={WalletCommerce}
                             />
+                            <Stack.Screen
+                                name={ROUTES.HISTORYRETIREMENTEXCUTIVE}
+                                component={HistoryRetirementExcutive}
+                            />
+                            <Stack.Screen name={ROUTES.KYC} component={Kyc} />
                         </>
                     )}
 
