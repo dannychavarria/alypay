@@ -28,8 +28,10 @@ const Switch = ({ onSwitch = () => {}, items = [], indexActive }) => {
 
     useEffect(() => {
         if (state !== indexActive) {
-            const current = items.find(item => item.state === indexActive)
-            setState(current.state)
+            if (indexActive !== null && indexActive !== undefined) {
+                const current = items.find(item => item.state === indexActive)
+                setState(current.state)
+            }
         }
     }, [indexActive])
 
