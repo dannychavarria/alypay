@@ -14,7 +14,7 @@ import Container from "../Container/Container"
 import Geolocation from "react-native-geolocation-service"
 import MapView, { Marker, PROVIDER_GOOGLE, Callout } from "react-native-maps"
 import Carousel from "react-native-snap-carousel"
-import { errorMessage, RFValue, http, getHeaders } from "../../utils/constants"
+import { errorMessage, RFValue, http, getHeaders, loader } from "../../utils/constants"
 import SearchMap from "../SearchMap/SearchMap" //Importacion del buscador
 
 // Import Assets
@@ -113,6 +113,8 @@ const MapsCommerce = () => {
             setInfo(data)
         } catch (error) {
             errorMessage(error.toString())
+        } finally {
+            loader(false)
         }
     }
 
@@ -129,6 +131,7 @@ const MapsCommerce = () => {
 
     useEffect(() => {
         ConfigureLocation()
+        loader(true)
     }, [])
 
     useEffect(() => {
