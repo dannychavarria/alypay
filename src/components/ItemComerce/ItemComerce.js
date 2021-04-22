@@ -22,10 +22,6 @@ const ItemComerce = ({ data = {} }) => {
         navigate(ROUTES.WALLETCOMMERCE, data)
     }
 
-    useEffect(() => {
-        read()
-    }, [])
-
     return (
         <>
             <TouchableOpacity style={styles.container} onPress={onInformacion}>
