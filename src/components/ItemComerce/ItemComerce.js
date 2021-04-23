@@ -17,6 +17,8 @@ import tether from "../../static/tether.png"
 
 const ItemComerce = ({ data = {} }) => {
     const { navigate } = useNavigation()
+    const images = data.item.profile_picture
+    console.log(images)
 
     const onInformacion = () => {
         navigate(ROUTES.WALLETCOMMERCE, data)
@@ -28,7 +30,7 @@ const ItemComerce = ({ data = {} }) => {
                 <Image
                     style={styles.logo}
                     source={
-                        { uri: data.item.profile_picture } === null
+                        images === null
                             ? avatar
                             : { uri: data.item?.profile_picture }
                     }

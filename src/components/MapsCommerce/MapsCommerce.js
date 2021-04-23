@@ -6,6 +6,8 @@ import {
     StyleSheet,
     Image,
     Dimensions,
+    Linking,
+    Platform,
 } from "react-native"
 import { PERMISSIONS, request, check } from "react-native-permissions"
 
@@ -126,12 +128,39 @@ const MapsCommerce = () => {
 
     // Funcion que rendecira las tarjetas de los commercios
     const renderCarouselItem = ({ item }) => {
-        // console.log(item)
+        //console.log(item)
+
+        // Obtenemos las posisciones iniciales del usuario
+        const scheme = Platform.select({
+            ios: `maps:${state.latitude},${state.longitude}?q=`,
+            android: `geo:${state.latitude},${state.longitude}?q=`,
+        })
+
+        // Obtenemos las posiciones del comercio
+        const latLng = `${item.latitude},${item.longitude}`
+        //Obtenemos el nombre del comercio
+        const label = item.name_commerce
+
+        // Hacemos la verificacion de que dispositivo esta utilizando
+        const url = Platform.select({
+            ios: `${scheme}${label}@${latLng}`,
+            android: `${scheme}${latLng}(${label})`,
+        })
+
+        // Funcion que nos permite dirigirnos al Google Maps para visualizar la ruta mas sercana del comercio
+        const direcction = () => {
+            Linking.openURL(url)
+        }
         return (
-            <View style={styles.cardContainer}>
-                <Text style={styles.cardTitle}>{item.name_commerce}</Text>
-                <Image style={styles.cardImage} source={{ uri: item.image }} />
-            </View>
+            <TouchableOpacity onPress={direcction}>
+                <View style={styles.cardContainer}>
+                    <Text style={styles.cardTitle}>{item.name_commerce}</Text>
+                    <Image
+                        style={styles.cardImage}
+                        source={{ uri: item.image }}
+                    />
+                </View>
+            </TouchableOpacity>
         )
     }
 
