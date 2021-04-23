@@ -8,7 +8,7 @@ import Icon from 'react-native-vector-icons/Feather'
 
 import { GlobalStyles } from "../../utils/constants"
 
-const SearchMap = ({ data, setNewLongitude, setNewLatitude }) => {
+const SearchMap = ({ data, setNewLongitude, setNewLatitude, click, setClick }) => {
     const [value, setValue] = useState('')
     const [list, setList] = useState([])
     const classes = useStyles(SearchMapStyle)
@@ -28,7 +28,7 @@ const SearchMap = ({ data, setNewLongitude, setNewLatitude }) => {
     }
 
     useEffect(() => {
-        value === '' ? setList([]) : ''
+        value != list ? setList([]) : ''
     }, [value])
 
 
@@ -38,6 +38,7 @@ const SearchMap = ({ data, setNewLongitude, setNewLatitude }) => {
         setNewLatitude(latitude)
         setValue('')//Para que se quite el flatlist al momento de tocar algun elemento de este
         setList([])
+        setClick(!click)
     }
 
     return (
@@ -66,7 +67,7 @@ const SearchMap = ({ data, setNewLongitude, setNewLatitude }) => {
                 renderItem={({ item }) => (
                     <TouchableOpacity style={classes.cardContainer}
                         onPress={() => { positionCommerce(item.longitude, item.latitude) }}>
-                        <Text>{item.name_commerce}</Text>
+                        <Text style={classes.textWhite}>{item.name_commerce}</Text>
                     </TouchableOpacity>
                 )}
             />

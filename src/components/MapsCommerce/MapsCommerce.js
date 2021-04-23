@@ -43,6 +43,7 @@ const reducer = (state, action) => {
 const MapsCommerce = () => {
     const [state, dispatch] = useReducer(reducer, initialState)
     const [info, setInfo] = useState([])
+    const [click, setClick] = useState(false)
     //Estados para la nueva posicion de la camara
     const [newLongitude, setNewLongitude] = useState(999)
     const [newLatitude, setNewLatitude] = useState(999)
@@ -184,7 +185,7 @@ const MapsCommerce = () => {
                 longitudeDelta: 0.045,
             })
         }
-    }, [newLatitude, newLongitude])
+    }, [newLatitude, newLongitude, click])
     /**Funcion para setear la ubicacion de lal item que se muestra en el carrusel
      *
      * @param {newLatitude, newLongitude} index
@@ -255,6 +256,8 @@ const MapsCommerce = () => {
                         data={info}
                         setNewLongitude={setNewLongitude}
                         setNewLatitude={setNewLatitude}
+                        click={click}
+                        setClick={setClick}
                     />
                 </>
             )}
