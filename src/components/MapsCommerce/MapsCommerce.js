@@ -14,7 +14,13 @@ import Container from "../Container/Container"
 import Geolocation from "react-native-geolocation-service"
 import MapView, { Marker, PROVIDER_GOOGLE, Callout } from "react-native-maps"
 import Carousel from "react-native-snap-carousel"
-import { errorMessage, RFValue, http, getHeaders, loader } from "../../utils/constants"
+import {
+    errorMessage,
+    RFValue,
+    http,
+    getHeaders,
+    loader,
+} from "../../utils/constants"
 import SearchMap from "../SearchMap/SearchMap" //Importacion del buscador
 
 // Import Assets
@@ -190,13 +196,16 @@ const MapsCommerce = () => {
                         }}>
                         {info.map((item, index) => (
                             <Marker
-                                image={Commerce}
                                 key={item.name}
                                 ref={ref => (item[index] = ref)}
                                 coordinate={{
                                     latitude: item.latitude,
                                     longitude: item.longitude,
                                 }}>
+                                <Image
+                                    source={Commerce}
+                                    style={styles.itemCommerce}
+                                />
                                 <Callout>
                                     <Text>{item.name_commerce}</Text>
                                 </Callout>
@@ -259,7 +268,7 @@ const styles = StyleSheet.create({
         // position: 'absolute',
         // borderBottomLeftRadius: 24,
         //borderBottomRightRadius: 24,
-        resizeMode: "cover",
+        resizeMode: "contain",
         padding: 50,
         borderBottomRightRadius: 15,
         borderBottomLeftRadius: 15,
@@ -267,6 +276,11 @@ const styles = StyleSheet.create({
     cardTitle: {
         color: "white",
         fontSize: 22,
+    },
+    itemCommerce: {
+        width: RFValue(60),
+        height: RFValue(70),
+        resizeMode: "contain",
     },
 })
 
