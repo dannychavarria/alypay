@@ -1,17 +1,18 @@
-import { RFValue, Colors } from '../../../utils/constants'
+import { RFValue, Colors, GlobalStyles } from '../../../utils/constants'
 
 export default {
     container:{
         padding: RFValue(20),
     },
+    containerPicker: {
+        ...GlobalStyles.textInput,
+        alignItems: "center",
+        flexDirection: "row",
+    },
     textInput: {
-        backgroundColor: '#fff',
-        borderRadius: 5,
-        borderWidth: 2,
         borderColor: Colors.colorSecondary + "55",
-        elevation: 5,
-        padding: RFValue(10),
-        zIndex: 50,
+        padding: 8,
+        flex: 1,
     },
     textInputCol: {
         flex: 0.9,

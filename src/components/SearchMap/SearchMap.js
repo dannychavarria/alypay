@@ -40,17 +40,15 @@ const SearchMap = ({ data, setNewLongitude, setNewLatitude }) => {
         setList([])
     }
 
-    console.log(data)
-
     return (
         <View style={classes.container}>
 
-            <View style={[{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }, classes.textInput]}>
+            <View style={classes.containerPicker}>
 
                 <TextInput
                     value={value}
                     onChangeText={setValue}
-                    style={classes.textInputCol}
+                    style={classes.textInput}
                     placeholder="Ingrese nombre del local"
                     placeholderTextColor="#ccc"
                 />

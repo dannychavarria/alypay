@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer, useRef } from "react"
+import React, { useState, useEffect, useReducer } from "react"
 import {
     View,
     Text,
@@ -12,9 +12,8 @@ import {
 import { PERMISSIONS, request, check } from "react-native-permissions"
 
 // Import Constans and Components
-import Container from "../Container/Container"
 import Geolocation from "react-native-geolocation-service"
-import MapView, { Marker, PROVIDER_GOOGLE, Callout } from "react-native-maps"
+import MapView, { Marker, Callout } from "react-native-maps"
 import Carousel from "react-native-snap-carousel"
 import {
     errorMessage,
@@ -24,12 +23,10 @@ import {
     loader,
 } from "../../utils/constants"
 import SearchMap from "../SearchMap/SearchMap" //Importacion del buscador
+import styleMap from "../../animations/map-dark-mode.json"
 
 // Import Assets
-import User from "../../static/Ubication.png"
 import Commerce from "../../static/UbicationCommerce.png"
-import logo from "../../static/alypay.png"
-import Search from "../Search/Search"
 
 const initialState = {
     latitude: null,
@@ -207,6 +204,7 @@ const MapsCommerce = () => {
                         showsUserLocation={true}
                         style={styles.map}
                         ref={map => setRef(map)} //setear "ref" para tener una referencia del MapView y usar sus metodos
+                        customMapStyle={styleMap}
                         initialRegion={{
                             longitude: state.longitude,
                             latitude: state.latitude,
