@@ -26,7 +26,9 @@ const SwitchCoin = ({ onSwitch = () => {}, items = {} }) => {
 
     useEffect(() => {
         if (items.ALY !== null) {
-            let _coins = Object.entries(items).map(item => item[1])
+            let _coins = Object.entries(items)
+                .map(item => item[1])
+                .slice(0, 5)
             setCoins(_coins)
             setState(_coins[0])
             setItemWidth(100 / _coins.length)

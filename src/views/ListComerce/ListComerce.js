@@ -125,7 +125,7 @@ const ListComerce = ({ route }) => {
                     <Switch
                         onSwitch={setStateView}
                         items={switchItems}
-                        indexActive={state.indexTabActive}
+                        indexActive={stateView}
                     />
                     {stateView === TYPE_VIEW.COMMERCE && (
                         <>
