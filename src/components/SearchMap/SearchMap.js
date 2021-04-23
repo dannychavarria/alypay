@@ -4,7 +4,11 @@ import { View, TextInput, Text, FlatList, TouchableOpacity } from "react-native"
 import useStyles from "../../hooks/useStyles.hook"
 import { SearchMapStyle } from "../../Styles/Components/index"
 
-const SearchMap = ({ data, setNewLongitude, setNewLatitude}) => {
+import Icon from 'react-native-vector-icons/Feather'
+
+import {GlobalStyles} from "../../utils/constants"
+
+const SearchMap = ({ data, setNewLongitude, setNewLatitude }) => {
     const [value, setValue] = useState('')
     const classes = useStyles(SearchMapStyle)
 
@@ -31,20 +35,27 @@ const SearchMap = ({ data, setNewLongitude, setNewLatitude}) => {
 
     return (
         <View style={classes.container}>
-            <TextInput
-                value={value}
-                onChangeText={setValue}
-                style={classes.textInput}
-                placeholder="Ingrese nombre del local"
-                placeholderTextColor="#ccc"
-            />
-            
+
+            <View style={[{flexDirection: 'row',justifyContent: 'center',alignItems: 'center'}, classes.textInput]}>
+
+                <TextInput
+                    value={value}
+                    onChangeText={setValue}
+                    style={classes.textInputCol}
+                    placeholder="Ingrese nombre del local"
+                    placeholderTextColor="#ccc"
+                />
+
+                <Icon name='search' color='gray' size={20} />
+
+            </View>
+
             <FlatList
-                keyExtractor={(_, i)=>i=i}
+                keyExtractor={(_, i) => i = i}
                 data={filteredList.slice(0, 5)}
                 renderItem={({ item }) => (
                     <TouchableOpacity style={classes.cardContainer}
-                        onPress={()=>{positionCommerce(item.longitude, item.latitude)}}>
+                        onPress={() => { positionCommerce(item.longitude, item.latitude) }}>
                         <Text>{item.name_commerce}</Text>
                     </TouchableOpacity>
                 )}
