@@ -26,12 +26,14 @@ const SwitchCoin = ({ onSwitch = () => { }, items = {} }) => {
 
     useEffect(() => {
         if (items.ALY !== null) {
-            let _coins = Object.entries(items).map(item => item[1])
+            let _coins = Object.entries(items).map(item => item[1]).slice(0, 5)
             setCoins(_coins)
             setState(_coins[0])
             setItemWidth(100 / _coins.length)
         }
     }, [items])
+
+    console.log(`coins: ${coins}`)
 
     // Esperamos que se actualice el estado para ejecutar el callback
     useEffect(() => changeState(), [state])
