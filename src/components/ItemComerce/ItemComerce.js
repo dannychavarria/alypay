@@ -18,22 +18,20 @@ import tether from "../../static/tether.png"
 const ItemComerce = ({ data = {} }) => {
     const { navigate } = useNavigation()
     const images = data.item.profile_picture
-    console.log(images)
 
     const onInformacion = () => {
         navigate(ROUTES.WALLETCOMMERCE, data)
     }
+
+    const parsedImage = images.replace("http", "https")
+    console.log("Imagen Parseada", parsedImage)
 
     return (
         <>
             <TouchableOpacity style={styles.container} onPress={onInformacion}>
                 <Image
                     style={styles.logo}
-                    source={
-                        images === null
-                            ? avatar
-                            : { uri: data.item?.profile_picture }
-                    }
+                    source={images === null ? avatar : { uri: parsedImage }}
                 />
 
                 <View style={styles.cardInformation}>

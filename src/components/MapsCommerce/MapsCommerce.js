@@ -150,13 +150,18 @@ const MapsCommerce = () => {
         const direcction = () => {
             Linking.openURL(url)
         }
+
+        const image = item.image
+        const parsedImage = image.replace("http", "https")
+        console.log("Imagen Parseada", parsedImage)
+
         return (
             <TouchableOpacity onPress={direcction}>
                 <View style={styles.cardContainer}>
                     <Text style={styles.cardTitle}>{item.name_commerce}</Text>
                     <Image
                         style={styles.cardImage}
-                        source={{ uri: item.image }}
+                        source={{ uri: parsedImage }}
                     />
                 </View>
             </TouchableOpacity>
@@ -226,7 +231,7 @@ const MapsCommerce = () => {
                         }}>
                         {info.map((item, index) => (
                             <Marker
-                                key={item.name}
+                                key={item.index}
                                 ref={ref => (item[index] = ref)}
                                 coordinate={{
                                     latitude: item.latitude,
