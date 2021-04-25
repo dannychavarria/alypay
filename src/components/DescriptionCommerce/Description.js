@@ -57,8 +57,8 @@ const Description = ({ route }) => {
     /// Total de factura
     const totalBill =
         details.id_type === 6
-            ? _.subtract(details.amount_usd, details.commission_usd)
-            : _.add(details.amount_usd, details.commission_usd)
+            ? _.subtract(details.amount_usd, details.amount_fee_usd)
+            : _.add(details.amount_usd, details.amount_fee_usd)
 
     // constante que retorna si encontro datos
     const foundData = Object.keys(details).length > 0 && !loader
@@ -164,8 +164,8 @@ const Description = ({ route }) => {
                                 </Text>
                                 <Text style={styles.subtitle}>
                                     {details.id_type === 6
-                                        ? `${details.commission_usd} ${
-                                              details.symbol_fee
+                                        ? `${details.amount_fee_usd} ${
+                                              details.symbol
                                           }`
                                         : `${details.amount_fee} ${
                                               details.coin_fee
