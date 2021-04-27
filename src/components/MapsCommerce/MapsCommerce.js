@@ -22,12 +22,14 @@ import {
     http,
     getHeaders,
     loader,
+    Colors
 } from "../../utils/constants"
 import SearchMap from "../SearchMap/SearchMap" //Importacion del buscador
 import styleMap from "../../animations/map-dark-mode.json"
 
 // Import Assets
 import Commerce from "../../static/UbicationCommerce.png"
+import IconMarket from "../../static/maket-icon-logo-yellow.png"
 
 const initialState = {
     latitude: null,
@@ -124,6 +126,8 @@ const MapsCommerce = () => {
             loader(false)
         }
     }
+
+    console.log(info)
 
     // Funcion que rendecira las tarjetas de los commercios
     const renderCarouselItem = ({ item }) => {
@@ -238,7 +242,7 @@ const MapsCommerce = () => {
                                     longitude: item.longitude,
                                 }}>
                                 <Image
-                                    source={Commerce}
+                                    source={IconMarket}
                                     style={styles.itemCommerce}
                                 />
                                 <Callout>
@@ -291,11 +295,13 @@ const styles = StyleSheet.create({
     },
     cardContainer: {
         //flexDirection: 'column',
-        backgroundColor: "rgba(0, 0, 0, 0.6)",
+        backgroundColor: Colors.colorBlack,
         height: "100%",
         width: "100%",
         //padding: 24,
         borderRadius: 15,
+        borderColor: Colors.colorYellow + 55,
+        borderWidth: 2,
         alignItems: "center",
     },
     cardImage: {
@@ -305,13 +311,13 @@ const styles = StyleSheet.create({
         // position: 'absolute',
         // borderBottomLeftRadius: 24,
         //borderBottomRightRadius: 24,
-        resizeMode: "contain",
+        resizeMode: "cover",
         padding: 50,
         borderBottomRightRadius: 15,
         borderBottomLeftRadius: 15,
     },
     cardTitle: {
-        color: "white",
+        color: Colors.colorYellow,
         fontSize: 22,
     },
     itemCommerce: {

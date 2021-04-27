@@ -22,13 +22,16 @@ export default {
         color: 'white',
     },
     cardContainer: {
-        backgroundColor: 'gray',
+        backgroundColor: Colors.colorBlack,
         height: RFValue(40),
         marginTop: RFValue(2),
         justifyContent: "center",
         alignItems: "center",
+        borderColor: Colors.colorYellow + 55,
+        borderWidth: 1,
+        borderRadius: 5,
     },
     textWhite:{    
-        color: 'white',
+        color: Colors.colorYellow,
     }
 }
