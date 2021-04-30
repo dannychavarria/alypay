@@ -9,6 +9,7 @@ import Wallet from "../Wallet/Wallet"
 import Recharge from "../Recharge/Recharge"
 import Retirement from "../Retirement/Retirement"
 import RetirementCommerce from "../RetirementCommerce/RetirementCommerce"
+import BuyCrypto from "../../views/BuyCrypto/BuyCrypto"
 
 // Import components
 import Navbar from "../../components/Navbar/Navbar"
@@ -38,6 +39,7 @@ const App = ({ navigation }) => {
                     name={ROUTES.RETIREMENTCOMMERCE}
                     component={RetirementCommerce}
                 />
+                <Stack.Screen name={ROUTES.BUY} component={BuyCrypto} />
             </Stack.Navigator>
 
             <Navbar />

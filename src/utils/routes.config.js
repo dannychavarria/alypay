@@ -19,6 +19,7 @@ const ROUTES = {
     RETIREMENTEXCUTIVE: "RetirementExcutive",
     HISTORYRETIREMENTEXCUTIVE: "HistoryRetirementExcutive",
     KYC: "Kyc",
+    BUY: "Buy",
 }
 
 export default ROUTES

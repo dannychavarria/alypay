@@ -82,8 +82,9 @@ const switchItems = [
 /**
  * Componente que renderiza un qr con la direccion wallet
  */
-const ReceiveComponent = ({ wallet = "" }) => {
+const ReceiveComponent = ({ wallet = "", data = {} }) => {
     const { navigate } = useNavigation()
+    console.log(data)
 
     const styles = StyleSheet.create({
         qrContainer: {
@@ -116,10 +117,20 @@ const ReceiveComponent = ({ wallet = "" }) => {
             color: Colors.colorYellow,
             textTransform: "uppercase",
         },
+
+        textButtonBuy: {
+            fontSize: RFValue(16),
+            color: Colors.colorYellow,
+            textTransform: "uppercase",
+        },
     })
 
     const toRecharge = () => {
         navigate("Recharge", { wallet })
+    }
+
+    const toBuyCrypto = () => {
+        navigate("Buy", { data })
     }
 
     return (
@@ -151,6 +162,21 @@ const ReceiveComponent = ({ wallet = "" }) => {
                     </Text>
                 </TouchableOpacity>
             </ViewAnimate>
+
+            <TouchableOpacity
+                onPress={toBuyCrypto}
+                style={[
+                    styles.toUpBalanceContainer,
+                    GlobalStyles.buttonPrimaryLine,
+                    {
+                        flex: 1,
+                        height: RFValue(30),
+                        width: RFValue(200),
+                        alignItems: "center",
+                    },
+                ]}>
+                <Text style={styles.textButtonToUpBalance}>Comprar</Text>
+            </TouchableOpacity>
         </ViewAnimate>
     )
 }
@@ -850,7 +876,10 @@ const Wallet = ({ route }) => {
                 <>
                     {// Verificamos si esta en la pantalla de Recibir
                     stateView === switchItems[0].state && (
-                        <ReceiveComponent wallet={state.wallet} />
+                        <ReceiveComponent
+                            wallet={state.wallet}
+                            data={state.information}
+                        />
                     )}
 
                     {stateView === switchItems[1].state && (
