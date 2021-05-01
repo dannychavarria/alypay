@@ -130,7 +130,7 @@ const ReceiveComponent = ({ wallet = "", data = {} }) => {
     }
 
     const toBuyCrypto = () => {
-        navigate("Buy", { data })
+        navigate("Buy", { data: data, wallet: wallet })
     }
 
     return (
