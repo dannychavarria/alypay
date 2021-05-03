@@ -4,50 +4,54 @@ export default {
     containerWallet: {
         margin: RFValue(20)    
     },
-    containerInput:{
-        width: '100%',
-        height: 350,
+    containerInputVertical: {
+        justifyContent: 'space-around',
+        flex: 1
     },
     containerInputHorizontal: {
         flexDirection: 'row',
-        width: '100%',
+        alignItems: 'center',
         justifyContent: 'space-between',
+    },
+    containerInputItem:{
+        marginVertical: 10
     },
     inputStyle: {
         backgroundColor: Colors.colorBlack,
         color: 'white',
         borderColor: Colors.colorYellow,
         borderWidth: 1,
-        width: RFValue(160),
+        height: 40,
+        width: '100%',
         borderRadius: 5
     },
     textTitleInput: {
         color: Colors.colorYellow,
-        fontSize: RFValue(18)
+        fontSize: RFValue(14)
     },
     textTitle: {
         color: Colors.colorYellow,
         alignSelf: 'center',
         fontSize: RFValue(26),
-        marginVertical: RFValue(40)
+        marginBottom: RFValue(40)
     },
     textTouchable: {
         backgroundColor: Colors.colorBlack,
         borderColor: Colors.colorYellow,
         borderWidth: 1,
         marginHorizontal: RFValue(10),
-        borderRadius: 5,
+        borderRadius: 25,
         paddingHorizontal: RFValue(10),
         paddingVertical: RFValue(5)
     },
     textTitleInputWaller: {
         color: Colors.colorYellow,
-        fontSize: RFValue(18),
+        fontSize: RFValue(14),
         alignSelf: 'center'
     },
     containerWalletTouchable: {
         flexDirection: 'column',
-        marginBottom: RFValue(40),
+        marginBottom: RFValue(10),
     },
     buttonBuy: {
         width: '100%',
@@ -75,9 +79,20 @@ export default {
         borderColor: Colors.colorYellow,
         borderWidth: 1,
         width: '100%',
-        borderRadius: 5
+        borderRadius: 25
     },
     containerHash: {
         marginVertical: 20
+    },
+    imageStyle: {
+        resizeMode: "contain",
+        height: RFValue(120),
+        width: RFValue(120),
+        alignSelf: 'center',
+        marginRight: 10,
+    },
+    textWhite: {
+        color: 'white',
+        fontSize: RFValue(16)
     }
 }
