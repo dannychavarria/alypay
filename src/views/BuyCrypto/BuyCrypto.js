@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react"
 import { View, Text, Image } from "react-native"
-import CheckBox from "react-native-check-box"
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler"
 
 // Import Components
@@ -21,26 +20,41 @@ import { Picker } from "@react-native-picker/picker"
 const BuyCrypto = ({ route }) => {
     const { data, wallet } = route.params
 
-    const { infoCoin, ConfigureComponent, } = useBuyCrypto()
-    const [coin, setCoin] = useState([])
+    const { infoCoin,
+        ConfigureComponent,
+        onChangeAmountFee,
+        totalAmountUSD,
+        priceCoin,
+        PriceMoment,
+        submintInformation } = useBuyCrypto()
 
-    console.log('Coin', infoCoin)
+    const [coin, setCoin] = useState([])
+    const [hash, setHash] = useState('')
+
+    console.log('Data', data)
 
     const urlImage =
-        data._id !== null
-            ? `https://s2.coinmarketcap.com/static/img/coins/128x128/
-            ${data._id
-            }.png`
+        infoCoin[coin + 1]?.id !== null
+            ? `https://s2.coinmarketcap.com/static/img/coins/128x128/${infoCoin[coin + 1]?.id}.png`
             : urlAlyCoin
+
+    console.log('Image: ', urlImage)
+
+    const sendInfo = () => {
+        const dataSend = {
+            id_wallet_from: infoCoin[coin + 1]?.id,
+            id_wallet_to: data._id
+        }
+        submintInformation()
+    }
 
     useEffect(() => {
         ConfigureComponent()
     }, [])
 
-    /*  useEffect(() => {
-    PriceMoment(coin)
+    useEffect(() => {
+        PriceMoment(coin + 1)
     }, [coin])
-  */
 
     const classes = useStyles(BuyCryptoStyles)
 
@@ -75,7 +89,7 @@ const BuyCrypto = ({ route }) => {
                                     }}
                                     onValueChange={value => setCoin(value)}>
                                     {Array.isArray(infoCoin) &&
-                                        infoCoin.slice(1,5).map((item, index) => (<Picker.Item
+                                        infoCoin.slice(1, 5).map((item, index) => (<Picker.Item
                                             enabled={true}
                                             key={index}
                                             label={item.symbol}
@@ -88,6 +102,7 @@ const BuyCrypto = ({ route }) => {
                             <View style={classes.containerInputItem}>
                                 <Text style={classes.textTitleInput}>{"Monto (Cripto)"}</Text>
                                 <TextInput
+                                    onChangeText={value => onChangeAmountFee(value, priceCoin)}
                                     style={classes.inputStyle}
                                     placeholder={'0.00'}
                                     placeholderTextColor={'gray'}
@@ -102,28 +117,28 @@ const BuyCrypto = ({ route }) => {
                 <View style={classes.containerInputHorizontal}>
                     <View>
                         <Text style={classes.textTitleInput}>Precio del mercado</Text>
-                        <Text style={classes.textWhite}>{Floor(infoCoin[coin + 1]?.quote.USD.price, 8)}</Text>
+                        <Text style={classes.textWhite}>$ {priceCoin || 0}</Text>
                     </View>
                     <View>
-                        <Text style={classes.textTitleInput}>Conversión (USD)</Text>
-                        <Text style={classes.textWhite}></Text>
+                        <Text style={classes.textTitleInput}>Conversión (ALY)</Text>
+                        <Text style={classes.textWhite}>ALY {totalAmountUSD || 0}</Text>
                     </View>
                 </View>
 
                 <View style={classes.containerHash}>
                     <Text style={classes.textTitleInput}>{'Ingrese hash de transacción'}</Text>
                     <TextInput
+                        value={hash}
                         placeholder={'Hash de la billetera'}
                         placeholderTextColor={'gray'}
                         style={classes.inputStyle}
-                        onChangeText={()=>{
-
-                        }}
+                        onChangeText={setHash}
                     />
                 </View>
 
                 <TouchableOpacity
                     style={classes.buttonBuy}
+                    onPress={() => sendInfo()}
                 >
                     <Text style={classes.textBuy} >COMPRAR</Text>
                 </TouchableOpacity>
