@@ -49,7 +49,14 @@ export default function useBuyCrypto() {
             return
         }
 
-        setAmounOrigin(value)
+        console.log('value? ', !value)
+
+        if(!value) {
+            setAmounOrigin('')
+        }else{
+            setAmounOrigin(value)
+        }
+
 
         let _amountFeeUSD = 0
 

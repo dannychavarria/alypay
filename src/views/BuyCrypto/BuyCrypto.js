@@ -4,18 +4,21 @@ import { TextInput, TouchableOpacity } from "react-native-gesture-handler"
 
 // Import Components
 import Container from "../../components/Container/Container"
-import Floor from "lodash/floor"
+
 // Import Hooks
 import useStyles from "../../hooks/useStyles.hook"
 import useBuyCrypto from "../../hooks/BuyCrypto/useBuyCrypto"
 
 // Import Styles
 import { BuyCryptoStyles } from "../../Styles/Views/index"
-import { Colors, RFValue } from "../../utils/constants"
+import { Colors, RFValue, GlobalStyles, CopyClipboard } from "../../utils/constants"
 
 //import constants
 import { urlAlyCoin } from "../../utils/constants"
 import { Picker } from "@react-native-picker/picker"
+
+// Import from Lodash
+import Floor from 'lodash/floor'
 
 // Import store from redux
 import store from "../../store/index"
@@ -36,27 +39,29 @@ const BuyCrypto = ({ route }) => {
         amounOrigin,
     } = useBuyCrypto()
 
-    console.log("Data", data)
-
     const urlImage =
         infoCoin[coin + 1]?.id !== null
             ? `https://s2.coinmarketcap.com/static/img/coins/128x128/${
-                  infoCoin[coin + 1]?.id
-              }.png`
+                infoCoin[coin + 1]?.id
+            }.png`
             : urlAlyCoin
 
     const sendInfo = () => {
+        const amount = parseFloat(amounOrigin)
+
         const dataSend = {
-            id_wallet_from: infoCoin[coin + 1]?.id,
-            id_wallet_to: data._id,
+            id_wallet_from: 0,
+            id_wallet_to: data.id,
             name_coin: data.name,
-            amount_from: amounOrigin,
+            amount_from: amount,
             amount_to: totalAmountUSD,
             amount_usd: totalAmountUSD,
             hash: hash,
-            isExternal: 1,
         }
         submintInformation(dataSend)
+        setHash('')
+
+        onChangeAmountFee('', 0)
     }
 
     useEffect(() => {
@@ -79,7 +84,9 @@ const BuyCrypto = ({ route }) => {
                         <Text style={classes.textTitleInputWaller}>
                             {"Tocar para copiar"}
                         </Text>
-                        <TouchableOpacity style={classes.textTouchable}>
+                        <TouchableOpacity
+                            onPress={() =>CopyClipboard(data.wallet)}
+                            style={classes.textTouchable}>
                             <Text
                                 style={classes.textTitleInput}
                                 numberOfLines={1}>
@@ -146,7 +153,7 @@ const BuyCrypto = ({ route }) => {
                             Precio del mercado
                         </Text>
                         <Text style={classes.textWhite}>
-                            $ {priceCoin || 0}
+                            $ {Floor(priceCoin, 8) || 0}
                         </Text>
                     </View>
                     <View>
@@ -154,7 +161,7 @@ const BuyCrypto = ({ route }) => {
                             Conversión (ALY)
                         </Text>
                         <Text style={classes.textWhite}>
-                            ALY {totalAmountUSD || 0}
+                            {Floor(totalAmountUSD, 2) || 0} ALY
                         </Text>
                     </View>
                 </View>
@@ -172,7 +179,7 @@ const BuyCrypto = ({ route }) => {
                     />
                 </View>
 
-                <TouchableOpacity style={classes.buttonBuy} onPress={sendInfo}>
+                <TouchableOpacity style={GlobalStyles.buttonPrimary} onPress={sendInfo}>
                     <Text style={classes.textBuy}>COMPRAR</Text>
                 </TouchableOpacity>
             </View>

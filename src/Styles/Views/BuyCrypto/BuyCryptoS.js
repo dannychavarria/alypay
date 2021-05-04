@@ -82,7 +82,7 @@ export default {
         borderRadius: 25
     },
     containerHash: {
-        marginVertical: 20
+        marginVertical: 30
     },
     imageStyle: {
         resizeMode: "contain",
