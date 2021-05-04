@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from "react"
 
 // Import Constants
 import { errorMessage, getFeePercentage, loader } from "../../utils/constants"
@@ -13,13 +13,14 @@ import SubmintInfoBuyService from "../../Services/SerBuyCrypto/SubmintInfoBuy"
 // Import Store
 
 export default function useBuyCrypto() {
-
     const [infoCoin, setInfoCoin] = useState({})
     const [totalAmountUSD, setTotalAmountUSD] = useState(0)
 
+    const [amounOrigin, setAmounOrigin] = useState(0)
+
     const [priceCoin, setPriceCoin] = useState(0)
 
-    console.log('Precios', infoCoin)
+    console.log("Precios", infoCoin)
     const ConfigureComponent = async () => {
         try {
             loader(true)
@@ -32,14 +33,14 @@ export default function useBuyCrypto() {
             setInfoCoin(arrayCoins)
         } catch (e) {
             errorMessage(e.message)
-        }finally{
+        } finally {
             loader(false)
         }
     }
 
-    const PriceMoment = (value) => {
+    const PriceMoment = value => {
         console.log(value)
-        const { price } = infoCoin[value]?.quote.USD
+        const { price } = infoCoin[value]?.quote.USD || 0
         setPriceCoin(price)
     }
 
@@ -48,7 +49,7 @@ export default function useBuyCrypto() {
             return
         }
 
-
+        setAmounOrigin(value)
 
         let _amountFeeUSD = 0
 
@@ -57,7 +58,8 @@ export default function useBuyCrypto() {
         setTotalAmountUSD(_amountFeeUSD)
     }
 
-    const submintInformation = async (data) => {
+    const submintInformation = async data => {
+        console.log("DataSubmint", data)
         try {
             await SubmintInfoBuyService({
                 dataSent: data,
@@ -75,6 +77,6 @@ export default function useBuyCrypto() {
         priceCoin,
         submintInformation,
         PriceMoment,
+        amounOrigin,
     }
-
 }

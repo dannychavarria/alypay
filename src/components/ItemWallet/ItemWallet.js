@@ -22,8 +22,6 @@ import Floor from "lodash/floor"
 const ItemWallet = ({ data = {}, disabled = false }) => {
     const { navigate } = useNavigation()
 
-    console.log("Data Wallets", data)
-
     const urlImage =
         data._id !== null
             ? `https://s2.coinmarketcap.com/static/img/coins/128x128/${
