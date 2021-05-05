@@ -49,17 +49,21 @@ export default function useBuyCrypto() {
     }
 
     // ???
-    const onChangeAmountFee = (value, price) => {
+    const onChangeAmountAly = (value, price) => {
         if (infoCoin.length === 0) {
             return
         }
 
-        // ???
+        console.log(!value)
+
+        //???
         if (!value) {
             setAmounOrigin("")
         } else {
             setAmounOrigin(value)
         }
+
+        // setAmounOrigin(value)
 
         let _amountFeeUSD = 0
 
@@ -81,7 +85,7 @@ export default function useBuyCrypto() {
 
     return {
         ConfigureComponent,
-        onChangeAmountFee,
+        onChangeAmountAly,
         infoCoin,
         totalAmountUSD,
         priceCoin,

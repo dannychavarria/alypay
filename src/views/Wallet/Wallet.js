@@ -82,7 +82,7 @@ const switchItems = [
 /**
  * Componente que renderiza un qr con la direccion wallet
  */
-const ReceiveComponent = ({ wallet = "", data = {} }) => {
+const ReceiveComponent = ({ wallet = "", data = {}, isAly = false }) => {
     const { navigate } = useNavigation()
     console.log(data)
 
@@ -163,20 +163,22 @@ const ReceiveComponent = ({ wallet = "", data = {} }) => {
                 </TouchableOpacity>
             </ViewAnimate>
 
-            <TouchableOpacity
-                onPress={toBuyCrypto}
-                style={[
-                    styles.toUpBalanceContainer,
-                    GlobalStyles.buttonPrimaryLine,
-                    {
-                        flex: 1,
-                        height: RFValue(30),
-                        width: RFValue(200),
-                        alignItems: "center",
-                    },
-                ]}>
-                <Text style={styles.textButtonToUpBalance}>Comprar</Text>
-            </TouchableOpacity>
+            { isAly &&
+                <TouchableOpacity
+                    onPress={toBuyCrypto}
+                    style={[
+                        styles.toUpBalanceContainer,
+                        GlobalStyles.buttonPrimaryLine,
+                        {
+                            flex: 1,
+                            height: RFValue(30),
+                            width: RFValue(200),
+                            alignItems: "center",
+                        },
+                    ]}>
+                    <Text style={styles.textButtonToUpBalance}>Comprar AlyCoin</Text>
+                </TouchableOpacity>
+            }
         </ViewAnimate>
     )
 }
@@ -201,7 +203,7 @@ const initialStateSendComponent = {
 }
 
 /** Componente que renderiza los datos necesarios para ejecutar una transaccion a otra wallet */
-const SendComponent = ({ data = {}, onCompleteTrasanction = () => {} }) => {
+const SendComponent = ({ data: data = {}, onCompleteTrasanction = () => { } }) => {
     const [state, dispatch] = useReducer(reducer, initialStateSendComponent)
 
     const { global, functions } = store.getState()
@@ -649,7 +651,7 @@ const SendComponent = ({ data = {}, onCompleteTrasanction = () => {} }) => {
                                 <Text style={styles.textBodyFee}>
                                     {_.floor(
                                         parseFloat(state.amountFraction) +
-                                            parseFloat(state.fee.amount),
+                                        parseFloat(state.fee.amount),
                                         8,
                                     )}{" "}
                                     {state.fee.symbol}
@@ -813,6 +815,9 @@ const Wallet = ({ route }) => {
 
     // Params passed from router
     const { params } = route
+
+    const isAly = params.id == 51
+
     /**
      * Funcion que se encarga de configurar todo el componente
      */
@@ -875,12 +880,13 @@ const Wallet = ({ route }) => {
             {state.information !== null && (
                 <>
                     {// Verificamos si esta en la pantalla de Recibir
-                    stateView === switchItems[0].state && (
-                        <ReceiveComponent
-                            wallet={state.wallet}
-                            data={state.information}
-                        />
-                    )}
+                        stateView === switchItems[0].state && (
+                            <ReceiveComponent
+                                wallet={state.wallet}
+                                data={state.information}
+                                isAly={isAly}
+                            />
+                        )}
 
                     {stateView === switchItems[1].state && (
                         <SendComponent

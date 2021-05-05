@@ -27,7 +27,7 @@ export default {
     },
     textTitleInput: {
         color: Colors.colorYellow,
-        fontSize: RFValue(14)
+        fontSize: RFValue(14),
     },
     textTitle: {
         color: Colors.colorYellow,

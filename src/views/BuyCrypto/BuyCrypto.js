@@ -34,13 +34,13 @@ const BuyCrypto = ({ route }) => {
     const { data, wallet } = route.params
 
     // ???
-    const [coin, setCoin] = useState([])
+    const [coin, setCoin] = useState(0)
     const [hash, setHash] = useState("")
 
     const {
         infoCoin,
         ConfigureComponent,
-        onChangeAmountFee,
+        onChangeAmountAly,
         totalAmountUSD,
         priceCoin,
         PriceMoment,
@@ -51,27 +51,28 @@ const BuyCrypto = ({ route }) => {
     // ???
     const urlImage =
         infoCoin[coin + 1]?.id !== null
-            ? `https://s2.coinmarketcap.com/static/img/coins/128x128/${
-                  infoCoin[coin + 1]?.id
-              }.png`
+            ? `https://s2.coinmarketcap.com/static/img/coins/128x128/${infoCoin[coin + 1]?.id
+            }.png`
             : urlAlyCoin
 
     const sendInfo = () => {
         const amount = parseFloat(amounOrigin)
+        const idCoinSelected = infoCoin[coin + 1].id
+        const symCoinSelected = infoCoin[coin + 1].symbol
 
         const dataSend = {
-            id_wallet_from: 0,
-            id_wallet_to: data.id,
             name_coin: data.name,
+            id_wallet_to: data.id,
             amount_from: amount,
             amount_to: totalAmountUSD,
             amount_usd: totalAmountUSD,
             hash: hash,
+            id_coin_from: idCoinSelected,
+            symbol_from: symCoinSelected
         }
         submintInformation(dataSend)
         setHash("")
-
-        onChangeAmountFee("", 0)
+        onChangeAmountAly("", 0)
     }
 
     useEffect(() => {
@@ -80,7 +81,11 @@ const BuyCrypto = ({ route }) => {
 
     useEffect(() => {
         PriceMoment(coin + 1)
-    }, [coin])
+    }, [coin, priceCoin])
+
+    useEffect(() => {
+        onChangeAmountAly(amounOrigin ,priceCoin)
+    },[priceCoin])
 
     return (
         <Container showLogo>
@@ -95,7 +100,10 @@ const BuyCrypto = ({ route }) => {
                         <TouchableOpacity
                             onPress={() => CopyClipboard(data.wallet)}
                             style={classes.textTouchable}>
-                            <Text style={classes.textTitleInput}>
+                            <Text
+                                style={classes.textTitleInput}
+                                numberOfLines={1}
+                            >
                                 {data.wallet}
                             </Text>
                         </TouchableOpacity>
@@ -122,7 +130,7 @@ const BuyCrypto = ({ route }) => {
                                     onValueChange={value => setCoin(value)}>
                                     {Array.isArray(infoCoin) &&
                                         infoCoin
-                                            .slice(1, 5)
+                                            .filter(info => info.symbol != 'ALY' && info.symbol != 'USDT')
                                             .map((item, index) => (
                                                 <Picker.Item
                                                     enabled={true}
@@ -141,7 +149,7 @@ const BuyCrypto = ({ route }) => {
                                 <TextInput
                                     value={amounOrigin}
                                     onChangeText={value =>
-                                        onChangeAmountFee(value, priceCoin)
+                                        onChangeAmountAly(value, priceCoin)
                                     }
                                     style={classes.inputStyle}
                                     placeholder="0.00"

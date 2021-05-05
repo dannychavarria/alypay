@@ -40,6 +40,8 @@ const ItemWallet = ({ data = {}, disabled = false }) => {
         }
     }
 
+    console.log('Data ' + data?.id)
+
     return (
         <TouchableOpacity
             disabled={disabled}
