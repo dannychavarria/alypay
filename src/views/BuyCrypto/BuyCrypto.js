@@ -11,20 +11,29 @@ import useBuyCrypto from "../../hooks/BuyCrypto/useBuyCrypto"
 
 // Import Styles
 import { BuyCryptoStyles } from "../../Styles/Views/index"
-import { Colors, RFValue, GlobalStyles, CopyClipboard } from "../../utils/constants"
+import {
+    Colors,
+    RFValue,
+    GlobalStyles,
+    CopyClipboard,
+} from "../../utils/constants"
 
 //import constants
 import { urlAlyCoin } from "../../utils/constants"
 import { Picker } from "@react-native-picker/picker"
 
 // Import from Lodash
-import Floor from 'lodash/floor'
+import Floor from "lodash/floor"
 
 // Import store from redux
 import store from "../../store/index"
 
 const BuyCrypto = ({ route }) => {
+    const classes = useStyles(BuyCryptoStyles)
+
     const { data, wallet } = route.params
+
+    // ???
     const [coin, setCoin] = useState([])
     const [hash, setHash] = useState("")
 
@@ -39,11 +48,12 @@ const BuyCrypto = ({ route }) => {
         amounOrigin,
     } = useBuyCrypto()
 
+    // ???
     const urlImage =
         infoCoin[coin + 1]?.id !== null
             ? `https://s2.coinmarketcap.com/static/img/coins/128x128/${
-                infoCoin[coin + 1]?.id
-            }.png`
+                  infoCoin[coin + 1]?.id
+              }.png`
             : urlAlyCoin
 
     const sendInfo = () => {
@@ -59,9 +69,9 @@ const BuyCrypto = ({ route }) => {
             hash: hash,
         }
         submintInformation(dataSend)
-        setHash('')
+        setHash("")
 
-        onChangeAmountFee('', 0)
+        onChangeAmountFee("", 0)
     }
 
     useEffect(() => {
@@ -72,24 +82,20 @@ const BuyCrypto = ({ route }) => {
         PriceMoment(coin + 1)
     }, [coin])
 
-    const classes = useStyles(BuyCryptoStyles)
-
     return (
         <Container showLogo>
             <View style={classes.containerWallet}>
                 <View style={classes.containerInput}>
-                    <Text style={classes.textTitle}>{"Comprar AlyCoin"}</Text>
+                    <Text style={classes.textTitle}>Comprar AlyCoin</Text>
 
                     <View style={classes.containerWalletTouchable}>
                         <Text style={classes.textTitleInputWaller}>
-                            {"Tocar para copiar"}
+                            Tocar para copiar
                         </Text>
                         <TouchableOpacity
-                            onPress={() =>CopyClipboard(data.wallet)}
+                            onPress={() => CopyClipboard(data.wallet)}
                             style={classes.textTouchable}>
-                            <Text
-                                style={classes.textTitleInput}
-                                numberOfLines={1}>
+                            <Text style={classes.textTitleInput}>
                                 {data.wallet}
                             </Text>
                         </TouchableOpacity>
@@ -104,7 +110,7 @@ const BuyCrypto = ({ route }) => {
                         <View style={classes.containerInputVertical}>
                             <View style={classes.containerInputItem}>
                                 <Text style={classes.textTitleInput}>
-                                    {"Toca para seleccionar"}
+                                    Toca para seleccionar
                                 </Text>
                                 <Picker
                                     style={classes.inputStyle}
@@ -130,7 +136,7 @@ const BuyCrypto = ({ route }) => {
                             </View>
                             <View style={classes.containerInputItem}>
                                 <Text style={classes.textTitleInput}>
-                                    {"Monto (Cripto)"}
+                                    Monto (Cripto)
                                 </Text>
                                 <TextInput
                                     value={amounOrigin}
@@ -138,9 +144,9 @@ const BuyCrypto = ({ route }) => {
                                         onChangeAmountFee(value, priceCoin)
                                     }
                                     style={classes.inputStyle}
-                                    placeholder={"0.00"}
-                                    placeholderTextColor={"gray"}
-                                    keyboardType={"number-pad"}
+                                    placeholder="0.00"
+                                    placeholderTextColor="#CCC"
+                                    keyboardType="numeric"
                                 />
                             </View>
                         </View>
@@ -168,18 +174,20 @@ const BuyCrypto = ({ route }) => {
 
                 <View style={classes.containerHash}>
                     <Text style={classes.textTitleInput}>
-                        {"Ingrese hash de transacción"}
+                        Ingrese hash de transacción
                     </Text>
                     <TextInput
                         value={hash}
-                        placeholder={"Hash de la billetera"}
-                        placeholderTextColor={"gray"}
+                        placeholder="Hash de la billetera"
+                        placeholderTextColor="#CCC"
                         style={classes.inputStyle}
                         onChangeText={setHash}
                     />
                 </View>
 
-                <TouchableOpacity style={GlobalStyles.buttonPrimary} onPress={sendInfo}>
+                <TouchableOpacity
+                    style={GlobalStyles.buttonPrimary}
+                    onPress={sendInfo}>
                     <Text style={classes.textBuy}>COMPRAR</Text>
                 </TouchableOpacity>
             </View>

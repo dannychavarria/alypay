@@ -9,19 +9,15 @@ import {
 export default async function submitInfo({ dataSent }) {
     try {
         loader(true)
-        console.log('DataSent',dataSent)
+        console.log("DataSent", dataSent)
 
-        if(dataSent.amount_from === 0 || isNaN(dataSent.amount_from)) {
-            throw String('Ingrese un monto para continuar')
+        if (dataSent.amount_from === 0 || isNaN(dataSent.amount_from)) {
+            throw String("Ingrese un monto para continuar")
         }
 
         if (dataSent.hash.length < 50) {
             throw String("El hash de transaccion no es valido")
         }
-
-        console.log(dataSent)
-
-
 
         const { data: response } = await http.post(
             "/wallets/purchase",
@@ -34,7 +30,6 @@ export default async function submitInfo({ dataSent }) {
         } else if (response.response === "success") {
             successMessage("Tu solicitud de compra esta en proceso")
         }
-
     } catch (error) {
         errorMessage(error.toString())
     } finally {
