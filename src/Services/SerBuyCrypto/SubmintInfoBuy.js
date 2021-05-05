@@ -15,7 +15,7 @@ export default async function submitInfo({ dataSent }) {
             throw String("Ingrese un monto para continuar")
         }
 
-        if (dataSent.hash.length < 50) {
+        if (dataSent.hash.length < 25) {
             throw String("El hash de transaccion no es valido")
         }
 

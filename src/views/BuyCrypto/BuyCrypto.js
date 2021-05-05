@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { View, Text, Image } from "react-native"
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler"
+import { Tooltip } from 'react-native-elements'
 
 // Import Components
 import Container from "../../components/Container/Container"
@@ -34,7 +35,7 @@ const BuyCrypto = ({ route }) => {
     const { data, wallet } = route.params
 
     // ???
-    const [coin, setCoin] = useState(0)
+    const [coin, setCoin] = useState([])
     const [hash, setHash] = useState("")
 
     const {
@@ -59,9 +60,10 @@ const BuyCrypto = ({ route }) => {
         const amount = parseFloat(amounOrigin)
         const idCoinSelected = infoCoin[coin + 1].id
         const symCoinSelected = infoCoin[coin + 1].symbol
+        const nameCoinSelected = infoCoin[coin + 1].name
 
         const dataSend = {
-            name_coin: data.name,
+            name_coin: nameCoinSelected,
             id_wallet_to: data.id,
             amount_from: amount,
             amount_to: totalAmountUSD,
@@ -84,19 +86,21 @@ const BuyCrypto = ({ route }) => {
     }, [coin, priceCoin])
 
     useEffect(() => {
-        onChangeAmountAly(amounOrigin ,priceCoin)
-    },[priceCoin])
+        onChangeAmountAly(amounOrigin, priceCoin)
+    }, [priceCoin])
 
     return (
-        <Container showLogo>
+        <Container showLogo onRefreshEnd={ConfigureComponent}>
             <View style={classes.containerWallet}>
                 <View style={classes.containerInput}>
                     <Text style={classes.textTitle}>Comprar AlyCoin</Text>
 
                     <View style={classes.containerWalletTouchable}>
-                        <Text style={classes.textTitleInputWaller}>
-                            Tocar para copiar
+                        <Tooltip popover={<Text>Lol</Text>}>
+                            <Text style={classes.textTitleInputWaller}>
+                                Tocar para copiar
                         </Text>
+                        </Tooltip>
                         <TouchableOpacity
                             onPress={() => CopyClipboard(data.wallet)}
                             style={classes.textTouchable}>
@@ -186,7 +190,7 @@ const BuyCrypto = ({ route }) => {
                     </Text>
                     <TextInput
                         value={hash}
-                        placeholder="Hash de la billetera"
+                        placeholder="Hash de transacción"
                         placeholderTextColor="#CCC"
                         style={classes.inputStyle}
                         onChangeText={setHash}
