@@ -13,17 +13,17 @@ import SubmintInfoBuyService from "../../Services/SerBuyCrypto/SubmintInfoBuy"
 // Import Store
 
 export default function useBuyCrypto() {
-    // ???
+    // Iniciar los estados de informacion de monedas y el monto
     const [infoCoin, setInfoCoin] = useState({})
     const [totalAmountUSD, setTotalAmountUSD] = useState(0)
 
-    //  ???
+    //  Estado del input del monto
     const [amounOrigin, setAmounOrigin] = useState(0)
 
-    // ????
+    // precio de la moneda actual
     const [priceCoin, setPriceCoin] = useState(0)
 
-    // ???
+    // Carga de la informacion de la moneda
     const ConfigureComponent = async () => {
         try {
             loader(true)
@@ -41,14 +41,14 @@ export default function useBuyCrypto() {
         }
     }
 
-    // ???
+    // Funcion que setea el precio actual de la moneda seleccionada
     const PriceMoment = value => {
         console.log(value)
         const { price } = infoCoin[value]?.quote.USD || 0
         setPriceCoin(price)
     }
 
-    // ???
+    // Funcion que devuelve setea los AlyCoin
     const onChangeAmountAly = (value, price) => {
         if (infoCoin.length === 0) {
             return
@@ -56,14 +56,12 @@ export default function useBuyCrypto() {
 
         console.log(!value)
 
-        //???
+        // Verifica si el value esta vacio
         if (!value) {
             setAmounOrigin("")
         } else {
             setAmounOrigin(value)
         }
-
-        // setAmounOrigin(value)
 
         let _amountFeeUSD = 0
 
@@ -72,7 +70,7 @@ export default function useBuyCrypto() {
         setTotalAmountUSD(_amountFeeUSD)
     }
 
-    // ???
+    // Envio de la data al servicio
     const submintInformation = async data => {
         try {
             await SubmintInfoBuyService({

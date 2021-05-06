@@ -6,6 +6,7 @@ import {
     loader,
 } from "../../utils/constants"
 
+// peticion de envio al server y comprobacion de campos
 export default async function submitInfo({ dataSent }) {
     try {
         loader(true)

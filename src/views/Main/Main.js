@@ -416,6 +416,7 @@ const Main = () => {
             />
             {stateView === TYPE_VIEW.WALLET && (
                 <>
+                    {/* <CardExecutive/> */}
                     <FlatList
                         data={state.wallets}
                         keyExtractor={(_, i) => i}

@@ -30,12 +30,13 @@ import Floor from "lodash/floor"
 import store from "../../store/index"
 
 const BuyCrypto = ({ route }) => {
+    // Estilos
     const classes = useStyles(BuyCryptoStyles)
+    const { data } = route.params
 
-    const { data, wallet } = route.params
-
-    // ???
+    // Index de la moneda seleccionada
     const [coin, setCoin] = useState([])
+    // Estado del hash de transaccion
     const [hash, setHash] = useState("")
 
     const {
@@ -49,19 +50,21 @@ const BuyCrypto = ({ route }) => {
         amounOrigin,
     } = useBuyCrypto()
 
-    // ???
+    // Imagen de la moneda
     const urlImage =
         infoCoin[coin + 1]?.id !== null
             ? `https://s2.coinmarketcap.com/static/img/coins/128x128/${infoCoin[coin + 1]?.id
             }.png`
             : urlAlyCoin
 
+    // funcion de envio de datos
     const sendInfo = () => {
         const amount = parseFloat(amounOrigin)
         const idCoinSelected = infoCoin[coin + 1].id
         const symCoinSelected = infoCoin[coin + 1].symbol
         const nameCoinSelected = infoCoin[coin + 1].name
 
+        // datos a enviar
         const dataSend = {
             name_coin: nameCoinSelected,
             id_wallet_to: data.id,
@@ -73,6 +76,8 @@ const BuyCrypto = ({ route }) => {
             symbol_from: symCoinSelected
         }
         submintInformation(dataSend)
+
+        // vaciar los inputs
         setHash("")
         onChangeAmountAly("", 0)
     }
@@ -96,11 +101,9 @@ const BuyCrypto = ({ route }) => {
                     <Text style={classes.textTitle}>Comprar AlyCoin</Text>
 
                     <View style={classes.containerWalletTouchable}>
-                        <Tooltip popover={<Text>Lol</Text>}>
-                            <Text style={classes.textTitleInputWaller}>
-                                Tocar para copiar
+                        <Text style={classes.textTitleInputWaller}>
+                            Tocar para copiar
                         </Text>
-                        </Tooltip>
                         <TouchableOpacity
                             onPress={() => CopyClipboard(data.wallet)}
                             style={classes.textTouchable}>
