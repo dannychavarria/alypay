@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { View, Text, Image } from "react-native"
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler"
-import { Tooltip } from 'react-native-elements'
 
 // Import Components
 import Container from "../../components/Container/Container"
@@ -73,7 +72,7 @@ const BuyCrypto = ({ route }) => {
             amount_usd: totalAmountUSD,
             hash: hash,
             id_coin_from: idCoinSelected,
-            symbol_from: symCoinSelected
+            symbol_from: symCoinSelected,
         }
         submintInformation(dataSend)
 

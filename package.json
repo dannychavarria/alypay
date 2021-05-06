@@ -32,7 +32,6 @@
     "react-native-crypto-js": "^1.0.0",
     "react-native-date-picker": "^3.0.2",
     "react-native-device-info": "^5.6.1",
-    "react-native-elements": "^3.4.1",
     "react-native-flash-message": "^0.1.15",
     "react-native-geolocation-service": "^5.1.1",
     "react-native-gesture-handler": "^1.6.1",
