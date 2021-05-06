@@ -488,7 +488,7 @@ export const calcAge = birthDate => {
 }
 
 /**
- * Configuracion de el metodo de authenticacion de touchID
+ * Configuracion de el metodo de authenticacion de touchID  
  */
 export const configTouchIDAuth = {
     title: "Autenticación",

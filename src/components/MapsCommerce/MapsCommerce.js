@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer, useRef } from "react"
+import React, { useState, useEffect, useReducer, useCallback } from "react"
 import {
     View,
     Text,
@@ -12,7 +12,6 @@ import {
 import { PERMISSIONS, request, check } from "react-native-permissions"
 
 // Import Constans and Components
-import Container from "../Container/Container"
 import Geolocation from "react-native-geolocation-service"
 import MapView, { Marker, Callout } from "react-native-maps"
 import Carousel from "react-native-snap-carousel"
@@ -28,8 +27,9 @@ import SearchMap from "../SearchMap/SearchMap" //Importacion del buscador
 import styleMap from "../../animations/map-dark-mode.json"
 
 // Import Assets
-import Commerce from "../../static/UbicationCommerce.png"
+import imageProfileAvatar from "../../static/ecommerce-avatar.png"
 import IconMarket from "../../static/maket-icon-logo-yellow.png"
+import iconDirection from "../../static/icon-directions-map.png"
 
 const initialState = {
     latitude: null,
@@ -113,12 +113,12 @@ const MapsCommerce = () => {
                 getHeaders(),
             )
 
-            console.log(data)
-
             if (data.error) {
                 throw String(data.message)
             }
-            // console.log("Data", data)
+
+            console.log(data)
+
             setInfo(data)
         } catch (error) {
             errorMessage(error.toString())
@@ -127,10 +127,8 @@ const MapsCommerce = () => {
         }
     }
 
-    console.log(info)
-
     // Funcion que rendecira las tarjetas de los commercios
-    const renderCarouselItem = ({ item }) => {
+    const renderCarouselItem = useCallback(({ item }) => {
         //console.log(item)
 
         // Obtenemos las posisciones iniciales del usuario
@@ -157,20 +155,31 @@ const MapsCommerce = () => {
 
         const image = item.image
         const parsedImage = image.replace("http", "https")
-        console.log("Imagen Parseada", parsedImage)
 
         return (
-            <TouchableOpacity onPress={direcction}>
-                <View style={styles.cardContainer}>
-                    <Text style={styles.cardTitle}>{item.name_commerce}</Text>
-                    <Image
-                        style={styles.cardImage}
-                        source={{ uri: parsedImage }}
-                    />
+            <TouchableOpacity style={styles.cardContainer} onPress={direcction}>
+                <Image
+                    style={styles.cardImage}
+                    source={{ uri: parsedImage }}
+                />
+                <View style={styles.containerImageAndTitle}>
+                    <View style={styles.containerImage}>
+                        <Image source={imageProfileAvatar} style={styles.avatarEcommerce} />
+                    </View>
+
+                    <View style={styles.carSubcontainer}>
+                        <Text style={styles.cardTitle}>{item?.name_commerce}</Text>
+                        <Text style={styles.cardDirection}>{item?.address}</Text>
+                    </View>
+                </View>
+
+                <View style={styles.containerTextDirection}>
+                    <Text style={styles.textDirection}>Ver direcciones</Text>
+                    <Image source={iconDirection} style={styles.imageDirectionText} />
                 </View>
             </TouchableOpacity>
         )
-    }
+    }, [])
 
     useEffect(() => {
         ConfigureLocation()
@@ -294,31 +303,62 @@ const styles = StyleSheet.create({
         marginBottom: 30,
     },
     cardContainer: {
-        //flexDirection: 'column',
-        backgroundColor: Colors.colorBlack,
-        height: "100%",
-        width: "100%",
-        //padding: 24,
+        alignItems: "center",
+        backgroundColor: "rgba(0, 0, 0, 0.8)",
         borderRadius: 15,
         borderColor: Colors.colorYellow + 55,
         borderWidth: 2,
+        overflow: "hidden",
+    },
+    containerImageAndTitle: {
         alignItems: "center",
+        flexDirection: "row",
+        justifyContent: "flex-start",
+    },
+    containerImage: {
+        borderRadius: RFValue(50),
+        borderWidth: 1,
+        borderColor: Colors.colorYellow,
+        padding: 10,
+        marginLeft: 20,
+    },
+    avatarEcommerce: {
+        resizeMode: "cover",        
+        height: RFValue(24),
+        width: RFValue(24),
+    },
+    carSubcontainer: {
+        flex: 1,
+        alignItems: "flex-start",
+        justifyContent: "center",
+        padding: 10,
     },
     cardImage: {
         height: RFValue(150),
         width: "100%",
-        // bottom: 0,
-        // position: 'absolute',
-        // borderBottomLeftRadius: 24,
-        //borderBottomRightRadius: 24,
         resizeMode: "cover",
-        padding: 50,
-        borderBottomRightRadius: 15,
-        borderBottomLeftRadius: 15,
+    },
+    cardDirection: {
+        color: "#CCC"
     },
     cardTitle: {
         color: Colors.colorYellow,
         fontSize: 22,
+    },
+    containerTextDirection: {
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        marginVertical: 10,
+    },
+    imageDirectionText: {
+        resizeMode: "cover",
+        height: RFValue(16),
+        width: RFValue(16)
+    },
+    textDirection: {
+        color: Colors.colorYellow,
+        fontSize: RFValue(12)
     },
     itemCommerce: {
         width: RFValue(60),
