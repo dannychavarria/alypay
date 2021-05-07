@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react"
+import React from "react"
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native"
 
 // Import constanst
-import { Colors, RFValue, readFile } from "../../utils/constants"
+import { Colors, RFValue } from "../../utils/constants"
 
 // Import Components
 import _ from "lodash"
@@ -24,15 +24,14 @@ const ItemComerce = ({ data = {} }) => {
     }
 
     const parsedImage = images.replace("http", "https")
-    console.log("Imagen Parseada", parsedImage)
 
     return (
         <>
             <TouchableOpacity style={styles.container} onPress={onInformacion}>
-                <Image
-                    style={styles.logo}
+                {/* <Image
+                    style={[styles.logo, Sty]}
                     source={images === null ? avatar : { uri: parsedImage }}
-                />
+                /> */}
 
                 <View style={styles.cardInformation}>
                     <View style={styles.headerTableTitle}>
