@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { View, Text, Image } from "react-native"
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler"
-import { Tooltip } from 'react-native-elements'
 
 // Import Components
 import Container from "../../components/Container/Container"

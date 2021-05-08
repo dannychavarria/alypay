@@ -8,7 +8,7 @@ import { SubmitInfoKycService } from "../../Services/index"
 
 export default function useKyc() {
     // Hacemos la peticion al server para guardar el registro
-    const submitInformation = async data => {
+    const submitInformationSer = async data => {
         try {
             await SubmitInfoKycService(data)
         } catch (error) {
@@ -17,6 +17,6 @@ export default function useKyc() {
     }
 
     return {
-        submitInformation,
+        submitInformationSer,
     }
 }

@@ -17,10 +17,13 @@ import RNFetchBlob from "rn-fetch-blob"
 import { check, PERMISSIONS, RESULTS, request } from "react-native-permissions"
 import { isIphoneX } from "react-native-iphone-x-helper"
 import { showMessage } from "react-native-flash-message"
+import moment from "moment"
 
 // Store and action from redux
 import store from "../store/index"
 import { SETPERMISSIONS, DELETESTORAGE, SETLOADER } from "../store/actionsTypes"
+
+import Floor from "lodash/floor"
 
 // Constanst
 const keyStorage = "@storage"
@@ -94,7 +97,8 @@ const PORT = "3085"
 // export const serverAddress = "https://alypay.uc.r.appspot.com"
 //export const serverAddress = "https://root-anvil-299019.uc.r.appspot.com"
 //export const serverAddress = "https://192.168.1.224:3000"
-export const serverAddress = "http://192.168.0.139:3085"
+// export const serverAddress = "http://192.168.0.139:3085"
+export const serverAddress = "http://23214b7b5dc8.ngrok.io/"
 /* export const serverAddress =
     Platform.OS === "ios"
         ? `http://localhost:${PORT}`
@@ -481,11 +485,12 @@ export const getFeePercentage = (amount, feeType, fees) => {
 
 export const calcAge = birthDate => {
     const NOW = moment(new Date(), "DD/MM/YYYY")
-    const fromDate = moment(birthDate, "DD/MM/YYYY")
+    console.log(NOW)
+    const fromDate = birthDate
 
     // Se calcula la edad
     const age = moment.duration(NOW.diff(fromDate)).asYears()
-    return age
+    return Floor(age,0)
 }
 
 /**
