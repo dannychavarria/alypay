@@ -53,7 +53,7 @@ const initialState = {
     province: "",
     direction1: "",
     direction2: "",
-    foundsOrigin: 'Ahorros',
+    foundsOrigin: "Ahorros",
     profession: "",
     avatar: null,
     identificationPhoto: null,
@@ -118,6 +118,7 @@ const reducer = (state, action) => {
 }
 
 const ECommerRegister = () => {
+    // Estado que almacena los estilos de los componentes
     const classes = useStyles(ECommerRegisterS)
 
     // Estados iniciales de los impust
@@ -127,33 +128,37 @@ const ECommerRegister = () => {
         beneficiaryStateReducer,
     )
 
+    // Estados que almacenan las imagenes del usuario
+    const [avatar, setAvatar] = useState(false)
+    const [identificationPhoto, setIdentificationPhoto] = useState(false)
+
+    // Estados que almacenan las imagenes del beneficiario / tutor
+    const [beneficiaryAvatar, setBeneficiaryAvatar] = useState(false)
+    const [
+        beneficiaryIdentificationPhoto,
+        setBeneficiaryIdentificationPhoto,
+    ] = useState(false)
+
     // Estado hace el cambio del CheckBox para el Cambio de leyenda cuando hay beneficiario
     const [CheckState, setCheckState] = useState(false)
+
+    // Estado que indica si muestra la modal de paises
+    const [modalCoutry, setModalCountry] = useState(false)
 
     const { global } = store.getState()
 
     console.log("store: ", global)
 
-    console.log('globalState: ', state)
+    console.log("globalState: ", state)
 
+    // Estados que almacenan la fecha del beneficiario
     const [showDate, setShowDate] = useState(false)
     const [birthday, setBirthday] = useState(new Date())
 
-    const [age, setAge] = useState('')
+    // Estado que almacena la edad del usuario para hacer validaciones
+    const [age, setAge] = useState("")
 
-    // Estado que indica si muestra la modal de paises
-    const [modalCoutry, setModalCountry] = useState(false)
-
-    const {
-        submitInformationSer
-    } = useKyc()
-
-    const ageUser = () => {
-        const result = calcAge(global.birthday)
-        console.log(result)
-        setAge(result)
-        dispatch({ type: 'beneficiaryTutor', payload: result < 18 ? 1 : 0 })
-    }
+    const { submitInformationSer } = useKyc()
 
     // Hacemos la peticion al server
     const submitInformation = async () => {
@@ -161,7 +166,9 @@ const ECommerRegister = () => {
             const dataSent = {
                 idTypeIdentification: state.identificationType,
                 identificationNumber: state.identificationNumber,
-                alternativeNumber: `${state.country.phoneCode} ${state.alternativeNumber}`,
+                alternativeNumber: `${state.country.phoneCode} ${
+                    state.alternativeNumber
+                }`,
                 nationality: state.nationality,
                 nationalityPhoneCode: state.phoneCodeNationality,
                 nationalityCurrencySymbol: state.currencyNationality,
@@ -184,7 +191,8 @@ const ECommerRegister = () => {
                     alternativeNumber: state.beneficiaryAlternativeNumber,
                     nationality: state.beneficiaryNationality,
                     nationalityPhoneCode: state.beneficiaryPhoneCodeNationality,
-                    nationalityCurrencySymbol: state.beneficiaryCurrencyNationality,
+                    nationalityCurrencySymbol:
+                        state.beneficiaryCurrencyNationality,
                     residence: state.beneficiaryResidence,
                     residencePhoneCode: state.beneficiaryPhoneCodeResidence,
                     residenceCurrencySymbol: state.beneficiaryCurrencyResidence,
@@ -198,13 +206,16 @@ const ECommerRegister = () => {
                     answer2: state.beneficiaryProfession,
                 }
             }
-            console.log('dataSent: ', dataSent)
-            submitInformationSer(createFormDate(
-                state.avatar,
-                state.identificationPhoto,
-                state.beneficiaryAvatar,
-                state.identificationPhotoBeneficiary,
-                dataSent) )
+            console.log("dataSent: ", dataSent)
+            submitInformationSer(
+                createFormDate(
+                    avatar,
+                    identificationPhoto,
+                    beneficiaryAvatar,
+                    beneficiaryIdentificationPhoto,
+                    dataSent,
+                ),
+            )
         } catch (error) {
             errorMessage(error.toString())
         }
@@ -214,7 +225,7 @@ const ECommerRegister = () => {
         avatar,
         identificationPhoto,
         beneficiaryAvatar,
-        identificationPhotoBeneficiary,
+        beneficiaryIdentificationPhoto,
         body,
     ) => {
         const data = new FormData()
@@ -234,7 +245,7 @@ const ECommerRegister = () => {
                     ? identificationPhoto.uri
                     : identificationPhoto.uri.replace("file://", ""),
         })
-        if(CheckState){
+        if (CheckState) {
             data.append("beneficiaryAvatar", {
                 name: beneficiaryAvatar.filename,
                 type: beneficiaryAvatar.type,
@@ -243,18 +254,29 @@ const ECommerRegister = () => {
                         ? beneficiaryAvatar.uri
                         : beneficiaryAvatar.uri.replace("file://", ""),
             })
-            data.append("identificationPhotoBeneficiary", {
-                name: identificationPhotoBeneficiary.filename,
-                type: identificationPhotoBeneficiary.type,
+            data.append("beneficiaryIdentificationPhoto", {
+                name: beneficiaryIdentificationPhoto.filename,
+                type: beneficiaryIdentificationPhoto.type,
                 uri:
                     Platform.OS === "android"
-                        ? identificationPhotoBeneficiary.uri
-                        : identificationPhotoBeneficiary.uri.replace("file://", ""),
+                        ? beneficiaryIdentificationPhoto.uri
+                        : beneficiaryIdentificationPhoto.uri.replace(
+                              "file://",
+                              "",
+                          ),
             })
         }
-        Object.keys(body).forEach((key) => data.append(key, data[key]))
+        Object.keys(body).forEach(key => data.append(key, data[key]))
 
-        return (data)
+        return data
+    }
+
+    // Funcion que permite hacer el calculo de la fecha
+    const ageUser = () => {
+        const result = calcAge(global.birthday)
+
+        setAge(result)
+        dispatch({ type: "beneficiaryTutor", payload: result < 18 ? 1 : 0 })
     }
 
     /**
@@ -272,7 +294,7 @@ const ECommerRegister = () => {
         if (
             item.name.length > 0 &&
             item.name.toLowerCase().search(state.filter.toLocaleLowerCase()) >
-            -1
+                -1
         ) {
             return (
                 <TouchableOpacity
@@ -293,7 +315,6 @@ const ECommerRegister = () => {
         try {
             switch (tab) {
                 case 0: {
-
                     // Validamos que ahiga ingresado el numero de identificacion
                     if (state.identificationNumber.trim().length === 0) {
                         throw String("Ingrese un numero de identificacion")
@@ -318,11 +339,11 @@ const ECommerRegister = () => {
                     if (state.profession.trim().length === 0) {
                         throw String("Es requerido su profesion actual")
                     }
-                    if (state.profilePictureId === null) {
+                    if (avatar === null) {
                         throw String("Imagen de perfil es requerida")
                     }
 
-                    if (state.identificationPictureId === null) {
+                    if (identificationPhoto === null) {
                         throw String("Imagen de identificacion es requerida")
                     }
                     break
@@ -401,16 +422,13 @@ const ECommerRegister = () => {
                         throw String("Es requerido su profesion actual")
                     }
 
-                    if (beneficiaryState.beneficiaryProfilePictureId === null) {
+                    if (beneficiaryAvatar === null) {
                         throw String(
                             "Imagen de perfil de beneficiario es requerida",
                         )
                     }
 
-                    if (
-                        beneficiaryState.beneficiaryIdentificationPictureId ===
-                        null
-                    ) {
+                    if (beneficiaryIdentificationPhoto === null) {
                         throw String(
                             "Imagen de identificacion de beneficiario es requerida",
                         )
@@ -435,7 +453,6 @@ const ECommerRegister = () => {
         const currentDate = selectedDate || birthday
         setBirthday(currentDate)
         setShowDate(false)
-
     }
 
     /**
@@ -451,22 +468,32 @@ const ECommerRegister = () => {
                 if (response.error) {
                     throw String(response.error)
                 }
-                dispatch({ type: ImageOption, payload: response })
-            })
-        } catch (error) {
-            showNotification(error.toString())
-        }
-    }
 
-    const uploadImageViewBeneficiary = async ImageOption => {
-        try {
-            await checkPermissionCamera()
+                switch (ImageOption) {
+                    case "avatar": {
+                        setAvatar(response)
+                        break
+                    }
 
-            launchCamera(optionsOpenCamera, response => {
-                if (response.error) {
-                    throw String(response.error)
+                    case "identificationPhoto": {
+                        setIdentificationPhoto(response)
+                        break
+                    }
+
+                    case "beneficiaryAvatar": {
+                        setBeneficiaryAvatar(response)
+                        break
+                    }
+
+                    case "beneficiaryIdentificationPhoto": {
+                        setBeneficiaryIdentificationPhoto(response)
+                        break
+                    }
+
+                    default: {
+                        break
+                    }
                 }
-                dispatchBeneficiary({ type: ImageOption, payload: response })
             })
         } catch (error) {
             showNotification(error.toString())
@@ -476,8 +503,6 @@ const ECommerRegister = () => {
     useEffect(() => {
         ageUser()
     }, [])
-
-    console.log('edad: ', age)
 
     return (
         <Container showLogo>
@@ -509,18 +534,12 @@ const ECommerRegister = () => {
                                     selectedValue={state.identificationType}
                                     onValueChange={value => {
                                         dispatch({
-                                            type: 'identificationType',
-                                            payload: value
+                                            type: "identificationType",
+                                            payload: value,
                                         })
-                                    }}
-                                >
-                                    <Picker.Item
-                                        label="Cedula"
-                                        value={1} />
-                                    <Picker.Item
-                                        label="Pasaporte"
-                                        value={2}
-                                    />
+                                    }}>
+                                    <Picker.Item label="Cedula" value={1} />
+                                    <Picker.Item label="Pasaporte" value={2} />
                                 </Picker>
                             </View>
                         </View>
@@ -569,8 +588,10 @@ const ECommerRegister = () => {
                                     onPress={_ => {
                                         setModalCountry(true)
                                         console.log(
-                                            `beneficiario: ${beneficiaryStateReducer.beneticiaryFilter
-                                            } no beneficiario: ${initialState.filter
+                                            `beneficiario: ${
+                                                beneficiaryStateReducer.beneticiaryFilter
+                                            } no beneficiario: ${
+                                                initialState.filter
                                             }`,
                                         )
                                     }}>
@@ -601,8 +622,10 @@ const ECommerRegister = () => {
                         </View>
 
                         <View style={classes.rowButtons}>
-                            <TouchableOpacity >
-                                <Text style={classes.textBack}>Cerrar sesión</Text>
+                            <TouchableOpacity>
+                                <Text style={classes.textBack}>
+                                    Cerrar sesión
+                                </Text>
                             </TouchableOpacity>
                             <TouchableOpacity
                                 onPress={nextPage}
@@ -623,12 +646,14 @@ const ECommerRegister = () => {
                         </View>
 
                         <View style={classes.row}>
-
-
-                            <View style={classes.row} >
+                            <View style={classes.row}>
                                 <View style={classes.labelsRow}>
-                                    <Text style={classes.legendRow}>Nacionalidad</Text>
-                                    <Text style={classes.required}>requerido</Text>
+                                    <Text style={classes.legendRow}>
+                                        Nacionalidad
+                                    </Text>
+                                    <Text style={classes.required}>
+                                        requerido
+                                    </Text>
                                 </View>
 
                                 <View style={GlobalStyles.containerPicker}>
@@ -636,17 +661,33 @@ const ECommerRegister = () => {
                                         style={GlobalStyles.picker}
                                         selectedValue={state.nationality}
                                         onValueChange={value => {
-                                            dispatch({ type: 'nationality', payload: value })
+                                            dispatch({
+                                                type: "nationality",
+                                                payload: value,
+                                            })
 
-                                            const selectedNationality = countries.find((item) => item.name === value);
+                                            const selectedNationality = countries.find(
+                                                item => item.name === value,
+                                            )
 
-                                            dispatch({ type: 'phoneCodeNationality', payload: selectedNationality.phoneCode });
-                                            dispatch({ type: 'currencyNationality', payload: selectedNationality.code });
-                                        }}
-                                    >
-                                        {
-                                            countries.map((item, index) => (<Picker.Item key={index} label={item.name} value={item.name} />))
-                                        }
+                                            dispatch({
+                                                type: "phoneCodeNationality",
+                                                payload:
+                                                    selectedNationality.phoneCode,
+                                            })
+                                            dispatch({
+                                                type: "currencyNationality",
+                                                payload:
+                                                    selectedNationality.code,
+                                            })
+                                        }}>
+                                        {countries.map((item, index) => (
+                                            <Picker.Item
+                                                key={index}
+                                                label={item.name}
+                                                value={item.name}
+                                            />
+                                        ))}
                                     </Picker>
                                 </View>
                             </View>
@@ -732,7 +773,7 @@ const ECommerRegister = () => {
                                     <View style={classes.containerTitle}>
                                         <Text style={classes.textTitle}>
                                             4. Preguntas de control
-                                </Text>
+                                        </Text>
                                     </View>
                                 </View>
 
@@ -740,8 +781,10 @@ const ECommerRegister = () => {
                                     <View style={classes.labelsRow}>
                                         <Text style={classes.legendRow}>
                                             ¿De dónde proviene su capital?
-                                </Text>
-                                        <Text style={classes.required}>Requerido</Text>
+                                        </Text>
+                                        <Text style={classes.required}>
+                                            Requerido
+                                        </Text>
                                     </View>
                                     <View style={GlobalStyles.containerPicker}>
                                         <Picker
@@ -768,8 +811,10 @@ const ECommerRegister = () => {
                                     <View style={classes.labelsRow}>
                                         <Text style={classes.legendRow}>
                                             ¿Cuál es su profesión actualmente?
-                                </Text>
-                                        <Text style={classes.required}>Requerido</Text>
+                                        </Text>
+                                        <Text style={classes.required}>
+                                            Requerido
+                                        </Text>
                                     </View>
                                     <TextInput
                                         style={classes.textInput}
@@ -785,11 +830,7 @@ const ECommerRegister = () => {
                                     />
                                 </View>
                             </>
-                        )
-                            : null
-                        }
-
-
+                        ) : null}
 
                         <View style={classes.containerTitle}>
                             {age < 18 ? (
@@ -810,10 +851,8 @@ const ECommerRegister = () => {
                                 </Text>
                             </View>
                             <UploadImage
-                                value={state.avatar}
-                                onChange={_ =>
-                                    uploadImageView("avatar")
-                                }
+                                value={avatar}
+                                onChange={_ => uploadImageView("avatar")}
                             />
                         </View>
 
@@ -824,56 +863,61 @@ const ECommerRegister = () => {
                                 </Text>
                             </View>
                             <UploadImage
-                                value={state.identificationPhoto}
+                                value={identificationPhoto}
                                 onChange={_ =>
                                     uploadImageView("identificationPhoto")
                                 }
                             />
                         </View>
 
-                        {age > 18 &&
-                            (<>
+                        {age > 18 && (
+                            <>
                                 <View style={classes.containerTitle}>
                                     <Text style={classes.textTitle}>
                                         6. Beneficiario
-                            </Text>
+                                    </Text>
                                 </View>
                                 <View style={classes.row}>
                                     <View style={classes.checkContainer}>
                                         <Text style={classes.legendSeePassword}>
                                             Añadir Beneficiario
-                                </Text>
+                                        </Text>
                                         <CheckBox
                                             checkBoxColor={Colors.colorYellow}
                                             isChecked={CheckState}
-                                            onClick={_ => setCheckState(!CheckState)}
+                                            onClick={_ =>
+                                                setCheckState(!CheckState)
+                                            }
                                         />
                                     </View>
                                 </View>
-                            </>)
-                        }
+                            </>
+                        )}
 
                         {age < 18 || CheckState ? (
                             <>
                                 <View style={classes.rowButtons}>
                                     <TouchableOpacity onPress={previousPage}>
-                                        <Text style={classes.textBack}>Atras</Text>
+                                        <Text style={classes.textBack}>
+                                            Atras
+                                        </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         onPress={nextPage}
                                         style={GlobalStyles.buttonPrimary}>
                                         <Text style={GlobalStyles.textButton}>
                                             Siguiente
-                                </Text>
+                                        </Text>
                                     </TouchableOpacity>
                                 </View>
                             </>
                         ) : (
                             <TouchableOpacity
                                 onPress={submitInformation}
-                                style={GlobalStyles.buttonPrimary
-                                }>
-                                <Text style={GlobalStyles.textButton}>Guardar</Text>
+                                style={GlobalStyles.buttonPrimary}>
+                                <Text style={GlobalStyles.textButton}>
+                                    Guardar
+                                </Text>
                             </TouchableOpacity>
                         )}
                     </ViewAnimation>
@@ -1467,13 +1511,9 @@ const ECommerRegister = () => {
                                 </Text>
                             </View>
                             <UploadImage
-                                value={
-                                    beneficiaryState.beneficiaryAvatar
-                                }
+                                value={beneficiaryAvatar}
                                 onChange={_ =>
-                                    uploadImageViewBeneficiary(
-                                        "beneficiaryAvatar",
-                                    )
+                                    uploadImageView("beneficiaryAvatar")
                                 }
                             />
                         </View>
@@ -1484,11 +1524,9 @@ const ECommerRegister = () => {
                                 </Text>
                             </View>
                             <UploadImage
-                                value={
-                                    beneficiaryState.beneficiaryIdentificationPhoto
-                                }
+                                value={beneficiaryIdentificationPhoto}
                                 onChange={_ =>
-                                    uploadImageViewBeneficiary(
+                                    uploadImageView(
                                         "beneficiaryIdentificationPhoto",
                                     )
                                 }
