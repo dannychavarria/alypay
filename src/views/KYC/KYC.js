@@ -23,6 +23,9 @@ import {
     RFValue,
     checkPermissionCamera,
     calcAge,
+    getHeaders,
+    http,
+    successMessage,
 } from "../../utils/constants"
 import countries from "../../utils/countries.json"
 import professions from "../../utils/profession.json"
@@ -53,7 +56,7 @@ const initialState = {
     province: "",
     direction1: "",
     direction2: "",
-    foundsOrigin: "Ahorros",
+    foundsOrigin: "De donde provienen tus ingresos",
     profession: "",
     avatar: null,
     identificationPhoto: null,
@@ -129,15 +132,15 @@ const ECommerRegister = () => {
     )
 
     // Estados que almacenan las imagenes del usuario
-    const [avatar, setAvatar] = useState(false)
-    const [identificationPhoto, setIdentificationPhoto] = useState(false)
+    const [avatar, setAvatar] = useState(null)
+    const [identificationPhoto, setIdentificationPhoto] = useState(null)
 
     // Estados que almacenan las imagenes del beneficiario / tutor
-    const [beneficiaryAvatar, setBeneficiaryAvatar] = useState(false)
+    const [beneficiaryAvatar, setBeneficiaryAvatar] = useState(null)
     const [
         beneficiaryIdentificationPhoto,
         setBeneficiaryIdentificationPhoto,
-    ] = useState(false)
+    ] = useState(null)
 
     // Estado hace el cambio del CheckBox para el Cambio de leyenda cuando hay beneficiario
     const [CheckState, setCheckState] = useState(false)
@@ -146,10 +149,6 @@ const ECommerRegister = () => {
     const [modalCoutry, setModalCountry] = useState(false)
 
     const { global } = store.getState()
-
-    console.log("store: ", global)
-
-    console.log("globalState: ", state)
 
     // Estados que almacenan la fecha del beneficiario
     const [showDate, setShowDate] = useState(false)
@@ -163,23 +162,62 @@ const ECommerRegister = () => {
     // Hacemos la peticion al server
     const submitInformation = async () => {
         try {
-            const dataSent = {
-                idTypeIdentification: state.identificationType,
-                identificationNumber: state.identificationNumber,
-                alternativeNumber: `${state.country.phoneCode} ${
-                    state.alternativeNumber
-                }`,
-                nationality: state.nationality,
-                nationalityPhoneCode: state.phoneCodeNationality,
-                nationalityCurrencySymbol: state.currencyNationality,
-                province: state.province,
-                direction1: state.direction1,
-                direction2: state.direction2,
-                answer1: state.foundsOrigin,
-                answer2: state.profession,
-            }
+            console.log('avatar: ',avatar)
+
+            const mydata = new FormData()
+
+            mydata.append('avatar', {
+                name: avatar.fileName,
+                type: avatar.type,
+                uri:
+                    Platform.OS === "android"
+                        ? avatar.uri
+                        : avatar.uri.replace("file://", ""),
+            })
+
+            mydata.append('identificationPhoto', {
+                name: identificationPhoto.fileName,
+                type: identificationPhoto.type,
+                uri:
+                    Platform.OS === "android"
+                        ? identificationPhoto.uri
+                        : identificationPhoto.uri.replace("file://", ""),
+            })
+
+            // mydata.append('beneficiaryAvatar', {
+            //     name: beneficiaryAvatar.fileName,
+            //     type: beneficiaryAvatar.type,
+            //     uri:
+            //         Platform.OS === "android"
+            //             ? beneficiaryAvatar.uri
+            //             : beneficiaryAvatar.uri.replace("file://", ""),
+            // })
+
+            // mydata.append('beneficiaryIdentificationPhoto', {
+            //     name: beneficiaryIdentificationPhoto.fileName,
+            //     type: beneficiaryIdentificationPhoto.type,
+            //     uri:
+            //         Platform.OS === "android"
+            //             ? beneficiaryIdentificationPhoto.uri
+            //             : beneficiaryIdentificationPhoto.uri.replace("file://", ""),
+            // })
+
+            mydata.append('idTypeIdentification', state.identificationType)
+            mydata.append('identificationNumber', state.identificationNumber)
+            mydata.append('alternativeNumber', `${state.country.phoneCode} ${state.alternativeNumber
+            }`)
+            mydata.append('nationality', state.nationality)
+            mydata.append('nationalityPhoneCode',state.phoneCodeNationality)
+            mydata.append('nationalityCurrencySymbol', state.nationalityCurrencySymbol)
+            mydata.append('province', state.province)
+            mydata.append('direction1', state.direction1)
+            mydata.append('direction2', state.direction2)
+            mydata.append('answer1', state.foundsOrigin)
+            mydata.append('answer2', state.profession)
+
             if (age < 18 || CheckState) {
-                dataSent.beneficiary = {
+                console.log("entra")
+                let beneficiario = {
                     idRelationship: state.beneficiaryRelationship,
                     idTypeIdentification: state.beneficiaryIdentificationType,
                     firstname: state.beneficiaryFirstname,
@@ -205,70 +243,19 @@ const ECommerRegister = () => {
                     answer1: state.beneficiaryFoundsOrigin,
                     answer2: state.beneficiaryProfession,
                 }
+                mydata.append('beneficiario', beneficiario)
             }
-            console.log("dataSent: ", dataSent)
-            submitInformationSer(
-                createFormDate(
-                    avatar,
-                    identificationPhoto,
-                    beneficiaryAvatar,
-                    beneficiaryIdentificationPhoto,
-                    dataSent,
-                ),
-            )
+          
+            submitInformationSer(mydata)
+
+            if (response.error) {
+                throw String(response.message)
+            } else if (response.response === "success") {
+                successMessage("Tu registro esta en proceso de aceptacion")
+            }
         } catch (error) {
             errorMessage(error.toString())
         }
-    }
-
-    const createFormDate = (
-        avatar,
-        identificationPhoto,
-        beneficiaryAvatar,
-        beneficiaryIdentificationPhoto,
-        body,
-    ) => {
-        const data = new FormData()
-        data.append("avatar", {
-            name: avatar.filename,
-            type: avatar.type,
-            uri:
-                Platform.OS === "android"
-                    ? avatar.uri
-                    : avatar.uri.replace("file://", ""),
-        })
-        data.append("identificationPhoto", {
-            name: identificationPhoto.filename,
-            type: identificationPhoto.type,
-            uri:
-                Platform.OS === "android"
-                    ? identificationPhoto.uri
-                    : identificationPhoto.uri.replace("file://", ""),
-        })
-        if (CheckState) {
-            data.append("beneficiaryAvatar", {
-                name: beneficiaryAvatar.filename,
-                type: beneficiaryAvatar.type,
-                uri:
-                    Platform.OS === "android"
-                        ? beneficiaryAvatar.uri
-                        : beneficiaryAvatar.uri.replace("file://", ""),
-            })
-            data.append("beneficiaryIdentificationPhoto", {
-                name: beneficiaryIdentificationPhoto.filename,
-                type: beneficiaryIdentificationPhoto.type,
-                uri:
-                    Platform.OS === "android"
-                        ? beneficiaryIdentificationPhoto.uri
-                        : beneficiaryIdentificationPhoto.uri.replace(
-                              "file://",
-                              "",
-                          ),
-            })
-        }
-        Object.keys(body).forEach(key => data.append(key, data[key]))
-
-        return data
     }
 
     // Funcion que permite hacer el calculo de la fecha
@@ -294,7 +281,7 @@ const ECommerRegister = () => {
         if (
             item.name.length > 0 &&
             item.name.toLowerCase().search(state.filter.toLocaleLowerCase()) >
-                -1
+            -1
         ) {
             return (
                 <TouchableOpacity
@@ -588,10 +575,8 @@ const ECommerRegister = () => {
                                     onPress={_ => {
                                         setModalCountry(true)
                                         console.log(
-                                            `beneficiario: ${
-                                                beneficiaryStateReducer.beneticiaryFilter
-                                            } no beneficiario: ${
-                                                initialState.filter
+                                            `beneficiario: ${beneficiaryStateReducer.beneticiaryFilter
+                                            } no beneficiario: ${initialState.filter
                                             }`,
                                         )
                                     }}>

@@ -1,5 +1,5 @@
 import {
-    getHeaders,
+    getHeadersMultipartFormData,
     http,
     errorMessage,
     successMessage,
@@ -9,13 +9,10 @@ import {
 export default async function submitInfo( dataSent ) {
     try {
         loader(true)
-        console.log("DataSent: ", dataSent)
 
-        const { data: response } = await http.post(
-            "/kyc",
-            dataSent,
-            getHeaders(),
-        )
+        console.log('DataSent: ', dataSent)
+
+        const { data: response } = await http.post("/kyc", {data: dataSent}, getHeadersMultipartFormData())
 
         if (response.error) {
             throw String(response.message)

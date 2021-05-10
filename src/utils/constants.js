@@ -97,8 +97,8 @@ const PORT = "3085"
 // export const serverAddress = "https://alypay.uc.r.appspot.com"
 //export const serverAddress = "https://root-anvil-299019.uc.r.appspot.com"
 //export const serverAddress = "https://192.168.1.224:3000"
-// export const serverAddress = "http://192.168.0.139:3085"
-export const serverAddress = "http://23214b7b5dc8.ngrok.io/"
+export const serverAddress = "http://192.168.0.102:3085"
+// export const serverAddress = "http://e65e29ab805d.ngrok.io"
 /* export const serverAddress =
     Platform.OS === "ios"
         ? `http://localhost:${PORT}`
@@ -432,6 +432,17 @@ export const getHeaders = () => {
 
     return {
         headers: {
+            "x-auth-token": token,
+        },
+    }
+}
+
+export const getHeadersMultipartFormData = () => {
+    const { token } = store.getState().global
+
+    return {
+        headers: {
+            'Content-Type': 'multipart/form-data',
             "x-auth-token": token,
         },
     }
