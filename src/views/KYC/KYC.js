@@ -120,7 +120,7 @@ const reducer = (state, action) => {
     }
 }
 
-const ECommerRegister = () => {
+const ECommerRegister = ({ navigation }) => {
     // Estado que almacena los estilos de los componentes
     const classes = useStyles(ECommerRegisterS)
 
@@ -1043,12 +1043,17 @@ const ECommerRegister = () => {
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
                             <View style={GlobalStyles.containerPicker}>
-                                <Picker style={GlobalStyles.picker}>
-                                    <Picker.Item
-                                        label="Identificación"
-                                        value={1}
-                                    />
-                                    <Picker.Item label="Cedula" value={2} />
+                                <Picker
+                                    style={GlobalStyles.picker}
+                                    selectedValue={beneficiaryState.beneficiaryIdentificationType}
+                                    onValueChange={value => {
+                                        dispatchBeneficiary({
+                                            type: "beneficiaryIdentificationType",
+                                            payload: value,
+                                        })
+                                    }}>
+                                    <Picker.Item label="Cedula" value={1} />
+                                    <Picker.Item label="Pasaporte" value={2} />
                                 </Picker>
                             </View>
                         </View>
@@ -1514,12 +1519,35 @@ const ECommerRegister = () => {
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
                             <View style={GlobalStyles.containerPicker}>
-                                <Picker style={GlobalStyles.picker}>
+                                <Picker
+                                    style={GlobalStyles.picker}
+                                    selectedValue={
+                                        beneficiaryState.beneficiaryRelationship
+                                    }
+                                    onValueChange={value =>
+                                        dispatchBeneficiary({
+                                            type: "beneficiaryRelationship",
+                                            payload: value
+                                        })
+                                    }
+                                >
                                     <Picker.Item
-                                        label="seleccionar respuesta"
+                                        label="Padre / Madre"
                                         value={1}
                                     />
-                                    <Picker.Item label="Cedula" value={2} />
+                                    <Picker.Item
+                                        label="Hermano (a)"
+                                        value={2}
+                                    />
+                                    <Picker.Item
+                                        label="Tío (a)"
+                                        value={3}
+                                    />
+                                    <Picker.Item
+                                        label="Abuelo (a)"
+                                        value={4}
+                                    />
+                                    <Picker.Item label="Otro" value={5} />
                                 </Picker>
                             </View>
                         </View>
