@@ -282,7 +282,7 @@ const Register = ({ navigation }) => {
                     }
 
                     // ejecutamos el servicio
-                    onSubmit()
+                    //onSubmit()
 
                     return false
                 }
@@ -940,7 +940,9 @@ const Register = ({ navigation }) => {
                         </View>
                     </View>
 
-                    <TouchableOpacity style={styles.buttonSuccess}>
+                    <TouchableOpacity
+                        style={styles.buttonSuccess}
+                        onPress={onSubmit}>
                         <Text style={GlobalStyles.textButton}>Listo</Text>
                     </TouchableOpacity>
                 </View>
