@@ -94,7 +94,7 @@ export const Colors = {
 const PORT = "3085"
 
 /**Direction for server */
-// export const serverAddress = "https://alypay.uc.r.appspot.com"
+export const serverAddress = "https://alypay.uc.r.appspot.com"
 //export const serverAddress = "https://root-anvil-299019.uc.r.appspot.com"
 //export const serverAddress = "https://192.168.1.224:3000"
 // export const serverAddress = "http://192.168.0.102:3085"
@@ -505,7 +505,7 @@ export const calcAge = birthDate => {
 }
 
 /**
- * Configuracion de el metodo de authenticacion de touchID  
+ * Configuracion de el metodo de authenticacion de touchID
  */
 export const configTouchIDAuth = {
     title: "Autenticación",
