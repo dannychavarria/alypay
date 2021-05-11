@@ -442,7 +442,7 @@ export const getHeadersMultipartFormData = () => {
 
     return {
         headers: {
-            'Content-Type': 'multipart/form-data',
+            'Content-Type': 'application/json',
             "x-auth-token": token,
         },
     }

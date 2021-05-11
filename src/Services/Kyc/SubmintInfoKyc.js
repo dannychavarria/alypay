@@ -6,13 +6,17 @@ import {
     loader,
 } from "../../utils/constants"
 
-export default async function submitInfo( dataSent ) {
+export default async function submitInfo(dataSent) {
     try {
         loader(true)
 
-        console.log('DataSent: ', dataSent)
+        console.log("DataSent: ", dataSent)
 
-        const { data: response } = await http.post("/kyc", {data: dataSent}, getHeadersMultipartFormData())
+        const { data: response } = await http.post(
+            "/kyc/simplex",
+            dataSent,
+            getHeadersMultipartFormData(),
+        )
 
         if (response.error) {
             throw String(response.message)

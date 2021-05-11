@@ -162,62 +162,22 @@ const ECommerRegister = () => {
     // Hacemos la peticion al server
     const submitInformation = async () => {
         try {
-            console.log('avatar: ',avatar)
-
-            const mydata = new FormData()
-
-            mydata.append('avatar', {
-                name: avatar.fileName,
-                type: avatar.type,
-                uri:
-                    Platform.OS === "android"
-                        ? avatar.uri
-                        : avatar.uri.replace("file://", ""),
-            })
-
-            mydata.append('identificationPhoto', {
-                name: identificationPhoto.fileName,
-                type: identificationPhoto.type,
-                uri:
-                    Platform.OS === "android"
-                        ? identificationPhoto.uri
-                        : identificationPhoto.uri.replace("file://", ""),
-            })
-
-            // mydata.append('beneficiaryAvatar', {
-            //     name: beneficiaryAvatar.fileName,
-            //     type: beneficiaryAvatar.type,
-            //     uri:
-            //         Platform.OS === "android"
-            //             ? beneficiaryAvatar.uri
-            //             : beneficiaryAvatar.uri.replace("file://", ""),
-            // })
-
-            // mydata.append('beneficiaryIdentificationPhoto', {
-            //     name: beneficiaryIdentificationPhoto.fileName,
-            //     type: beneficiaryIdentificationPhoto.type,
-            //     uri:
-            //         Platform.OS === "android"
-            //             ? beneficiaryIdentificationPhoto.uri
-            //             : beneficiaryIdentificationPhoto.uri.replace("file://", ""),
-            // })
-
-            mydata.append('idTypeIdentification', state.identificationType)
-            mydata.append('identificationNumber', state.identificationNumber)
-            mydata.append('alternativeNumber', `${state.country.phoneCode} ${state.alternativeNumber
-            }`)
-            mydata.append('nationality', state.nationality)
-            mydata.append('nationalityPhoneCode',state.phoneCodeNationality)
-            mydata.append('nationalityCurrencySymbol', state.nationalityCurrencySymbol)
-            mydata.append('province', state.province)
-            mydata.append('direction1', state.direction1)
-            mydata.append('direction2', state.direction2)
-            mydata.append('answer1', state.foundsOrigin)
-            mydata.append('answer2', state.profession)
-
+            const dataSent = {
+                idTypeIdentification: state.identificationType,
+                identificationNumber: state.identificationNumber,
+                alternativeNumber: `${state.country.phoneCode} ${state.alternativeNumber
+                    }`,
+                nationality: state.nationality,
+                nationalityPhoneCode: state.phoneCodeNationality,
+                nationalityCurrencySymbol: state.currencyNationality,
+                province: state.province,
+                direction1: state.direction1,
+                direction2: state.direction2,
+                answer1: state.foundsOrigin,
+                answer2: state.profession,
+            }
             if (age < 18 || CheckState) {
-                console.log("entra")
-                let beneficiario = {
+                dataSent.beneficiary = {
                     idRelationship: state.beneficiaryRelationship,
                     idTypeIdentification: state.beneficiaryIdentificationType,
                     firstname: state.beneficiaryFirstname,
@@ -243,19 +203,86 @@ const ECommerRegister = () => {
                     answer1: state.beneficiaryFoundsOrigin,
                     answer2: state.beneficiaryProfession,
                 }
-                mydata.append('beneficiario', beneficiario)
             }
-          
-            submitInformationSer(mydata)
 
-            if (response.error) {
-                throw String(response.message)
-            } else if (response.response === "success") {
-                successMessage("Tu registro esta en proceso de aceptacion")
-            }
+            console.log('datasent', dataSent)
+
+            submitInformationSer(createFormData(
+                avatar,
+                identificationPhoto,
+                beneficiaryAvatar,
+                beneficiaryIdentificationPhoto,
+                dataSent
+            ))
+
         } catch (error) {
             errorMessage(error.toString())
         }
+    }
+    
+    
+
+    const createFormData = (
+        avatar,
+        identificationPhoto,
+        beneficiaryAvatar,
+        beneficiaryIdentificationPhoto,
+        body,
+    ) => {
+        
+
+        const myAvatar={
+            name: avatar.fileName,
+            type: avatar.type,
+            uri:
+                Platform.OS === "android"
+                    ? avatar.uri
+                    : avatar.uri.replace("file://", ""),
+        }
+
+        const data = new FormData()
+
+        data.append("avatar", JSON.stringify(myAvatar))
+
+        const myIdentificationPhoto={
+            name: identificationPhoto.fileName,
+            type: identificationPhoto.type,
+            uri:
+                Platform.OS === "android"
+                    ? identificationPhoto.uri
+                    : identificationPhoto.uri.replace("file://", ""),
+        }
+
+        data.append("identificationPhoto", JSON.stringify(myIdentificationPhoto))
+
+        if (CheckState) {
+            data.append("beneficiaryAvatar", {
+                name: beneficiaryAvatar.fileName,
+                type: beneficiaryAvatar.type,
+                uri:
+                    Platform.OS === "android"
+                        ? beneficiaryAvatar.uri
+                        : beneficiaryAvatar.uri.replace("file://", ""),
+            })
+            data.append("beneficiaryIdentificationPhoto", {
+                name: beneficiaryIdentificationPhoto.fileName,
+                type: beneficiaryIdentificationPhoto.type,
+                uri:
+                    Platform.OS === "android"
+                        ? beneficiaryIdentificationPhoto.uri
+                        : beneficiaryIdentificationPhoto.uri.replace(
+                            "file://",
+                            "",
+                        ),
+            })
+        }
+
+        Object.keys(body).forEach(key => {
+            data.append(key, body[key])
+        })
+
+        
+        return data
     }
 
     // Funcion que permite hacer el calculo de la fecha
