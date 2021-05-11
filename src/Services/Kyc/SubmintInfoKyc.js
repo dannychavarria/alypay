@@ -13,7 +13,7 @@ export default async function submitInfo(dataSent) {
         console.log("DataSent: ", dataSent)
 
         const { data: response } = await http.post(
-            "/kyc/simplex",
+            "/kyc",
             dataSent,
             getHeadersMultipartFormData(),
         )

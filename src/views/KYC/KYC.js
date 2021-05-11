@@ -90,7 +90,7 @@ const beneficiaryStateReducer = {
     beneficiaryDirection1: "",
     beneficiaryDirection2: "",
     beneficiaryPostalCode: "",
-    beneficiaryFoundsOrigin: 1,
+    beneficiaryFoundsOrigin: "De donde provienen tus ingresos",
     beneficiaryEstimateMonthlyAmount: 0,
     beneficiaryProfession: "",
     beneficiaryAvatar: null,
@@ -162,7 +162,7 @@ const ECommerRegister = () => {
     // Hacemos la peticion al server
     const submitInformation = async () => {
         try {
-            const dataSent = {
+            let dataSent = {
                 idTypeIdentification: state.identificationType,
                 identificationNumber: state.identificationNumber,
                 alternativeNumber: `${state.country.phoneCode} ${state.alternativeNumber
@@ -175,37 +175,44 @@ const ECommerRegister = () => {
                 direction2: state.direction2,
                 answer1: state.foundsOrigin,
                 answer2: state.profession,
+
+                haveBeneficiary: (age < 18 || CheckState) ? 1 : 0,
+
             }
-            if (age < 18 || CheckState) {
-                dataSent.beneficiary = {
-                    idRelationship: state.beneficiaryRelationship,
-                    idTypeIdentification: state.beneficiaryIdentificationType,
-                    firstname: state.beneficiaryFirstname,
-                    lastname: state.beneficiaryLastname,
-                    email: state.beneficiaryEmail,
-                    birthday: state.beneficiarybirthday,
-                    identificationNumber: state.beneficiaryIdentificationNumber,
-                    principalNumber: state.beneficiaryPrincipalNumber,
-                    alternativeNumber: state.beneficiaryAlternativeNumber,
-                    nationality: state.beneficiaryNationality,
-                    nationalityPhoneCode: state.beneficiaryPhoneCodeNationality,
-                    nationalityCurrencySymbol:
-                        state.beneficiaryCurrencyNationality,
-                    residence: state.beneficiaryResidence,
-                    residencePhoneCode: state.beneficiaryPhoneCodeResidence,
-                    residenceCurrencySymbol: state.beneficiaryCurrencyResidence,
-                    province: state.beneficiaryProvince,
-                    city: state.beneficiaryCity,
-                    tutor: state.beneficiaryTutor,
-                    direction1: state.beneficiaryDirection1,
-                    direction2: state.beneficiaryDirection2,
-                    postalCode: state.beneficiaryPostalCode,
-                    answer1: state.beneficiaryFoundsOrigin,
-                    answer2: state.beneficiaryProfession,
+
+            if (CheckState || age < 18) {
+                dataSent = {
+                    ...dataSent,
+                    beneficiaryIdRelationship: beneficiaryState.beneficiaryRelationship,
+                    beneficiaryIdTypeIdentification: beneficiaryState.beneficiaryIdentificationType,
+                    beneficiaryFirstname: beneficiaryState.beneficiaryFirstname,
+                    beneficiaryLastname: beneficiaryState.beneficiaryLastname,
+                    beneficiaryEmail: beneficiaryState.beneficiaryEmail,
+                    beneficiaryBirthday: birthday.toString(),
+                    beneficiaryIdentificationNumber: beneficiaryState.beneficiaryIdentificationNumber,
+                    beneficiaryPrincipalNumber: beneficiaryState.beneficiaryPrincipalNumber,
+                    beneficiaryAlternativeNumber: beneficiaryState.beneficiaryAlternativeNumber,
+                    beneficiaryNationality: beneficiaryState.beneficiaryNationality,
+                    beneficiaryNationalityPhoneCode: beneficiaryState.beneficiaryPhoneCodeNationality,
+                    beneficiaryNationalityCurrencySymbol:
+                        beneficiaryState.beneficiaryCurrencyNationality,
+                    beneficiaryResidence: beneficiaryState.beneficiaryResidence,
+                    beneficiaryResidencePhoneCode: beneficiaryState.beneficiaryPhoneCodeResidence,
+                    beneficiaryResidenceCurrencySymbol: beneficiaryState.beneficiaryCurrencyResidence,
+                    beneficiaryProvince: beneficiaryState.beneficiaryProvince,
+                    beneficiaryCity: beneficiaryState.beneficiaryCity,
+                    beneficiaryTutor: beneficiaryState.beneficiaryTutor,
+                    beneficiaryDirection1: beneficiaryState.beneficiaryDirection1,
+                    beneficiaryDirection2: beneficiaryState.beneficiaryDirection2,
+                    beneficiaryPostalCode: beneficiaryState.beneficiaryPostalCode,
+                    beneficiaryAnswer1: beneficiaryState.beneficiaryFoundsOrigin,
+                    beneficiaryAnswer2: beneficiaryState.beneficiaryProfession,
                 }
             }
 
-            console.log('datasent', dataSent)
+
+
+            console.log('dataSent', dataSent)
 
             submitInformationSer(createFormData(
                 avatar,
@@ -219,8 +226,8 @@ const ECommerRegister = () => {
             errorMessage(error.toString())
         }
     }
-    
-    
+
+    console.log('benefir', beneficiaryState.beneficiaryFoundsOrigin)
 
     const createFormData = (
         avatar,
@@ -229,9 +236,10 @@ const ECommerRegister = () => {
         beneficiaryIdentificationPhoto,
         body,
     ) => {
-        
 
-        const myAvatar={
+        const data = new FormData()
+
+        const myAvatar = {
             name: avatar.fileName,
             type: avatar.type,
             uri:
@@ -239,12 +247,9 @@ const ECommerRegister = () => {
                     ? avatar.uri
                     : avatar.uri.replace("file://", ""),
         }
-
-        const data = new FormData()
-
         data.append("avatar", JSON.stringify(myAvatar))
 
-        const myIdentificationPhoto={
+        const myIdentificationPhoto = {
             name: identificationPhoto.fileName,
             type: identificationPhoto.type,
             uri:
@@ -252,19 +257,19 @@ const ECommerRegister = () => {
                     ? identificationPhoto.uri
                     : identificationPhoto.uri.replace("file://", ""),
         }
-
         data.append("identificationPhoto", JSON.stringify(myIdentificationPhoto))
 
         if (CheckState) {
-            data.append("beneficiaryAvatar", {
+            data.append("beneficiaryAvatar", JSON.stringify({
                 name: beneficiaryAvatar.fileName,
                 type: beneficiaryAvatar.type,
                 uri:
                     Platform.OS === "android"
                         ? beneficiaryAvatar.uri
                         : beneficiaryAvatar.uri.replace("file://", ""),
-            })
-            data.append("beneficiaryIdentificationPhoto", {
+            }))
+
+            data.append("beneficiaryIdentificationPhoto", JSON.stringify({
                 name: beneficiaryIdentificationPhoto.fileName,
                 type: beneficiaryIdentificationPhoto.type,
                 uri:
@@ -274,14 +279,13 @@ const ECommerRegister = () => {
                             "file://",
                             "",
                         ),
-            })
+            }))
         }
 
         Object.keys(body).forEach(key => {
             data.append(key, body[key])
         })
 
-        
         return data
     }
 
@@ -398,6 +402,7 @@ const ECommerRegister = () => {
                     if (!validator.isEmail(beneficiaryState.beneficiaryEmail)) {
                         throw String("Ingrese un email valido")
                     }
+                    break
                 }
 
                 case 4: {
@@ -1377,7 +1382,6 @@ const ECommerRegister = () => {
                                 <Text style={classes.legendRow}>
                                     Dirección (Línea 2)
                                 </Text>
-                                <Text style={classes.required}>Requerido</Text>
                             </View>
                             <TextInput
                                 style={classes.textInput}
@@ -1461,12 +1465,22 @@ const ECommerRegister = () => {
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
                             <View style={GlobalStyles.containerPicker}>
-                                <Picker style={GlobalStyles.picker}>
-                                    <Picker.Item
-                                        label="seleccionar respuesta"
-                                        value={1}
-                                    />
-                                    <Picker.Item label="Cedula" value={2} />
+                                <Picker
+                                    style={GlobalStyles.picker}
+                                    onValueChange={value => {
+                                        dispatchBeneficiary({
+                                            type: "beneficiaryFoundsOrigin",
+                                            payload: value,
+                                        })
+                                    }}
+                                    selectedValue={beneficiaryState.beneficiaryFoundsOrigin}>
+                                    {professions.map((item, index) => (
+                                        <Picker.Item
+                                            key={index}
+                                            label={item.profession}
+                                            value={item.profession}
+                                        />
+                                    ))}
                                 </Picker>
                             </View>
                         </View>
@@ -1550,7 +1564,7 @@ const ECommerRegister = () => {
                                 <Text style={classes.textBack}>Atras</Text>
                             </TouchableOpacity>
                             <TouchableOpacity
-                                onPress={nextPage}
+                                onPress={submitInformation}
                                 style={GlobalStyles.buttonPrimary}>
                                 <Text style={GlobalStyles.textButton}>
                                     Guardar
