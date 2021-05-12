@@ -341,6 +341,8 @@ const Main = () => {
 
     const { global } = store.getState()
 
+    console.log('GlobalMain',global)
+
     /**
      * Metodo que configura el componente, inicializando todas las tareas
      */
@@ -412,7 +414,7 @@ const Main = () => {
 
     return (
         <Container onRefreshEnd={configurateComponent} showLogo>
-            {global.kyc_type === 0 ? <ModalKyc /> : null}
+            {global.kyc_type  === 0 ? <ModalKyc /> : null}
             <Switch
                 onSwitch={setStateView}
                 items={switchItems}

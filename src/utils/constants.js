@@ -97,8 +97,8 @@ const PORT = "3085"
 // export const serverAddress = "https://alypay.uc.r.appspot.com"
 //export const serverAddress = "https://root-anvil-299019.uc.r.appspot.com"
 //export const serverAddress = "https://192.168.1.224:3000"
-// export const serverAddress = "http://192.168.0.102:3085"
-export const serverAddress = "http://514865373541.ngrok.io"
+export const serverAddress = "http://192.168.0.102:3085"
+// export const serverAddress = "http://b83d81f175aa.ngrok.io"
 /* export const serverAddress =
     Platform.OS === "ios"
         ? `http://localhost:${PORT}`

@@ -65,6 +65,8 @@ const initialState = {
     country: countries[0],
     filter: "",
 
+    gender: '',
+
     tab: 0,
 }
 
@@ -95,6 +97,8 @@ const beneficiaryStateReducer = {
     beneficiaryProfession: "",
     beneficiaryAvatar: null,
     beneficiaryIdentificationPhoto: null,
+
+    beneficiaryGender: '',
 
     beneficiaryCountry: countries[0],
     beneticiaryFilter: "",
@@ -164,6 +168,7 @@ const KycUser = ({ navigation }) => {
     const submitInformation = async () => {
         try {
             let dataSent = {
+                gender: state.gender,
                 idTypeIdentification: state.identificationType,
                 identificationNumber: state.identificationNumber,
                 alternativeNumber: `${state.country.phoneCode} ${
@@ -184,6 +189,7 @@ const KycUser = ({ navigation }) => {
             if (CheckState || age < 18) {
                 dataSent = {
                     ...dataSent,
+                    beneficiaryGender: beneficiaryState.beneficiaryGender,
                     beneficiaryIdRelationship:
                         beneficiaryState.beneficiaryRelationship,
                     beneficiaryIdTypeIdentification:
@@ -564,6 +570,31 @@ const KycUser = ({ navigation }) => {
                         <View style={classes.row}>
                             <View style={classes.labelsRow}>
                                 <Text style={classes.legendRow}>
+                                    Seleccione su genero
+                                </Text>
+                                <Text style={classes.required}>Requerido</Text>
+                            </View>
+                            <View style={GlobalStyles.containerPicker}>
+                                <Picker
+                                    style={GlobalStyles.picker}
+                                    selectedValue={state.gender}
+                                    onValueChange={value => {
+                                        dispatch({
+                                            type: "gender",
+                                            payload: value,
+                                        })
+                                    }}>
+                                    <Picker.Item label="Seleccione su genero" value={3} />
+                                    <Picker.Item label="Masculino" value={1} />
+                                    <Picker.Item label="Femenino" value={2} />
+                                    <Picker.Item label="No especifica" value={3} />
+                                </Picker>
+                            </View>
+                        </View>
+
+                        <View style={classes.row}>
+                            <View style={classes.labelsRow}>
+                                <Text style={classes.legendRow}>
                                     Tipo de identificación
                                 </Text>
                                 <Text style={classes.required}>Requerido</Text>
@@ -662,7 +693,9 @@ const KycUser = ({ navigation }) => {
                         </View>
 
                         <View style={classes.rowButtons}>
-                            <TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={}
+                            >
                                 <Text style={classes.textBack}>
                                     Cerrar sesión
                                 </Text>
@@ -981,6 +1014,31 @@ const KycUser = ({ navigation }) => {
                             <Text style={classes.textTitle}>
                                 1. Información personal
                             </Text>
+                        </View>
+
+                        <View style={classes.row}>
+                            <View style={classes.labelsRow}>
+                                <Text style={classes.legendRow}>
+                                    Seleccione su genero
+                                </Text>
+                                <Text style={classes.required}>Requerido</Text>
+                            </View>
+                            <View style={GlobalStyles.containerPicker}>
+                                <Picker
+                                    style={GlobalStyles.picker}
+                                    selectedValue={beneficiaryState.beneficiaryGender}
+                                    onValueChange={value => {
+                                        dispatchBeneficiary({
+                                            type: "beneficiaryGender",
+                                            payload: value,
+                                        })
+                                    }}>
+                                    <Picker.Item label="Seleccione su genero" value={3} />
+                                    <Picker.Item label="Masculino" value={1} />
+                                    <Picker.Item label="Femenino" value={2} />
+                                    <Picker.Item label="No especifica" value={3} />
+                                </Picker>
+                            </View>
                         </View>
 
                         <View style={classes.row}>
