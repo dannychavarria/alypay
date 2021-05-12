@@ -242,7 +242,6 @@ const KycUser = ({ navigation }) => {
                     beneficiaryIdentificationPhoto,
                     dataSent,
                 ),
-                navigation.dispatch(StackActions.push("Main")),
             )
         } catch (error) {
             errorMessage(error.toString())

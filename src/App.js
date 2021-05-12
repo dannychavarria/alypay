@@ -37,6 +37,7 @@ import RetirementExcutive from "./views/RetirementExcutive/RetirementExcutive"
 import WalletCommerce from "./views/WalletCommerce/WalletCommerce"
 import HistoryRetirementExcutive from "./components/HistoryRetirementExcutive/HistoryRetirementExcutive"
 import Kyc from "./views/KYC/KYC"
+import ModalKyc from "./components/ModalKyc/ModalKyc"
 
 // import assets and animation
 import notConectionAnimation from "./animations/no-internet-connection.json"
@@ -190,6 +191,8 @@ const App = () => {
                     autoPlay
                 />
             </Modal>
+
+            <ModalKyc />
 
             {!state.loged && <ButtonSupport />}
 

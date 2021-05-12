@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { View, Text, Image, TouchableOpacity, Alert } from "react-native"
 
 // Import Components
@@ -16,8 +16,13 @@ import { ModalKycStyles } from "../../Styles/Components/index"
 import Logo from "../../static/alypay.png"
 import LogoFunko from "../../static/AlyFunko.png"
 
+// Import Stoore
+import store from "../../store/index"
+
 const ModalKyc = ({ navigation }) => {
     const classes = useStyles(ModalKycStyles)
+
+    const { global } = store.getState()
 
     const { navigate } = useNavigation()
 
@@ -52,6 +57,19 @@ const ModalKyc = ({ navigation }) => {
             console.log(error)
         }
     }
+
+    useEffect(() => {
+        store.subscribe(() => {
+            const newStore = store.getState()
+
+            const conditional =
+                "kyc_type" in newStore && newStore?.kyc_type === 0
+
+            console.log(conditional, newStore)
+
+            setShowModal(conditional)
+        })
+    }, [])
 
     return (
         <Modal
