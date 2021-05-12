@@ -21,6 +21,7 @@ import {
 } from "react-native"
 import { Image } from "react-native-animatable"
 import { useNavigation } from "@react-navigation/native"
+import ModalKyc from "../../components/ModalKyc/ModalKyc"
 
 // Import constant and functions
 import * as CryptoJS from "react-native-crypto-js"
@@ -411,6 +412,7 @@ const Main = () => {
 
     return (
         <Container onRefreshEnd={configurateComponent} showLogo>
+            {global.kyc_type === 0 ? <ModalKyc /> : null}
             <Switch
                 onSwitch={setStateView}
                 items={switchItems}
