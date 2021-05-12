@@ -17,11 +17,14 @@ import RNFetchBlob from "rn-fetch-blob"
 import { check, PERMISSIONS, RESULTS, request } from "react-native-permissions"
 import { isIphoneX } from "react-native-iphone-x-helper"
 import { showMessage } from "react-native-flash-message"
+import moment from "moment"
 
 // Store and action from redux
 import store from "../store/index"
 import { SETPERMISSIONS, DELETESTORAGE, SETLOADER } from "../store/actionsTypes"
 import { createIconSetFromFontello } from "react-native-vector-icons"
+
+import Floor from "lodash/floor"
 
 // Constanst
 const keyStorage = "@storage"
@@ -94,13 +97,6 @@ const PORT = "3000"
 /**Direction for server */
 // export const serverAddress = "https://alypay.uc.r.appspot.com"
 export const serverAddress = "https://root-anvil-299019.uc.r.appspot.com"
-// export const serverAddress = "http://10.0.2.2:3000"
-// export const serverAddress =
-//     Platform.OS === "ios"
-//         ? `http://localhost:${PORT}`
-//         : `http://10.0.2.2:${PORT}`
-/* export const serverAddress = "https://alypay-test.herokuapp.com/" */
-
 export const serverSpeedtradingsURL = "https://ardent-medley-272823.appspot.com"
 
 /**
@@ -435,6 +431,17 @@ export const getHeaders = () => {
     }
 }
 
+export const getHeadersMultipartFormData = () => {
+    const { token } = store.getState().global
+
+    return {
+        headers: {
+            "Content-Type": "application/json",
+            "x-auth-token": token,
+        },
+    }
+}
+
 /**
  * Format number with decimal miles separator
  * example:
@@ -483,15 +490,16 @@ export const getFeePercentage = (amount, feeType, fees) => {
 
 export const calcAge = birthDate => {
     const NOW = moment(new Date(), "DD/MM/YYYY")
-    const fromDate = moment(birthDate, "DD/MM/YYYY")
+    console.log(NOW)
+    const fromDate = birthDate
 
     // Se calcula la edad
     const age = moment.duration(NOW.diff(fromDate)).asYears()
-    return age
+    return Floor(age, 0)
 }
 
 /**
- * Configuracion de el metodo de authenticacion de touchID  
+ * Configuracion de el metodo de authenticacion de touchID
  */
 export const configTouchIDAuth = {
     title: "Autenticación",

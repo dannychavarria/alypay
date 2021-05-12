@@ -21,6 +21,7 @@ import {
 } from "react-native"
 import { Image } from "react-native-animatable"
 import { useNavigation } from "@react-navigation/native"
+import ModalKyc from "../../components/ModalKyc/ModalKyc"
 
 // Import constant and functions
 import * as CryptoJS from "react-native-crypto-js"
@@ -338,6 +339,10 @@ const Main = () => {
     const [indexActive, setIndexActive] = useState(0)
     const { globalStorage } = store.getState()
 
+    const { global } = store.getState()
+
+    console.log("GlobalMain", global)
+
     /**
      * Metodo que configura el componente, inicializando todas las tareas
      */
@@ -409,6 +414,7 @@ const Main = () => {
 
     return (
         <Container onRefreshEnd={configurateComponent} showLogo>
+            {global.kyc_type === 0 ? <ModalKyc /> : null}
             <Switch
                 onSwitch={setStateView}
                 items={switchItems}
@@ -416,6 +422,7 @@ const Main = () => {
             />
             {stateView === TYPE_VIEW.WALLET && (
                 <>
+                    {/* <CardExecutive /> */}
                     <FlatList
                         data={state.wallets}
                         keyExtractor={(_, i) => i}
