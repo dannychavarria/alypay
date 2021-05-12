@@ -97,6 +97,8 @@ const styles = StyleSheet.create({
     image: {
         resizeMode: "contain",
         marginRight: RFValue(10),
+        borderRadius: RFValue(64),
+        overflow: "hidden",
         height: RFValue(64),
         width: RFValue(64),
     },
