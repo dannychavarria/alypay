@@ -120,7 +120,7 @@ const reducer = (state, action) => {
     }
 }
 
-const ECommerRegister = ({ navigation }) => {
+const KycUser = ({ navigation }) => {
     // Estado que almacena los estilos de los componentes
     const classes = useStyles(ECommerRegisterS)
 
@@ -149,6 +149,7 @@ const ECommerRegister = ({ navigation }) => {
     const [modalCoutry, setModalCountry] = useState(false)
 
     const { global } = store.getState()
+    console.log("Global", global)
 
     // Estados que almacenan la fecha del beneficiario
     const [showDate, setShowDate] = useState(false)
@@ -165,8 +166,9 @@ const ECommerRegister = ({ navigation }) => {
             let dataSent = {
                 idTypeIdentification: state.identificationType,
                 identificationNumber: state.identificationNumber,
-                alternativeNumber: `${state.country.phoneCode} ${state.alternativeNumber
-                    }`,
+                alternativeNumber: `${state.country.phoneCode} ${
+                    state.alternativeNumber
+                }`,
                 nationality: state.nationality,
                 nationalityPhoneCode: state.phoneCodeNationality,
                 nationalityCurrencySymbol: state.currencyNationality,
@@ -176,58 +178,69 @@ const ECommerRegister = ({ navigation }) => {
                 answer1: state.foundsOrigin,
                 answer2: state.profession,
 
-                haveBeneficiary: (age < 18 || CheckState) ? 1 : 0,
-
+                haveBeneficiary: age < 18 || CheckState ? 1 : 0,
             }
 
             if (CheckState || age < 18) {
                 dataSent = {
                     ...dataSent,
-                    beneficiaryIdRelationship: beneficiaryState.beneficiaryRelationship,
-                    beneficiaryIdTypeIdentification: beneficiaryState.beneficiaryIdentificationType,
+                    beneficiaryIdRelationship:
+                        beneficiaryState.beneficiaryRelationship,
+                    beneficiaryIdTypeIdentification:
+                        beneficiaryState.beneficiaryIdentificationType,
                     beneficiaryFirstname: beneficiaryState.beneficiaryFirstname,
                     beneficiaryLastname: beneficiaryState.beneficiaryLastname,
                     beneficiaryEmail: beneficiaryState.beneficiaryEmail,
                     beneficiaryBirthday: birthday.toString(),
-                    beneficiaryIdentificationNumber: beneficiaryState.beneficiaryIdentificationNumber,
-                    beneficiaryPrincipalNumber: beneficiaryState.beneficiaryPrincipalNumber,
-                    beneficiaryAlternativeNumber: beneficiaryState.beneficiaryAlternativeNumber,
-                    beneficiaryNationality: beneficiaryState.beneficiaryNationality,
-                    beneficiaryNationalityPhoneCode: beneficiaryState.beneficiaryPhoneCodeNationality,
+                    beneficiaryIdentificationNumber:
+                        beneficiaryState.beneficiaryIdentificationNumber,
+                    beneficiaryPrincipalNumber:
+                        beneficiaryState.beneficiaryPrincipalNumber,
+                    beneficiaryAlternativeNumber:
+                        beneficiaryState.beneficiaryAlternativeNumber,
+                    beneficiaryNationality:
+                        beneficiaryState.beneficiaryNationality,
+                    beneficiaryNationalityPhoneCode:
+                        beneficiaryState.beneficiaryPhoneCodeNationality,
                     beneficiaryNationalityCurrencySymbol:
                         beneficiaryState.beneficiaryCurrencyNationality,
                     beneficiaryResidence: beneficiaryState.beneficiaryResidence,
-                    beneficiaryResidencePhoneCode: beneficiaryState.beneficiaryPhoneCodeResidence,
-                    beneficiaryResidenceCurrencySymbol: beneficiaryState.beneficiaryCurrencyResidence,
+                    beneficiaryResidencePhoneCode:
+                        beneficiaryState.beneficiaryPhoneCodeResidence,
+                    beneficiaryResidenceCurrencySymbol:
+                        beneficiaryState.beneficiaryCurrencyResidence,
                     beneficiaryProvince: beneficiaryState.beneficiaryProvince,
                     beneficiaryCity: beneficiaryState.beneficiaryCity,
                     beneficiaryTutor: beneficiaryState.beneficiaryTutor,
-                    beneficiaryDirection1: beneficiaryState.beneficiaryDirection1,
-                    beneficiaryDirection2: beneficiaryState.beneficiaryDirection2,
-                    beneficiaryPostalCode: beneficiaryState.beneficiaryPostalCode,
-                    beneficiaryAnswer1: beneficiaryState.beneficiaryFoundsOrigin,
+                    beneficiaryDirection1:
+                        beneficiaryState.beneficiaryDirection1,
+                    beneficiaryDirection2:
+                        beneficiaryState.beneficiaryDirection2,
+                    beneficiaryPostalCode:
+                        beneficiaryState.beneficiaryPostalCode,
+                    beneficiaryAnswer1:
+                        beneficiaryState.beneficiaryFoundsOrigin,
                     beneficiaryAnswer2: beneficiaryState.beneficiaryProfession,
                 }
             }
 
+            console.log("dataSent", dataSent)
 
-
-            console.log('dataSent', dataSent)
-
-            submitInformationSer(createFormData(
-                avatar,
-                identificationPhoto,
-                beneficiaryAvatar,
-                beneficiaryIdentificationPhoto,
-                dataSent
-            ))
-
+            submitInformationSer(
+                createFormData(
+                    avatar,
+                    identificationPhoto,
+                    beneficiaryAvatar,
+                    beneficiaryIdentificationPhoto,
+                    dataSent,
+                ),
+            )
         } catch (error) {
             errorMessage(error.toString())
         }
     }
 
-    console.log('benefir', beneficiaryState.beneficiaryFoundsOrigin)
+    console.log("benefir", beneficiaryState.beneficiaryFoundsOrigin)
 
     const createFormData = (
         avatar,
@@ -236,7 +249,6 @@ const ECommerRegister = ({ navigation }) => {
         beneficiaryIdentificationPhoto,
         body,
     ) => {
-
         const data = new FormData()
 
         const myAvatar = {
@@ -257,29 +269,38 @@ const ECommerRegister = ({ navigation }) => {
                     ? identificationPhoto.uri
                     : identificationPhoto.uri.replace("file://", ""),
         }
-        data.append("identificationPhoto", JSON.stringify(myIdentificationPhoto))
+        data.append(
+            "identificationPhoto",
+            JSON.stringify(myIdentificationPhoto),
+        )
 
         if (CheckState) {
-            data.append("beneficiaryAvatar", JSON.stringify({
-                name: beneficiaryAvatar.fileName,
-                type: beneficiaryAvatar.type,
-                uri:
-                    Platform.OS === "android"
-                        ? beneficiaryAvatar.uri
-                        : beneficiaryAvatar.uri.replace("file://", ""),
-            }))
+            data.append(
+                "beneficiaryAvatar",
+                JSON.stringify({
+                    name: beneficiaryAvatar.fileName,
+                    type: beneficiaryAvatar.type,
+                    uri:
+                        Platform.OS === "android"
+                            ? beneficiaryAvatar.uri
+                            : beneficiaryAvatar.uri.replace("file://", ""),
+                }),
+            )
 
-            data.append("beneficiaryIdentificationPhoto", JSON.stringify({
-                name: beneficiaryIdentificationPhoto.fileName,
-                type: beneficiaryIdentificationPhoto.type,
-                uri:
-                    Platform.OS === "android"
-                        ? beneficiaryIdentificationPhoto.uri
-                        : beneficiaryIdentificationPhoto.uri.replace(
-                            "file://",
-                            "",
-                        ),
-            }))
+            data.append(
+                "beneficiaryIdentificationPhoto",
+                JSON.stringify({
+                    name: beneficiaryIdentificationPhoto.fileName,
+                    type: beneficiaryIdentificationPhoto.type,
+                    uri:
+                        Platform.OS === "android"
+                            ? beneficiaryIdentificationPhoto.uri
+                            : beneficiaryIdentificationPhoto.uri.replace(
+                                  "file://",
+                                  "",
+                              ),
+                }),
+            )
         }
 
         Object.keys(body).forEach(key => {
@@ -312,7 +333,7 @@ const ECommerRegister = ({ navigation }) => {
         if (
             item.name.length > 0 &&
             item.name.toLowerCase().search(state.filter.toLocaleLowerCase()) >
-            -1
+                -1
         ) {
             return (
                 <TouchableOpacity
@@ -607,8 +628,10 @@ const ECommerRegister = ({ navigation }) => {
                                     onPress={_ => {
                                         setModalCountry(true)
                                         console.log(
-                                            `beneficiario: ${beneficiaryStateReducer.beneticiaryFilter
-                                            } no beneficiario: ${initialState.filter
+                                            `beneficiario: ${
+                                                beneficiaryStateReducer.beneticiaryFilter
+                                            } no beneficiario: ${
+                                                initialState.filter
                                             }`,
                                         )
                                     }}>
@@ -1045,10 +1068,13 @@ const ECommerRegister = ({ navigation }) => {
                             <View style={GlobalStyles.containerPicker}>
                                 <Picker
                                     style={GlobalStyles.picker}
-                                    selectedValue={beneficiaryState.beneficiaryIdentificationType}
+                                    selectedValue={
+                                        beneficiaryState.beneficiaryIdentificationType
+                                    }
                                     onValueChange={value => {
                                         dispatchBeneficiary({
-                                            type: "beneficiaryIdentificationType",
+                                            type:
+                                                "beneficiaryIdentificationType",
                                             payload: value,
                                         })
                                     }}>
@@ -1478,7 +1504,9 @@ const ECommerRegister = ({ navigation }) => {
                                             payload: value,
                                         })
                                     }}
-                                    selectedValue={beneficiaryState.beneficiaryFoundsOrigin}>
+                                    selectedValue={
+                                        beneficiaryState.beneficiaryFoundsOrigin
+                                    }>
                                     {professions.map((item, index) => (
                                         <Picker.Item
                                             key={index}
@@ -1527,10 +1555,9 @@ const ECommerRegister = ({ navigation }) => {
                                     onValueChange={value =>
                                         dispatchBeneficiary({
                                             type: "beneficiaryRelationship",
-                                            payload: value
+                                            payload: value,
                                         })
-                                    }
-                                >
+                                    }>
                                     <Picker.Item
                                         label="Padre / Madre"
                                         value={1}
@@ -1539,14 +1566,8 @@ const ECommerRegister = ({ navigation }) => {
                                         label="Hermano (a)"
                                         value={2}
                                     />
-                                    <Picker.Item
-                                        label="Tío (a)"
-                                        value={3}
-                                    />
-                                    <Picker.Item
-                                        label="Abuelo (a)"
-                                        value={4}
-                                    />
+                                    <Picker.Item label="Tío (a)" value={3} />
+                                    <Picker.Item label="Abuelo (a)" value={4} />
                                     <Picker.Item label="Otro" value={5} />
                                 </Picker>
                             </View>
@@ -1632,4 +1653,4 @@ const ECommerRegister = ({ navigation }) => {
     )
 }
 
-export default ECommerRegister
+export default KycUser

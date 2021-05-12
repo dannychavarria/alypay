@@ -94,10 +94,10 @@ export const Colors = {
 const PORT = "3085"
 
 /**Direction for server */
-// export const serverAddress = "https://alypay.uc.r.appspot.com"
+export const serverAddress = "https://alypay.uc.r.appspot.com"
 //export const serverAddress = "https://root-anvil-299019.uc.r.appspot.com"
 //export const serverAddress = "https://192.168.1.224:3000"
-export const serverAddress = "http://192.168.0.102:3085"
+// export const serverAddress = "http://192.168.0.102:3085"
 // export const serverAddress = "http://c3847d8f93d6.ngrok.io"
 /* export const serverAddress =
     Platform.OS === "ios"
@@ -442,7 +442,7 @@ export const getHeadersMultipartFormData = () => {
 
     return {
         headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
             "x-auth-token": token,
         },
     }
@@ -501,7 +501,7 @@ export const calcAge = birthDate => {
 
     // Se calcula la edad
     const age = moment.duration(NOW.diff(fromDate)).asYears()
-    return Floor(age,0)
+    return Floor(age, 0)
 }
 
 /**

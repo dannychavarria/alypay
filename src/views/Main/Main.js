@@ -338,6 +338,8 @@ const Main = () => {
     const [indexActive, setIndexActive] = useState(0)
     const { globalStorage } = store.getState()
 
+    const { global } = store.getState()
+
     /**
      * Metodo que configura el componente, inicializando todas las tareas
      */
@@ -416,7 +418,7 @@ const Main = () => {
             />
             {stateView === TYPE_VIEW.WALLET && (
                 <>
-                    <CardExecutive/>
+                    <CardExecutive />
                     <FlatList
                         data={state.wallets}
                         keyExtractor={(_, i) => i}
