@@ -65,7 +65,7 @@ const initialState = {
     showCountries: false,
 
     // Vista seleccionada
-    tab: 2,
+    tab: 0,
 
     // Muestra el mensaje de registrado
     showSuccess: false,
