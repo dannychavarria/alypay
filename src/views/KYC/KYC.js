@@ -6,7 +6,9 @@ import {
     TouchableOpacity,
     FlatList,
     Platform,
+    Alert,
 } from "react-native"
+import { StackActions } from "@react-navigation/native"
 
 // Import Hook
 import useStyles from "../../hooks/useStyles.hook"
@@ -65,7 +67,7 @@ const initialState = {
     country: countries[0],
     filter: "",
 
-    gender: '',
+    gender: "",
 
     tab: 0,
 }
@@ -98,7 +100,7 @@ const beneficiaryStateReducer = {
     beneficiaryAvatar: null,
     beneficiaryIdentificationPhoto: null,
 
-    beneficiaryGender: '',
+    beneficiaryGender: "",
 
     beneficiaryCountry: countries[0],
     beneticiaryFilter: "",
@@ -546,6 +548,27 @@ const KycUser = ({ navigation }) => {
         }
     }
 
+    /**Metodo que confirma la salida del usuario a la pantalla de inicio */
+    const goBack = () => {
+        Alert.alert(
+            "Estas a punto de salir",
+            "Perderas todo tus registros. ¿Salir?",
+            [
+                {
+                    text: "Cancelar",
+                    onPress: () => {},
+                },
+                {
+                    text: "Salir",
+                    onPress: () =>
+                        navigation.dispatch(StackActions.push("Main")),
+                },
+            ],
+        )
+
+        return true
+    }
+
     useEffect(() => {
         ageUser()
     }, [])
@@ -584,10 +607,16 @@ const KycUser = ({ navigation }) => {
                                             payload: value,
                                         })
                                     }}>
-                                    <Picker.Item label="Seleccione su genero" value={3} />
+                                    <Picker.Item
+                                        label="Seleccione su genero"
+                                        value={3}
+                                    />
                                     <Picker.Item label="Masculino" value={1} />
                                     <Picker.Item label="Femenino" value={2} />
-                                    <Picker.Item label="No especifica" value={3} />
+                                    <Picker.Item
+                                        label="No especifica"
+                                        value={3}
+                                    />
                                 </Picker>
                             </View>
                         </View>
@@ -693,9 +722,7 @@ const KycUser = ({ navigation }) => {
                         </View>
 
                         <View style={classes.rowButtons}>
-                            <TouchableOpacity
-                                onPress={}
-                            >
+                            <TouchableOpacity onPress={goBack}>
                                 <Text style={classes.textBack}>
                                     Cerrar sesión
                                 </Text>
@@ -1026,17 +1053,25 @@ const KycUser = ({ navigation }) => {
                             <View style={GlobalStyles.containerPicker}>
                                 <Picker
                                     style={GlobalStyles.picker}
-                                    selectedValue={beneficiaryState.beneficiaryGender}
+                                    selectedValue={
+                                        beneficiaryState.beneficiaryGender
+                                    }
                                     onValueChange={value => {
                                         dispatchBeneficiary({
                                             type: "beneficiaryGender",
                                             payload: value,
                                         })
                                     }}>
-                                    <Picker.Item label="Seleccione su genero" value={3} />
+                                    <Picker.Item
+                                        label="Seleccione su genero"
+                                        value={3}
+                                    />
                                     <Picker.Item label="Masculino" value={1} />
                                     <Picker.Item label="Femenino" value={2} />
-                                    <Picker.Item label="No especifica" value={3} />
+                                    <Picker.Item
+                                        label="No especifica"
+                                        value={3}
+                                    />
                                 </Picker>
                             </View>
                         </View>

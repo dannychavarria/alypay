@@ -1,9 +1,9 @@
 import React, { useState } from "react"
-import { View, Text, Image, TouchableOpacity } from "react-native"
+import { View, Text, Image, TouchableOpacity, Alert } from "react-native"
 
 // Import Components
 import Modal from "react-native-modal"
-import { GlobalStyles } from "../../utils/constants"
+import { GlobalStyles, logOutApp } from "../../utils/constants"
 import { useNavigation } from "@react-navigation/native"
 
 // Import Hooks
@@ -28,10 +28,36 @@ const ModalKyc = ({ navigation }) => {
         setShowModal(false)
     }
 
-    const goBack = () => {}
+    const toggleMenu = () => {
+        Alert.alert(
+            "Cerrar sesion",
+            "Estas apunto de cerrar sesion en AlyPay",
+            [
+                {
+                    text: "Cancelar",
+                    onPress: () => {},
+                },
+                {
+                    text: "Cerrar Sesion",
+                    onPress: logOut,
+                },
+            ],
+        )
+    }
+
+    const logOut = async () => {
+        try {
+            await logOutApp()
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     return (
-        <Modal isVisible={showModal}>
+        <Modal
+            isVisible={showModal}
+            animationIn="fadeIn"
+            animationOut="fadeOut">
             <View style={classes.container}>
                 <Image style={classes.logoSuccess} source={Logo} />
 
@@ -61,7 +87,9 @@ const ModalKyc = ({ navigation }) => {
                 </View>
 
                 <View style={classes.rowButtons}>
-                    <TouchableOpacity style={classes.registerButton}>
+                    <TouchableOpacity
+                        style={classes.registerButton}
+                        onPress={toggleMenu}>
                         <Text style={classes.textRegisterButton}>
                             cerrar session
                         </Text>
