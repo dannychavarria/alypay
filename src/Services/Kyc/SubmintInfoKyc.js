@@ -22,10 +22,12 @@ export default async function submitInfo(dataSent, callback) {
 
         if (response.error) {
             throw String(response.message)
-        } 
-        
+        }
+
         if (response.response === "success") {
             successMessage("Tu registro esta en proceso de aceptacion")
+
+            callback()
         }
     } catch (error) {
         errorMessage(error.toString())

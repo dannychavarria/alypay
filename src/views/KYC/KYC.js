@@ -242,6 +242,7 @@ const KycUser = ({ navigation }) => {
                     beneficiaryIdentificationPhoto,
                     dataSent,
                 ),
+                navigation.dispatch(StackActions.push("Main")),
             )
         } catch (error) {
             errorMessage(error.toString())
@@ -723,9 +724,7 @@ const KycUser = ({ navigation }) => {
 
                         <View style={classes.rowButtons}>
                             <TouchableOpacity onPress={goBack}>
-                                <Text style={classes.textBack}>
-                                    Cerrar sesión
-                                </Text>
+                                <Text style={classes.textBack}>Volver</Text>
                             </TouchableOpacity>
                             <TouchableOpacity
                                 onPress={nextPage}
