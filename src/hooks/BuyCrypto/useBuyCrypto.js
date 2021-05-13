@@ -14,7 +14,7 @@ import SubmintInfoBuyService from "../../Services/SerBuyCrypto/SubmintInfoBuy"
 
 export default function useBuyCrypto() {
     // Iniciar los estados de informacion de monedas y el monto
-    const [infoCoin, setInfoCoin] = useState({})
+    const [infoCoin, setInfoCoin] = useState([])
     const [totalAmountUSD, setTotalAmountUSD] = useState(0)
 
     //  Estado del input del monto
@@ -33,7 +33,9 @@ export default function useBuyCrypto() {
             // convertimos el objeto en array
             const arrayCoins = Object.values(data)
 
-            setInfoCoin(arrayCoins)
+            let arrayCoinsFilter = arrayCoins.filter(info => info.symbol != 'ALY' && info.symbol != 'USDT')
+
+            setInfoCoin(arrayCoinsFilter)
         } catch (e) {
             errorMessage(e.message)
         } finally {
@@ -42,9 +44,8 @@ export default function useBuyCrypto() {
     }
 
     // Funcion que setea el precio actual de la moneda seleccionada
-    const PriceMoment = value => {
-        console.log(value)
-        const { price } = infoCoin[value]?.quote.USD || 0
+    const PriceMoment = async value => {
+        const { price } = await infoCoin[value]?.quote.USD
         setPriceCoin(price)
     }
 

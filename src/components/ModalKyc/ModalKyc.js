@@ -19,27 +19,14 @@ import LogoFunko from "../../static/AlyFunko.png"
 // Import Stoore
 import store from "../../store/index"
 
-<<<<<<< HEAD
-const ModalKyc = () => {
-    const classes = useStyles(ModalKycStyles)
-
-    const { global, navigation } = store.getState()
-
-    //const { navigate } = useNavigation()
-=======
-const ModalKyc = _ => {
+const ModalKyc = ({kycConfirm}) => {
     const classes = useStyles(ModalKycStyles)
 
     const { navigation } = store.getState()
->>>>>>> 10fccf273cef9061a6c85dce5e43db8bdc61016f
 
-    const [showModal, setShowModal] = useState(true)
+    const [showModal, setShowModal] = useState(false)
 
     const onKyc = () => {
-<<<<<<< HEAD
-        navigation.push("Kyc")
-=======
->>>>>>> 10fccf273cef9061a6c85dce5e43db8bdc61016f
         setShowModal(false)
         navigation.push("Kyc")
     }
@@ -70,35 +57,31 @@ const ModalKyc = _ => {
         }
     }
 
-<<<<<<< HEAD
+    useEffect(()=>{
+        console.log('entra')
+        setShowModal(kycConfirm == 1 ? false : true)
+    },[])
+
     // useEffect(() => {
     //     store.subscribe(() => {
-    //         const newStore = store.getState()
-=======
-    useEffect(() => {
-        store.subscribe(() => {
-            const newStore = store.getState().global
->>>>>>> 10fccf273cef9061a6c85dce5e43db8bdc61016f
+    //         const newStore = store.getState().global
+
+    //         console.log("NewStore",newStore)
 
     //         const conditional =
     //             "kyc_type" in newStore && newStore?.kyc_type === 0
 
-<<<<<<< HEAD
+    //         console.log('Condicional',conditional)
+
     //         setShowModal(conditional)
     //     })
     // }, [])
-=======
-            console.log(conditional)
 
-            setShowModal(conditional)
-        })
-    }, [])
->>>>>>> 10fccf273cef9061a6c85dce5e43db8bdc61016f
+    console.log('showModal: ', showModal)
 
     return (
         <Modal
             isVisible={showModal}
-            onBackdropPress={_ => setShowModal(false)}
             animationIn="fadeIn"
             animationOut="fadeOut">
             <View style={classes.container}>

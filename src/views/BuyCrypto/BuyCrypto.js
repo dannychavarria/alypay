@@ -34,7 +34,7 @@ const BuyCrypto = ({ route }) => {
     const { data } = route.params
 
     // Index de la moneda seleccionada
-    const [coin, setCoin] = useState([])
+    const [coin, setCoin] = useState(0)
     // Estado del hash de transaccion
     const [hash, setHash] = useState("")
 
@@ -49,24 +49,19 @@ const BuyCrypto = ({ route }) => {
         amounOrigin,
     } = useBuyCrypto()
 
-    // const urlImage = `https://s2.coinmarketcap.com/static/img/coins/128x128/${
-    //     infoCoin[coin]?.id
-    // }`
-
     // Imagen de la moneda
     const urlImage =
-        infoCoin[coin + 1]?.id !== null
-            ? `https://s2.coinmarketcap.com/static/img/coins/128x128/${
-                  infoCoin[coin + 1]?.id
-              }.png`
+        infoCoin[coin]?.id !== null
+            ? `https://s2.coinmarketcap.com/static/img/coins/128x128/${infoCoin[coin]?.id
+            }.png`
             : urlAlyCoin
 
     // funcion de envio de datos
     const sendInfo = () => {
         const amount = parseFloat(amounOrigin)
-        const idCoinSelected = infoCoin[coin + 1].id
-        const symCoinSelected = infoCoin[coin + 1].symbol
-        const nameCoinSelected = infoCoin[coin + 1].name
+        const idCoinSelected = infoCoin[coin].id
+        const symCoinSelected = infoCoin[coin].symbol
+        const nameCoinSelected = infoCoin[coin].name
 
         // datos a enviar
         const dataSend = {
@@ -86,12 +81,16 @@ const BuyCrypto = ({ route }) => {
         onChangeAmountAly("", 0)
     }
 
+    console.log('coins: ', infoCoin)
+
     useEffect(() => {
         ConfigureComponent()
+        PriceMoment(coin)
+        onChangeAmountAly(amounOrigin, priceCoin)
     }, [])
 
     useEffect(() => {
-        PriceMoment(coin + 1)
+        PriceMoment(coin)
     }, [coin, priceCoin])
 
     useEffect(() => {
@@ -109,12 +108,14 @@ const BuyCrypto = ({ route }) => {
                             Tocar para copiar
                         </Text>
                         <TouchableOpacity
-                            onPress={() => CopyClipboard(data.wallet)}
+                            onPress={() => CopyClipboard(infoCoin[coin]?.wallet)}
                             style={classes.textTouchable}>
                             <Text
                                 style={classes.textTitleInput}
-                                numberOfLines={1}>
-                                {data.wallet}
+
+                                numberOfLines={1}
+                            >
+                                {infoCoin[coin]?.wallet}
                             </Text>
                         </TouchableOpacity>
                     </View>
@@ -140,11 +141,6 @@ const BuyCrypto = ({ route }) => {
                                     onValueChange={value => setCoin(value)}>
                                     {Array.isArray(infoCoin) &&
                                         infoCoin
-                                            .filter(
-                                                info =>
-                                                    info.symbol !== "ALY" &&
-                                                    info.symbol !== "USDT",
-                                            )
                                             .map((item, index) => (
                                                 <Picker.Item
                                                     enabled={true}
@@ -181,7 +177,7 @@ const BuyCrypto = ({ route }) => {
                             Precio del mercado
                         </Text>
                         <Text style={classes.textWhite}>
-                            $ {Floor(priceCoin, 8) || 0}
+                            $ {Floor(priceCoin, 8)}
                         </Text>
                     </View>
                     <View>

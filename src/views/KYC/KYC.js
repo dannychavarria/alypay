@@ -7,6 +7,7 @@ import {
     FlatList,
     Platform,
     Alert,
+    BackHandler
 } from "react-native"
 import { StackActions } from "@react-navigation/native"
 
@@ -171,79 +172,79 @@ const KycUser = ({ navigation }) => {
     // Hacemos la peticion al server
     const submitInformation = async () => {
         try {
-            // let dataSent = {
-            //     gender: state.gender,
-            //     idTypeIdentification: state.identificationType,
-            //     identificationNumber: state.identificationNumber,
-            //     alternativeNumber: `${state.country.phoneCode} ${
-            //         state.alternativeNumber
-            //     }`,
-            //     nationality: state.nationality,
-            //     nationalityPhoneCode: state.phoneCodeNationality,
-            //     nationalityCurrencySymbol: state.currencyNationality,
-            //     province: state.province,
-            //     direction1: state.direction1,
-            //     direction2: state.direction2,
-            //     answer1: state.foundsOrigin,
-            //     answer2: state.profession,
+            let dataSent = {
+                gender: state.gender,
+                idTypeIdentification: state.identificationType,
+                identificationNumber: state.identificationNumber,
+                alternativeNumber: `${state.country.phoneCode} ${
+                    state.alternativeNumber
+                }`,
+                nationality: state.nationality,
+                nationalityPhoneCode: state.phoneCodeNationality,
+                nationalityCurrencySymbol: state.currencyNationality,
+                province: state.province,
+                direction1: state.direction1,
+                direction2: state.direction2,
+                answer1: state.foundsOrigin,
+                answer2: state.profession,
 
-            //     haveBeneficiary: age < 18 || CheckState ? 1 : 0,
-            // }
+                haveBeneficiary: age < 18 || CheckState ? 1 : 0,
+            }
 
-            // if (CheckState || age < 18) {
-            //     dataSent = {
-            //         ...dataSent,
-            //         beneficiaryGender: beneficiaryState.beneficiaryGender,
-            //         beneficiaryIdRelationship:
-            //             beneficiaryState.beneficiaryRelationship,
-            //         beneficiaryIdTypeIdentification:
-            //             beneficiaryState.beneficiaryIdentificationType,
-            //         beneficiaryFirstname: beneficiaryState.beneficiaryFirstname,
-            //         beneficiaryLastname: beneficiaryState.beneficiaryLastname,
-            //         beneficiaryEmail: beneficiaryState.beneficiaryEmail,
-            //         beneficiaryBirthday: birthday.toString(),
-            //         beneficiaryIdentificationNumber:
-            //             beneficiaryState.beneficiaryIdentificationNumber,
-            //         beneficiaryPrincipalNumber:
-            //             beneficiaryState.beneficiaryPrincipalNumber,
-            //         beneficiaryAlternativeNumber:
-            //             beneficiaryState.beneficiaryAlternativeNumber,
-            //         beneficiaryNationality:
-            //             beneficiaryState.beneficiaryNationality,
-            //         beneficiaryNationalityPhoneCode:
-            //             beneficiaryState.beneficiaryPhoneCodeNationality,
-            //         beneficiaryNationalityCurrencySymbol:
-            //             beneficiaryState.beneficiaryCurrencyNationality,
-            //         beneficiaryResidence: beneficiaryState.beneficiaryResidence,
-            //         beneficiaryResidencePhoneCode:
-            //             beneficiaryState.beneficiaryPhoneCodeResidence,
-            //         beneficiaryResidenceCurrencySymbol:
-            //             beneficiaryState.beneficiaryCurrencyResidence,
-            //         beneficiaryProvince: beneficiaryState.beneficiaryProvince,
-            //         beneficiaryCity: beneficiaryState.beneficiaryCity,
-            //         beneficiaryTutor: beneficiaryState.beneficiaryTutor,
-            //         beneficiaryDirection1:
-            //             beneficiaryState.beneficiaryDirection1,
-            //         beneficiaryDirection2:
-            //             beneficiaryState.beneficiaryDirection2,
-            //         beneficiaryPostalCode:
-            //             beneficiaryState.beneficiaryPostalCode,
-            //         beneficiaryAnswer1:
-            //             beneficiaryState.beneficiaryFoundsOrigin,
-            //         beneficiaryAnswer2: beneficiaryState.beneficiaryProfession,
-            //     }
-            // }
+            if (CheckState || age < 18) {
+                dataSent = {
+                    ...dataSent,
+                    beneficiaryGender: beneficiaryState.beneficiaryGender,
+                    beneficiaryIdRelationship:
+                        beneficiaryState.beneficiaryRelationship,
+                    beneficiaryIdTypeIdentification:
+                        beneficiaryState.beneficiaryIdentificationType,
+                    beneficiaryFirstname: beneficiaryState.beneficiaryFirstname,
+                    beneficiaryLastname: beneficiaryState.beneficiaryLastname,
+                    beneficiaryEmail: beneficiaryState.beneficiaryEmail,
+                    beneficiaryBirthday: birthday.toString(),
+                    beneficiaryIdentificationNumber:
+                        beneficiaryState.beneficiaryIdentificationNumber,
+                    beneficiaryPrincipalNumber:
+                        beneficiaryState.beneficiaryPrincipalNumber,
+                    beneficiaryAlternativeNumber:
+                        beneficiaryState.beneficiaryAlternativeNumber,
+                    beneficiaryNationality:
+                        beneficiaryState.beneficiaryNationality,
+                    beneficiaryNationalityPhoneCode:
+                        beneficiaryState.beneficiaryPhoneCodeNationality,
+                    beneficiaryNationalityCurrencySymbol:
+                        beneficiaryState.beneficiaryCurrencyNationality,
+                    beneficiaryResidence: beneficiaryState.beneficiaryResidence,
+                    beneficiaryResidencePhoneCode:
+                        beneficiaryState.beneficiaryPhoneCodeResidence,
+                    beneficiaryResidenceCurrencySymbol:
+                        beneficiaryState.beneficiaryCurrencyResidence,
+                    beneficiaryProvince: beneficiaryState.beneficiaryProvince,
+                    beneficiaryCity: beneficiaryState.beneficiaryCity,
+                    beneficiaryTutor: beneficiaryState.beneficiaryTutor,
+                    beneficiaryDirection1:
+                        beneficiaryState.beneficiaryDirection1,
+                    beneficiaryDirection2:
+                        beneficiaryState.beneficiaryDirection2,
+                    beneficiaryPostalCode:
+                        beneficiaryState.beneficiaryPostalCode,
+                    beneficiaryAnswer1:
+                        beneficiaryState.beneficiaryFoundsOrigin,
+                    beneficiaryAnswer2: beneficiaryState.beneficiaryProfession,
+                }
+            }
 
             // console.log("dataSent", dataSent)
 
-            submitInformationSer({}
-                // createFormData(
-                //     avatar,
-                //     identificationPhoto,
-                //     beneficiaryAvatar,
-                //     beneficiaryIdentificationPhoto,
-                //     dataSent,
-                // ),
+            submitInformationSer(
+                createFormData(
+                    avatar,
+                    identificationPhoto,
+                    beneficiaryAvatar,
+                    beneficiaryIdentificationPhoto,
+                    dataSent,
+                ),
             )
         } catch (error) {
             errorMessage(error.toString())
@@ -606,6 +607,12 @@ const KycUser = ({ navigation }) => {
         ageUser()
     }, [])
 
+    useEffect(() => {
+        // Metodo que esta a la escucha cuando le dan atras
+        const handledBack = BackHandler.addEventListener('hardwareBackPress', goBack)
+        return () => handledBack.remove()
+    }, [])
+
     return (
         <Container showLogo>
             <View style={classes.container}>
@@ -642,7 +649,7 @@ const KycUser = ({ navigation }) => {
                                     }}>
                                     <Picker.Item
                                         label="Seleccione su genero"
-                                        value={3}
+                                        value={0}
                                     />
                                     <Picker.Item label="Masculino" value={1} />
                                     <Picker.Item label="Femenino" value={2} />
@@ -753,7 +760,7 @@ const KycUser = ({ navigation }) => {
                             </TouchableOpacity>
                             <TouchableOpacity
                                 // onPress={nextPage}
-                                onPress={submitInformation}
+                                onPress={nextPage}
                                 style={GlobalStyles.buttonPrimary}>
                                 <Text style={GlobalStyles.textButton}>
                                     Siguiente
