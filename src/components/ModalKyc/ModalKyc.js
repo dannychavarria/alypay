@@ -19,12 +19,12 @@ import LogoFunko from "../../static/AlyFunko.png"
 // Import Stoore
 import store from "../../store/index"
 
-const ModalKyc = _ => {
+const ModalKyc = ({kycConfirm}) => {
     const classes = useStyles(ModalKycStyles)
 
     const { navigation } = store.getState()
 
-    const [showModal, setShowModal] = useState(true)
+    const [showModal, setShowModal] = useState(false)
 
     const onKyc = () => {
         setShowModal(false)
@@ -57,23 +57,31 @@ const ModalKyc = _ => {
         }
     }
 
-    useEffect(() => {
-        store.subscribe(() => {
-            const newStore = store.getState().global
+    useEffect(()=>{
+        console.log('entra')
+        setShowModal(kycConfirm == 1 ? false : true)
+    },[])
 
-            const conditional =
-                "kyc_type" in newStore && newStore?.kyc_type === 0
+    // useEffect(() => {
+    //     store.subscribe(() => {
+    //         const newStore = store.getState().global
 
-            console.log(conditional)
+    //         console.log("NewStore",newStore)
 
-            setShowModal(conditional)
-        })
-    }, [])
+    //         const conditional =
+    //             "kyc_type" in newStore && newStore?.kyc_type === 0
+
+    //         console.log('Condicional',conditional)
+
+    //         setShowModal(conditional)
+    //     })
+    // }, [])
+
+    console.log('showModal: ', showModal)
 
     return (
         <Modal
             isVisible={showModal}
-            onBackdropPress={_ => setShowModal(false)}
             animationIn="fadeIn"
             animationOut="fadeOut">
             <View style={classes.container}>

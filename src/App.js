@@ -192,8 +192,6 @@ const App = () => {
                 />
             </Modal>
 
-            <ModalKyc />
-
             {!state.loged && <ButtonSupport />}
 
             <Loader isVisible={state.loader} />

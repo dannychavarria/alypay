@@ -96,7 +96,8 @@ const PORT = "3000"
 
 /**Direction for server */
 // export const serverAddress = "https://alypay.uc.r.appspot.com"
-export const serverAddress = "https://root-anvil-299019.uc.r.appspot.com"
+// export const serverAddress = "https://root-anvil-299019.uc.r.appspot.com"
+export const serverAddress = "http://192.168.0.102:3085"
 export const serverSpeedtradingsURL = "https://ardent-medley-272823.appspot.com"
 
 /**
@@ -104,8 +105,6 @@ export const serverSpeedtradingsURL = "https://ardent-medley-272823.appspot.com"
  */
 export const urlAlyCoin =
     "https://lh3.googleusercontent.com/5LMKBulbDnGu4JBUYp4Ye4fX0MjH88xF7hMy5-4US3VSAkxK2XIWqNxXdqWZFnUZQoRDL3W7nKhrgWWHzM_eL-1nX4fnBPu7d9u7DyRv_miLRhFp6g38cDD32_H9UoZoh936cWUpUUOLx3qvx-_fBV-ZKQb_2TzVHhR19DKYhm_Zpl_Wczi1I73a6wBo7XDbtdNUrnzW8kC_Hv8J9tpv6wQhsTCr6l68UIVwth6rkpoFycZ2Gpzn6GL_7VSs9NlCj2V5v3NHCRcsZzptz2uxAa0HcsvnEqhtOirEmjBsT114hl3LWjT4Xf9dIxcmVcdt1usggqyuF6svD2VF_fdT6SjqfmVg3ifl5zf7zS1s7JfwrIvFDjXN3i1vYo43nzpt8ykabNqDjRuwMnroAvndk2lgIh1jLcDpjlLFtCvjBej6DQUmTR2MK75RLACot2kbfiA-S45pB9tHgBc77QmzWLLMgHIhQ_5d6OtZVdzbKoGS4eUTeemPo39HuWKAMCl_RiT_O2AOfDQZr9DKOFY780VbPBpryFhlG-8rRp6p7LSKRKbn3v2C0R5GNjUJ0tyOsLArAookarLr4437Tl4SkPavSqvFKK_9rmmdFdfb1Hg5_j9gXnYV_pkTMDjIUeN3awIuZhbBC8iKtafsouFqqsfvQVXsmmawCg4edY_NXg6_XPuVjxaJST5Z7fREYx_8obZJQA=w1600-h784-ft"
-
-console.log(serverAddress)
 
 const http = axios.create({
     baseURL: serverAddress,
@@ -490,7 +489,6 @@ export const getFeePercentage = (amount, feeType, fees) => {
 
 export const calcAge = birthDate => {
     const NOW = moment(new Date(), "DD/MM/YYYY")
-    console.log(NOW)
     const fromDate = birthDate
 
     // Se calcula la edad

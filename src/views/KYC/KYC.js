@@ -7,6 +7,7 @@ import {
     FlatList,
     Platform,
     Alert,
+    BackHandler
 } from "react-native"
 import { StackActions } from "@react-navigation/native"
 
@@ -151,11 +152,13 @@ const KycUser = ({ navigation }) => {
     // Estado hace el cambio del CheckBox para el Cambio de leyenda cuando hay beneficiario
     const [CheckState, setCheckState] = useState(false)
 
-    // Estado que indica si muestra la modal de paises
+    // Estado que indica si muestra la modal de paises del Usuario
     const [modalCoutry, setModalCountry] = useState(false)
 
+    // Estado que indica si muestra la modal de paises del beneficiario
+    const [modalCoutryBeneficiary, setModalCountryBeneficiary] = useState(false)
+
     const { global } = store.getState()
-    console.log("Global", global)
 
     // Estados que almacenan la fecha del beneficiario
     const [showDate, setShowDate] = useState(false)
@@ -169,86 +172,84 @@ const KycUser = ({ navigation }) => {
     // Hacemos la peticion al server
     const submitInformation = async () => {
         try {
-            // let dataSent = {
-            //     gender: state.gender,
-            //     idTypeIdentification: state.identificationType,
-            //     identificationNumber: state.identificationNumber,
-            //     alternativeNumber: `${state.country.phoneCode} ${
-            //         state.alternativeNumber
-            //     }`,
-            //     nationality: state.nationality,
-            //     nationalityPhoneCode: state.phoneCodeNationality,
-            //     nationalityCurrencySymbol: state.currencyNationality,
-            //     province: state.province,
-            //     direction1: state.direction1,
-            //     direction2: state.direction2,
-            //     answer1: state.foundsOrigin,
-            //     answer2: state.profession,
+            let dataSent = {
+                gender: state.gender,
+                idTypeIdentification: state.identificationType,
+                identificationNumber: state.identificationNumber,
+                alternativeNumber: `${state.country.phoneCode} ${
+                    state.alternativeNumber
+                }`,
+                nationality: state.nationality,
+                nationalityPhoneCode: state.phoneCodeNationality,
+                nationalityCurrencySymbol: state.currencyNationality,
+                province: state.province,
+                direction1: state.direction1,
+                direction2: state.direction2,
+                answer1: state.foundsOrigin,
+                answer2: state.profession,
 
-            //     haveBeneficiary: age < 18 || CheckState ? 1 : 0,
-            // }
+                haveBeneficiary: age < 18 || CheckState ? 1 : 0,
+            }
 
-            // if (CheckState || age < 18) {
-            //     dataSent = {
-            //         ...dataSent,
-            //         beneficiaryGender: beneficiaryState.beneficiaryGender,
-            //         beneficiaryIdRelationship:
-            //             beneficiaryState.beneficiaryRelationship,
-            //         beneficiaryIdTypeIdentification:
-            //             beneficiaryState.beneficiaryIdentificationType,
-            //         beneficiaryFirstname: beneficiaryState.beneficiaryFirstname,
-            //         beneficiaryLastname: beneficiaryState.beneficiaryLastname,
-            //         beneficiaryEmail: beneficiaryState.beneficiaryEmail,
-            //         beneficiaryBirthday: birthday.toString(),
-            //         beneficiaryIdentificationNumber:
-            //             beneficiaryState.beneficiaryIdentificationNumber,
-            //         beneficiaryPrincipalNumber:
-            //             beneficiaryState.beneficiaryPrincipalNumber,
-            //         beneficiaryAlternativeNumber:
-            //             beneficiaryState.beneficiaryAlternativeNumber,
-            //         beneficiaryNationality:
-            //             beneficiaryState.beneficiaryNationality,
-            //         beneficiaryNationalityPhoneCode:
-            //             beneficiaryState.beneficiaryPhoneCodeNationality,
-            //         beneficiaryNationalityCurrencySymbol:
-            //             beneficiaryState.beneficiaryCurrencyNationality,
-            //         beneficiaryResidence: beneficiaryState.beneficiaryResidence,
-            //         beneficiaryResidencePhoneCode:
-            //             beneficiaryState.beneficiaryPhoneCodeResidence,
-            //         beneficiaryResidenceCurrencySymbol:
-            //             beneficiaryState.beneficiaryCurrencyResidence,
-            //         beneficiaryProvince: beneficiaryState.beneficiaryProvince,
-            //         beneficiaryCity: beneficiaryState.beneficiaryCity,
-            //         beneficiaryTutor: beneficiaryState.beneficiaryTutor,
-            //         beneficiaryDirection1:
-            //             beneficiaryState.beneficiaryDirection1,
-            //         beneficiaryDirection2:
-            //             beneficiaryState.beneficiaryDirection2,
-            //         beneficiaryPostalCode:
-            //             beneficiaryState.beneficiaryPostalCode,
-            //         beneficiaryAnswer1:
-            //             beneficiaryState.beneficiaryFoundsOrigin,
-            //         beneficiaryAnswer2: beneficiaryState.beneficiaryProfession,
-            //     }
-            // }
+            if (CheckState || age < 18) {
+                dataSent = {
+                    ...dataSent,
+                    beneficiaryGender: beneficiaryState.beneficiaryGender,
+                    beneficiaryIdRelationship:
+                        beneficiaryState.beneficiaryRelationship,
+                    beneficiaryIdTypeIdentification:
+                        beneficiaryState.beneficiaryIdentificationType,
+                    beneficiaryFirstname: beneficiaryState.beneficiaryFirstname,
+                    beneficiaryLastname: beneficiaryState.beneficiaryLastname,
+                    beneficiaryEmail: beneficiaryState.beneficiaryEmail,
+                    beneficiaryBirthday: birthday.toString(),
+                    beneficiaryIdentificationNumber:
+                        beneficiaryState.beneficiaryIdentificationNumber,
+                    beneficiaryPrincipalNumber:
+                        beneficiaryState.beneficiaryPrincipalNumber,
+                    beneficiaryAlternativeNumber:
+                        beneficiaryState.beneficiaryAlternativeNumber,
+                    beneficiaryNationality:
+                        beneficiaryState.beneficiaryNationality,
+                    beneficiaryNationalityPhoneCode:
+                        beneficiaryState.beneficiaryPhoneCodeNationality,
+                    beneficiaryNationalityCurrencySymbol:
+                        beneficiaryState.beneficiaryCurrencyNationality,
+                    beneficiaryResidence: beneficiaryState.beneficiaryResidence,
+                    beneficiaryResidencePhoneCode:
+                        beneficiaryState.beneficiaryPhoneCodeResidence,
+                    beneficiaryResidenceCurrencySymbol:
+                        beneficiaryState.beneficiaryCurrencyResidence,
+                    beneficiaryProvince: beneficiaryState.beneficiaryProvince,
+                    beneficiaryCity: beneficiaryState.beneficiaryCity,
+                    beneficiaryTutor: beneficiaryState.beneficiaryTutor,
+                    beneficiaryDirection1:
+                        beneficiaryState.beneficiaryDirection1,
+                    beneficiaryDirection2:
+                        beneficiaryState.beneficiaryDirection2,
+                    beneficiaryPostalCode:
+                        beneficiaryState.beneficiaryPostalCode,
+                    beneficiaryAnswer1:
+                        beneficiaryState.beneficiaryFoundsOrigin,
+                    beneficiaryAnswer2: beneficiaryState.beneficiaryProfession,
+                }
+            }
 
             // console.log("dataSent", dataSent)
 
-            submitInformationSer({}
-                // createFormData(
-                //     avatar,
-                //     identificationPhoto,
-                //     beneficiaryAvatar,
-                //     beneficiaryIdentificationPhoto,
-                //     dataSent,
-                // ),
+            submitInformationSer(
+                createFormData(
+                    avatar,
+                    identificationPhoto,
+                    beneficiaryAvatar,
+                    beneficiaryIdentificationPhoto,
+                    dataSent,
+                ),
             )
         } catch (error) {
             errorMessage(error.toString())
         }
     }
-
-    console.log("benefir", beneficiaryState.beneficiaryFoundsOrigin)
 
     const createFormData = (
         avatar,
@@ -336,6 +337,16 @@ const KycUser = ({ navigation }) => {
         setModalCountry(false)
     }
 
+    /**
+     * Funcion que permite guardar la seleccion del pais de beneficiario
+     * @param {*} item
+     */
+    const selectedCountryBeneficiary = item => {
+        dispatchBeneficiary({ type: "beneficiaryCountry", payload: item })
+
+        setModalCountryBeneficiary(false)
+    }
+
     /**render element country modal */
     const ItemCountry = ({ item }) => {
         if (
@@ -347,6 +358,29 @@ const KycUser = ({ navigation }) => {
                 <TouchableOpacity
                     style={classes.itemCountry}
                     onPress={_ => selectedCountry(item)}>
+                    <Text style={{ color: "#FFF" }}>{item.name}</Text>
+                    <Text style={{ color: Colors.colorYellow }}>
+                        {item.phoneCode}
+                    </Text>
+                </TouchableOpacity>
+            )
+        }
+    }
+
+    /**render element country modal */
+    const ItemCountryBenficiary = ({ item }) => {
+        if (
+            item.name.length > 0 &&
+            item.name
+                .toLowerCase()
+                .search(
+                    beneficiaryState.beneticiaryFilter.toLocaleLowerCase(),
+                ) > -1
+        ) {
+            return (
+                <TouchableOpacity
+                    style={classes.itemCountry}
+                    onPress={_ => selectedCountryBeneficiary(item)}>
                     <Text style={{ color: "#FFF" }}>{item.name}</Text>
                     <Text style={{ color: Colors.colorYellow }}>
                         {item.phoneCode}
@@ -573,6 +607,12 @@ const KycUser = ({ navigation }) => {
         ageUser()
     }, [])
 
+    useEffect(() => {
+        // Metodo que esta a la escucha cuando le dan atras
+        const handledBack = BackHandler.addEventListener('hardwareBackPress', goBack)
+        return () => handledBack.remove()
+    }, [])
+
     return (
         <Container showLogo>
             <View style={classes.container}>
@@ -609,7 +649,7 @@ const KycUser = ({ navigation }) => {
                                     }}>
                                     <Picker.Item
                                         label="Seleccione su genero"
-                                        value={3}
+                                        value={0}
                                     />
                                     <Picker.Item label="Masculino" value={1} />
                                     <Picker.Item label="Femenino" value={2} />
@@ -687,13 +727,6 @@ const KycUser = ({ navigation }) => {
                                     ]}
                                     onPress={_ => {
                                         setModalCountry(true)
-                                        console.log(
-                                            `beneficiario: ${
-                                                beneficiaryStateReducer.beneticiaryFilter
-                                            } no beneficiario: ${
-                                                initialState.filter
-                                            }`,
-                                        )
                                     }}>
                                     <Text
                                         style={{
@@ -727,7 +760,7 @@ const KycUser = ({ navigation }) => {
                             </TouchableOpacity>
                             <TouchableOpacity
                                 // onPress={nextPage}
-                                onPress={submitInformation}
+                                onPress={nextPage}
                                 style={GlobalStyles.buttonPrimary}>
                                 <Text style={GlobalStyles.textButton}>
                                     Siguiente
@@ -1044,39 +1077,6 @@ const KycUser = ({ navigation }) => {
 
                         <View style={classes.row}>
                             <View style={classes.labelsRow}>
-                                <Text style={classes.legendRow}>
-                                    Seleccione su genero
-                                </Text>
-                                <Text style={classes.required}>Requerido</Text>
-                            </View>
-                            <View style={GlobalStyles.containerPicker}>
-                                <Picker
-                                    style={GlobalStyles.picker}
-                                    selectedValue={
-                                        beneficiaryState.beneficiaryGender
-                                    }
-                                    onValueChange={value => {
-                                        dispatchBeneficiary({
-                                            type: "beneficiaryGender",
-                                            payload: value,
-                                        })
-                                    }}>
-                                    <Picker.Item
-                                        label="Seleccione su genero"
-                                        value={3}
-                                    />
-                                    <Picker.Item label="Masculino" value={1} />
-                                    <Picker.Item label="Femenino" value={2} />
-                                    <Picker.Item
-                                        label="No especifica"
-                                        value={3}
-                                    />
-                                </Picker>
-                            </View>
-                        </View>
-
-                        <View style={classes.row}>
-                            <View style={classes.labelsRow}>
                                 <Text style={classes.legendRow}>Nombre</Text>
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
@@ -1113,6 +1113,39 @@ const KycUser = ({ navigation }) => {
                                     })
                                 }
                             />
+                        </View>
+
+                        <View style={classes.row}>
+                            <View style={classes.labelsRow}>
+                                <Text style={classes.legendRow}>
+                                    Seleccione su genero
+                                </Text>
+                                <Text style={classes.required}>Requerido</Text>
+                            </View>
+                            <View style={GlobalStyles.containerPicker}>
+                                <Picker
+                                    style={GlobalStyles.picker}
+                                    selectedValue={
+                                        beneficiaryState.beneficiaryGender
+                                    }
+                                    onValueChange={value => {
+                                        dispatchBeneficiary({
+                                            type: "beneficiaryGender",
+                                            payload: value,
+                                        })
+                                    }}>
+                                    <Picker.Item
+                                        label="Seleccione su genero"
+                                        value={3}
+                                    />
+                                    <Picker.Item label="Masculino" value={1} />
+                                    <Picker.Item label="Femenino" value={2} />
+                                    <Picker.Item
+                                        label="No especifica"
+                                        value={3}
+                                    />
+                                </Picker>
+                            </View>
                         </View>
 
                         <View style={classes.row}>
@@ -1219,12 +1252,17 @@ const KycUser = ({ navigation }) => {
                                             justifyContent: "center",
                                         },
                                     ]}
-                                    onPress={_ => setModalCountry(true)}>
+                                    onPress={_ =>
+                                        setModalCountryBeneficiary(true)
+                                    }>
                                     <Text
                                         style={{
                                             color: Colors.colorYellow,
                                         }}>
-                                        {state.country.phoneCode}
+                                        {
+                                            beneficiaryState.beneficiaryCountry
+                                                .phoneCode
+                                        }
                                     </Text>
                                 </TouchableOpacity>
 
@@ -1262,12 +1300,17 @@ const KycUser = ({ navigation }) => {
                                             justifyContent: "center",
                                         },
                                     ]}
-                                    onPress={_ => setModalCountry(true)}>
+                                    onPress={_ =>
+                                        setModalCountryBeneficiary(true)
+                                    }>
                                     <Text
                                         style={{
                                             color: Colors.colorYellow,
                                         }}>
-                                        {state.country.phoneCode}
+                                        {
+                                            beneficiaryState.beneficiaryCountry
+                                                .phoneCode
+                                        }
                                     </Text>
                                 </TouchableOpacity>
 
@@ -1737,6 +1780,35 @@ const KycUser = ({ navigation }) => {
                         keyboardShouldPersistTaps="always"
                         data={countries}
                         renderItem={ItemCountry}
+                        keyExtractor={(_, i) => i.toString()}
+                    />
+                </View>
+            </Modal>
+
+            <Modal
+                isVisible={modalCoutryBeneficiary}
+                onBackdropPress={_ => setModalCountryBeneficiary(false)}
+                onBackButtonPress={_ => setModalCountryBeneficiary(false)}>
+                <View style={classes.containerModal}>
+                    <TextInput
+                        style={classes.textInput}
+                        placeholder="Buscar"
+                        placeholderTextColor="#FFF"
+                        value={beneficiaryState.beneticiaryFilter}
+                        onChangeText={str =>
+                            dispatchBeneficiary({
+                                type: "beneticiaryFilter",
+                                payload: str,
+                            })
+                        }
+                    />
+
+                    <View style={{ height: 10 }} />
+
+                    <FlatList
+                        keyboardShouldPersistTaps="always"
+                        data={countries}
+                        renderItem={ItemCountryBenficiary}
                         keyExtractor={(_, i) => i.toString()}
                     />
                 </View>

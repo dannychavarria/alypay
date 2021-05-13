@@ -48,7 +48,7 @@ const BuyCrypto = ({ route }) => {
         submintInformation,
         amounOrigin,
     } = useBuyCrypto()
-    
+
     // Imagen de la moneda
     const urlImage =
         infoCoin[coin]?.id !== null
@@ -72,7 +72,7 @@ const BuyCrypto = ({ route }) => {
             amount_usd: totalAmountUSD,
             hash: hash,
             id_coin_from: idCoinSelected,
-            symbol_from: symCoinSelected
+            symbol_from: symCoinSelected,
         }
         submintInformation(dataSend)
 
@@ -112,6 +112,7 @@ const BuyCrypto = ({ route }) => {
                             style={classes.textTouchable}>
                             <Text
                                 style={classes.textTitleInput}
+
                                 numberOfLines={1}
                             >
                                 {infoCoin[coin]?.wallet}
