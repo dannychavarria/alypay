@@ -48,7 +48,7 @@ export default function useBuyCrypto() {
         setPriceCoin(price)
     }
 
-    // Funcion que devuelve setea los AlyCoin
+    // Funcion que calcula el precio de la moneda a alypay
     const onChangeAmountAly = (value, price) => {
         if (infoCoin.length === 0) {
             return

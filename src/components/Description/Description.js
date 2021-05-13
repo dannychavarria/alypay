@@ -31,7 +31,6 @@ const Description = ({ route }) => {
     const [details, setDetails] = useState({})
     const [loader, setLoader] = useState(false)
     const hash = route.params?.hash
-    console.log("Detalles", details)
 
     // Hacemos la peticon al server para obtener los detalles de las transacciones
     const getAllDetails = async () => {

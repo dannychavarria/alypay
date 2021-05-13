@@ -19,17 +19,17 @@ import LogoFunko from "../../static/AlyFunko.png"
 // Import Stoore
 import store from "../../store/index"
 
-const ModalKyc = ({ navigation }) => {
+const ModalKyc = () => {
     const classes = useStyles(ModalKycStyles)
 
-    const { global } = store.getState()
+    const { global, navigation } = store.getState()
 
-    const { navigate } = useNavigation()
+    //const { navigate } = useNavigation()
 
     const [showModal, setShowModal] = useState(true)
 
     const onKyc = () => {
-        navigate("Kyc")
+        navigation.push("Kyc")
         setShowModal(false)
     }
 
@@ -58,18 +58,16 @@ const ModalKyc = ({ navigation }) => {
         }
     }
 
-    useEffect(() => {
-        store.subscribe(() => {
-            const newStore = store.getState()
+    // useEffect(() => {
+    //     store.subscribe(() => {
+    //         const newStore = store.getState()
 
-            const conditional =
-                "kyc_type" in newStore && newStore?.kyc_type === 0
+    //         const conditional =
+    //             "kyc_type" in newStore && newStore?.kyc_type === 0
 
-            console.log(conditional, newStore)
-
-            setShowModal(conditional)
-        })
-    }, [])
+    //         setShowModal(conditional)
+    //     })
+    // }, [])
 
     return (
         <Modal

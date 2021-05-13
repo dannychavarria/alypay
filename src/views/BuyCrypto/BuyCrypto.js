@@ -49,11 +49,16 @@ const BuyCrypto = ({ route }) => {
         amounOrigin,
     } = useBuyCrypto()
 
+    // const urlImage = `https://s2.coinmarketcap.com/static/img/coins/128x128/${
+    //     infoCoin[coin]?.id
+    // }`
+
     // Imagen de la moneda
     const urlImage =
         infoCoin[coin + 1]?.id !== null
-            ? `https://s2.coinmarketcap.com/static/img/coins/128x128/${infoCoin[coin + 1]?.id
-            }.png`
+            ? `https://s2.coinmarketcap.com/static/img/coins/128x128/${
+                  infoCoin[coin + 1]?.id
+              }.png`
             : urlAlyCoin
 
     // funcion de envio de datos
@@ -72,7 +77,7 @@ const BuyCrypto = ({ route }) => {
             amount_usd: totalAmountUSD,
             hash: hash,
             id_coin_from: idCoinSelected,
-            symbol_from: symCoinSelected
+            symbol_from: symCoinSelected,
         }
         submintInformation(dataSend)
 
@@ -108,8 +113,7 @@ const BuyCrypto = ({ route }) => {
                             style={classes.textTouchable}>
                             <Text
                                 style={classes.textTitleInput}
-                                numberOfLines={1}
-                            >
+                                numberOfLines={1}>
                                 {data.wallet}
                             </Text>
                         </TouchableOpacity>
@@ -136,7 +140,11 @@ const BuyCrypto = ({ route }) => {
                                     onValueChange={value => setCoin(value)}>
                                     {Array.isArray(infoCoin) &&
                                         infoCoin
-                                            .filter(info => info.symbol != 'ALY' && info.symbol != 'USDT')
+                                            .filter(
+                                                info =>
+                                                    info.symbol !== "ALY" &&
+                                                    info.symbol !== "USDT",
+                                            )
                                             .map((item, index) => (
                                                 <Picker.Item
                                                     enabled={true}

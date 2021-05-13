@@ -11,8 +11,6 @@ export default async function submitInfo(dataSent) {
     try {
         loader(true)
 
-        console.log("DataSent: ", dataSent)
-
         const { navigate } = useNavigation()
 
         const { data: response } = await http.post(
@@ -21,12 +19,9 @@ export default async function submitInfo(dataSent) {
             getHeadersMultipartFormData(),
         )
 
-        console.log(response)
-
         if (response.error) {
             throw String(response.message)
-        } else if (response.response === "success") {
-            successMessage("Tu registro esta en proceso de aceptacion")
+        } else {
             navigate("Main")
         }
     } catch (error) {

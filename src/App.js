@@ -192,7 +192,7 @@ const App = () => {
                 />
             </Modal>
 
-            <ModalKyc />
+            {/* <ModalKyc /> */}
 
             {!state.loged && <ButtonSupport />}
 
