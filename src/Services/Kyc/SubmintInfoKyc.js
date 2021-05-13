@@ -11,7 +11,7 @@ export default async function submitInfo(dataSent) {
     try {
         loader(true)
 
-        const {navigation} = store.getState()
+        const { navigation } = store.getState()
 
         const { data: response } = await http.post(
             "/kyc",
@@ -22,7 +22,7 @@ export default async function submitInfo(dataSent) {
         if (response.error) {
             throw String(response.message)
         } else {
-            successMessage(response.message)
+            successMessage("Has completado tu registro de KYC con exito")
             navigation.pop()
         }
     } catch (error) {
