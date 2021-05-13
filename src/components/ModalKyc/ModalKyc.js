@@ -59,7 +59,7 @@ const ModalKyc = ({kycConfirm}) => {
 
     useEffect(()=>{
         console.log('entra')
-        setShowModal(kycConfirm == 1 && showModal == false ? false : true)
+        setShowModal(kycConfirm == 1 ? false : true)
     },[])
 
     // useEffect(() => {
