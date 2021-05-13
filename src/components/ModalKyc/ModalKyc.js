@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useMemo } from "react"
 import { View, Text, Image, TouchableOpacity, Alert } from "react-native"
 
 // Import Components
@@ -19,20 +19,19 @@ import LogoFunko from "../../static/AlyFunko.png"
 // Import Stoore
 import store from "../../store/index"
 
-const ModalKyc = ({ navigation }) => {
+const ModalKyc = _ => {
     const classes = useStyles(ModalKycStyles)
 
-    const { global } = store.getState()
-
-    const { navigate } = useNavigation()
+    const { navigation } = store.getState()
 
     const [showModal, setShowModal] = useState(true)
 
     const onKyc = () => {
-        navigate("Kyc")
         setShowModal(false)
+        navigation.push("Kyc")
     }
 
+    // ??????
     const toggleMenu = () => {
         Alert.alert(
             "Cerrar sesion",
@@ -60,12 +59,12 @@ const ModalKyc = ({ navigation }) => {
 
     useEffect(() => {
         store.subscribe(() => {
-            const newStore = store.getState()
+            const newStore = store.getState().global
 
             const conditional =
                 "kyc_type" in newStore && newStore?.kyc_type === 0
 
-            console.log(conditional, newStore)
+            console.log(conditional)
 
             setShowModal(conditional)
         })
@@ -74,6 +73,7 @@ const ModalKyc = ({ navigation }) => {
     return (
         <Modal
             isVisible={showModal}
+            onBackdropPress={_ => setShowModal(false)}
             animationIn="fadeIn"
             animationOut="fadeOut">
             <View style={classes.container}>
