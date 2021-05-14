@@ -1,14 +1,18 @@
 import { Colors, RFValue, GlobalStyles } from "../../../utils/constants"
+import { StyleSheet } from "react-native"
 
 export default {
     container: {
         alignSelf: "center",
         alignItems: "center",
-        backgroundColor: Colors.colorBlack,
+        backgroundColor: Colors.colorMain,
         borderRadius: 10,
-        padding: 10,
-        height: "90%",
-        width: "90%",
+        marginHorizontal: RFValue(50),
+        marginTop: RFValue(100),
+        height: RFValue(550),
+        width: RFValue(300),
+        ...StyleSheet.absoluteFillObject,
+        zIndex: 10000,
     },
     logoSuccess: {
         resizeMode: "contain",
@@ -36,10 +40,11 @@ export default {
         width: "80%",
     },
     rowButtons: {
+        flex: 1,
         alignItems: "center",
-        marginVertical: RFValue(25),
-        paddingHorizontal: RFValue(15),
-        width: "100%",
+        // marginVertical: RFValue(10),
+        paddingHorizontal: RFValue(10),
+        // width: "100%",
         flexDirection: "row",
     },
 
