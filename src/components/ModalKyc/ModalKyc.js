@@ -19,7 +19,7 @@ import LogoFunko from "../../static/AlyFunko.png"
 // Import Stoore
 import store from "../../store/index"
 
-const ModalKyc = ({kycConfirm}) => {
+const ModalKyc = ({ kycConfirm }) => {
     const classes = useStyles(ModalKycStyles)
 
     const { navigation } = store.getState()
@@ -31,7 +31,7 @@ const ModalKyc = ({kycConfirm}) => {
         navigation.push("Kyc")
     }
 
-    // ??????
+    // Funcion que muestra un alert para verificar que quisere cerrar sesion
     const toggleMenu = () => {
         Alert.alert(
             "Cerrar sesion",
@@ -57,10 +57,10 @@ const ModalKyc = ({kycConfirm}) => {
         }
     }
 
-    useEffect(()=>{
-        console.log('entra')
+    useEffect(() => {
+        console.log("entra")
         setShowModal(kycConfirm == 1 ? false : true)
-    },[])
+    }, [])
 
     // useEffect(() => {
     //     store.subscribe(() => {
@@ -77,60 +77,116 @@ const ModalKyc = ({kycConfirm}) => {
     //     })
     // }, [])
 
-    console.log('showModal: ', showModal)
+    console.log("showModal: ", showModal)
+
+    const infoKyc = kycConfirm === 0
 
     return (
-        <Modal
-            isVisible={showModal}
-            animationIn="fadeIn"
-            animationOut="fadeOut">
-            <View style={classes.container}>
-                <Image style={classes.logoSuccess} source={Logo} />
+        <>
+            {infoKyc && (
+                <View style={classes.container}>
+                    <Image style={classes.logoSuccess} source={Logo} />
 
-                <View style={[classes.rowImage, { alignItems: "center" }]}>
+                    <View style={[classes.rowImage, { alignItems: "center" }]}>
+                        <View style={{ alignItems: "center" }}>
+                            <Text style={classes.textTitle}>
+                                Su cuenta ya esta casi lista
+                            </Text>
+
+                            <Text style={classes.subTitle}>
+                                Ahora solo debe terminar el proceso de registro
+                                con la informacion solicitada
+                            </Text>
+                        </View>
+
+                        <View style={{ paddingTop: 15 }}>
+                            <Image
+                                style={classes.logoSuccess}
+                                source={LogoFunko}
+                            />
+                        </View>
+                    </View>
+
                     <View style={{ alignItems: "center" }}>
-                        <Text style={classes.textTitle}>
-                            Su cuenta ya esta casi lista
-                        </Text>
-
-                        <Text style={classes.subTitle}>
-                            Ahora solo debe terminar el proceso de registro con
-                            la informacion solicitada
-                        </Text>
+                        <View style={classes.row}>
+                            <Text style={classes.textTitleSub}>
+                                Pulsa el bóton 'Continuar' para terminar su
+                                registro
+                            </Text>
+                        </View>
                     </View>
 
-                    <View style={{ paddingTop: 15 }}>
-                        <Image style={classes.logoSuccess} source={LogoFunko} />
+                    <View style={classes.rowButtons}>
+                        <TouchableOpacity
+                            style={classes.registerButton}
+                            onPress={toggleMenu}>
+                            <Text style={classes.textRegisterButton}>
+                                cerrar session
+                            </Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            onPress={onKyc}
+                            style={[GlobalStyles.buttonPrimaryLine]}>
+                            <Text style={GlobalStyles.textButtonPrimaryLine}>
+                                continuar
+                            </Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
+            )}
+        </>
+        // <Modal
+        //     isVisible={showModal}
+        //     animationIn="fadeIn"
+        //     animationOut="fadeOut">
+        //     <View style={classes.container}>
+        //         <Image style={classes.logoSuccess} source={Logo} />
 
-                <View style={{ alignItems: "center" }}>
-                    <View style={classes.row}>
-                        <Text style={classes.textTitleSub}>
-                            Pulsa el bóton 'Continuar' para terminar su registro
-                        </Text>
-                    </View>
-                </View>
+        // <View style={[classes.rowImage, { alignItems: "center" }]}>
+        //     <View style={{ alignItems: "center" }}>
+        //         <Text style={classes.textTitle}>
+        //             Su cuenta ya esta casi lista
+        //         </Text>
 
-                <View style={classes.rowButtons}>
-                    <TouchableOpacity
-                        style={classes.registerButton}
-                        onPress={toggleMenu}>
-                        <Text style={classes.textRegisterButton}>
-                            cerrar session
-                        </Text>
-                    </TouchableOpacity>
+        //         <Text style={classes.subTitle}>
+        //             Ahora solo debe terminar el proceso de registro con
+        //             la informacion solicitada
+        //         </Text>
+        //     </View>
 
-                    <TouchableOpacity
-                        onPress={onKyc}
-                        style={[GlobalStyles.buttonPrimaryLine]}>
-                        <Text style={GlobalStyles.textButtonPrimaryLine}>
-                            continuar
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-        </Modal>
+        //     <View style={{ paddingTop: 15 }}>
+        //         <Image style={classes.logoSuccess} source={LogoFunko} />
+        //     </View>
+        // </View>
+
+        // <View style={{ alignItems: "center" }}>
+        //     <View style={classes.row}>
+        //         <Text style={classes.textTitleSub}>
+        //             Pulsa el bóton 'Continuar' para terminar su registro
+        //         </Text>
+        //     </View>
+        // </View>
+
+        // <View style={classes.rowButtons}>
+        //     <TouchableOpacity
+        //         style={classes.registerButton}
+        //         onPress={toggleMenu}>
+        //         <Text style={classes.textRegisterButton}>
+        //             cerrar session
+        //         </Text>
+        //     </TouchableOpacity>
+
+        //     <TouchableOpacity
+        //         onPress={onKyc}
+        //         style={[GlobalStyles.buttonPrimaryLine]}>
+        //         <Text style={GlobalStyles.textButtonPrimaryLine}>
+        //             continuar
+        //         </Text>
+        //     </TouchableOpacity>
+        // </View>
+        //     </View>
+        // </Modal>
     )
 }
 
