@@ -341,7 +341,7 @@ const Main = () => {
 
     const { global } = store.getState()
 
-    console.log("GlobalMain", global)
+    console.log("GlobalMain: ", global)
 
     /**
      * Metodo que configura el componente, inicializando todas las tareas

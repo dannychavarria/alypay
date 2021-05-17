@@ -19,6 +19,7 @@ const ItemComerce = ({ data = {} }) => {
     const { navigate } = useNavigation()
     const images = data.item.profile_picture
 
+
     const onInformacion = () => {
         navigate(ROUTES.WALLETCOMMERCE, data)
     }
