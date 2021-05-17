@@ -352,7 +352,7 @@ const Main = () => {
 
             const { data } = await http.get("/wallets", getHeaders())
 
-            if (data.error) {
+            if (data.error) { 
                 throw String(data.message)
             } else {
                 dispatch({ type: "wallets", payload: data })
