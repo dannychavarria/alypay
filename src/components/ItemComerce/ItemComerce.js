@@ -28,10 +28,10 @@ const ItemComerce = ({ data = {} }) => {
     return (
         <>
             <TouchableOpacity style={styles.container} onPress={onInformacion}>
-                {/* <Image
+                <Image
                     style={[styles.logo, Sty]}
                     source={images === null ? avatar : { uri: parsedImage }}
-                /> */}
+                />
 
                 <View style={styles.cardInformation}>
                     <View style={styles.headerTableTitle}>

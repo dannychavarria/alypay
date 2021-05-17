@@ -8,6 +8,7 @@ import FlashMessage from "react-native-flash-message"
 import Loader from "./components/Loader/Loader"
 import Modal from "react-native-modal"
 import Lottie from "lottie-react-native"
+import { useNavigation } from "@react-navigation/native"
 
 // Import functions and utils constanst
 import { getStorage, reducer, RFValue, Colors } from "./utils/constants"
@@ -55,6 +56,7 @@ const initialState = {
 
 const App = () => {
     const [state, dispatch] = useReducer(reducer, initialState)
+    const { navigate } = useNavigation()
 
     const ConfigurateComponent = async () => {
         const payload = await getStorage()
@@ -72,6 +74,10 @@ const App = () => {
 
             // Le decimos que el usuario esta logueado
             dispatch({ type: "loged", payload: true })
+
+            if (payload.kyc_type === 0) {
+                navigate("Kyc")
+            }
         } else {
             dispatch({ type: "loged", payload: false })
 
@@ -194,13 +200,11 @@ const App = () => {
 
             {!state.loged && <ButtonSupport />}
 
-
             <Loader isVisible={state.loader} />
 
             <Splash isVisible={state.splash} />
 
             <FlashMessage position="top" floating={true} />
-
         </>
     )
 }

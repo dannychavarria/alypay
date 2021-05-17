@@ -820,7 +820,9 @@ const Wallet = ({ route }) => {
     // Params passed from router
     const { params } = route
 
-    const isAly = params.id == 51
+    const isAly = params.symbol === "ALY"
+
+    console.log("Parametros", route)
 
     /**
      * Funcion que se encarga de configurar todo el componente
