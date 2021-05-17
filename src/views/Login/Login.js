@@ -29,15 +29,38 @@ import videoclip from "../../static/videos/cover.mp4"
 const initialState = {
     email: "",
     password: "",
-
-    // Info device
-    ipAddress: "",
-    device: "",
-    macAddress: "",
-    systemName: "",
+    activeSession: false,    
 }
 
 const { height } = Dimensions.get("window")
+
+/**
+ * @author msobalvarro
+ * @sumary Promesa que devuelve informacion del dispositivo
+ */
+const getDeviceInfo = () => new Promise(async (resolve, reject) => {
+    try {
+        // Obtenemos la ip publica del dispositivo
+        const public_ip = await getPublicIp()
+
+        /**Marca del dispositivo */
+        const device = await getBrand()
+
+        /**Modelo del dispositivo */
+        const deviceId = await getDeviceId()
+
+        // Obtenemos la direccion mac del dispositvo
+        const mac_adress = await getMacAddress()
+
+        // sistema (version)
+        const system_name = await getSystemName()
+
+        resolve({ device: `${device} - ${deviceId}`, mac_adress, system_name, public_ip })
+
+    } catch (error) {
+        reject(error.toString())
+    }
+})
 
 const Login = ({ navigation }) => {
     const [state, dispatch] = useReducer(reducer, initialState)
@@ -63,13 +86,13 @@ const Login = ({ navigation }) => {
             // Loader app mode on
             loader(true)
 
+            const dataDeviceInfo = await getDeviceInfo()
+
             const variables = {
                 email: state.email,
                 password: state.password,
-                public_ip: state.ipAddress,
-                device: state.device,
-                mac_adress: state.macAddress,
-                system_name: state.systemName
+                active_session: state.activeSession,
+                ...dataDeviceInfo
             }
 
             const { data } = await http.post("/login", variables)
@@ -83,10 +106,15 @@ const Login = ({ navigation }) => {
                     store.dispatch({ type: SETSTORAGE, payload: data })
 
                     setStorage(data)
+
+                    
+                    // validamos si el cliente tiene KYC
+                    if(data.kyc_type === 0) {
+                        // viajamos a la pantalla de KYC
+                        navigate("Kyc")                        
+                    }
                 }
             }
-
-            // submit({ variables })
         } catch (error) {
             showMessage({
                 message: error.toString(),
@@ -101,41 +129,6 @@ const Login = ({ navigation }) => {
         }
     }
 
-    /**
-     * Funcion que obtiene
-     */
-    const getDeviceInfo = async () => {
-        try {
-            // Obtenemos la ip publica del dispositivo
-            // const ip = await getPublicIp()
-
-            // console.log(ip)
-
-            // dispatch({ type: "ipAddress", payload: ip })
-
-            /**Marca del dispositivo */
-            const device = await getBrand()
-
-            /**Modelo del dispositivo */
-            const deviceId = await getDeviceId()
-
-            // Ingresamos al store la informacion del dispositivo
-            dispatch({ type: "device", payload: `${device} - ${deviceId}` })
-
-            // Obtenemos la direccion mac del dispositvo
-            const macAddress = await getMacAddress()
-
-            dispatch({ type: "macAddress", payload: macAddress })
-
-            const systemVersion = await getSystemName()
-
-            dispatch({ type: "systemName", payload: systemVersion })
-
-        } catch (error) {
-            errorMessage(error.toString())
-        }
-    }
-
     /**Funcion que lleva a la pantalla de registro */
     const toRegister = () => {
         navigate(ROUTES.REGISTER)
@@ -143,8 +136,6 @@ const Login = ({ navigation }) => {
 
     useEffect(() => {
         store.dispatch({ type: SETNAVIGATION, payload: navigation })
-
-        getDeviceInfo()
     }, [])
 
     return (
@@ -192,20 +183,19 @@ const Login = ({ navigation }) => {
                             <Icon name={showPassword ? 'visibility-off' : 'visibility'} color={Colors.colorYellow} size={20} />
                         </TouchableOpacity>
                     </View>
-
                 </View>
 
 
-                {/*  <View style={[styles.rowButtons, { justifyContent: "flex-end" }]}>
-                    <Text style={[styles.legend, { marginRight: 10 }]}>Mostar Contraseña</Text>
+                 <View style={[styles.rowButtons, { justifyContent: "flex-end" }]}>
+                    <Text style={[styles.legend, { marginRight: 10 }]}>Recordar contraseña</Text>
 
                     <CheckBox
                         checkBoxColor={Colors.colorYellow}
-                        isChecked={state.showPassword}
-                        onClick={_ => dispatch({ type: "showPassword", payload: !state.showPassword })}
+                        isChecked={state.activeSession}
+                        onClick={_ => dispatch({ type: "activeSession", payload: !state.activeSession })}
                     />
                 </View>
- */}
+
 
                 <View style={styles.rowButtons}>
                     <TouchableOpacity onPress={toRegister} style={styles.registerButton}>

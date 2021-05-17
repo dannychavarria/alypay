@@ -43,11 +43,11 @@ import UploadImage from "../../components/UploadImage/UploadImage"
 import { View as ViewAnimation } from "react-native-animatable"
 import { launchCamera } from "react-native-image-picker"
 import { Picker } from "@react-native-picker/picker"
-import Icon from "react-native-vector-icons/MaterialIcons"
 import AntDesign from "react-native-vector-icons/AntDesign"
 import DateTimePicker from "@react-native-community/datetimepicker"
 import moment from "moment"
 import validator from "validator"
+import ModalKyc from "../../components/ModalKyc/ModalKyc"
 
 const initialState = {
     identificationType: 1,
@@ -1813,6 +1813,9 @@ const KycUser = ({ navigation }) => {
                     />
                 </View>
             </Modal>
+
+
+            <ModalKyc />
         </Container>
     )
 }

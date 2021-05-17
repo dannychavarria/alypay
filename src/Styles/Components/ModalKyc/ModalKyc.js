@@ -2,16 +2,22 @@ import { Colors, RFValue, GlobalStyles } from "../../../utils/constants"
 import { StyleSheet } from "react-native"
 
 export default {
+    superContainer: {
+        justifyContent: "center",
+        alignItems: "center",
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: "rgba(0,0,0,0.8)",
+        zIndex: 1000
+    },
     container: {
         alignSelf: "center",
         alignItems: "center",
-        backgroundColor: Colors.colorMain,
+        backgroundColor: Colors.colorBlack,
         borderRadius: 10,
         marginHorizontal: RFValue(50),
         marginTop: RFValue(100),
         height: RFValue(550),
         width: RFValue(300),
-        ...StyleSheet.absoluteFillObject,
         zIndex: 10000,
     },
     logoSuccess: {

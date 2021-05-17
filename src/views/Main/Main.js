@@ -339,10 +339,6 @@ const Main = () => {
     const [indexActive, setIndexActive] = useState(0)
     const { globalStorage } = store.getState()
 
-    const { global } = store.getState()
-
-    console.log("GlobalMain", global)
-
     /**
      * Metodo que configura el componente, inicializando todas las tareas
      */
@@ -413,7 +409,6 @@ const Main = () => {
     }, [])
 
     return (
-        <>
             <Container onRefreshEnd={configurateComponent} showLogo>
                 <Switch
                     onSwitch={setStateView}
@@ -424,7 +419,7 @@ const Main = () => {
                     <>
                         <FlatList
                             data={state.wallets}
-                            keyExtractor={(_, i) => i}
+                            keyExtractor={(_, i) => i.toString()}
                             renderItem={({ item }) => <ItemWallet data={item} />}
                         />
                     </>
@@ -440,8 +435,6 @@ const Main = () => {
                     />
                 )}
             </Container>
-            <ModalKyc kycConfirm={global.kyc_type} />
-        </>
     )
 }
 
