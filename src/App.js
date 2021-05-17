@@ -56,7 +56,7 @@ const initialState = {
 
 const App = () => {
     const [state, dispatch] = useReducer(reducer, initialState)
-    const { navigate } = useNavigation()
+    // const { navigate } = useNavigation()
 
     const ConfigurateComponent = async () => {
         const payload = await getStorage()
@@ -75,9 +75,9 @@ const App = () => {
             // Le decimos que el usuario esta logueado
             dispatch({ type: "loged", payload: true })
 
-            if (payload.kyc_type === 0) {
-                navigate("Kyc")
-            }
+            // if (payload.kyc_type === 0) {
+            //     // navigate("Kyc")
+            // }
         } else {
             dispatch({ type: "loged", payload: false })
 

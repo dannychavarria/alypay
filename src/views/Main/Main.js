@@ -338,6 +338,10 @@ const Main = () => {
     const [state, dispatch] = useReducer(reducer, initialState)
     const [indexActive, setIndexActive] = useState(0)
     const { globalStorage } = store.getState()
+    const { navigate } = useNavigation()
+
+    const { global } = store.getState()
+    console.log("Global", global)
 
     /**
      * Metodo que configura el componente, inicializando todas las tareas
@@ -348,8 +352,6 @@ const Main = () => {
 
             const { data } = await http.get("/wallets", getHeaders())
 
-            console.log("Wallet", data)
-
             if (data.error) {
                 throw String(data.message)
             } else {
@@ -359,6 +361,10 @@ const Main = () => {
             const dataStorage = {
                 ...globalStorage,
                 wallets: data,
+            }
+
+            if (global.kyc_type === 0) {
+                navigate("Kyc")
             }
 
             store.dispatch({ type: SETSTORAGE, payload: dataStorage })
