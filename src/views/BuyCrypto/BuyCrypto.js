@@ -19,7 +19,7 @@ import {
 } from "../../utils/constants"
 
 //import constants
-import { urlAlyCoin } from "../../utils/constants"
+
 import { Picker } from "@react-native-picker/picker"
 
 // Import from Lodash
@@ -34,7 +34,7 @@ const BuyCrypto = ({ route }) => {
     const { data } = route.params
 
     // Index de la moneda seleccionada
-    const [coin, setCoin] = useState(0)
+    const [coin, setCoin] = useState()
     // Estado del hash de transaccion
     const [hash, setHash] = useState("")
 
@@ -50,11 +50,9 @@ const BuyCrypto = ({ route }) => {
     } = useBuyCrypto()
 
     // Imagen de la moneda
-    const urlImage =
-        infoCoin[coin]?.id !== null
-            ? `https://s2.coinmarketcap.com/static/img/coins/128x128/${infoCoin[coin]?.id
-            }.png`
-            : urlAlyCoin
+    const urlImage = `https://s2.coinmarketcap.com/static/img/coins/128x128/${
+        infoCoin[coin]?.id
+    }.png`
 
     // funcion de envio de datos
     const sendInfo = () => {
@@ -81,11 +79,9 @@ const BuyCrypto = ({ route }) => {
         onChangeAmountAly("", 0)
     }
 
-    console.log('coins: ', infoCoin)
-
     useEffect(() => {
         ConfigureComponent()
-        PriceMoment(coin)
+
         onChangeAmountAly(amounOrigin, priceCoin)
     }, [])
 
@@ -108,13 +104,13 @@ const BuyCrypto = ({ route }) => {
                             Tocar para copiar
                         </Text>
                         <TouchableOpacity
-                            onPress={() => CopyClipboard(infoCoin[coin]?.wallet)}
+                            onPress={() =>
+                                CopyClipboard(infoCoin[coin]?.wallet)
+                            }
                             style={classes.textTouchable}>
                             <Text
                                 style={classes.textTitleInput}
-
-                                numberOfLines={1}
-                            >
+                                numberOfLines={1}>
                                 {infoCoin[coin]?.wallet}
                             </Text>
                         </TouchableOpacity>
@@ -139,17 +135,15 @@ const BuyCrypto = ({ route }) => {
                                         backgroundColor: "transparent",
                                     }}
                                     onValueChange={value => setCoin(value)}>
-                                    {Array.isArray(infoCoin) &&
-                                        infoCoin
-                                            .map((item, index) => (
-                                                <Picker.Item
-                                                    enabled={true}
-                                                    key={index}
-                                                    label={item.symbol}
-                                                    value={index}
-                                                    color={Colors.colorMain}
-                                                />
-                                            ))}
+                                    {infoCoin.map((item, index) => (
+                                        <Picker.Item
+                                            enabled={true}
+                                            key={index}
+                                            label={item.symbol}
+                                            value={index}
+                                            color={Colors.colorMain}
+                                        />
+                                    ))}
                                 </Picker>
                             </View>
                             <View style={classes.containerInputItem}>

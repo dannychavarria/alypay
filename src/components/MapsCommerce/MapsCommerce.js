@@ -21,7 +21,7 @@ import {
     http,
     getHeaders,
     loader,
-    Colors
+    Colors,
 } from "../../utils/constants"
 import SearchMap from "../SearchMap/SearchMap" //Importacion del buscador
 import styleMap from "../../animations/map-dark-mode.json"
@@ -52,6 +52,8 @@ const MapsCommerce = () => {
     const [newLatitude, setNewLatitude] = useState(999)
     //Estado para referenciar al MapView y poder usar sus metodos
     const [ref, setRef] = useState()
+
+    const [markersRef, setMarkersRef] = useState([])
 
     // Funcion que permite dar los permisos para la Geolocalizacion
     const ConfigureLocation = async () => {
@@ -158,24 +160,31 @@ const MapsCommerce = () => {
 
         return (
             <TouchableOpacity style={styles.cardContainer} onPress={direcction}>
-                <Image
-                    style={styles.cardImage}
-                    source={{ uri: parsedImage }}
-                />
+                <Image style={styles.cardImage} source={{ uri: parsedImage }} />
                 <View style={styles.containerImageAndTitle}>
                     <View style={styles.containerImage}>
-                        <Image source={imageProfileAvatar} style={styles.avatarEcommerce} />
+                        <Image
+                            source={imageProfileAvatar}
+                            style={styles.avatarEcommerce}
+                        />
                     </View>
 
                     <View style={styles.carSubcontainer}>
-                        <Text style={styles.cardTitle}>{item?.name_commerce}</Text>
-                        <Text style={styles.cardDirection}>{item?.address}</Text>
+                        <Text style={styles.cardTitle}>
+                            {item?.name_commerce}
+                        </Text>
+                        <Text style={styles.cardDirection}>
+                            {item?.address}
+                        </Text>
                     </View>
                 </View>
 
                 <View style={styles.containerTextDirection}>
                     <Text style={styles.textDirection}>Ver direcciones</Text>
-                    <Image source={iconDirection} style={styles.imageDirectionText} />
+                    <Image
+                        source={iconDirection}
+                        style={styles.imageDirectionText}
+                    />
                 </View>
             </TouchableOpacity>
         )
@@ -214,6 +223,8 @@ const MapsCommerce = () => {
 
         setNewLatitude(commerce.latitude)
         setNewLongitude(commerce.longitude)
+
+        markersRef[index].showCallout()
     }
 
     return (
@@ -245,7 +256,12 @@ const MapsCommerce = () => {
                         {info.map((item, index) => (
                             <Marker
                                 key={item.index}
-                                ref={ref => (item[index] = ref)}
+                                // ref={ref => (item[index] = ref)}
+                                ref={ref => {
+                                    let updaRef = markersRef
+                                    updaRef[index] = ref
+                                    setMarkersRef(updaRef)
+                                }}
                                 coordinate={{
                                     latitude: item.latitude,
                                     longitude: item.longitude,
@@ -323,7 +339,7 @@ const styles = StyleSheet.create({
         marginLeft: 20,
     },
     avatarEcommerce: {
-        resizeMode: "cover",        
+        resizeMode: "cover",
         height: RFValue(24),
         width: RFValue(24),
     },
@@ -339,7 +355,7 @@ const styles = StyleSheet.create({
         resizeMode: "cover",
     },
     cardDirection: {
-        color: "#CCC"
+        color: "#CCC",
     },
     cardTitle: {
         color: Colors.colorYellow,
@@ -354,11 +370,11 @@ const styles = StyleSheet.create({
     imageDirectionText: {
         resizeMode: "cover",
         height: RFValue(16),
-        width: RFValue(16)
+        width: RFValue(16),
     },
     textDirection: {
         color: Colors.colorYellow,
-        fontSize: RFValue(12)
+        fontSize: RFValue(12),
     },
     itemCommerce: {
         width: RFValue(60),
