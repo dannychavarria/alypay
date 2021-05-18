@@ -194,7 +194,7 @@ const Description = ({ route }) => {
                     </View>
 
                     <TouchableOpacity
-                        onPress={_ => CopyClipboard(details.wallet_too)}>
+                        onPress={_ => CopyClipboard(details.wallet_to)}>
                         <View style={[styles.hashsec, styles.text]}>
                             <View style={styles.containertitle}>
                                 <Text style={styles.title}>

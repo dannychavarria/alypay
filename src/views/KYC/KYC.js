@@ -1,8 +1,19 @@
-import React, { useReducer, useState } from "react"
-import { View, Text, TextInput, TouchableOpacity, FlatList } from "react-native"
+import React, { useReducer, useState, useEffect } from "react"
+import {
+    View,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    FlatList,
+    Platform,
+    Alert,
+    BackHandler,
+} from "react-native"
+import { StackActions } from "@react-navigation/native"
 
 // Import Hook
 import useStyles from "../../hooks/useStyles.hook"
+import useKyc from "../../hooks/Kyc/useKyc.hook"
 
 // Import Styles
 import { ECommerRegisterS } from "../../Styles/Views/index"
@@ -15,9 +26,15 @@ import {
     RFValue,
     checkPermissionCamera,
     calcAge,
+    getHeaders,
+    http,
+    successMessage,
+    logOutApp,
 } from "../../utils/constants"
 import countries from "../../utils/countries.json"
 import professions from "../../utils/profession.json"
+
+import store from "../../store/index"
 
 // Import Components
 import Container from "../../components/Container/Container"
@@ -27,12 +44,11 @@ import UploadImage from "../../components/UploadImage/UploadImage"
 import { View as ViewAnimation } from "react-native-animatable"
 import { launchCamera } from "react-native-image-picker"
 import { Picker } from "@react-native-picker/picker"
-import Icon from "react-native-vector-icons/MaterialIcons"
 import AntDesign from "react-native-vector-icons/AntDesign"
 import DateTimePicker from "@react-native-community/datetimepicker"
 import moment from "moment"
 import validator from "validator"
-import { startDetecting } from "react-native/Libraries/Utilities/PixelRatio"
+import ModalKyc from "../../components/ModalKyc/ModalKyc"
 
 const initialState = {
     identificationType: 1,
@@ -44,16 +60,18 @@ const initialState = {
     province: "",
     direction1: "",
     direction2: "",
-    foundsOrigin: "",
+    foundsOrigin: "De donde provienen tus ingresos",
     profession: "",
-    profilePictureId: null,
-    identificationPictureId: null,
+    avatar: null,
+    identificationPhoto: null,
     password: "",
 
     country: countries[0],
     filter: "",
 
-    tab: 3,
+    gender: "",
+
+    tab: 0,
 }
 
 const beneficiaryStateReducer = {
@@ -78,11 +96,13 @@ const beneficiaryStateReducer = {
     beneficiaryDirection1: "",
     beneficiaryDirection2: "",
     beneficiaryPostalCode: "",
-    beneficiaryFoundsOrigin: 1,
+    beneficiaryFoundsOrigin: "De donde provienen tus ingresos",
     beneficiaryEstimateMonthlyAmount: 0,
     beneficiaryProfession: "",
-    beneficiaryProfilePictureId: null,
-    beneficiaryIdentificationPictureId: null,
+    beneficiaryAvatar: null,
+    beneficiaryIdentificationPhoto: null,
+
+    beneficiaryGender: "",
 
     beneficiaryCountry: countries[0],
     beneticiaryFilter: "",
@@ -108,7 +128,8 @@ const reducer = (state, action) => {
     }
 }
 
-const ECommerRegister = () => {
+const KycUser = ({ navigation }) => {
+    // Estado que almacena los estilos de los componentes
     const classes = useStyles(ECommerRegisterS)
 
     // Estados iniciales de los impust
@@ -118,41 +139,193 @@ const ECommerRegister = () => {
         beneficiaryStateReducer,
     )
 
+    // Estados que almacenan las imagenes del usuario
+    const [avatar, setAvatar] = useState(null)
+    const [identificationPhoto, setIdentificationPhoto] = useState(null)
+
+    // Estados que almacenan las imagenes del beneficiario / tutor
+    const [beneficiaryAvatar, setBeneficiaryAvatar] = useState(null)
+    const [
+        beneficiaryIdentificationPhoto,
+        setBeneficiaryIdentificationPhoto,
+    ] = useState(null)
+
     // Estado hace el cambio del CheckBox para el Cambio de leyenda cuando hay beneficiario
     const [CheckState, setCheckState] = useState(false)
 
+    // Estado que indica si muestra la modal de paises del Usuario
+    const [modalCoutry, setModalCountry] = useState(false)
+
+    // Estado que indica si muestra la modal de paises del beneficiario
+    const [modalCoutryBeneficiary, setModalCountryBeneficiary] = useState(false)
+
+    const { global } = store.getState()
+
+    // Estados que almacenan la fecha del beneficiario
     const [showDate, setShowDate] = useState(false)
     const [birthday, setBirthday] = useState(new Date())
 
-    // Estado que indica si muestra la modal de paises
-    const [modalCoutry, setModalCountry] = useState(false)
+    // Estado que almacena la edad del usuario para hacer validaciones
+    const [age, setAge] = useState("")
 
-    // Estados que permiten previsualizar las contraseñas
-    const [showPassword, setShowPassword] = useState(false)
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-    const [confirmPassword, setConfirmPassword] = useState("")
+    const { submitInformationSer } = useKyc()
 
     // Hacemos la peticion al server
     const submitInformation = async () => {
         try {
-            const dataSent = {
-                identificationType: state.identificationType,
+            let dataSent = {
+                gender: state.gender,
+                idTypeIdentification: state.identificationType,
                 identificationNumber: state.identificationNumber,
-                alternativeNumber: `${state.country.phoneCode} ``${
+                alternativeNumber: `${state.country.phoneCode} ${
                     state.alternativeNumber
                 }`,
                 nationality: state.nationality,
-                phoneCodeNationality: state.phoneCodeNationality,
-                currencyNationality: state.currencyNationality,
+                nationalityPhoneCode: state.phoneCodeNationality,
+                nationalityCurrencySymbol: state.currencyNationality,
                 province: state.province,
                 direction1: state.direction1,
                 direction2: state.direction2,
                 answer1: state.foundsOrigin,
-                profession: state.profession,
+                answer2: state.profession,
+
+                haveBeneficiary: age < 18 || CheckState ? 1 : 0,
             }
+
+            if (CheckState || age < 18) {
+                dataSent = {
+                    ...dataSent,
+                    beneficiaryGender: beneficiaryState.beneficiaryGender,
+                    beneficiaryIdRelationship:
+                        beneficiaryState.beneficiaryRelationship,
+                    beneficiaryIdTypeIdentification:
+                        beneficiaryState.beneficiaryIdentificationType,
+                    beneficiaryFirstname: beneficiaryState.beneficiaryFirstname,
+                    beneficiaryLastname: beneficiaryState.beneficiaryLastname,
+                    beneficiaryEmail: beneficiaryState.beneficiaryEmail,
+                    beneficiaryBirthday: birthday.toString(),
+                    beneficiaryIdentificationNumber:
+                        beneficiaryState.beneficiaryIdentificationNumber,
+                    beneficiaryPrincipalNumber:
+                        beneficiaryState.beneficiaryPrincipalNumber,
+                    beneficiaryAlternativeNumber:
+                        beneficiaryState.beneficiaryAlternativeNumber,
+                    beneficiaryNationality:
+                        beneficiaryState.beneficiaryNationality,
+                    beneficiaryNationalityPhoneCode:
+                        beneficiaryState.beneficiaryPhoneCodeNationality,
+                    beneficiaryNationalityCurrencySymbol:
+                        beneficiaryState.beneficiaryCurrencyNationality,
+                    beneficiaryResidence: beneficiaryState.beneficiaryResidence,
+                    beneficiaryResidencePhoneCode:
+                        beneficiaryState.beneficiaryPhoneCodeResidence,
+                    beneficiaryResidenceCurrencySymbol:
+                        beneficiaryState.beneficiaryCurrencyResidence,
+                    beneficiaryProvince: beneficiaryState.beneficiaryProvince,
+                    beneficiaryCity: beneficiaryState.beneficiaryCity,
+                    beneficiaryTutor: beneficiaryState.beneficiaryTutor,
+                    beneficiaryDirection1:
+                        beneficiaryState.beneficiaryDirection1,
+                    beneficiaryDirection2:
+                        beneficiaryState.beneficiaryDirection2,
+                    beneficiaryPostalCode:
+                        beneficiaryState.beneficiaryPostalCode,
+                    beneficiaryAnswer1:
+                        beneficiaryState.beneficiaryFoundsOrigin,
+                    beneficiaryAnswer2: beneficiaryState.beneficiaryProfession,
+                }
+            }
+
+            // console.log("dataSent", dataSent)
+
+            submitInformationSer(
+                createFormData(
+                    avatar,
+                    identificationPhoto,
+                    beneficiaryAvatar,
+                    beneficiaryIdentificationPhoto,
+                    dataSent,
+                ),
+            )
         } catch (error) {
             errorMessage(error.toString())
         }
+    }
+
+    const createFormData = (
+        avatar,
+        identificationPhoto,
+        beneficiaryAvatar,
+        beneficiaryIdentificationPhoto,
+        body,
+    ) => {
+        const data = new FormData()
+
+        const myAvatar = {
+            name: avatar.fileName,
+            type: avatar.type,
+            uri:
+                Platform.OS === "android"
+                    ? avatar.uri
+                    : avatar.uri.replace("file://", ""),
+        }
+        data.append("avatar", JSON.stringify(myAvatar))
+
+        const myIdentificationPhoto = {
+            name: identificationPhoto.fileName,
+            type: identificationPhoto.type,
+            uri:
+                Platform.OS === "android"
+                    ? identificationPhoto.uri
+                    : identificationPhoto.uri.replace("file://", ""),
+        }
+        data.append(
+            "identificationPhoto",
+            JSON.stringify(myIdentificationPhoto),
+        )
+
+        if (CheckState) {
+            data.append(
+                "beneficiaryAvatar",
+                JSON.stringify({
+                    name: beneficiaryAvatar.fileName,
+                    type: beneficiaryAvatar.type,
+                    uri:
+                        Platform.OS === "android"
+                            ? beneficiaryAvatar.uri
+                            : beneficiaryAvatar.uri.replace("file://", ""),
+                }),
+            )
+
+            data.append(
+                "beneficiaryIdentificationPhoto",
+                JSON.stringify({
+                    name: beneficiaryIdentificationPhoto.fileName,
+                    type: beneficiaryIdentificationPhoto.type,
+                    uri:
+                        Platform.OS === "android"
+                            ? beneficiaryIdentificationPhoto.uri
+                            : beneficiaryIdentificationPhoto.uri.replace(
+                                  "file://",
+                                  "",
+                              ),
+                }),
+            )
+        }
+
+        Object.keys(body).forEach(key => {
+            data.append(key, body[key])
+        })
+
+        return data
+    }
+
+    // Funcion que permite hacer el calculo de la fecha
+    const ageUser = () => {
+        const result = calcAge(global.birthday)
+
+        setAge(result)
+        dispatch({ type: "beneficiaryTutor", payload: result < 18 ? 1 : 0 })
     }
 
     /**
@@ -163,6 +336,16 @@ const ECommerRegister = () => {
         dispatch({ type: "country", payload: item })
 
         setModalCountry(false)
+    }
+
+    /**
+     * Funcion que permite guardar la seleccion del pais de beneficiario
+     * @param {*} item
+     */
+    const selectedCountryBeneficiary = item => {
+        dispatchBeneficiary({ type: "beneficiaryCountry", payload: item })
+
+        setModalCountryBeneficiary(false)
     }
 
     /**render element country modal */
@@ -185,22 +368,35 @@ const ECommerRegister = () => {
         }
     }
 
+    /**render element country modal */
+    const ItemCountryBenficiary = ({ item }) => {
+        if (
+            item.name.length > 0 &&
+            item.name
+                .toLowerCase()
+                .search(
+                    beneficiaryState.beneticiaryFilter.toLocaleLowerCase(),
+                ) > -1
+        ) {
+            return (
+                <TouchableOpacity
+                    style={classes.itemCountry}
+                    onPress={_ => selectedCountryBeneficiary(item)}>
+                    <Text style={{ color: "#FFF" }}>{item.name}</Text>
+                    <Text style={{ color: Colors.colorYellow }}>
+                        {item.phoneCode}
+                    </Text>
+                </TouchableOpacity>
+            )
+        }
+    }
+
     const nextPage = () => {
         const { tab } = state
 
         try {
             switch (tab) {
                 case 0: {
-                    // Validamos que ahiga ingresado una contraseña
-                    if (state.password.trim().length === 0) {
-                        throw String("Ingrese una contraseña")
-                    }
-
-                    // Validamos que las contraseña sean igual
-                    if (state.password !== confirmPassword) {
-                        throw String("Las contraseñas no coinciden")
-                    }
-
                     // Validamos que ahiga ingresado el numero de identificacion
                     if (state.identificationNumber.trim().length === 0) {
                         throw String("Ingrese un numero de identificacion")
@@ -225,11 +421,11 @@ const ECommerRegister = () => {
                     if (state.profession.trim().length === 0) {
                         throw String("Es requerido su profesion actual")
                     }
-                    if (state.profilePictureId === null) {
+                    if (avatar === null) {
                         throw String("Imagen de perfil es requerida")
                     }
 
-                    if (state.identificationPictureId === null) {
+                    if (identificationPhoto === null) {
                         throw String("Imagen de identificacion es requerida")
                     }
                     break
@@ -270,6 +466,7 @@ const ECommerRegister = () => {
                     if (!validator.isEmail(beneficiaryState.beneficiaryEmail)) {
                         throw String("Ingrese un email valido")
                     }
+                    break
                 }
 
                 case 4: {
@@ -308,16 +505,13 @@ const ECommerRegister = () => {
                         throw String("Es requerido su profesion actual")
                     }
 
-                    if (beneficiaryState.beneficiaryProfilePictureId === null) {
+                    if (beneficiaryAvatar === null) {
                         throw String(
                             "Imagen de perfil de beneficiario es requerida",
                         )
                     }
 
-                    if (
-                        beneficiaryState.beneficiaryIdentificationPictureId ===
-                        null
-                    ) {
+                    if (beneficiaryIdentificationPhoto === null) {
                         throw String(
                             "Imagen de identificacion de beneficiario es requerida",
                         )
@@ -335,15 +529,13 @@ const ECommerRegister = () => {
     const previousPage = () => {
         const { tab } = state
 
-        dispatch({ type: "tab", payload: tab - 1 })
+        dispatch({ type: "tab", payload: tab == 0 ? tab : tab - 1 })
     }
 
     const changeDate = (event, selectedDate) => {
         const currentDate = selectedDate || birthday
         setBirthday(currentDate)
         setShowDate(false)
-
-        const result = calcAge()
     }
 
     /**
@@ -359,27 +551,70 @@ const ECommerRegister = () => {
                 if (response.error) {
                     throw String(response.error)
                 }
-                dispatch({ type: ImageOption, payload: response })
-            })
-        } catch (error) {
-            showNotification(error.toString())
-        }
-    }
 
-    const uploadImageViewBeneficiary = async ImageOption => {
-        try {
-            await checkPermissionCamera()
+                switch (ImageOption) {
+                    case "avatar": {
+                        setAvatar(response)
+                        break
+                    }
 
-            launchCamera(optionsOpenCamera, response => {
-                if (response.error) {
-                    throw String(response.error)
+                    case "identificationPhoto": {
+                        setIdentificationPhoto(response)
+                        break
+                    }
+
+                    case "beneficiaryAvatar": {
+                        setBeneficiaryAvatar(response)
+                        break
+                    }
+
+                    case "beneficiaryIdentificationPhoto": {
+                        setBeneficiaryIdentificationPhoto(response)
+                        break
+                    }
+
+                    default: {
+                        break
+                    }
                 }
-                dispatchBeneficiary({ type: ImageOption, payload: response })
             })
         } catch (error) {
             showNotification(error.toString())
         }
     }
+
+    /**Metodo que confirma la salida del usuario a la pantalla de inicio */
+    const goBack = () => {
+        Alert.alert(
+            "Estas a punto de salir",
+            "Perderas todo tus registros. ¿Salir?",
+            [
+                {
+                    text: "Cancelar",
+                    onPress: () => {},
+                },
+                {
+                    text: "Salir",
+                    onPress: logOutApp,
+                },
+            ],
+        )
+
+        return true
+    }
+
+    useEffect(() => {
+        ageUser()
+    }, [])
+
+    useEffect(() => {
+        // Metodo que esta a la escucha cuando le dan atras
+        const handledBack = BackHandler.addEventListener(
+            "hardwareBackPress",
+            goBack,
+        )
+        return () => handledBack.remove()
+    }, [])
 
     return (
         <Container showLogo>
@@ -401,80 +636,31 @@ const ECommerRegister = () => {
                         <View style={classes.row}>
                             <View style={classes.labelsRow}>
                                 <Text style={classes.legendRow}>
-                                    Contraseña de seguridad
+                                    Seleccione su genero
                                 </Text>
+                                <Text style={classes.required}>Requerido</Text>
                             </View>
-                            <View
-                                style={[
-                                    classes.textInputWithImage,
-                                    classes.textInput,
-                                ]}>
-                                <TextInput
-                                    secureTextEntry={!showPassword}
-                                    value={state.password}
-                                    onChangeText={payload =>
-                                        dispatch({ type: "password", payload })
-                                    }
-                                    placeholder="Contraseña"
-                                    placeholderTextColor="#CCC"
-                                    style={classes.textInputCol}
-                                />
-                                <TouchableOpacity
-                                    onPress={e =>
-                                        setShowPassword(!showPassword)
-                                    }
-                                    style={classes.touchableCol}>
-                                    <Icon
-                                        name={
-                                            showPassword
-                                                ? "visibility-off"
-                                                : "visibility"
-                                        }
-                                        color={Colors.colorYellow}
-                                        size={18}
+                            <View style={GlobalStyles.containerPicker}>
+                                <Picker
+                                    style={GlobalStyles.picker}
+                                    selectedValue={state.gender}
+                                    onValueChange={value => {
+                                        dispatch({
+                                            type: "gender",
+                                            payload: value,
+                                        })
+                                    }}>
+                                    <Picker.Item
+                                        label="Seleccione su genero"
+                                        value={0}
                                     />
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-
-                        <View style={classes.row}>
-                            <View style={classes.labelsRow}>
-                                <Text style={classes.legendRow}>
-                                    Repetir contraseña de seguridad
-                                </Text>
-                            </View>
-                            <View
-                                style={[
-                                    classes.textInputWithImage,
-                                    classes.textInput,
-                                ]}>
-                                <TextInput
-                                    secureTextEntry={!showConfirmPassword}
-                                    value={confirmPassword}
-                                    onChangeText={value =>
-                                        setConfirmPassword(value)
-                                    }
-                                    placeholder="Contraseña"
-                                    placeholderTextColor="#CCC"
-                                    style={classes.textInputCol}
-                                />
-                                <TouchableOpacity
-                                    onPress={e =>
-                                        setShowConfirmPassword(
-                                            !showConfirmPassword,
-                                        )
-                                    }
-                                    style={classes.touchableCol}>
-                                    <Icon
-                                        name={
-                                            showConfirmPassword
-                                                ? "visibility-off"
-                                                : "visibility"
-                                        }
-                                        color={Colors.colorYellow}
-                                        size={18}
+                                    <Picker.Item label="Masculino" value={1} />
+                                    <Picker.Item label="Femenino" value={2} />
+                                    <Picker.Item
+                                        label="No especifica"
+                                        value={3}
                                     />
-                                </TouchableOpacity>
+                                </Picker>
                             </View>
                         </View>
 
@@ -486,12 +672,17 @@ const ECommerRegister = () => {
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
                             <View style={GlobalStyles.containerPicker}>
-                                <Picker style={GlobalStyles.picker}>
-                                    <Picker.Item
-                                        label="Identificación"
-                                        value={1}
-                                    />
-                                    <Picker.Item label="Cedula" value={2} />
+                                <Picker
+                                    style={GlobalStyles.picker}
+                                    selectedValue={state.identificationType}
+                                    onValueChange={value => {
+                                        dispatch({
+                                            type: "identificationType",
+                                            payload: value,
+                                        })
+                                    }}>
+                                    <Picker.Item label="Cedula" value={1} />
+                                    <Picker.Item label="Pasaporte" value={2} />
                                 </Picker>
                             </View>
                         </View>
@@ -539,13 +730,6 @@ const ECommerRegister = () => {
                                     ]}
                                     onPress={_ => {
                                         setModalCountry(true)
-                                        console.log(
-                                            `beneficiario: ${
-                                                beneficiaryStateReducer.beneticiaryFilter
-                                            } no beneficiario: ${
-                                                initialState.filter
-                                            }`,
-                                        )
                                     }}>
                                     <Text
                                         style={{
@@ -574,10 +758,13 @@ const ECommerRegister = () => {
                         </View>
 
                         <View style={classes.rowButtons}>
-                            <TouchableOpacity onPress={previousPage}>
-                                <Text style={classes.textBack}>Atras</Text>
+                            <TouchableOpacity onPress={goBack}>
+                                <Text style={classes.textBack}>
+                                    Cerrar sesión
+                                </Text>
                             </TouchableOpacity>
                             <TouchableOpacity
+                                // onPress={nextPage}
                                 onPress={nextPage}
                                 style={GlobalStyles.buttonPrimary}>
                                 <Text style={GlobalStyles.textButton}>
@@ -596,6 +783,52 @@ const ECommerRegister = () => {
                         </View>
 
                         <View style={classes.row}>
+                            <View style={classes.row}>
+                                <View style={classes.labelsRow}>
+                                    <Text style={classes.legendRow}>
+                                        Nacionalidad
+                                    </Text>
+                                    <Text style={classes.required}>
+                                        requerido
+                                    </Text>
+                                </View>
+
+                                <View style={GlobalStyles.containerPicker}>
+                                    <Picker
+                                        style={GlobalStyles.picker}
+                                        selectedValue={state.nationality}
+                                        onValueChange={value => {
+                                            dispatch({
+                                                type: "nationality",
+                                                payload: value,
+                                            })
+
+                                            const selectedNationality = countries.find(
+                                                item => item.name === value,
+                                            )
+
+                                            dispatch({
+                                                type: "phoneCodeNationality",
+                                                payload:
+                                                    selectedNationality.phoneCode,
+                                            })
+                                            dispatch({
+                                                type: "currencyNationality",
+                                                payload:
+                                                    selectedNationality.code,
+                                            })
+                                        }}>
+                                        {countries.map((item, index) => (
+                                            <Picker.Item
+                                                key={index}
+                                                label={item.name}
+                                                value={item.name}
+                                            />
+                                        ))}
+                                    </Picker>
+                                </View>
+                            </View>
+
                             <View style={classes.labelsRow}>
                                 <Text style={classes.legendRow}>
                                     Estado/Provincia/Región
@@ -671,67 +904,81 @@ const ECommerRegister = () => {
 
                 {state.tab === 2 && (
                     <ViewAnimation style={classes.tab} animation="fadeIn">
-                        <View style={classes.row}>
-                            <View style={classes.containerTitle}>
-                                <Text style={classes.textTitle}>
-                                    4. Preguntas de control
-                                </Text>
-                            </View>
-                        </View>
+                        {age > 18 ? (
+                            <>
+                                <View style={classes.row}>
+                                    <View style={classes.containerTitle}>
+                                        <Text style={classes.textTitle}>
+                                            4. Preguntas de control
+                                        </Text>
+                                    </View>
+                                </View>
 
-                        <View style={classes.row}>
-                            <View style={classes.labelsRow}>
-                                <Text style={classes.legendRow}>
-                                    ¿De dónde proviene su capital?
-                                </Text>
-                                <Text style={classes.required}>Requerido</Text>
-                            </View>
-                            <View style={GlobalStyles.containerPicker}>
-                                <Picker
-                                    style={GlobalStyles.picker}
-                                    onValueChange={value => {
-                                        dispatch({
-                                            type: "foundsOrigin",
-                                            payload: value,
-                                        })
-                                    }}
-                                    selectedValue={state.foundsOrigin}>
-                                    {professions.map((item, index) => (
-                                        <Picker.Item
-                                            key={index}
-                                            label={item.profession}
-                                            value={item.profession}
-                                        />
-                                    ))}
-                                </Picker>
-                            </View>
-                        </View>
+                                <View style={classes.row}>
+                                    <View style={classes.labelsRow}>
+                                        <Text style={classes.legendRow}>
+                                            ¿De dónde proviene su capital?
+                                        </Text>
+                                        <Text style={classes.required}>
+                                            Requerido
+                                        </Text>
+                                    </View>
+                                    <View style={GlobalStyles.containerPicker}>
+                                        <Picker
+                                            style={GlobalStyles.picker}
+                                            onValueChange={value => {
+                                                dispatch({
+                                                    type: "foundsOrigin",
+                                                    payload: value,
+                                                })
+                                            }}
+                                            selectedValue={state.foundsOrigin}>
+                                            {professions.map((item, index) => (
+                                                <Picker.Item
+                                                    key={index}
+                                                    label={item.profession}
+                                                    value={item.profession}
+                                                />
+                                            ))}
+                                        </Picker>
+                                    </View>
+                                </View>
 
-                        <View style={classes.row}>
-                            <View style={classes.labelsRow}>
-                                <Text style={classes.legendRow}>
-                                    ¿Cuál es su profesión actualmente?
-                                </Text>
-                                <Text style={classes.required}>Requerido</Text>
-                            </View>
-                            <TextInput
-                                style={classes.textInput}
-                                placeholder="Cual es tu profesion"
-                                placeholderTextColor="#CCC"
-                                value={state.profession}
-                                onChangeText={str =>
-                                    dispatch({
-                                        type: "profession",
-                                        payload: str,
-                                    })
-                                }
-                            />
-                        </View>
+                                <View style={classes.row}>
+                                    <View style={classes.labelsRow}>
+                                        <Text style={classes.legendRow}>
+                                            ¿Cuál es su profesión actualmente?
+                                        </Text>
+                                        <Text style={classes.required}>
+                                            Requerido
+                                        </Text>
+                                    </View>
+                                    <TextInput
+                                        style={classes.textInput}
+                                        placeholder="Cual es tu profesion"
+                                        placeholderTextColor="#CCC"
+                                        value={state.profession}
+                                        onChangeText={str =>
+                                            dispatch({
+                                                type: "profession",
+                                                payload: str,
+                                            })
+                                        }
+                                    />
+                                </View>
+                            </>
+                        ) : null}
 
                         <View style={classes.containerTitle}>
-                            <Text style={classes.textTitle}>
-                                5. Foto de perfil y verificación
-                            </Text>
+                            {age < 18 ? (
+                                <Text style={classes.textTitle}>
+                                    4. Foto de perfil y verificación
+                                </Text>
+                            ) : (
+                                <Text style={classes.textTitle}>
+                                    5. Foto de perfil y verificación
+                                </Text>
+                            )}
                         </View>
 
                         <View style={classes.position}>
@@ -741,10 +988,8 @@ const ECommerRegister = () => {
                                 </Text>
                             </View>
                             <UploadImage
-                                value={state.profilePictureId}
-                                onChange={_ =>
-                                    uploadImageView("profilePictureId")
-                                }
+                                value={avatar}
+                                onChange={_ => uploadImageView("avatar")}
                             />
                         </View>
 
@@ -755,52 +1000,78 @@ const ECommerRegister = () => {
                                 </Text>
                             </View>
                             <UploadImage
-                                value={state.identificationPictureId}
+                                value={identificationPhoto}
                                 onChange={_ =>
-                                    uploadImageView("identificationPictureId")
+                                    uploadImageView("identificationPhoto")
                                 }
                             />
                         </View>
 
-                        <View style={classes.containerTitle}>
-                            <Text style={classes.textTitle}>
-                                6. Beneficiario
-                            </Text>
-                        </View>
-                        <View style={classes.row}>
-                            <View style={classes.checkContainer}>
-                                <Text style={classes.legendSeePassword}>
-                                    Añadir Beneficiario
-                                </Text>
-                                <CheckBox
-                                    checkBoxColor={Colors.colorYellow}
-                                    isChecked={CheckState}
-                                    onClick={_ => setCheckState(!CheckState)}
-                                />
-                            </View>
-                        </View>
+                        {age > 18 && (
+                            <>
+                                <View style={classes.containerTitle}>
+                                    <Text style={classes.textTitle}>
+                                        6. Beneficiario
+                                    </Text>
+                                </View>
+                                <View style={classes.row}>
+                                    <View style={classes.checkContainer}>
+                                        <Text style={classes.legendSeePassword}>
+                                            Añadir Beneficiario
+                                        </Text>
+                                        <CheckBox
+                                            checkBoxColor={Colors.colorYellow}
+                                            isChecked={CheckState}
+                                            onClick={_ =>
+                                                setCheckState(!CheckState)
+                                            }
+                                        />
+                                    </View>
+                                </View>
+                            </>
+                        )}
 
-                        <View style={classes.rowButtons}>
-                            <TouchableOpacity onPress={previousPage}>
-                                <Text style={classes.textBack}>Atras</Text>
-                            </TouchableOpacity>
+                        {age < 18 || CheckState ? (
+                            <>
+                                <View style={classes.rowButtons}>
+                                    <TouchableOpacity onPress={previousPage}>
+                                        <Text style={classes.textBack}>
+                                            Atras
+                                        </Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        onPress={nextPage}
+                                        style={GlobalStyles.buttonPrimary}>
+                                        <Text style={GlobalStyles.textButton}>
+                                            Siguiente
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </>
+                        ) : (
                             <TouchableOpacity
-                                onPress={nextPage}
+                                onPress={submitInformation}
                                 style={GlobalStyles.buttonPrimary}>
                                 <Text style={GlobalStyles.textButton}>
-                                    Siguiente
+                                    Guardar
                                 </Text>
                             </TouchableOpacity>
-                        </View>
+                        )}
                     </ViewAnimation>
                 )}
 
                 {state.tab === 3 && (
                     <ViewAnimation style={classes.tab} animation="fadeIn">
                         <View style={classes.containerTitle}>
-                            <Text style={classes.containerTitleText}>
-                                Información del Beneficiario
-                            </Text>
+                            {age > 18 || CheckState ? (
+                                <Text style={classes.containerTitleText}>
+                                    Información del Beneficiario
+                                </Text>
+                            ) : (
+                                <Text style={classes.containerTitleText}>
+                                    Información del Tutor
+                                </Text>
+                            )}
                         </View>
 
                         <View style={classes.containerTitle}>
@@ -852,6 +1123,39 @@ const ECommerRegister = () => {
                         <View style={classes.row}>
                             <View style={classes.labelsRow}>
                                 <Text style={classes.legendRow}>
+                                    Seleccione su genero
+                                </Text>
+                                <Text style={classes.required}>Requerido</Text>
+                            </View>
+                            <View style={GlobalStyles.containerPicker}>
+                                <Picker
+                                    style={GlobalStyles.picker}
+                                    selectedValue={
+                                        beneficiaryState.beneficiaryGender
+                                    }
+                                    onValueChange={value => {
+                                        dispatchBeneficiary({
+                                            type: "beneficiaryGender",
+                                            payload: value,
+                                        })
+                                    }}>
+                                    <Picker.Item
+                                        label="Seleccione su genero"
+                                        value={3}
+                                    />
+                                    <Picker.Item label="Masculino" value={1} />
+                                    <Picker.Item label="Femenino" value={2} />
+                                    <Picker.Item
+                                        label="No especifica"
+                                        value={3}
+                                    />
+                                </Picker>
+                            </View>
+                        </View>
+
+                        <View style={classes.row}>
+                            <View style={classes.labelsRow}>
+                                <Text style={classes.legendRow}>
                                     Fecha de nacimiento
                                 </Text>
                                 <Text style={classes.required}>Requerido</Text>
@@ -892,12 +1196,20 @@ const ECommerRegister = () => {
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
                             <View style={GlobalStyles.containerPicker}>
-                                <Picker style={GlobalStyles.picker}>
-                                    <Picker.Item
-                                        label="Identificación"
-                                        value={1}
-                                    />
-                                    <Picker.Item label="Cedula" value={2} />
+                                <Picker
+                                    style={GlobalStyles.picker}
+                                    selectedValue={
+                                        beneficiaryState.beneficiaryIdentificationType
+                                    }
+                                    onValueChange={value => {
+                                        dispatchBeneficiary({
+                                            type:
+                                                "beneficiaryIdentificationType",
+                                            payload: value,
+                                        })
+                                    }}>
+                                    <Picker.Item label="Cedula" value={1} />
+                                    <Picker.Item label="Pasaporte" value={2} />
                                 </Picker>
                             </View>
                         </View>
@@ -945,12 +1257,17 @@ const ECommerRegister = () => {
                                             justifyContent: "center",
                                         },
                                     ]}
-                                    onPress={_ => setModalCountry(true)}>
+                                    onPress={_ =>
+                                        setModalCountryBeneficiary(true)
+                                    }>
                                     <Text
                                         style={{
                                             color: Colors.colorYellow,
                                         }}>
-                                        {state.country.phoneCode}
+                                        {
+                                            beneficiaryState.beneficiaryCountry
+                                                .phoneCode
+                                        }
                                     </Text>
                                 </TouchableOpacity>
 
@@ -988,12 +1305,17 @@ const ECommerRegister = () => {
                                             justifyContent: "center",
                                         },
                                     ]}
-                                    onPress={_ => setModalCountry(true)}>
+                                    onPress={_ =>
+                                        setModalCountryBeneficiary(true)
+                                    }>
                                     <Text
                                         style={{
                                             color: Colors.colorYellow,
                                         }}>
-                                        {state.country.phoneCode}
+                                        {
+                                            beneficiaryState.beneficiaryCountry
+                                                .phoneCode
+                                        }
                                     </Text>
                                 </TouchableOpacity>
 
@@ -1056,6 +1378,17 @@ const ECommerRegister = () => {
                 )}
                 {state.tab === 4 && (
                     <ViewAnimation style={classes.tab} animation="fadeIn">
+                        <View style={classes.containerTitle}>
+                            {age > 18 || CheckState ? (
+                                <Text style={classes.containerTitleText}>
+                                    Información del Beneficiario
+                                </Text>
+                            ) : (
+                                <Text style={classes.containerTitleText}>
+                                    Información del Tutor
+                                </Text>
+                            )}
+                        </View>
                         <View style={classes.containerTitle}>
                             <Text style={classes.textTitle}>
                                 3. Nacionalidad y residencia
@@ -1220,7 +1553,6 @@ const ECommerRegister = () => {
                                 <Text style={classes.legendRow}>
                                     Dirección (Línea 2)
                                 </Text>
-                                <Text style={classes.required}>Requerido</Text>
                             </View>
                             <TextInput
                                 style={classes.textInput}
@@ -1277,6 +1609,17 @@ const ECommerRegister = () => {
 
                 {state.tab === 5 && (
                     <ViewAnimation style={classes.tab} animation="fadeIn">
+                        <View style={classes.containerTitle}>
+                            {age > 18 || CheckState ? (
+                                <Text style={classes.containerTitleText}>
+                                    Información del Beneficiario
+                                </Text>
+                            ) : (
+                                <Text style={classes.containerTitleText}>
+                                    Información del Tutor
+                                </Text>
+                            )}
+                        </View>
                         <View style={classes.row}>
                             <View style={classes.containerTitle}>
                                 <Text style={classes.textTitle}>
@@ -1293,12 +1636,24 @@ const ECommerRegister = () => {
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
                             <View style={GlobalStyles.containerPicker}>
-                                <Picker style={GlobalStyles.picker}>
-                                    <Picker.Item
-                                        label="seleccionar respuesta"
-                                        value={1}
-                                    />
-                                    <Picker.Item label="Cedula" value={2} />
+                                <Picker
+                                    style={GlobalStyles.picker}
+                                    onValueChange={value => {
+                                        dispatchBeneficiary({
+                                            type: "beneficiaryFoundsOrigin",
+                                            payload: value,
+                                        })
+                                    }}
+                                    selectedValue={
+                                        beneficiaryState.beneficiaryFoundsOrigin
+                                    }>
+                                    {professions.map((item, index) => (
+                                        <Picker.Item
+                                            key={index}
+                                            label={item.profession}
+                                            value={item.profession}
+                                        />
+                                    ))}
                                 </Picker>
                             </View>
                         </View>
@@ -1332,12 +1687,28 @@ const ECommerRegister = () => {
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
                             <View style={GlobalStyles.containerPicker}>
-                                <Picker style={GlobalStyles.picker}>
+                                <Picker
+                                    style={GlobalStyles.picker}
+                                    selectedValue={
+                                        beneficiaryState.beneficiaryRelationship
+                                    }
+                                    onValueChange={value =>
+                                        dispatchBeneficiary({
+                                            type: "beneficiaryRelationship",
+                                            payload: value,
+                                        })
+                                    }>
                                     <Picker.Item
-                                        label="seleccionar respuesta"
+                                        label="Padre / Madre"
                                         value={1}
                                     />
-                                    <Picker.Item label="Cedula" value={2} />
+                                    <Picker.Item
+                                        label="Hermano (a)"
+                                        value={2}
+                                    />
+                                    <Picker.Item label="Tío (a)" value={3} />
+                                    <Picker.Item label="Abuelo (a)" value={4} />
+                                    <Picker.Item label="Otro" value={5} />
                                 </Picker>
                             </View>
                         </View>
@@ -1355,13 +1726,9 @@ const ECommerRegister = () => {
                                 </Text>
                             </View>
                             <UploadImage
-                                value={
-                                    beneficiaryState.beneficiaryProfilePictureId
-                                }
+                                value={beneficiaryAvatar}
                                 onChange={_ =>
-                                    uploadImageViewBeneficiary(
-                                        "beneficiaryProfilePictureId",
-                                    )
+                                    uploadImageView("beneficiaryAvatar")
                                 }
                             />
                         </View>
@@ -1372,12 +1739,10 @@ const ECommerRegister = () => {
                                 </Text>
                             </View>
                             <UploadImage
-                                value={
-                                    beneficiaryState.beneficiaryIdentificationPictureId
-                                }
+                                value={beneficiaryIdentificationPhoto}
                                 onChange={_ =>
-                                    uploadImageViewBeneficiary(
-                                        "beneficiaryIdentificationPictureId",
+                                    uploadImageView(
+                                        "beneficiaryIdentificationPhoto",
                                     )
                                 }
                             />
@@ -1388,10 +1753,10 @@ const ECommerRegister = () => {
                                 <Text style={classes.textBack}>Atras</Text>
                             </TouchableOpacity>
                             <TouchableOpacity
-                                onPress={nextPage}
+                                onPress={submitInformation}
                                 style={GlobalStyles.buttonPrimary}>
                                 <Text style={GlobalStyles.textButton}>
-                                    Siguiente
+                                    Guardar
                                 </Text>
                             </TouchableOpacity>
                         </View>
@@ -1424,8 +1789,39 @@ const ECommerRegister = () => {
                     />
                 </View>
             </Modal>
+
+            <Modal
+                isVisible={modalCoutryBeneficiary}
+                onBackdropPress={_ => setModalCountryBeneficiary(false)}
+                onBackButtonPress={_ => setModalCountryBeneficiary(false)}>
+                <View style={classes.containerModal}>
+                    <TextInput
+                        style={classes.textInput}
+                        placeholder="Buscar"
+                        placeholderTextColor="#FFF"
+                        value={beneficiaryState.beneticiaryFilter}
+                        onChangeText={str =>
+                            dispatchBeneficiary({
+                                type: "beneticiaryFilter",
+                                payload: str,
+                            })
+                        }
+                    />
+
+                    <View style={{ height: 10 }} />
+
+                    <FlatList
+                        keyboardShouldPersistTaps="always"
+                        data={countries}
+                        renderItem={ItemCountryBenficiary}
+                        keyExtractor={(_, i) => i.toString()}
+                    />
+                </View>
+            </Modal>
+
+            <ModalKyc />
         </Container>
     )
 }
 
-export default ECommerRegister
+export default KycUser

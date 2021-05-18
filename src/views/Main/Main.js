@@ -21,6 +21,7 @@ import {
 } from "react-native"
 import { Image } from "react-native-animatable"
 import { useNavigation } from "@react-navigation/native"
+import ModalKyc from "../../components/ModalKyc/ModalKyc"
 
 // Import constant and functions
 import * as CryptoJS from "react-native-crypto-js"
@@ -337,6 +338,10 @@ const Main = () => {
     const [state, dispatch] = useReducer(reducer, initialState)
     const [indexActive, setIndexActive] = useState(0)
     const { globalStorage } = store.getState()
+    const { navigate } = useNavigation()
+
+    const { global } = store.getState()
+    console.log("Global", global)
 
     /**
      * Metodo que configura el componente, inicializando todas las tareas
@@ -356,6 +361,10 @@ const Main = () => {
             const dataStorage = {
                 ...globalStorage,
                 wallets: data,
+            }
+
+            if (global.kyc_type === 0) {
+                navigate("Kyc")
             }
 
             store.dispatch({ type: SETSTORAGE, payload: dataStorage })
@@ -418,7 +427,7 @@ const Main = () => {
                 <>
                     <FlatList
                         data={state.wallets}
-                        keyExtractor={(_, i) => i}
+                        keyExtractor={(_, i) => i.toString()}
                         renderItem={({ item }) => <ItemWallet data={item} />}
                     />
                 </>

@@ -13,7 +13,7 @@ export default {
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: Colors.colorMain,
-        width: '82%',
+        width: "82%",
         borderColor: Colors.colorYellow,
         paddingHorizontal: RFValue(20),
         marginLeft: 10,
@@ -26,7 +26,7 @@ export default {
     },
 
     textInput: {
-        backgroundColor: Colors.colorBlack,
+        backgroundColor: Colors.colorMain,
         borderRadius: 5,
         borderWidth: 2,
         borderColor: Colors.colorYellow,
@@ -67,7 +67,7 @@ export default {
         borderRadius: 10,
         borderBottomWidth: 2,
         borderColor: Colors.colorYellow,
-        padding: 10
+        padding: 10,
     },
     column: {
         flexDirection: "row",

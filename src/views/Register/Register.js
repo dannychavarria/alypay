@@ -41,6 +41,7 @@ import validator from "validator"
 import sendAnimation from "../../animations/send.json"
 import logo from "../../static/alypay.png"
 import videoclip from "../../static/videos/cover.mp4"
+import LogoFunko from "../../static/AlyFunko.png"
 
 const initialState = {
     // Datos para el fomulario
@@ -87,6 +88,8 @@ const Register = ({ navigation }) => {
     // Estados que permiten previsualizar las contraseñas
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+
+    const [showModal, setShowModal] = useState(false)
 
     /**Metodo que configura todo el componente */
     const configurateComponent = async () => {
@@ -279,7 +282,7 @@ const Register = ({ navigation }) => {
                     }
 
                     // ejecutamos el servicio
-                    onSubmit()
+                    //onSubmit()
 
                     return false
                 }
@@ -312,6 +315,10 @@ const Register = ({ navigation }) => {
     /** Funcion que modifica el estado que muestra la ventana modal de terminos y condiciones */
     const toggleModalTerms = () =>
         dispatch({ type: "showModalTerms", payload: !state.showModalTerms })
+
+    const shoConfirm = () => {
+        setShowModal(true)
+    }
 
     useEffect(() => {
         configurateComponent()
@@ -703,7 +710,7 @@ const Register = ({ navigation }) => {
                                 </TouchableOpacity>
 
                                 <TouchableOpacity
-                                    onPress={nextPage}
+                                    onPress={shoConfirm}
                                     style={[
                                         GlobalStyles.buttonPrimaryLine,
                                         { flex: 1 },
@@ -895,6 +902,51 @@ const Register = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
             </Modal>
+
+            <Modal
+                isVisible={showModal}
+                animationIn="fadeIn"
+                animationOut="fadeOut"
+                backdropOpacity={0.95}
+                onBackButtonPress={_ => setShowModal(false)}>
+                <View style={styles.containerModalSuccess1}>
+                    <Image style={styles.logoSuccess} source={logo} />
+
+                    <View style={[styles.rowImage, { alignItems: "center" }]}>
+                        <View style={{ alignItems: "center" }}>
+                            <Text style={styles.textTitleSuccess}>
+                                Su cuenta ya esta casi lista
+                            </Text>
+
+                            <Text style={styles.subTitle}>
+                                Enviaremos un correo de activacion para
+                                verificar que eres tu
+                            </Text>
+                        </View>
+
+                        <View style={{ paddingTop: 15 }}>
+                            <Image
+                                style={styles.logoSuccess}
+                                source={LogoFunko}
+                            />
+                        </View>
+                    </View>
+
+                    <View style={{ alignItems: "center" }}>
+                        <View style={styles.row}>
+                            <Text style={styles.textTitleSuccess}>
+                                ¡Gracias por registrarse con nosotros!
+                            </Text>
+                        </View>
+                    </View>
+
+                    <TouchableOpacity
+                        style={styles.buttonSuccess}
+                        onPress={onSubmit}>
+                        <Text style={GlobalStyles.textButton}>Listo</Text>
+                    </TouchableOpacity>
+                </View>
+            </Modal>
         </KeyboardAvoidingView>
     )
 }
@@ -1023,6 +1075,16 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
 
+    containerModalSuccess1: {
+        alignSelf: "center",
+        alignItems: "center",
+        backgroundColor: Colors.colorBlack,
+        borderRadius: 10,
+        padding: 10,
+        height: "80%",
+        width: "90%",
+    },
+
     animationSend: {
         height: RFValue(128),
         width: RFValue(128),
@@ -1096,6 +1158,21 @@ const styles = StyleSheet.create({
     touchableCol: {
         flex: 0.1,
         alignItems: "flex-end",
+    },
+    logoSuccess: {
+        resizeMode: "contain",
+        height: RFValue(128),
+        width: RFValue(256),
+    },
+    rowImage: {
+        flexDirection: "column",
+        alignItems: "center",
+    },
+    subTitle: {
+        color: "#FFF",
+        fontSize: RFValue(14),
+        textAlign: "center",
+        //marginVertical: RFValue(10),
     },
 })
 
