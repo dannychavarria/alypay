@@ -55,6 +55,8 @@ const MapsCommerce = () => {
 
     const [markersRef, setMarkersRef] = useState([])
 
+    const [carouselRef, setCarouselRef] = useState()
+
     // Funcion que permite dar los permisos para la Geolocalizacion
     const ConfigureLocation = async () => {
         try {
@@ -226,6 +228,10 @@ const MapsCommerce = () => {
 
         markersRef[index].showCallout()
     }
+    //Se cambia el tap del carusel segun el index
+    const changeTap = index => {
+        carouselRef.snapToItem(index)
+    }
 
     return (
         <View style={styles.container}>
@@ -285,6 +291,7 @@ const MapsCommerce = () => {
                         sliderWidth={Dimensions.get("window").width}
                         removeClippedSubviews={false}
                         layout={"default"}
+                        ref={ref => setCarouselRef(ref)}
                         onSnapToItem={index => onChangeTap(index)} //mandar el index de la targeta actual a la funcion
                     />
 
@@ -294,6 +301,7 @@ const MapsCommerce = () => {
                         setNewLatitude={setNewLatitude}
                         click={click}
                         setClick={setClick}
+                        changeTap={changeTap}
                     />
                 </>
             )}
