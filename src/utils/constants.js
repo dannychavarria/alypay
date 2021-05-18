@@ -113,7 +113,7 @@ const http = axios.create({
             Alert.alert("AlyPay", "Tu sesion ha caducado", [
                 {
                     text: "Ok",
-                    onPress: () => logOutApp(), 
+                    onPress: () => logOutApp(),
                 },
             ])
 
@@ -435,7 +435,7 @@ export const getHeadersMultipartFormData = () => {
 
     return {
         headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data",
             "x-auth-token": token,
         },
     }

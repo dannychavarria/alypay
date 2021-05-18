@@ -269,7 +269,7 @@ const KycUser = ({ navigation }) => {
                     ? avatar.uri
                     : avatar.uri.replace("file://", ""),
         }
-        data.append("avatar", JSON.stringify(myAvatar))
+        data.append("avatar", myAvatar)
 
         const myIdentificationPhoto = {
             name: identificationPhoto.fileName,
@@ -279,38 +279,29 @@ const KycUser = ({ navigation }) => {
                     ? identificationPhoto.uri
                     : identificationPhoto.uri.replace("file://", ""),
         }
-        data.append(
-            "identificationPhoto",
-            JSON.stringify(myIdentificationPhoto),
-        )
+        data.append("identificationPhoto", myIdentificationPhoto)
 
         if (CheckState) {
-            data.append(
-                "beneficiaryAvatar",
-                JSON.stringify({
-                    name: beneficiaryAvatar.fileName,
-                    type: beneficiaryAvatar.type,
-                    uri:
-                        Platform.OS === "android"
-                            ? beneficiaryAvatar.uri
-                            : beneficiaryAvatar.uri.replace("file://", ""),
-                }),
-            )
+            data.append("beneficiaryAvatar", {
+                name: beneficiaryAvatar.fileName,
+                type: beneficiaryAvatar.type,
+                uri:
+                    Platform.OS === "android"
+                        ? beneficiaryAvatar.uri
+                        : beneficiaryAvatar.uri.replace("file://", ""),
+            })
 
-            data.append(
-                "beneficiaryIdentificationPhoto",
-                JSON.stringify({
-                    name: beneficiaryIdentificationPhoto.fileName,
-                    type: beneficiaryIdentificationPhoto.type,
-                    uri:
-                        Platform.OS === "android"
-                            ? beneficiaryIdentificationPhoto.uri
-                            : beneficiaryIdentificationPhoto.uri.replace(
-                                  "file://",
-                                  "",
-                              ),
-                }),
-            )
+            data.append("beneficiaryIdentificationPhoto", {
+                name: beneficiaryIdentificationPhoto.fileName,
+                type: beneficiaryIdentificationPhoto.type,
+                uri:
+                    Platform.OS === "android"
+                        ? beneficiaryIdentificationPhoto.uri
+                        : beneficiaryIdentificationPhoto.uri.replace(
+                              "file://",
+                              "",
+                          ),
+            })
         }
 
         Object.keys(body).forEach(key => {
