@@ -53,8 +53,10 @@ const MapsCommerce = () => {
     //Estado para referenciar al MapView y poder usar sus metodos
     const [ref, setRef] = useState()
 
+    // Estado que almacena la referencia de los markers de los comercios para mostrar su nombre
     const [markersRef, setMarkersRef] = useState([])
 
+    // Estado que almacena la referencia de los comercios para posicionar la card al hacer la busqueda
     const [carouselRef, setCarouselRef] = useState()
 
     // Funcion que permite dar los permisos para la Geolocalizacion
@@ -192,6 +194,24 @@ const MapsCommerce = () => {
         )
     }, [])
 
+    /**Funcion para setear la ubicacion de lal item que se muestra en el carrusel
+     *
+     * @param {newLatitude, newLongitude} index
+     */
+    const onChangeTap = index => {
+        var commerce = info[index]
+
+        setNewLatitude(commerce.latitude)
+        setNewLongitude(commerce.longitude)
+
+        markersRef[index].showCallout()
+    }
+
+    //Se cambia el tap del carusel segun el index
+    const changeTap = index => {
+        carouselRef.snapToItem(index)
+    }
+
     useEffect(() => {
         ConfigureLocation()
         loader(true)
@@ -202,6 +222,7 @@ const MapsCommerce = () => {
             informationCommerce()
         }
     }, [state.latitude, state.longitude])
+
     /**
      * useEffect para cambiar la posicion de la camara si cambian los estados de:
      * @param {newLongitude, newLatitude} index
@@ -216,22 +237,6 @@ const MapsCommerce = () => {
             })
         }
     }, [newLatitude, newLongitude, click])
-    /**Funcion para setear la ubicacion de lal item que se muestra en el carrusel
-     *
-     * @param {newLatitude, newLongitude} index
-     */
-    const onChangeTap = index => {
-        var commerce = info[index]
-
-        setNewLatitude(commerce.latitude)
-        setNewLongitude(commerce.longitude)
-
-        markersRef[index].showCallout()
-    }
-    //Se cambia el tap del carusel segun el index
-    const changeTap = index => {
-        carouselRef.snapToItem(index) 
-    }
 
     return (
         <View style={styles.container}>
