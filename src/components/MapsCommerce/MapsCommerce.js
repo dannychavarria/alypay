@@ -230,7 +230,7 @@ const MapsCommerce = () => {
     }
     //Se cambia el tap del carusel segun el index
     const changeTap = index => {
-        carouselRef.snapToItem(index)
+        carouselRef.snapToItem(index) 
     }
 
     return (

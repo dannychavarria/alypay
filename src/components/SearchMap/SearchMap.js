@@ -28,7 +28,7 @@ const SearchMap = ({
                     const { name_commerce } = item
                     return name_commerce
                         .toLowerCase()
-                        .includes(value.toLowerCase())
+                        .includes(value.toLowerCase()) 
                 }),
             )
         }
