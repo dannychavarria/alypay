@@ -95,9 +95,9 @@ export const Colors = {
 const PORT = "3000"
 
 /**Direction for server */
-export const serverAddress = "https://alypay.uc.r.appspot.com"
+// export const serverAddress = "https://alypay.uc.r.appspot.com"
 // export const serverAddress = "https://root-anvil-299019.uc.r.appspot.com"
-// export const serverAddress = "http://192.168.0.110:3085"
+export const serverAddress = `http://10.0.2.2:3000`
 export const serverSpeedtradingsURL = "https://ardent-medley-272823.appspot.com"
 
 /**
@@ -113,7 +113,7 @@ const http = axios.create({
             Alert.alert("AlyPay", "Tu sesion ha caducado", [
                 {
                     text: "Ok",
-                    onPress: () => logOutApp(), 
+                    onPress: () => logOutApp(),
                 },
             ])
 
@@ -435,7 +435,7 @@ export const getHeadersMultipartFormData = () => {
 
     return {
         headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data",
             "x-auth-token": token,
         },
     }
@@ -504,3 +504,12 @@ export const configTouchIDAuth = {
     passcodeFallback: true,
     cancelText: "CANCELAR",
 }
+
+/**
+ * 
+ * @author msobalvarro
+ * @summary Funcion que valida direccion de archivos del dispositovp
+ * @param {String} uri 
+ * @returns String
+ */
+export const formatURI = uri => Platform.OS === "android" ? uri : uri.replace("file://", "",)

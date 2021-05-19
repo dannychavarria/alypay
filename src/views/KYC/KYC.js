@@ -30,6 +30,7 @@ import {
     http,
     successMessage,
     logOutApp,
+    formatURI,
 } from "../../utils/constants"
 import countries from "../../utils/countries.json"
 import professions from "../../utils/profession.json"
@@ -177,9 +178,7 @@ const KycUser = ({ navigation }) => {
                 gender: state.gender,
                 idTypeIdentification: state.identificationType,
                 identificationNumber: state.identificationNumber,
-                alternativeNumber: `${state.country.phoneCode} ${
-                    state.alternativeNumber
-                }`,
+                alternativeNumber: `${state.country.phoneCode} ${state.alternativeNumber}`,
                 nationality: state.nationality,
                 nationalityPhoneCode: state.phoneCodeNationality,
                 nationalityCurrencySymbol: state.currencyNationality,
@@ -236,8 +235,6 @@ const KycUser = ({ navigation }) => {
                 }
             }
 
-            // console.log("dataSent", dataSent)
-
             submitInformationSer(
                 createFormData(
                     avatar,
@@ -264,58 +261,32 @@ const KycUser = ({ navigation }) => {
         const myAvatar = {
             name: avatar.fileName,
             type: avatar.type,
-            uri:
-                Platform.OS === "android"
-                    ? avatar.uri
-                    : avatar.uri.replace("file://", ""),
+            uri: formatURI(avatar.uri)
         }
-        data.append("avatar", JSON.stringify(myAvatar))
+        data.append("avatar", myAvatar)
 
         const myIdentificationPhoto = {
             name: identificationPhoto.fileName,
             type: identificationPhoto.type,
-            uri:
-                Platform.OS === "android"
-                    ? identificationPhoto.uri
-                    : identificationPhoto.uri.replace("file://", ""),
+            uri: formatURI(identificationPhoto.uri)
         }
-        data.append(
-            "identificationPhoto",
-            JSON.stringify(myIdentificationPhoto),
-        )
+        data.append("identificationPhoto", myIdentificationPhoto)
 
         if (CheckState) {
-            data.append(
-                "beneficiaryAvatar",
-                JSON.stringify({
-                    name: beneficiaryAvatar.fileName,
-                    type: beneficiaryAvatar.type,
-                    uri:
-                        Platform.OS === "android"
-                            ? beneficiaryAvatar.uri
-                            : beneficiaryAvatar.uri.replace("file://", ""),
-                }),
-            )
+            data.append("beneficiaryAvatar", {
+                name: beneficiaryAvatar.fileName,
+                type: beneficiaryAvatar.type,
+                uri: formatURI(beneficiaryAvatar.uri)
+            })
 
-            data.append(
-                "beneficiaryIdentificationPhoto",
-                JSON.stringify({
-                    name: beneficiaryIdentificationPhoto.fileName,
-                    type: beneficiaryIdentificationPhoto.type,
-                    uri:
-                        Platform.OS === "android"
-                            ? beneficiaryIdentificationPhoto.uri
-                            : beneficiaryIdentificationPhoto.uri.replace(
-                                  "file://",
-                                  "",
-                              ),
-                }),
-            )
+            data.append("beneficiaryIdentificationPhoto", {
+                name: beneficiaryIdentificationPhoto.fileName,
+                type: beneficiaryIdentificationPhoto.type,
+                uri: formatURI(beneficiaryIdentificationPhoto.uri)
+            })
         }
 
-        Object.keys(body).forEach(key => {
-            data.append(key, body[key])
-        })
+        Object.keys(body).forEach(i => data.append(i, body[i]))
 
         return data
     }
@@ -353,7 +324,7 @@ const KycUser = ({ navigation }) => {
         if (
             item.name.length > 0 &&
             item.name.toLowerCase().search(state.filter.toLocaleLowerCase()) >
-                -1
+            -1
         ) {
             return (
                 <TouchableOpacity
@@ -591,7 +562,7 @@ const KycUser = ({ navigation }) => {
             [
                 {
                     text: "Cancelar",
-                    onPress: () => {},
+                    onPress: () => { },
                 },
                 {
                     text: "Salir",
