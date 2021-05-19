@@ -110,6 +110,7 @@ const beneficiaryStateReducer = {
 
 const optionsOpenCamera = {
     noData: true,
+    includeBase64: true,
     maxHeight: 1024,
     maxWidth: 1024,
     quality: 0.6,
@@ -119,6 +120,7 @@ const optionsOpenCamera = {
         path: "Pictures/myAppPicture/", //-->this is FUCK neccesary
         privateDirectory: true,
     },
+    cameraType: "back",
 }
 
 const reducer = (state, action) => {
@@ -262,6 +264,7 @@ const KycUser = ({ navigation }) => {
         const data = new FormData()
 
         const myAvatar = {
+            data: avatar.base64,
             name: avatar.fileName,
             type: avatar.type,
             uri:
@@ -270,8 +273,10 @@ const KycUser = ({ navigation }) => {
                     : avatar.uri.replace("file://", ""),
         }
         data.append("avatar", JSON.stringify(myAvatar))
+        //data.append("infoAVatar", JSON.stringify(myAvatar))
 
         const myIdentificationPhoto = {
+            data: identificationPhoto.base64,
             name: identificationPhoto.fileName,
             type: identificationPhoto.type,
             uri:
@@ -285,32 +290,28 @@ const KycUser = ({ navigation }) => {
         )
 
         if (CheckState) {
-            data.append(
-                "beneficiaryAvatar",
-                JSON.stringify({
-                    name: beneficiaryAvatar.fileName,
-                    type: beneficiaryAvatar.type,
-                    uri:
-                        Platform.OS === "android"
-                            ? beneficiaryAvatar.uri
-                            : beneficiaryAvatar.uri.replace("file://", ""),
-                }),
-            )
+            data.append("beneficiaryAvatar", {
+                data: beneficiaryAvatar.base64,
+                name: beneficiaryAvatar.fileName,
+                type: beneficiaryAvatar.type,
+                uri:
+                    Platform.OS === "android"
+                        ? beneficiaryAvatar.uri
+                        : beneficiaryAvatar.uri.replace("file://", ""),
+            })
 
-            data.append(
-                "beneficiaryIdentificationPhoto",
-                JSON.stringify({
-                    name: beneficiaryIdentificationPhoto.fileName,
-                    type: beneficiaryIdentificationPhoto.type,
-                    uri:
-                        Platform.OS === "android"
-                            ? beneficiaryIdentificationPhoto.uri
-                            : beneficiaryIdentificationPhoto.uri.replace(
-                                  "file://",
-                                  "",
-                              ),
-                }),
-            )
+            data.append("beneficiaryIdentificationPhoto", {
+                data: beneficiaryIdentificationPhoto.base64,
+                name: beneficiaryIdentificationPhoto.fileName,
+                type: beneficiaryIdentificationPhoto.type,
+                uri:
+                    Platform.OS === "android"
+                        ? beneficiaryIdentificationPhoto.uri
+                        : beneficiaryIdentificationPhoto.uri.replace(
+                              "file://",
+                              "",
+                          ),
+            })
         }
 
         Object.keys(body).forEach(key => {
