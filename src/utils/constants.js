@@ -113,7 +113,7 @@ const http = axios.create({
             Alert.alert("AlyPay", "Tu sesion ha caducado", [
                 {
                     text: "Ok",
-                    onPress: () => logOutApp(), 
+                    onPress: () => logOutApp(),
                 },
             ])
 
