@@ -341,7 +341,6 @@ const Main = () => {
     const { navigate } = useNavigation()
 
     const { global } = store.getState()
-    console.log("Global", global)
 
     /**
      * Metodo que configura el componente, inicializando todas las tareas

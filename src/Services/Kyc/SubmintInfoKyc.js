@@ -14,7 +14,7 @@ export default async function submitInfo(dataSent) {
         const { navigation } = store.getState()
 
         const { data: response } = await http.post(
-            "/kyc",
+            "/test/files",
             dataSent,
             getHeadersMultipartFormData(),
         )

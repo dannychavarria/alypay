@@ -29,7 +29,7 @@ const ItemComerce = ({ data = {} }) => {
         <>
             <TouchableOpacity style={styles.container} onPress={onInformacion}>
                 <Image
-                    style={[styles.logo, Sty]}
+                    style={styles.logo}
                     source={images === null ? avatar : { uri: parsedImage }}
                 />
 
