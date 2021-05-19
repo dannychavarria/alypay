@@ -111,6 +111,7 @@ const beneficiaryStateReducer = {
 
 const optionsOpenCamera = {
     noData: true,
+    includeBase64: true,
     maxHeight: 1024,
     maxWidth: 1024,
     quality: 0.6,
@@ -120,6 +121,7 @@ const optionsOpenCamera = {
         path: "Pictures/myAppPicture/", //-->this is FUCK neccesary
         privateDirectory: true,
     },
+    cameraType: "back",
 }
 
 const reducer = (state, action) => {
@@ -259,13 +261,15 @@ const KycUser = ({ navigation }) => {
         const data = new FormData()
 
         const myAvatar = {
+            data: avatar.base64,
             name: avatar.fileName,
             type: avatar.type,
             uri: formatURI(avatar.uri)
         }
-        data.append("avatar", myAvatar)
+        data.append("avatar", JSON.stringify(myAvatar))
 
         const myIdentificationPhoto = {
+            data: identificationPhoto.base64,
             name: identificationPhoto.fileName,
             type: identificationPhoto.type,
             uri: formatURI(identificationPhoto.uri)
@@ -274,12 +278,14 @@ const KycUser = ({ navigation }) => {
 
         if (CheckState) {
             data.append("beneficiaryAvatar", {
+                data: beneficiaryAvatar.base64,
                 name: beneficiaryAvatar.fileName,
                 type: beneficiaryAvatar.type,
                 uri: formatURI(beneficiaryAvatar.uri)
             })
 
             data.append("beneficiaryIdentificationPhoto", {
+                data: beneficiaryIdentificationPhoto.base64,
                 name: beneficiaryIdentificationPhoto.fileName,
                 type: beneficiaryIdentificationPhoto.type,
                 uri: formatURI(beneficiaryIdentificationPhoto.uri)

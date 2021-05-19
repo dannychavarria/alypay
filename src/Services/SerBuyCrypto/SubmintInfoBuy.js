@@ -5,12 +5,14 @@ import {
     successMessage,
     loader,
 } from "../../utils/constants"
+import store from "../../store/index"
 
 // peticion de envio al server y comprobacion de campos
 export default async function submitInfo({ dataSent }) {
     try {
         loader(true)
-        console.log("DataSent", dataSent)
+
+        const { navigation } = store.getState()
 
         if (dataSent.amount_from === 0 || isNaN(dataSent.amount_from)) {
             throw String("Ingrese un monto para continuar")
@@ -30,6 +32,7 @@ export default async function submitInfo({ dataSent }) {
             throw String(response.message)
         } else if (response.response === "success") {
             successMessage("Tu solicitud de compra esta en proceso")
+            navigation.pop()
         }
     } catch (error) {
         errorMessage(error.toString())

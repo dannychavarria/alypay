@@ -60,6 +60,7 @@ const BuyCrypto = ({ route }) => {
         const idCoinSelected = infoCoin[coin].id
         const symCoinSelected = infoCoin[coin].symbol
         const nameCoinSelected = infoCoin[coin].name
+        const addressCoin = infoCoin[coin]?.wallet
 
         // datos a enviar
         const dataSend = {
@@ -71,12 +72,10 @@ const BuyCrypto = ({ route }) => {
             hash: hash,
             id_coin_from: idCoinSelected,
             symbol_from: symCoinSelected,
+            address: addressCoin
         }
         submintInformation(dataSend)
 
-        // vaciar los inputs
-        setHash("")
-        onChangeAmountAly("", 0)
     }
 
     useEffect(() => {
