@@ -1,134 +1,128 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import { View, Text, TextInput } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import Icon from 'react-native-vector-icons/Feather'
 
-import Container from "../../components/Container/Container"
+import { Colors, RFValue } from "../../utils/constants"
 
-const Profile = () => {
+import useStyles from "../../hooks/useStyles.hook"
+
+import ProfileStyle from "../../Styles/Views/ProfileStyle/ProfileStyle"
+
+import DateTimePicker from "@react-native-community/datetimepicker"
+
+const Profile = ({ route }) => {
+
+    const [showDate, setShowDate] = useState(false)
+    const [birthday, setBirthday] = useState(new Date())
+    const [date, setDate] = useState(new Date())
+
+    const classes = useStyles(ProfileStyle)
+
+    const { data } = route.params
+
+    console.log('User Data: ', data)
+
+    const changeDate = (event, selectedDate) => {
+        const currentDate = selectedDate
+        setBirthday(currentDate)
+        setShowDate(false)
+    }
+
+    useEffect(() => {
+        setBirthday(data.birthday)
+    },[])
 
     return (
-        <Container>
-            <View style={{
-                margin: 10,
-                backgroundColor: 'red',
-                borderRadius: 15,
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center'
-            }}>
+        <View style={classes.principalContainer}>
 
-                <View style={{
-                    backgroundColor: 'green',
-                    width: 200,
-                    alignItems: 'center',
-                    margin: 10,
-                }}>
-                    <View style={{ backgroundColor: 'gray', width: 150, height: 150, margin: 10, borderRadius: 75 }} />
+            <View style={classes.dataContainer}>
 
-                    <View style={{ backgroundColor: 'blue', margin: 10 }}>
-                        <Text style={{ color: 'yellow', fontSize: 16 }}>Nombre del usuario</Text>
-                        <Text style={{ color: 'yellow', fontSize: 14, alignSelf: 'flex-end' }}>@username</Text>
+                <View style={classes.notEditableDataContainer}>
+                    <View style={classes.principalDataContainer}>
+
+                        <View style={classes.imageStyle} />
+
+                        <View style={classes.usuarioNameContainer}>
+                            <Text style={classes.principalText}>{`${data.first_name} ${data.last_name}`}</Text>
+                            <Text style={classes.secundaryTextEnd}>@{data.username}</Text>
+                        </View>
+
+                    </View>
+
+                    <View style={classes.mailContainer}>
+                        <Text style={classes.principalText}>Correo:</Text>
+                        <Text style={classes.secundaryTextCenter}>{data.email}</Text>
                     </View>
 
                 </View>
 
-                <View style={{
-                    margin: 10,
-                    marginBottom: 10,
-                    width: '95%',
-                    backgroundColor: 'gray',
-                    padding: 5,
-                }}>
+                <View style={classes.birthdayContainer}>
 
-                    <Text style={{ color: 'yellow', fontSize: 18 }}>Correo:</Text>
+                    <View style={classes.birthdayTextContainer}>
+                        <Text style={classes.principalText}>Fecha de nacimiento:</Text>
+                        <Text style={classes.principalText}>{birthday.toString()}</Text>
+                    </View>
 
-                    <Text style={{ color: 'yellow', fontSize: 16, alignSelf: 'center' }}>Correo@correo.com</Text>
+                    <TouchableOpacity 
+                        style={classes.iconContainer}
+                        onPress={ _ => setShowDate(true) }
+                    >
+                        <Icon
+                            style={{ alignSelf: "center" }}
+                            name='edit'
+                            size={RFValue(45)}
+                            color={Colors.colorYellow}
+                        />
+                    </TouchableOpacity>
+
+                    {showDate && (
+                        <DateTimePicker
+                            testID="datetimepicker"
+                            value={date}
+                            onChange={changeDate}
+                            mode="date"
+                            display="spinner"
+                        />
+                    )}
+
+                </View>
+
+                <View style={classes.twoInputContainer}>
+
+                    <View style={classes.inputHorizontalContainer}>
+                        <Text style={classes.principalText}>PIN:</Text>
+
+                        <TextInput style={classes.inputPIN}
+                            placeholder='00000000'
+                            placeholderTextColor={Colors.colorYellow + 55}
+                            keyboardType='number-pad'
+                        />
+                    </View>
+
+                    <View style={classes.inputHorizontalContainer}>
+                        <Text style={classes.principalText}>Confirmar PIN:</Text>
+
+                        <TextInput style={classes.inputPIN}
+                            placeholder='00000000'
+                            placeholderTextColor={Colors.colorYellow + 55}
+                            keyboardType='number-pad'
+                        />
+                    </View>
 
                 </View>
 
             </View>
 
-            <View style={{
-                flexDirection: 'row',
-                marginHorizontal: 10,
-                marginBottom: 10,
-                height: 75,
-                backgroundColor: 'gray',
-                borderRadius: 15,
-                justifyContent: 'space-between',
-            }}>
+            <View style={classes.bottomContainer}>
 
-                <View style={{
-                    backgroundColor: 'blue',
-                    borderRadius: 15,
-                    padding: 5,
-                    width: '80%'
-                }}>
-                    <Text style={{ color: 'yellow', fontSize: 18 }}>Fecha de nacimiento:</Text>
-
-                    <Text style={{ color: 'yellow', fontSize: 18 }}>10/08/00</Text>
-                </View>
-
-                <TouchableOpacity style={{justifyContent: 'center'}}>
-                    <Icon style={{alignSelf: 'center'}} name='camera' size={40}/>
+                <TouchableOpacity style={classes.bottomStyle}>
+                    <Text style={{ color: Colors.colorMain, fontSize: 26 }}>Guardar</Text>
                 </TouchableOpacity>
 
             </View>
 
-            <View style={{
-                flexDirection: 'row',
-                marginHorizontal: 10,
-                marginBottom: 10,
-                height: 75,
-                backgroundColor: 'gray',
-                borderRadius: 15,
-                justifyContent: 'space-between'
-            }}>
-
-                <View style={{
-                    backgroundColor: 'blue',
-                    borderRadius: 15,
-                    padding: 5,
-                    width: '47.5%'
-                }}>
-                    <Text style={{ color: 'yellow', fontSize: 18 }}>PIN:</Text>
-
-                    <TextInput style={{
-                        color: 'yellow',
-                        fontSize: 18,
-                        backgroundColor: 'chocolate',
-                        padding: 0,
-                    }}
-                        placeholder='00000000'
-                        placeholderTextColor='yellow'
-                        keyboardType='number-pad'
-                    />
-                </View>
-
-                <View style={{
-                    backgroundColor: 'blue',
-                    borderRadius: 15,
-                    padding: 5,
-                    width: '47.5%'
-                }}>
-                    <Text style={{ color: 'yellow', fontSize: 18 }}>Confirmar PIN:</Text>
-
-                    <TextInput style={{
-                        color: 'yellow',
-                        fontSize: 18,
-                        backgroundColor: 'chocolate',
-                        padding: 0,
-                    }}
-                        placeholder='00000000'
-                        placeholderTextColor='yellow'
-                        keyboardType='number-pad'
-                    />
-                </View>
-
-            </View>
-
-        </Container>
+        </View>
     )
 }
 

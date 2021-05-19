@@ -38,6 +38,7 @@ import RetirementExcutive from "./views/RetirementExcutive/RetirementExcutive"
 import WalletCommerce from "./views/WalletCommerce/WalletCommerce"
 import HistoryRetirementExcutive from "./components/HistoryRetirementExcutive/HistoryRetirementExcutive"
 import Kyc from "./views/KYC/KYC"
+import Profile from "./views/profile/Profile"
 import ModalKyc from "./components/ModalKyc/ModalKyc"
 
 // import assets and animation
@@ -166,6 +167,8 @@ const App = () => {
                                 component={HistoryRetirementExcutive}
                             />
                             <Stack.Screen name={ROUTES.KYC} component={Kyc} />
+
+                            <Stack.Screen name={ROUTES.PROFILE} component={Profile} />
                         </>
                     )}
 
