@@ -1,128 +1,98 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, Text, TextInput } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import Icon from 'react-native-vector-icons/Feather'
 
-import { Colors, RFValue } from "../../utils/constants"
-
+import { Colors, errorMessage } from "../../utils/constants"
 import useStyles from "../../hooks/useStyles.hook"
-
 import ProfileStyle from "../../Styles/Views/ProfileStyle/ProfileStyle"
 
-import DateTimePicker from "@react-native-community/datetimepicker"
+import moment from 'moment'
+import ServiceProfile from "../../Services/SerProfile/SerProfile"
+
+import Container from "../../components/Container/Container"
+import ModalPin from "../../components/ModalPin/ModalPin"
 
 const Profile = ({ route }) => {
 
-    const [showDate, setShowDate] = useState(false)
     const [birthday, setBirthday] = useState(new Date())
-    const [date, setDate] = useState(new Date())
+    const [pin, setPin] = useState('')
+    const [pinConfirm, setPinConfirm] = useState('')
+    const [password, setPassword] = useState('')
+
+    const [showModal, setShowModal] = useState(false)
 
     const classes = useStyles(ProfileStyle)
 
     const { data } = route.params
 
-    console.log('User Data: ', data)
+    const submitInformation = () => {
+        try {
+            if (pin !== pinConfirm) {
+                throw String("Pins no coinciden")
+            }
 
-    const changeDate = (event, selectedDate) => {
-        const currentDate = selectedDate
-        setBirthday(currentDate)
-        setShowDate(false)
+            const DataSent = {
+                pin_number: pin,
+                password: password
+            }
+
+            ServiceProfile(DataSent)
+
+        } catch (error) {
+            errorMessage(error.toString())
+        }
+
     }
 
     useEffect(() => {
-        setBirthday(data.birthday)
-    },[])
+        setBirthday(moment(data.birthday).format('DD/MM/YYYY'))
+    }, [])
 
     return (
-        <View style={classes.principalContainer}>
-
-            <View style={classes.dataContainer}>
+        <Container showLogo>
 
                 <View style={classes.notEditableDataContainer}>
-                    <View style={classes.principalDataContainer}>
 
-                        <View style={classes.imageStyle} />
+                    <View style={classes.imageStyle} />
 
-                        <View style={classes.usuarioNameContainer}>
-                            <Text style={classes.principalText}>{`${data.first_name} ${data.last_name}`}</Text>
-                            <Text style={classes.secundaryTextEnd}>@{data.username}</Text>
-                        </View>
-
+                    <View style={classes.textContainer}>
+                        <Text style={classes.principalTextCenter}>{`${data.first_name} ${data.last_name}`}</Text>
+                        <Text style={classes.secundaryTextCenter}>@{data.username}</Text>
                     </View>
 
-                    <View style={classes.mailContainer}>
-                        <Text style={classes.principalText}>Correo:</Text>
-                        <Text style={classes.secundaryTextCenter}>{data.email}</Text>
+                    <View style={classes.textContainer}>
+                        <Text style={classes.secundaryTextCenter}>Correo</Text>
+                        <Text style={classes.principalTextCenter}>{data.email}</Text>
                     </View>
 
-                </View>
-
-                <View style={classes.birthdayContainer}>
-
-                    <View style={classes.birthdayTextContainer}>
-                        <Text style={classes.principalText}>Fecha de nacimiento:</Text>
-                        <Text style={classes.principalText}>{birthday.toString()}</Text>
-                    </View>
-
-                    <TouchableOpacity 
-                        style={classes.iconContainer}
-                        onPress={ _ => setShowDate(true) }
-                    >
-                        <Icon
-                            style={{ alignSelf: "center" }}
-                            name='edit'
-                            size={RFValue(45)}
-                            color={Colors.colorYellow}
-                        />
-                    </TouchableOpacity>
-
-                    {showDate && (
-                        <DateTimePicker
-                            testID="datetimepicker"
-                            value={date}
-                            onChange={changeDate}
-                            mode="date"
-                            display="spinner"
-                        />
-                    )}
-
-                </View>
-
-                <View style={classes.twoInputContainer}>
-
-                    <View style={classes.inputHorizontalContainer}>
-                        <Text style={classes.principalText}>PIN:</Text>
-
-                        <TextInput style={classes.inputPIN}
-                            placeholder='00000000'
-                            placeholderTextColor={Colors.colorYellow + 55}
-                            keyboardType='number-pad'
-                        />
-                    </View>
-
-                    <View style={classes.inputHorizontalContainer}>
-                        <Text style={classes.principalText}>Confirmar PIN:</Text>
-
-                        <TextInput style={classes.inputPIN}
-                            placeholder='00000000'
-                            placeholderTextColor={Colors.colorYellow + 55}
-                            keyboardType='number-pad'
-                        />
+                    <View style={classes.textContainer}>
+                        <Text style={classes.secundaryTextCenter}>Fecha de nacimiento</Text>
+                        <Text style={classes.principalTextCenter}>{birthday.toString()}</Text>
                     </View>
 
                 </View>
-
-            </View>
 
             <View style={classes.bottomContainer}>
 
-                <TouchableOpacity style={classes.bottomStyle}>
-                    <Text style={{ color: Colors.colorMain, fontSize: 26 }}>Guardar</Text>
+                <TouchableOpacity style={classes.bottomStyle}
+                    onPress={()=>setShowModal(true)}
+                >
+                    <Text style={classes.textButton}>Cambiar PIN</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={classes.bottomSecundary}>
+                    <Text style={classes.textButtonSecundary}>Soporte</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={classes.bottomSecundary}>
+                    <Text style={classes.textButtonSecundary}>Salir</Text>
                 </TouchableOpacity>
 
             </View>
 
-        </View>
+            {showModal && <ModalPin setShowModal={setShowModal}/>}
+
+        </Container>
     )
 }
 
