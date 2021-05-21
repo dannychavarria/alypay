@@ -110,7 +110,7 @@ const beneficiaryStateReducer = {
 }
 
 const optionsOpenCamera = {
-    noData: true,
+    //noData: true,
     includeBase64: true,
     maxHeight: 1024,
     maxWidth: 1024,
@@ -180,7 +180,9 @@ const KycUser = ({ navigation }) => {
                 gender: state.gender,
                 idTypeIdentification: state.identificationType,
                 identificationNumber: state.identificationNumber,
-                alternativeNumber: `${state.country.phoneCode} ${state.alternativeNumber}`,
+                alternativeNumber: `${state.country.phoneCode} ${
+                    state.alternativeNumber
+                }`,
                 nationality: state.nationality,
                 nationalityPhoneCode: state.phoneCodeNationality,
                 nationalityCurrencySymbol: state.currencyNationality,
@@ -262,37 +264,67 @@ const KycUser = ({ navigation }) => {
 
         const myAvatar = {
             data: avatar.base64,
-            name: avatar.fileName,
+            //name: avatar.fileName,
             type: avatar.type,
-            uri: formatURI(avatar.uri)
+            //uri: formatURI(avatar.uri),
+            size: avatar.fileSize,
         }
         data.append("avatar", JSON.stringify(myAvatar))
 
+        // data.append("avatar", myAvatar)
+
         const myIdentificationPhoto = {
             data: identificationPhoto.base64,
-            name: identificationPhoto.fileName,
+            //name: identificationPhoto.fileName,
             type: identificationPhoto.type,
-            uri: formatURI(identificationPhoto.uri)
+            //uri: formatURI(identificationPhoto.uri),
+            size: identificationPhoto.fileSize,
         }
-        data.append("identificationPhoto", myIdentificationPhoto)
+        data.append(
+            "identificationPhoto",
+            JSON.stringify(myIdentificationPhoto),
+        )
+
+        // data.append("identificationPhoto", myIdentificationPhoto)
 
         if (CheckState) {
-            data.append("beneficiaryAvatar", {
-                data: beneficiaryAvatar.base64,
-                name: beneficiaryAvatar.fileName,
-                type: beneficiaryAvatar.type,
-                uri: formatURI(beneficiaryAvatar.uri)
-            })
+            data.append(
+                "beneficiaryAvatar",
+                JSON.stringify({
+                    data: beneficiaryAvatar.base64,
+                    name: beneficiaryAvatar.fileName,
+                    type: beneficiaryAvatar.type,
+                    uri: formatURI(beneficiaryAvatar.uri),
+                    size: beneficiaryAvatar.size,
+                }),
+                // {
+                //     name: beneficiaryAvatar.fileName,
+                //     type: beneficiaryAvatar.type,
+                //     uri: formatURI(beneficiaryAvatar.uri),
+                // },
+            )
 
-            data.append("beneficiaryIdentificationPhoto", {
-                data: beneficiaryIdentificationPhoto.base64,
-                name: beneficiaryIdentificationPhoto.fileName,
-                type: beneficiaryIdentificationPhoto.type,
-                uri: formatURI(beneficiaryIdentificationPhoto.uri)
-            })
+            data.append(
+                "beneficiaryIdentificationPhoto",
+                JSON.stringify({
+                    data: beneficiaryIdentificationPhoto.base64,
+                    // name: beneficiaryIdentificationPhoto.fileName,
+                    type: beneficiaryIdentificationPhoto.type,
+                    size: beneficiaryIdentificationPhoto.size,
+                    // uri: formatURI(beneficiaryIdentificationPhoto.uri),
+                }),
+                // {
+                //     name: beneficiaryIdentificationPhoto.fileName,
+                //     type: beneficiaryIdentificationPhoto.type,
+                //     uri: formatURI(beneficiaryIdentificationPhoto.uri),
+                // },
+            )
         }
 
         Object.keys(body).forEach(i => data.append(i, body[i]))
+        // Object.keys(body).forEach(key => {
+        //     data.append(key, body[key])
+        // })
 
         return data
     }
@@ -330,7 +362,7 @@ const KycUser = ({ navigation }) => {
         if (
             item.name.length > 0 &&
             item.name.toLowerCase().search(state.filter.toLocaleLowerCase()) >
-            -1
+                -1
         ) {
             return (
                 <TouchableOpacity
@@ -568,7 +600,7 @@ const KycUser = ({ navigation }) => {
             [
                 {
                     text: "Cancelar",
-                    onPress: () => { },
+                    onPress: () => {},
                 },
                 {
                     text: "Salir",
