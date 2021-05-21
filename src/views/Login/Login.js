@@ -1,7 +1,12 @@
 import React, { useEffect, useReducer, useState } from "react"
 
 // Import config get info device
-import { getBrand, getDeviceId, getMacAddress, getSystemName } from "react-native-device-info"
+import {
+    getBrand,
+    getDeviceId,
+    getMacAddress,
+    getSystemName,
+} from "react-native-device-info"
 import getPublicIp from "react-native-public-ip"
 
 // Import components
@@ -9,13 +14,33 @@ import Video from "react-native-video"
 import CheckBox from "react-native-check-box"
 import Icon from "react-native-vector-icons/MaterialIcons"
 import { View as ViewAnimation } from "react-native-animatable"
-import { Text, TextInput, StyleSheet, Image, View, Dimensions, KeyboardAvoidingView, Platform, TouchableOpacity } from "react-native"
+import {
+    Text,
+    TextInput,
+    StyleSheet,
+    Image,
+    View,
+    Dimensions,
+    KeyboardAvoidingView,
+    Platform,
+    TouchableOpacity,
+} from "react-native"
 
 // Import constants and functions
 import ROUTES from "../../utils/routes.config"
 import validator from "validator"
 import { useNavigation } from "@react-navigation/native"
-import { reducer, Colors, GlobalStyles, RFValue, setStorage, http, loader, errorMessage, serverAddress } from "../../utils/constants"
+import {
+    reducer,
+    Colors,
+    GlobalStyles,
+    RFValue,
+    setStorage,
+    http,
+    loader,
+    errorMessage,
+    serverAddress,
+} from "../../utils/constants"
 import { showMessage } from "react-native-flash-message"
 
 // Import reduz store and types
@@ -29,15 +54,43 @@ import videoclip from "../../static/videos/cover.mp4"
 const initialState = {
     email: "",
     password: "",
-
-    // Info device
-    ipAddress: "",
-    device: "",
-    macAddress: "",
-    systemName: "",
+    activeSession: false,
 }
 
 const { height } = Dimensions.get("window")
+
+/**
+ * @author msobalvarro
+ * @sumary Promesa que devuelve informacion del dispositivo
+ */
+const getDeviceInfo = () =>
+    new Promise(async (resolve, reject) => {
+        try {
+            // Obtenemos la ip publica del dispositivo
+            //const public_ip = await getPublicIp()
+
+            /**Marca del dispositivo */
+            const device = await getBrand()
+
+            /**Modelo del dispositivo */
+            const deviceId = await getDeviceId()
+
+            // Obtenemos la direccion mac del dispositvo
+            const mac_adress = await getMacAddress()
+
+            // sistema (version)
+            const system_name = await getSystemName()
+
+            resolve({
+                device: `${device} - ${deviceId}`,
+                mac_adress,
+                system_name,
+                //public_ip,
+            })
+        } catch (error) {
+            reject(error.toString())
+        }
+    })
 
 const Login = ({ navigation }) => {
     const [state, dispatch] = useReducer(reducer, initialState)
@@ -50,7 +103,6 @@ const Login = ({ navigation }) => {
      */
     const onSubmit = async () => {
         try {
-
             // Verificamos si el formato es un correo
             if (!validator.isEmail(state.email.trim())) {
                 throw "Correo electronico no es correcto"
@@ -63,13 +115,13 @@ const Login = ({ navigation }) => {
             // Loader app mode on
             loader(true)
 
+            const dataDeviceInfo = await getDeviceInfo()
+
             const variables = {
                 email: state.email,
                 password: state.password,
-                public_ip: state.ipAddress,
-                device: state.device,
-                mac_adress: state.macAddress,
-                system_name: state.systemName
+                active_session: state.activeSession,
+                ...dataDeviceInfo,
             }
 
             const { data } = await http.post("/login", variables)
@@ -83,10 +135,14 @@ const Login = ({ navigation }) => {
                     store.dispatch({ type: SETSTORAGE, payload: data })
 
                     setStorage(data)
+
+                    // validamos si el cliente tiene KYC
+                    if (data.kyc_type === 0) {
+                        // viajamos a la pantalla de KYC
+                        navigate("Kyc")
+                    }
                 }
             }
-
-            // submit({ variables })
         } catch (error) {
             showMessage({
                 message: error.toString(),
@@ -101,41 +157,6 @@ const Login = ({ navigation }) => {
         }
     }
 
-    /**
-     * Funcion que obtiene
-     */
-    const getDeviceInfo = async () => {
-        try {
-            // Obtenemos la ip publica del dispositivo
-            // const ip = await getPublicIp()
-
-            // console.log(ip)
-
-            // dispatch({ type: "ipAddress", payload: ip })
-
-            /**Marca del dispositivo */
-            const device = await getBrand()
-
-            /**Modelo del dispositivo */
-            const deviceId = await getDeviceId()
-
-            // Ingresamos al store la informacion del dispositivo
-            dispatch({ type: "device", payload: `${device} - ${deviceId}` })
-
-            // Obtenemos la direccion mac del dispositvo
-            const macAddress = await getMacAddress()
-
-            dispatch({ type: "macAddress", payload: macAddress })
-
-            const systemVersion = await getSystemName()
-
-            dispatch({ type: "systemName", payload: systemVersion })
-
-        } catch (error) {
-            errorMessage(error.toString())
-        }
-    }
-
     /**Funcion que lleva a la pantalla de registro */
     const toRegister = () => {
         navigate(ROUTES.REGISTER)
@@ -143,12 +164,12 @@ const Login = ({ navigation }) => {
 
     useEffect(() => {
         store.dispatch({ type: SETNAVIGATION, payload: navigation })
-
-        getDeviceInfo()
     }, [])
 
     return (
-        <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} style={styles.rootContainer}>
+        <KeyboardAvoidingView
+            behavior={Platform.OS == "ios" ? "padding" : "height"}
+            style={styles.rootContainer}>
             <Video
                 selectedVideoTrack={{ type: "disabled" }}
                 resizeMode="cover"
@@ -157,7 +178,8 @@ const Login = ({ navigation }) => {
                 muted={true}
                 playWhenInactive={true}
                 source={videoclip}
-                style={styles.videoclip} />
+                style={styles.videoclip}
+            />
 
             <View style={styles.cap} />
 
@@ -174,46 +196,79 @@ const Login = ({ navigation }) => {
                         autoCapitalize="none"
                         keyboardType="email-address"
                         keyboardAppearance="dark"
-                        onChangeText={payload => dispatch({ type: "email", payload })} />
+                        onChangeText={payload =>
+                            dispatch({ type: "email", payload })
+                        }
+                    />
                 </View>
 
                 <View style={styles.row}>
                     <Text style={styles.legend}>Contraseña</Text>
 
-                    <View style={[styles.textInputWithImage, GlobalStyles.textInput]}>
+                    <View
+                        style={[
+                            styles.textInputWithImage,
+                            GlobalStyles.textInput,
+                        ]}>
                         <TextInput
                             style={styles.textInputCol}
                             value={state.password}
                             secureTextEntry={!showPassword}
                             keyboardAppearance="dark"
-                            onChangeText={payload => dispatch({ type: "password", payload })} />
+                            onChangeText={payload =>
+                                dispatch({ type: "password", payload })
+                            }
+                        />
 
-                        <TouchableOpacity onPress={_ => setShowPassword(!showPassword)} style={styles.touchableCol}>
-                            <Icon name={showPassword ? 'visibility-off' : 'visibility'} color={Colors.colorYellow} size={20} />
+                        <TouchableOpacity
+                            onPress={_ => setShowPassword(!showPassword)}
+                            style={styles.touchableCol}>
+                            <Icon
+                                name={
+                                    showPassword
+                                        ? "visibility-off"
+                                        : "visibility"
+                                }
+                                color={Colors.colorYellow}
+                                size={20}
+                            />
                         </TouchableOpacity>
                     </View>
-
                 </View>
 
-
-                {/*  <View style={[styles.rowButtons, { justifyContent: "flex-end" }]}>
-                    <Text style={[styles.legend, { marginRight: 10 }]}>Mostar Contraseña</Text>
+                <View
+                    style={[styles.rowButtons, { justifyContent: "flex-end" }]}>
+                    <Text style={[styles.legend, { marginRight: 10 }]}>
+                        Recordar contraseña
+                    </Text>
 
                     <CheckBox
                         checkBoxColor={Colors.colorYellow}
-                        isChecked={state.showPassword}
-                        onClick={_ => dispatch({ type: "showPassword", payload: !state.showPassword })}
+                        isChecked={state.activeSession}
+                        onClick={_ =>
+                            dispatch({
+                                type: "activeSession",
+                                payload: !state.activeSession,
+                            })
+                        }
                     />
                 </View>
- */}
 
                 <View style={styles.rowButtons}>
-                    <TouchableOpacity onPress={toRegister} style={styles.registerButton}>
-                        <Text style={styles.textRegisterButton}>registrarme</Text>
+                    <TouchableOpacity
+                        onPress={toRegister}
+                        style={styles.registerButton}>
+                        <Text style={styles.textRegisterButton}>
+                            registrarme
+                        </Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={onSubmit} style={[GlobalStyles.buttonPrimaryLine, { flex: 1 }]}>
-                        <Text style={GlobalStyles.textButtonPrimaryLine}>Iniciar</Text>
+                    <TouchableOpacity
+                        onPress={onSubmit}
+                        style={[GlobalStyles.buttonPrimaryLine, { flex: 1 }]}>
+                        <Text style={GlobalStyles.textButtonPrimaryLine}>
+                            Iniciar
+                        </Text>
                     </TouchableOpacity>
                 </View>
             </ViewAnimation>
@@ -223,7 +278,7 @@ const Login = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     rootContainer: {
-        flex: 1
+        flex: 1,
     },
 
     subcontainer: {
@@ -232,7 +287,7 @@ const styles = StyleSheet.create({
         height: Dimensions.get("window").height,
         flexDirection: "column",
         justifyContent: "center",
-        zIndex: 20
+        zIndex: 20,
     },
 
     cap: {
@@ -264,19 +319,19 @@ const styles = StyleSheet.create({
     row: {
         marginVertical: RFValue(10),
         paddingHorizontal: RFValue(25),
-        width: '100%',
+        width: "100%",
     },
 
     rowButtons: {
         alignItems: "center",
         marginVertical: RFValue(10),
         paddingHorizontal: RFValue(25),
-        width: '100%',
-        flexDirection: "row"
+        width: "100%",
+        flexDirection: "row",
     },
 
     registerButton: {
-        marginRight: RFValue(50)
+        marginRight: RFValue(50),
     },
 
     textRegisterButton: {
@@ -285,19 +340,19 @@ const styles = StyleSheet.create({
         color: Colors.colorYellow,
     },
     textInputWithImage: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
     },
     textInputCol: {
         flex: 0.9,
         paddingLeft: 5,
         padding: 0,
-        color: 'white',
+        color: "white",
     },
     touchableCol: {
         flex: 0.1,
-        alignItems: 'flex-end',
+        alignItems: "flex-end",
     },
 })
 

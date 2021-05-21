@@ -77,7 +77,7 @@ const initialState = {
  * Vista componente que se renderiza cuando
  * el usuario ejecuta el componente pagar en el switch
  */
-const PayComponent = ({ onGoBack = () => { } }) => {
+const PayComponent = ({ onGoBack = () => {} }) => {
     const { navigate } = useNavigation()
     const scanerCamera = useRef(null)
 
@@ -154,7 +154,7 @@ const PayComponent = ({ onGoBack = () => { } }) => {
             [
                 {
                     text: "Cancelar",
-                    onPress: () => { },
+                    onPress: () => {},
                 },
                 {
                     text: "Salir",
@@ -338,10 +338,9 @@ const Main = () => {
     const [state, dispatch] = useReducer(reducer, initialState)
     const [indexActive, setIndexActive] = useState(0)
     const { globalStorage } = store.getState()
+    const { navigate } = useNavigation()
 
     const { global } = store.getState()
-
-    console.log("GlobalMain: ", global)
 
     /**
      * Metodo que configura el componente, inicializando todas las tareas
@@ -361,6 +360,10 @@ const Main = () => {
             const dataStorage = {
                 ...globalStorage,
                 wallets: data,
+            }
+
+            if (global.kyc_type === 0) {
+                navigate("Kyc")
             }
 
             store.dispatch({ type: SETSTORAGE, payload: dataStorage })
@@ -413,35 +416,33 @@ const Main = () => {
     }, [])
 
     return (
-        <>
-            <Container onRefreshEnd={configurateComponent} showLogo>
-                <Switch
-                    onSwitch={setStateView}
-                    items={switchItems}
-                    indexActive={stateView}
-                />
-                {stateView === TYPE_VIEW.WALLET && (
-                    <>
-                        <FlatList
-                            data={state.wallets}
-                            keyExtractor={(_, i) => i}
-                            renderItem={({ item }) => <ItemWallet data={item} />}
-                        />
-                    </>
-                )}
-
-                {stateView === TYPE_VIEW.PAY && (
-                    <PayComponent
-                        onGoBack={() => {
-                            dispatch({ type: "indexTabActive", payload: 0 })
-                            setIndexActive(0)
-                            setStateView(TYPE_VIEW.WALLET)
-                        }}
+        <Container onRefreshEnd={configurateComponent} showLogo>
+            <Switch
+                onSwitch={setStateView}
+                items={switchItems}
+                indexActive={stateView}
+            />
+            {stateView === TYPE_VIEW.WALLET && (
+                <>
+                    {/* <CardExecutive data={global}/> */}
+                    <FlatList
+                        data={state.wallets}
+                        keyExtractor={(_, i) => i.toString()}
+                        renderItem={({ item }) => <ItemWallet data={item} />}
                     />
-                )}
-            </Container>
-            <ModalKyc kycConfirm={global.kyc_type} />
-        </>
+                </>
+            )}
+
+            {stateView === TYPE_VIEW.PAY && (
+                <PayComponent
+                    onGoBack={() => {
+                        dispatch({ type: "indexTabActive", payload: 0 })
+                        setIndexActive(0)
+                        setStateView(TYPE_VIEW.WALLET)
+                    }}
+                />
+            )}
+        </Container>
     )
 }
 

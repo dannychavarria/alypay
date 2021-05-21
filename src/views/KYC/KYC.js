@@ -7,9 +7,8 @@ import {
     FlatList,
     Platform,
     Alert,
-    BackHandler
+    BackHandler,
 } from "react-native"
-import { StackActions } from "@react-navigation/native"
 
 // Import Hook
 import useStyles from "../../hooks/useStyles.hook"
@@ -26,9 +25,7 @@ import {
     RFValue,
     checkPermissionCamera,
     calcAge,
-    getHeaders,
-    http,
-    successMessage,
+    logOutApp,
 } from "../../utils/constants"
 import countries from "../../utils/countries.json"
 import professions from "../../utils/profession.json"
@@ -43,11 +40,11 @@ import UploadImage from "../../components/UploadImage/UploadImage"
 import { View as ViewAnimation } from "react-native-animatable"
 import { launchCamera } from "react-native-image-picker"
 import { Picker } from "@react-native-picker/picker"
-import Icon from "react-native-vector-icons/MaterialIcons"
 import AntDesign from "react-native-vector-icons/AntDesign"
 import DateTimePicker from "@react-native-community/datetimepicker"
 import moment from "moment"
 import validator from "validator"
+import ModalKyc from "../../components/ModalKyc/ModalKyc"
 
 const initialState = {
     identificationType: 1,
@@ -594,8 +591,7 @@ const KycUser = ({ navigation }) => {
                 },
                 {
                     text: "Salir",
-                    onPress: () =>
-                        navigation.dispatch(StackActions.push("Main")),
+                    onPress: logOutApp,
                 },
             ],
         )
@@ -609,7 +605,10 @@ const KycUser = ({ navigation }) => {
 
     useEffect(() => {
         // Metodo que esta a la escucha cuando le dan atras
-        const handledBack = BackHandler.addEventListener('hardwareBackPress', goBack)
+        const handledBack = BackHandler.addEventListener(
+            "hardwareBackPress",
+            goBack,
+        )
         return () => handledBack.remove()
     }, [])
 
@@ -756,7 +755,9 @@ const KycUser = ({ navigation }) => {
 
                         <View style={classes.rowButtons}>
                             <TouchableOpacity onPress={goBack}>
-                                <Text style={classes.textBack}>Volver</Text>
+                                <Text style={classes.textBack}>
+                                    Cerrar sesión
+                                </Text>
                             </TouchableOpacity>
                             <TouchableOpacity
                                 // onPress={nextPage}
@@ -1813,6 +1814,8 @@ const KycUser = ({ navigation }) => {
                     />
                 </View>
             </Modal>
+
+            <ModalKyc />
         </Container>
     )
 }
