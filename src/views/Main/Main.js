@@ -341,7 +341,6 @@ const Main = () => {
     const { navigate } = useNavigation()
 
     const { global } = store.getState()
-    console.log("Global", global)
 
     /**
      * Metodo que configura el componente, inicializando todas las tareas
@@ -352,7 +351,7 @@ const Main = () => {
 
             const { data } = await http.get("/wallets", getHeaders())
 
-            if (data.error) {
+            if (data.error) { 
                 throw String(data.message)
             } else {
                 dispatch({ type: "wallets", payload: data })
