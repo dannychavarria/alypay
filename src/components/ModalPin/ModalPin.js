@@ -1,123 +1,130 @@
-import React, { useEffect } from 'react'
-import { View, Text, TextInput, TouchableOpacity, BackHandler } from 'react-native'
-import { Colors } from '../../utils/constants'
+import React, { useState } from 'react'
+import { View, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, Modal } from 'react-native'
 
-const ModalPin = ({ setShowModal }) => {
+// import constanst
+import { GlobalStyles, errorMessage } from '../../utils/constants'
 
+// import styles 
+import useStyles from "../../hooks/useStyles.hook"
+import ProfileStyle from "../../Styles/Views/ProfileStyle/ProfileStyle"
+
+// import servicios
+import ServiceProfile from "../../Services/SerProfile/SerProfile"
+
+
+const ModalPin = ({ showModal, setShowModal }) => {
+
+    // estados de pin y contraseña
+    const [pin, setPin] = useState('')
+    const [pinConfirm, setPinConfirm] = useState('')
+    const [password, setPassword] = useState('')
+
+    // llamada a los estilos
+    const classes = useStyles(ProfileStyle)
+
+    // funcion de cierre del modal
     const closeModal = () => {
         setShowModal(false)
-        console.log('entra')
     }
 
-    useEffect(() => {
-        // Metodo que esta a la escucha cuando le dan atras
-        const handledBack = BackHandler.addEventListener(
-            "hardwareBackPress",
-            () => { false },
-        )
-        return () => handledBack.remove()
-    }, [])
+    // funcion de envio de informacion
+    const submitInformation = () => {
+        try {
+            if (pin !== pinConfirm) {
+                throw String("Pins no coinciden")
+            }
+
+            const DataSent = {
+                pin_number: pin,
+                password: password
+            }
+
+            ServiceProfile(DataSent)
+
+        } catch (error) {
+            errorMessage(error.toString())
+        }
+
+    }
 
     return (
-        <TouchableOpacity style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            alignItems: 'center',
-            justifyContent: 'center',
-        }}
-            activeOpacity={false}
-            onPress={closeModal}
-            onLongPress={closeModal}
-        >
+        <View style={classes.modalContainer}>
 
-            <View style={{
-                width: '80%',
-                backgroundColor: 'black',
-                borderColor: Colors.colorYellow,
-                borderWidth: 1,
-                padding: 25
-            }}>
+            <Modal
+                animationType="none"
+                transparent={true}
+                visible={showModal}
+                onRequestClose={closeModal}
+            >
 
-                <Text style={{
-                    alignSelf: 'center',
-                    color: Colors.colorYellow,
-                    fontSize: 22,
-                    marginBottom: 15
-                }}>Ingrese PIN</Text>
+                <TouchableWithoutFeedback
+                    onPress={closeModal}
+                    onLongPress={closeModal}
+                >
+                    <View style={classes.modalOut} />
+                </TouchableWithoutFeedback>
 
-                <Text style={{
-                    color: 'gray',
-                    fontSize: 16,
-                    marginBottom: 15
-                }}>Ingrese un PIN válido de 6 dígitos y
-                    recuerdelo, no comparta su PIN con nadie.
-                    Es la manera más segura de verificar su
-                identidad cuando efectúe usa transacción.</Text>
+                <View style={classes.modalContainer}>
 
-                <Text style={{
-                    color: Colors.colorYellow,
-                    fontSize: 22,
-                }}>PIN</Text>
+                    <View style={classes.modalStyle}>
+                        <Text style={classes.modalTextTitle}>Ingrese PIN</Text>
 
-                <TextInput style={{
-                    backgroundColor: Colors.colorBlack,
-                    borderColor: 'gray',
-                    borderWidth: 1,
-                    borderRadius: 5,
-                    marginBottom: 15
-                }}
-                    placeholder="000000"
-                    placeholderTextColor='gray'
-                />
+                        <Text style={classes.modalTextSubtitle}>Ingrese un PIN válido
+                        e 6 dígitos y
+                        recuerdelo, no comparta su PIN con nadie.
+                        Es la manera más segura de verificar su
+                        identidad cuando efectúe usa transacción.</Text>
 
-                <Text style={{
-                    color: Colors.colorYellow,
-                    fontSize: 22,
-                }}>Confirmar PIN</Text>
+                        <Text style={classes.modalTextTitleLeft}>PIN</Text>
 
-                <TextInput style={{
-                    backgroundColor: Colors.colorBlack,
-                    borderColor: 'gray',
-                    borderWidth: 1,
-                    borderRadius: 5,
-                    marginBottom: 15
-                }}
-                    placeholder="000000"
-                    placeholderTextColor='gray'
-                />
+                        <TextInput style={classes.modalInput}
+                            value={pin}
+                            onChangeText={setPin}
+                            placeholder="000000"
+                            placeholderTextColor='gray'
+                            keyboardType='number-pad'
+                            maxLength={6}
+                        />
 
-                <Text style={{
-                    color: 'gray',
-                    fontSize: 16,
-                }}>Ingrese su contraseña para verificar
-                el cambio de PIN</Text>
+                        <Text style={classes.modalTextTitleLeft}>Confirmar PIN</Text>
 
-                <Text style={{
-                    color: Colors.colorYellow,
-                    fontSize: 22,
-                }}>Contraseña</Text>
+                        <TextInput style={classes.modalInput}
+                            value={pinConfirm}
+                            onChangeText={setPinConfirm}
+                            placeholder="000000"
+                            placeholderTextColor='gray'
+                            keyboardType='number-pad'
+                            maxLength={6}
+                        />
 
-                <TextInput style={{
-                    backgroundColor: Colors.colorBlack,
-                    borderColor: 'gray',
-                    borderWidth: 1,
-                    borderRadius: 5,
-                    marginBottom: 15
-                }}
-                    placeholder="Ingrese su contraseña"
-                    placeholderTextColor='gray'
-                />
+                        <Text style={{
+                            color: 'gray',
+                            fontSize: 16,
+                        }}>Ingrese su contraseña para verificar
+                        el cambio de PIN.</Text>
 
-                <TouchableOpacity style={{backgroundColor: Colors.colorYellow}}>
-                    <Text>Confirmar</Text>
-                </TouchableOpacity>
+                        <Text style={classes.modalTextTitleLeft}>Contraseña</Text>
 
-            </View>
+                        <TextInput style={classes.modalInput}
+                            value={password}
+                            onChangeText={setPassword}
+                            placeholder="Ingrese su contraseña"
+                            placeholderTextColor='gray'
+                            secureTextEntry
+                        />
 
-        </TouchableOpacity>
+                        <TouchableOpacity style={GlobalStyles.buttonPrimary}
+                            onPress={submitInformation}>
+                            <Text style={GlobalStyles.textButton}>Confirmar</Text>
+                        </TouchableOpacity>
+                    </View>
+
+
+                </View>
+
+            </Modal>
+
+        </View>
     )
 }
 

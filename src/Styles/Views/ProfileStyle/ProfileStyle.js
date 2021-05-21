@@ -43,7 +43,6 @@ export default {
         alignItems: 'center',
     },
     imageStyle: {
-        backgroundColor: 'gray',
         width: RFValue(180),
         height: RFValue(180),
         margin: 10,
@@ -66,5 +65,50 @@ export default {
     textButtonSecundary: {
         color: Colors.colorYellow,
         fontSize: 22
+    },
+
+    modalContainer: {
+        flex: 1,
+        marginTop: 22,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    modalOut: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+    },
+    modalStyle: {
+        width: '80%',
+        backgroundColor: 'black',
+        borderColor: Colors.colorYellow,
+        borderWidth: 1,
+        padding: 25,
+        borderRadius: 5,
+    },
+    modalTextTitle: {
+        alignSelf: 'center',
+        color: Colors.colorYellow,
+        fontSize: 22,
+        marginBottom: 15
+    },
+    modalTextSubtitle: {
+        color: 'gray',
+        fontSize: 16,
+        marginBottom: 15
+    },
+    modalTextTitleLeft: {
+        color: Colors.colorYellow,
+        fontSize: 22,
+    },
+    modalInput: {
+        backgroundColor: Colors.colorBlack,
+        borderColor: 'gray',
+        borderWidth: 1,
+        borderRadius: 5,
+        marginBottom: 15,
+        color: Colors.colorYellow,
     }
 }

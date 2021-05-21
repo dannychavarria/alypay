@@ -425,7 +425,7 @@ const Main = () => {
             />
             {stateView === TYPE_VIEW.WALLET && (
                 <>
-                    <CardExecutive data={global}/>
+                    {/* <CardExecutive data={global}/> */}
                     <FlatList
                         data={state.wallets}
                         keyExtractor={(_, i) => i.toString()}

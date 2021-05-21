@@ -1,3 +1,4 @@
+// import constanst
 import {
     getHeaders,
     http,
@@ -5,8 +6,11 @@ import {
     successMessage,
     loader,
 } from "../../utils/constants"
+
+// import store
 import store from "../../store/index"
 
+// funcion de peticion a la endpoint
 export default async function ServiceProfile(DataSent){
     try {
 
@@ -14,11 +18,7 @@ export default async function ServiceProfile(DataSent){
 
         const { navigation } = store.getState()
 
-        console.log('data: ', DataSent)
-
         const {data: response} = await http.put('/pin/update', DataSent, getHeaders())
-
-        console.log(response)
 
         if (response.error) {
             throw String(response.message)
