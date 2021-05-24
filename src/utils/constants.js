@@ -22,7 +22,6 @@ import moment from "moment"
 // Store and action from redux
 import store from "../store/index"
 import { SETPERMISSIONS, DELETESTORAGE, SETLOADER } from "../store/actionsTypes"
-import { createIconSetFromFontello } from "react-native-vector-icons"
 
 import Floor from "lodash/floor"
 

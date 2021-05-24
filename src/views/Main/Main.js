@@ -43,7 +43,6 @@ import { BlurView } from "@react-native-community/blur"
 
 // import assets
 import ExampleImage from "../../static/example-order.png"
-import CardExecutive from "../../components/CardExecutive/CardExecutive"
 
 /**
  * Constante que almacena el tipo de vista seleccionada del switch
