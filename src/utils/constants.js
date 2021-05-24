@@ -18,11 +18,11 @@ import { check, PERMISSIONS, RESULTS, request } from "react-native-permissions"
 import { isIphoneX } from "react-native-iphone-x-helper"
 import { showMessage } from "react-native-flash-message"
 import moment from "moment"
+import ModalConfirmPin from "../components/ModalConfirmPin/ModalConfirmPin"
 
 // Store and action from redux
 import store from "../store/index"
 import { SETPERMISSIONS, DELETESTORAGE, SETLOADER } from "../store/actionsTypes"
-import { createIconSetFromFontello } from "react-native-vector-icons"
 
 import Floor from "lodash/floor"
 
@@ -98,6 +98,7 @@ const PORT = "3000"
 // export const serverAddress = "https://alypay.uc.r.appspot.com"
 // export const serverAddress = "https://root-anvil-299019.uc.r.appspot.com"
 export const serverAddress = "http://192.168.0.111:3085"
+// export const serverAddress = "http://91a0bebed1b1.ngrok.io"
 export const serverSpeedtradingsURL = "https://ardent-medley-272823.appspot.com"
 
 /**
@@ -113,7 +114,7 @@ const http = axios.create({
             Alert.alert("AlyPay", "Tu sesion ha caducado", [
                 {
                     text: "Ok",
-                    onPress: () => logOutApp(), 
+                    onPress: () => logOutApp(),
                 },
             ])
 
@@ -503,4 +504,15 @@ export const configTouchIDAuth = {
     title: "Autenticación",
     passcodeFallback: true,
     cancelText: "CANCELAR",
+    fallbackLabel:'CODIGO DE SEGURIDAD'
 }
+
+/**
+ *
+ * @author msobalvarro
+ * @summary Funcion que valida direccion de archivos del dispositovp
+ * @param {String} uri
+ * @returns String
+ */
+export const formatURI = uri =>
+    Platform.OS === "android" ? uri : uri.replace("file://", "")

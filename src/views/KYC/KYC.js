@@ -26,6 +26,7 @@ import {
     checkPermissionCamera,
     calcAge,
     logOutApp,
+    formatURI,
 } from "../../utils/constants"
 import countries from "../../utils/countries.json"
 import professions from "../../utils/profession.json"
@@ -105,7 +106,8 @@ const beneficiaryStateReducer = {
 }
 
 const optionsOpenCamera = {
-    noData: true,
+    //noData: true,
+    includeBase64: true,
     maxHeight: 1024,
     maxWidth: 1024,
     quality: 0.6,
@@ -115,6 +117,7 @@ const optionsOpenCamera = {
         path: "Pictures/myAppPicture/", //-->this is FUCK neccesary
         privateDirectory: true,
     },
+    cameraType: "back",
 }
 
 const reducer = (state, action) => {
@@ -232,8 +235,6 @@ const KycUser = ({ navigation }) => {
                 }
             }
 
-            // console.log("dataSent", dataSent)
-
             submitInformationSer(
                 createFormData(
                     avatar,
@@ -258,60 +259,68 @@ const KycUser = ({ navigation }) => {
         const data = new FormData()
 
         const myAvatar = {
-            name: avatar.fileName,
+            data: avatar.base64,
+            //name: avatar.fileName,
             type: avatar.type,
-            uri:
-                Platform.OS === "android"
-                    ? avatar.uri
-                    : avatar.uri.replace("file://", ""),
+            //uri: formatURI(avatar.uri),
+            size: avatar.fileSize,
         }
         data.append("avatar", JSON.stringify(myAvatar))
 
+        // data.append("avatar", myAvatar)
+
         const myIdentificationPhoto = {
-            name: identificationPhoto.fileName,
+            data: identificationPhoto.base64,
+            //name: identificationPhoto.fileName,
             type: identificationPhoto.type,
-            uri:
-                Platform.OS === "android"
-                    ? identificationPhoto.uri
-                    : identificationPhoto.uri.replace("file://", ""),
+            //uri: formatURI(identificationPhoto.uri),
+            size: identificationPhoto.fileSize,
         }
         data.append(
             "identificationPhoto",
             JSON.stringify(myIdentificationPhoto),
         )
 
+        // data.append("identificationPhoto", myIdentificationPhoto)
+
         if (CheckState) {
             data.append(
                 "beneficiaryAvatar",
                 JSON.stringify({
+                    data: beneficiaryAvatar.base64,
                     name: beneficiaryAvatar.fileName,
                     type: beneficiaryAvatar.type,
-                    uri:
-                        Platform.OS === "android"
-                            ? beneficiaryAvatar.uri
-                            : beneficiaryAvatar.uri.replace("file://", ""),
+                    uri: formatURI(beneficiaryAvatar.uri),
+                    size: beneficiaryAvatar.size,
                 }),
+                // {
+                //     name: beneficiaryAvatar.fileName,
+                //     type: beneficiaryAvatar.type,
+                //     uri: formatURI(beneficiaryAvatar.uri),
+                // },
             )
 
             data.append(
                 "beneficiaryIdentificationPhoto",
                 JSON.stringify({
-                    name: beneficiaryIdentificationPhoto.fileName,
+                    data: beneficiaryIdentificationPhoto.base64,
+                    // name: beneficiaryIdentificationPhoto.fileName,
                     type: beneficiaryIdentificationPhoto.type,
-                    uri:
-                        Platform.OS === "android"
-                            ? beneficiaryIdentificationPhoto.uri
-                            : beneficiaryIdentificationPhoto.uri.replace(
-                                  "file://",
-                                  "",
-                              ),
+                    size: beneficiaryIdentificationPhoto.size,
+                    // uri: formatURI(beneficiaryIdentificationPhoto.uri),
                 }),
+                // {
+                //     name: beneficiaryIdentificationPhoto.fileName,
+                //     type: beneficiaryIdentificationPhoto.type,
+                //     uri: formatURI(beneficiaryIdentificationPhoto.uri),
+                // },
             )
         }
 
-        Object.keys(body).forEach(key => {
-            data.append(key, body[key])
-        })
+        Object.keys(body).forEach(i => data.append(i, body[i]))
+        // Object.keys(body).forEach(key => {
+        //     data.append(key, body[key])
+        // })
 
         return data
     }

@@ -9,6 +9,7 @@ import ItemWallet from "../../components/ItemWallet/ItemWallet"
 import StoreElement from "../../components/StoreElement/StoreElement"
 import Switch from "../../components/Switch/Switch"
 import Search from "../../components/Search/Search"
+import ModalConfirmPin from "../../components/ModalConfirmPin/ModalConfirmPin"
 
 // Import other components
 import QRCodeScanner from "react-native-qrcode-scanner"
@@ -206,11 +207,15 @@ const initialStateSendComponent = {
 /** Componente que renderiza los datos necesarios para ejecutar una transaccion a otra wallet */
 const SendComponent = ({
     data: data = {},
-    onCompleteTrasanction = () => {},
+    onCompleteTrasanction = () => { },
 }) => {
     const [state, dispatch] = useReducer(reducer, initialStateSendComponent)
 
     const { global, functions } = store.getState()
+
+    const [showModalPin, setShowModalPin] = useState(false)
+
+    const [pinSent, setPinSent] = useState()
 
     const { navigate } = useNavigation()
 
@@ -655,7 +660,7 @@ const SendComponent = ({
                                 <Text style={styles.textBodyFee}>
                                     {_.floor(
                                         parseFloat(state.amountFraction) +
-                                            parseFloat(state.fee.amount),
+                                        parseFloat(state.fee.amount),
                                         8,
                                     )}{" "}
                                     {state.fee.symbol}
@@ -702,7 +707,10 @@ const SendComponent = ({
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                        onPress={onComprobateWallet}
+                        onPress={() => {
+                            // setShowModalPin(true)
+                            onComprobateWallet()
+                        }}
                         style={[
                             GlobalStyles.buttonPrimary,
                             { flex: 1, marginLeft: 25 },
@@ -734,6 +742,7 @@ const SendComponent = ({
                     />
                 </View>
             </Modal>
+            
         </ViewAnimate>
     )
 }
@@ -886,13 +895,13 @@ const Wallet = ({ route }) => {
             {state.information !== null && (
                 <>
                     {// Verificamos si esta en la pantalla de Recibir
-                    stateView === switchItems[0].state && (
-                        <ReceiveComponent
-                            wallet={state.wallet}
-                            data={state.information}
-                            isAly={isAly}
-                        />
-                    )}
+                        stateView === switchItems[0].state && (
+                            <ReceiveComponent
+                                wallet={state.wallet}
+                                data={state.information}
+                                isAly={isAly}
+                            />
+                        )}
 
                     {stateView === switchItems[1].state && (
                         <SendComponent

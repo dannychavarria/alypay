@@ -1,6 +1,8 @@
+import { Colors, RFValue } from '../../../utils/constants'
+
 export default {
     buttonStyle: {
-        backgroundColor: 'black',
+        backgroundColor: Colors.colorBlack,
         borderRadius: 10,
         alignItems: 'center',
         paddingVertical: 20,
@@ -8,10 +10,23 @@ export default {
         margin: 5
     },
     textButtonStyle: { 
-        color: 'yellow' 
+        color: Colors.colorYellow,
+        fontWeight: "bold",
+        fontSize: RFValue(18)
     },
     rowContainer:{
         flexDirection: 'row', 
         justifyContent: 'center' 
+    },
+    principalContainer:{
+        flex: 1,
+        marginTop: RFValue(80),
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    title: {
+        color: 'gray',
+        marginBottom: 40,
+        fontSize: RFValue(18)
     }
 }

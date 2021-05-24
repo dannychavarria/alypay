@@ -21,6 +21,7 @@ const ROUTES = {
     KYC: "Kyc",
     PROFILE: "Profile",
     BUY: "Buy",
+    MODALCONFIRM: "ModalConfirm"
 }
 
 export default ROUTES

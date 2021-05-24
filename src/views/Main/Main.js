@@ -21,7 +21,6 @@ import {
 } from "react-native"
 import { Image } from "react-native-animatable"
 import { useNavigation } from "@react-navigation/native"
-import ModalConfirmPin from "../../components/ModalConfirmPin/ModalConfirmPin"
 
 // Import constant and functions
 import * as CryptoJS from "react-native-crypto-js"
@@ -43,7 +42,6 @@ import { BlurView } from "@react-native-community/blur"
 
 // import assets
 import ExampleImage from "../../static/example-order.png"
-import CardExecutive from "../../components/CardExecutive/CardExecutive"
 
 /**
  * Constante que almacena el tipo de vista seleccionada del switch
@@ -77,7 +75,7 @@ const initialState = {
  * Vista componente que se renderiza cuando
  * el usuario ejecuta el componente pagar en el switch
  */
-const PayComponent = ({ onGoBack = () => {} }) => {
+const PayComponent = ({ onGoBack = () => { } }) => {
     const { navigate } = useNavigation()
     const scanerCamera = useRef(null)
 
@@ -154,7 +152,7 @@ const PayComponent = ({ onGoBack = () => {} }) => {
             [
                 {
                     text: "Cancelar",
-                    onPress: () => {},
+                    onPress: () => { },
                 },
                 {
                     text: "Salir",
@@ -340,6 +338,7 @@ const Main = () => {
     const { globalStorage } = store.getState()
     const { navigate } = useNavigation()
 
+
     const { global } = store.getState()
 
     /**
@@ -351,7 +350,7 @@ const Main = () => {
 
             const { data } = await http.get("/wallets", getHeaders())
 
-            if (data.error) { 
+            if (data.error) {
                 throw String(data.message)
             } else {
                 dispatch({ type: "wallets", payload: data })
@@ -430,7 +429,6 @@ const Main = () => {
                         keyExtractor={(_, i) => i.toString()}
                         renderItem={({ item }) => <ItemWallet data={item} />}
                     />
-                    <ModalConfirmPin/>
                 </>
             )}
 
