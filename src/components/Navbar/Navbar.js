@@ -10,6 +10,7 @@ import Search from '../Search/Search'
 import { RFValue, Colors, logOutApp, OpenSupport } from "../../utils/constants"
 import { useNavigation, StackActions } from "@react-navigation/native"
 import { isIphoneX } from "react-native-iphone-x-helper"
+import store from "../../store/index"
 
 // Import assets
 import Commerce from "../../static/Commerce.png"
@@ -19,6 +20,9 @@ const iconSize = RFValue(32)
 const Navbar = () => {
     const [hidden, setHidden] = useState(false)
     const { dispatch, navigate } = useNavigation()
+
+    // obtenemos la informacion del usuario del store
+    const { global } = store.getState()
 
     const toggleMenu = () => {
         Alert.alert("Cerrar sesion", "Estas apunto de cerrar sesion en AlyPay", [
@@ -54,6 +58,11 @@ const Navbar = () => {
     */
     const onSearch = () => {
         navigate('SearchGlobal')
+    }
+
+    // Funcion que navega a la pantalla de perfil
+    const onProfile = () => {
+        navigate('Profile', {data : global})
     }
 
     /**
@@ -99,13 +108,11 @@ const Navbar = () => {
                             <Icon name="ios-search" size={iconSize} color={Colors.colorYellow} />
                         </TouchableOpacity>
 
-                        <TouchableOpacity onPress={OpenSupport} style={styles.button}>
-                            <Icon name="logo-whatsapp" size={iconSize} color={Colors.colorYellow} />
+                        {/* Se agrego el boton de perfil */}
+                        <TouchableOpacity onPress={onProfile} style={styles.button}>
+                            <Icon name="md-person" size={iconSize} color={Colors.colorYellow} />
                         </TouchableOpacity>
 
-                        <TouchableOpacity onPress={toggleMenu} style={styles.button}>
-                            <Icon name="ios-exit" size={iconSize} color={Colors.colorYellow} />
-                        </TouchableOpacity>
                     </View>
 
                     {

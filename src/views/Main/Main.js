@@ -21,7 +21,7 @@ import {
 } from "react-native"
 import { Image } from "react-native-animatable"
 import { useNavigation } from "@react-navigation/native"
-import ModalKyc from "../../components/ModalKyc/ModalKyc"
+import ModalConfirmPin from "../../components/ModalConfirmPin/ModalConfirmPin"
 
 // Import constant and functions
 import * as CryptoJS from "react-native-crypto-js"
@@ -342,8 +342,6 @@ const Main = () => {
 
     const { global } = store.getState()
 
-    console.log("GlobalMain: ", global)
-
     /**
      * Metodo que configura el componente, inicializando todas las tareas
      */
@@ -426,11 +424,13 @@ const Main = () => {
             />
             {stateView === TYPE_VIEW.WALLET && (
                 <>
+                    {/* <CardExecutive data={global}/> */}
                     <FlatList
                         data={state.wallets}
                         keyExtractor={(_, i) => i.toString()}
                         renderItem={({ item }) => <ItemWallet data={item} />}
                     />
+                    <ModalConfirmPin/>
                 </>
             )}
 
