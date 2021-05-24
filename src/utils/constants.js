@@ -94,9 +94,10 @@ export const Colors = {
 const PORT = "3000"
 
 /**Direction for server */
-export const serverAddress = "https://alypay.uc.r.appspot.com"
+// export const serverAddress = "https://alypay.uc.r.appspot.com"
 // export const serverAddress = "https://root-anvil-299019.uc.r.appspot.com"
-// export const serverAddress = "http://192.168.0.110:3085"
+export const serverAddress = "http://192.168.0.111:3085"
+// export const serverAddress = "http://7a45c15a1dff.ngrok.io"
 export const serverSpeedtradingsURL = "https://ardent-medley-272823.appspot.com"
 
 /**
@@ -434,7 +435,7 @@ export const getHeadersMultipartFormData = () => {
 
     return {
         headers: {
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "application/json",
             "x-auth-token": token,
         },
     }
@@ -505,10 +506,11 @@ export const configTouchIDAuth = {
 }
 
 /**
- * 
+ *
  * @author msobalvarro
  * @summary Funcion que valida direccion de archivos del dispositovp
- * @param {String} uri 
+ * @param {String} uri
  * @returns String
  */
-export const formatURI = uri => Platform.OS === "android" ? uri : uri.replace("file://", "",)
+export const formatURI = uri =>
+    Platform.OS === "android" ? uri : uri.replace("file://", "")

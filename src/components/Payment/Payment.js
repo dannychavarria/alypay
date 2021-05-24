@@ -1,15 +1,31 @@
-import React, { useState, useEffect } from 'react'
-import { Text, View, TouchableOpacity, StyleSheet, Alert } from 'react-native'
+import React, { useState, useEffect } from "react"
+import {
+    Text,
+    View,
+    TouchableOpacity,
+    StyleSheet,
+    Alert,
+    BackHandler,
+} from "react-native"
 
 // Import functions
-import { RFValue, Colors, GlobalStyles, http, loader, getHeaders, successMessage, errorMessage } from '../../utils/constants'
-import { useNavigation } from '@react-navigation/native'
+import {
+    RFValue,
+    Colors,
+    GlobalStyles,
+    http,
+    loader,
+    getHeaders,
+    successMessage,
+    errorMessage,
+} from "../../utils/constants"
+import { useNavigation } from "@react-navigation/native"
 
 // Import Componets
-import Container from '../Container/Container'
-import SwitchCoin from '../Switch/SwitchCoin'
+import Container from "../Container/Container"
+import SwitchCoin from "../Switch/SwitchCoin"
 import _ from "lodash"
-import store from '../../store'
+import store from "../../store"
 
 const Payment = ({ route, navigation }) => {
     const { goBack } = useNavigation()
@@ -21,7 +37,13 @@ const Payment = ({ route, navigation }) => {
     const [commerceData, setCommerceData] = useState({})
 
     // Estado que guarda la informacion detallada de las monedas
-    const [crpytoPrices, setCryptoPrices] = useState({ ALY: null, BTC: null, ETH: null, DASH: null, LTC: null })
+    const [crpytoPrices, setCryptoPrices] = useState({
+        ALY: null,
+        BTC: null,
+        ETH: null,
+        DASH: null,
+        LTC: null,
+    })
 
     // Informacion detallada del comercio
     const Pay = route.params.data
@@ -35,21 +57,25 @@ const Payment = ({ route, navigation }) => {
             loader(true)
 
             // Ejecutamos la peticion
-            const { data } = await http.get(`/ecommerce/transaction/info/${scanned ? Pay.orderId : Pay.order}`, getHeaders());
+            const { data } = await http.get(
+                `/ecommerce/transaction/info/${
+                    scanned ? Pay.orderId : Pay.order
+                }`,
+                getHeaders(),
+            )
 
             if (data.error) {
                 throw String(data.message)
             }
 
-            // Almacena los precios de las monedas optenidas de la peticion 
+            // Almacena los precios de las monedas optenidas de la peticion
             setCryptoPrices(data.wallets)
 
             // Almacena el detalle de la orden del comercio
             setCommerceData(data.data)
-
         } catch (error) {
             Alert.alert("Ha Ocurrido un error", error.toString())
-            navigation.navigate('Main')
+            navigation.navigate("Main")
         } finally {
             loader(false)
         }
@@ -76,7 +102,11 @@ const Payment = ({ route, navigation }) => {
             }
 
             // Realiza la peticion de pago con los datos de la transaccion obtenidos
-            const { data } = await http.post("/ecommerce/transaction/pay", senData, getHeaders())
+            const { data } = await http.post(
+                "/ecommerce/transaction/pay",
+                senData,
+                getHeaders(),
+            )
 
             if (data.error) {
                 throw String(data.message)
@@ -91,7 +121,6 @@ const Payment = ({ route, navigation }) => {
 
                 goBack()
             }
-
         } catch (error) {
             errorMessage(error.toString())
         } finally {
@@ -101,24 +130,35 @@ const Payment = ({ route, navigation }) => {
 
     // Funcion que cancela la orden generada por el comercio
     const cancelPayment = () => {
-        Alert.alert("Estas apunto de cancelar la transaccion", "Realmente quieres ejecutar esta accion", [
-            {
-                text: "Cancelar",
-                onPress: () => { }
-            },
-            {
-                text: "Salir",
-                onPress: () => {
-                    navigation.pop()
-                }
-            }
-        ])
+        Alert.alert(
+            "Estas apunto de cancelar la transaccion",
+            "Realmente quieres ejecutar esta accion",
+            [
+                {
+                    text: "Cancelar",
+                    onPress: () => {},
+                },
+                {
+                    text: "Salir",
+                    onPress: () => {
+                        navigation.pop()
+                    },
+                },
+            ],
+        )
 
         return true
     }
 
     useEffect(() => {
         getAllPrices()
+
+        // Metodo que esta a la escucha cuando le dan atras
+        const handledBack = BackHandler.addEventListener(
+            "hardwareBackPress",
+            cancelPayment,
+        )
+        return () => handledBack.remove()
     }, [])
 
     return (
@@ -129,38 +169,56 @@ const Payment = ({ route, navigation }) => {
 
             <SwitchCoin
                 items={crpytoPrices}
-                onSwitch={value => setCurrentCoin(value)} />
+                onSwitch={value => setCurrentCoin(value)}
+            />
 
             <View style={styles.card}>
                 <View style={styles.headerCard}>
-                    <Text style={styles.textHeaderCard}>Descripcion de la Transaccion</Text>
-                    <Text style={styles.textRowTable}>{scanned ? Pay.description : commerceData.description}</Text>
-
+                    <Text style={styles.textHeaderCard}>
+                        Descripcion de la Transaccion
+                    </Text>
+                    <Text style={styles.textRowTable}>
+                        {scanned ? Pay.description : commerceData.description}
+                    </Text>
                 </View>
 
                 <View style={styles.headerCard}>
                     <View style={styles.bodyRowTable}>
-                        <Text style={styles.textHeaderCard}>Sub-Total {currentCoin.symbol}</Text>
-                        <Text style={styles.textRowTable}>{currentCoin.fee?.subtotal}</Text>
+                        <Text style={styles.textHeaderCard}>
+                            Sub-Total {currentCoin.symbol}
+                        </Text>
+                        <Text style={styles.textRowTable}>
+                            {currentCoin.fee?.subtotal}
+                        </Text>
                     </View>
 
                     <View style={styles.bodyRowTable}>
-                        <Text style={styles.textHeaderCard}>Fee {currentCoin.symbol}</Text>
-                        <Text style={styles.textRowTable}>{currentCoin.fee?.fee}</Text>
+                        <Text style={styles.textHeaderCard}>
+                            Fee {currentCoin.symbol}
+                        </Text>
+                        <Text style={styles.textRowTable}>
+                            {currentCoin.fee?.fee}
+                        </Text>
                     </View>
 
                     <View style={styles.bodyRowTable}>
-                        <Text style={styles.textFooterCard}>Total {currentCoin.symbol}</Text>
-                        <Text style={styles.textRowTable}>{currentCoin.fee?.total}</Text>
+                        <Text style={styles.textFooterCard}>
+                            Total {currentCoin.symbol}
+                        </Text>
+                        <Text style={styles.textRowTable}>
+                            {currentCoin.fee?.total}
+                        </Text>
                     </View>
                 </View>
 
                 <View style={styles.footerCard}>
                     <View style={styles.bodyRowTable}>
                         <Text style={styles.textFooterCard}>Total (USD)</Text>
-                        <Text style={styles.textRowTable}>{currentCoin.feeUSD?.total} {currentCoin.feeUSD?.symbol}</Text>
+                        <Text style={styles.textRowTable}>
+                            {currentCoin.feeUSD?.total}{" "}
+                            {currentCoin.feeUSD?.symbol}
+                        </Text>
                     </View>
-
                 </View>
             </View>
 
@@ -170,25 +228,28 @@ const Payment = ({ route, navigation }) => {
                 </TouchableOpacity>
 
                 <TouchableOpacity style={GlobalStyles.buttonPrimary}>
-                    <Text onPress={confirmPayment} style={{ textTransform: "uppercase" }}>Confirmar</Text>
+                    <Text
+                        onPress={confirmPayment}
+                        style={{ textTransform: "uppercase" }}>
+                        Confirmar
+                    </Text>
                 </TouchableOpacity>
             </View>
-        </Container >
+        </Container>
     )
-
 }
 
 const styles = StyleSheet.create({
     container: {
-        justifyContent: 'center',
+        justifyContent: "center",
         alignItems: "center",
-        padding: 5
+        padding: 5,
     },
     containerButtons: {
         alignItems: "center",
         flexDirection: "row",
         justifyContent: "space-between",
-        padding: 10
+        padding: 10,
     },
     card: {
         backgroundColor: Colors.colorBlack,
@@ -200,25 +261,25 @@ const styles = StyleSheet.create({
     },
     title: {
         color: Colors.colorYellow,
-        fontSize: RFValue(20)
+        fontSize: RFValue(20),
     },
     textHeaderCard: {
         fontSize: RFValue(16),
-        color: Colors.colorYellow
+        color: Colors.colorYellow,
     },
     textFooterCard: {
         fontWeight: "bold",
         fontSize: RFValue(16),
-        color: Colors.colorYellow
+        color: Colors.colorYellow,
     },
     textRowTable: {
         color: "#FFF",
-        fontSize: RFValue(16)
+        fontSize: RFValue(16),
     },
     subtitle: {
-        justifyContent: 'center',
+        justifyContent: "center",
         color: Colors.colorMain,
-        fontSize: RFValue(14)
+        fontSize: RFValue(14),
     },
     headerCard: {
         borderBottomColor: Colors.colorYellow,
@@ -240,12 +301,12 @@ const styles = StyleSheet.create({
         borderBottomWidth: 2,
         paddingVertical: 10,
         flexDirection: "row",
-        justifyContent: "space-between"
+        justifyContent: "space-between",
     },
     textBack: {
         color: Colors.colorRed,
         //textTransform: "uppercase",
-        fontSize: RFValue(16)
+        fontSize: RFValue(16),
     },
 })
 
