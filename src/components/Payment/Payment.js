@@ -81,6 +81,14 @@ const Payment = ({ route, navigation }) => {
         }
     }
 
+    const verifiPIN = async () => {
+        try {
+            navigation.navigate('ModalConfirm', { fun : confirmPayment })
+        } catch (error) {
+            errorMessage(error.toString())
+        }
+    }
+
     /**Funcion que envia los datos al servidor backend */
     const confirmPayment = async () => {
         try {
@@ -229,7 +237,7 @@ const Payment = ({ route, navigation }) => {
 
                 <TouchableOpacity style={GlobalStyles.buttonPrimary}>
                     <Text
-                        onPress={confirmPayment}
+                        onPress={verifiPIN}
                         style={{ textTransform: "uppercase" }}>
                         Confirmar
                     </Text>

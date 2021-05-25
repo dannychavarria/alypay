@@ -18,7 +18,6 @@ import { check, PERMISSIONS, RESULTS, request } from "react-native-permissions"
 import { isIphoneX } from "react-native-iphone-x-helper"
 import { showMessage } from "react-native-flash-message"
 import moment from "moment"
-import ModalConfirmPin from "../components/ModalConfirmPin/ModalConfirmPin"
 
 // Store and action from redux
 import store from "../store/index"
@@ -97,8 +96,8 @@ const PORT = "3000"
 /**Direction for server */
 // export const serverAddress = "https://alypay.uc.r.appspot.com"
 // export const serverAddress = "https://root-anvil-299019.uc.r.appspot.com"
-export const serverAddress = "http://192.168.0.111:3085"
-// export const serverAddress = "http://91a0bebed1b1.ngrok.io"
+// export const serverAddress = "http://192.168.0.111:3085"
+export const serverAddress = "http://104567a907a2.ngrok.io"
 export const serverSpeedtradingsURL = "https://ardent-medley-272823.appspot.com"
 
 /**
@@ -436,6 +435,7 @@ export const getHeadersMultipartFormData = () => {
 
     return {
         headers: {
+            "Accept": "application/json",
             "Content-Type": "application/json",
             "x-auth-token": token,
         },

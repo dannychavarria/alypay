@@ -61,11 +61,27 @@ const Retirement = ({ route, navigation }) => {
         dispatch({ type: "amountUSD", payload: isNaN(newAmount) ? 0 : newAmount.toFixed(2) })
     }
 
+    const verifiPIN = async () => {
+        try {
+
+            // verificamos los permisos del TouchID
+            const auth = await CheckTouchIDPermission()
+
+            // validamos si el usuario no esta autenticado
+            if (!auth) {
+                throw String("Autenticación incorrecta")
+            }else{
+                navigation.navigate('ModalConfirm', { fun : onSubmit})
+            }
+
+        } catch (error) {
+            errorMessage(error.toString())
+        }
+    }
+
     /** Metodo que se ejcuta cuando el usuario  */
     const onSubmit = async () => {
         try {
-            loader(true)
-
 
             // validamos si hay alguna wallet ingresada
             if (state.walletAdress.length === 0) {
@@ -79,13 +95,7 @@ const Retirement = ({ route, navigation }) => {
                 throw String(`Monto de ${data.description} tiene un formato incorrecto`)
             }
 
-            // verificamos los permisos del TouchID
-            const auth = await CheckTouchIDPermission()
-
-            // validamos si el usuario no esta autenticado
-            if (!auth) {
-                throw String("Autenticación incorrecta")
-            }
+            loader(true)
 
             const dataSend = {
                 wallet: state.walletAdress,
@@ -108,7 +118,7 @@ const Retirement = ({ route, navigation }) => {
             } else {
                 throw String("Tu solictud no se ha podido procesar, contacte a soporte")
             }
-            
+
             // actualizamos la wallets
             functions?.reloadWallets()
 
@@ -215,7 +225,7 @@ const Retirement = ({ route, navigation }) => {
                     </View>
                 }
 
-                <TouchableOpacity onPress={onSubmit} style={[GlobalStyles.buttonPrimary, styles.buttonSend]}>
+                <TouchableOpacity onPress={verifiPIN} style={[GlobalStyles.buttonPrimary, styles.buttonSend]}>
                     <Text style={GlobalStyles.textButton}>Retirar</Text>
                 </TouchableOpacity>
 

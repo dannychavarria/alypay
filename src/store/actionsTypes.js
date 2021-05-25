@@ -24,3 +24,7 @@ export const SETLOADER = "SETLOADER"
 
 /**Setea los datos una funcion */
 export const SETFUNCTION = "SETFUNCTION"
+
+export const PINAUTH = "PINAUTH"
+export const CLOSEAUTH = "CLOSEAUTH"
+export const SHOWPIN = "SHOWPIN"

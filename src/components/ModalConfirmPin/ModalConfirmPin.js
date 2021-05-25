@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, TouchableOpacity, Text, Modal } from 'react-native'
 
 import ModalConfirmPinS from "../../Styles/Components/ModalConfirmPinS/ModalConfirmPinS"
@@ -9,11 +9,24 @@ import EntryPassword from '../../components/EntryPassword/entryPassword.componen
 import Container from '../../components/Container/Container'
 
 import { http, getHeaders, errorMessage, successMessage, loader } from '../../utils/constants'
+import store from "../../store/index"
+import { PINAUTH } from "../../store/actionsTypes"
 
-const ModalConfirmPin = () => {
-
+const ModalConfirmPin = _ => {
     const [PIN, setPIN] = useState([])
-    const [show, setShow] = useState(true)
+    const { navigation, pin } = store.getState()
+
+    const [show, setVisible] = useState(false)
+
+    useEffect(function() {
+        store.subscribe(function() {
+            const { pin } = store.getState()
+
+            if (show !== pin.show) {
+                setVisible(pin.show)
+            }
+        })
+    }, [])
 
     const classes = useStyles(ModalConfirmPinS)
 
@@ -21,29 +34,33 @@ const ModalConfirmPin = () => {
         PIN.length < 6 ? setPIN([...PIN, pin]) : ''
     }
 
-    console.log('entra')
+    const submitPIN = async () => {
 
-    const submitPIN = () => {
+        let pinParse = ''
+
+        PIN.map(item => pinParse = pinParse + item)
 
         try {
-            const { data: response } = http.get(`/pin/${PIN}`, getHeaders())
-            if (response.error) {
-                throw String(response.message)
-            }
+            loader(true)
+            // const { data: response } = await http.get(`/pin/${pinParse}`, getHeaders())
+            // if (response.error) {
+            //     throw String(response.message)
+            // } else {
+            //     fun()
+            // }
+
+            await store.dispatch({ type: PINAUTH, fn: fun, pin: pinParse })
         } catch (error) {
             errorMessage(error.toString())
         } finally {
-            setShowModalPin(false)
             loader(false)
+            navigation.pop()
         }
 
     }
 
     return (
-        <Modal
-            isVisible={show}
-            onRequestClose={() => { setShow(false) }}
-        >
+        <Modal isVisible={show}>
             <Container showLogo>
                 <View style={classes.principalContainer}>
 

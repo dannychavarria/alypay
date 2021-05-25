@@ -213,11 +213,7 @@ const SendComponent = ({
 
     const { global, functions } = store.getState()
 
-    const [showModalPin, setShowModalPin] = useState(false)
-
-    const [pinSent, setPinSent] = useState()
-
-    const { navigate } = useNavigation()
+    const { navigation } = store.getState()
 
     const styles = StyleSheet.create({
         container: {
@@ -353,9 +349,9 @@ const SendComponent = ({
         },
     })
 
-    /** Metodo que se ejecuta para enviar los fondos */
-    const submit = async () => {
+    const verifiPin = async () => {
         try {
+
             Keyboard.dismiss()
 
             if (state.amountUSD.trim().length === 0) {
@@ -365,6 +361,25 @@ const SendComponent = ({
             // Ejecutamos una vibracion minima del dispositivo
             Vibration.vibrate(100)
 
+            // verificamos si el dispositvo tiene touch id
+            const auth = await CheckTouchIDPermission()
+
+            if (!auth) {
+                throw String("Autenticación incorrecta")
+            }else{
+                navigation.navigate('ModalConfirm', { fun: submit })
+            }
+        } catch (error) {
+            errorMessage(error.toString())
+        }
+    }
+
+    /** Metodo que se ejecuta para enviar los fondos */
+    const submit = async () => {
+        try {
+
+            console.log('entra')
+
             // variables que se enviaran a una peticion
             const vars = {
                 amount_usd: state.amountUSD,
@@ -372,13 +387,6 @@ const SendComponent = ({
                 id_wallet: data.id,
                 wallet: state.walletAdress,
                 symbol: data.symbol,
-            }
-
-            // verificamos si el dispositvo tiene touch id
-            const auth = await CheckTouchIDPermission()
-
-            if (!auth) {
-                throw String("Autenticación incorrecta")
             }
 
             loader(true)
@@ -523,7 +531,7 @@ const SendComponent = ({
 
     /** Metodo que envia a la pantalla de retiros  */
     const onRetirement = () => {
-        navigate("Retirement", data)
+        navigation.navigate("Retirement", data)
     }
 
     /** Metodo que se ejecuta cuando el lector QR lee el codigo */
@@ -707,10 +715,7 @@ const SendComponent = ({
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                        onPress={() => {
-                            // setShowModalPin(true)
-                            onComprobateWallet()
-                        }}
+                        onPress={onComprobateWallet}
                         style={[
                             GlobalStyles.buttonPrimary,
                             { flex: 1, marginLeft: 25 },
@@ -722,7 +727,7 @@ const SendComponent = ({
 
             {state.walletAccepted && (
                 <TouchableOpacity
-                    onPress={submit}
+                    onPress={verifiPin}
                     style={GlobalStyles.buttonPrimary}>
                     <Text style={GlobalStyles.textButton}>Enviar</Text>
                 </TouchableOpacity>
@@ -742,7 +747,7 @@ const SendComponent = ({
                     />
                 </View>
             </Modal>
-            
+
         </ViewAnimate>
     )
 }
