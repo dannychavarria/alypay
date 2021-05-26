@@ -367,7 +367,7 @@ const SendComponent = ({
             if (!auth) {
                 throw String("Autenticación incorrecta")
             }else{
-                navigation.navigate('ModalConfirm', { fun: submit })
+                store.dispatch({ type: 'SHOWPIN', payload: true})
             }
         } catch (error) {
             errorMessage(error.toString())

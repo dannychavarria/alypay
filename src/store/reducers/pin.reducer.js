@@ -16,14 +16,14 @@ export const pin = (state = INITIAL_STATE, action) => {
             return { ...state, show: action.payload }
         }  
         case PINAUTH: {
-            const { data: response } = await http.get(`/pin/${action.pin}`, getHeaders())            
+            // const { data: response } = http.get(`/pin/${action.pin}`, getHeaders())            
             
-            if (response.error) {
-                showMessage({})
-            } else {
-                // verificamos si existe la funcion para ejecutarla
-                action?.fn()
-            }
+            // if (response.error) {
+            //     showMessage({})
+            // } else {
+            //     // verificamos si existe la funcion para ejecutarla
+            //     action?.fn()
+            // }
 
             return { ...state, show: false }
         }

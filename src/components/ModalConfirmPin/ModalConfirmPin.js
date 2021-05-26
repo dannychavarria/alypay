@@ -49,7 +49,7 @@ const ModalConfirmPin = _ => {
             //     fun()
             // }
 
-            await store.dispatch({ type: PINAUTH, fn: fun, pin: pinParse })
+            // await store.dispatch({ type: PINAUTH, fn: fun, pin: pinParse })
         } catch (error) {
             errorMessage(error.toString())
         } finally {
