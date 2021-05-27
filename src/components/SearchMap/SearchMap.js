@@ -14,6 +14,7 @@ const SearchMap = ({
     setNewLatitude,
     click,
     setClick,
+    changeTap
 }) => {
     const [value, setValue] = useState("")
     const [list, setList] = useState([])
@@ -27,7 +28,7 @@ const SearchMap = ({
                     const { name_commerce } = item
                     return name_commerce
                         .toLowerCase()
-                        .includes(value.toLowerCase())
+                        .includes(value.toLowerCase()) 
                 }),
             )
         }
@@ -40,11 +41,19 @@ const SearchMap = ({
 
     //Seteo de la nueva longitud y latitud a la que se dirigira
     const positionCommerce = (longitude, latitude) => {
+
+        //Se busca el comercio que selecciono mediante comparar la latitud y longitud
+        let commerce = data.find(item=> item.latitude === latitude && item.longitude === longitude)
+        //Se obtiene el indice del comercio en el arreglo principal
+        let index = data.indexOf(commerce)
+
         setNewLongitude(longitude)
         setNewLatitude(latitude)
         setValue("") //Para que se quite el flatlist al momento de tocar algun elemento de este
         setList([])
         setClick(!click)
+        //Se envia el index del comercio seleccionado
+        changeTap(index)
     }
 
     return (
@@ -68,7 +77,7 @@ const SearchMap = ({
             <FlatList
                 keyExtractor={(_, i) => (i = i)}
                 data={list}
-                renderItem={({ item }) => (
+                renderItem={({ item, index }) => (
                     <TouchableOpacity
                         style={classes.cardContainer}
                         onPress={() => {

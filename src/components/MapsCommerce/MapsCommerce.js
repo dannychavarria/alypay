@@ -21,7 +21,7 @@ import {
     http,
     getHeaders,
     loader,
-    Colors
+    Colors,
 } from "../../utils/constants"
 import SearchMap from "../SearchMap/SearchMap" //Importacion del buscador
 import styleMap from "../../animations/map-dark-mode.json"
@@ -52,6 +52,12 @@ const MapsCommerce = () => {
     const [newLatitude, setNewLatitude] = useState(999)
     //Estado para referenciar al MapView y poder usar sus metodos
     const [ref, setRef] = useState()
+
+    // Estado que almacena la referencia de los markers de los comercios para mostrar su nombre
+    const [markersRef, setMarkersRef] = useState([])
+
+    // Estado que almacena la referencia de los comercios para posicionar la card al hacer la busqueda
+    const [carouselRef, setCarouselRef] = useState()
 
     // Funcion que permite dar los permisos para la Geolocalizacion
     const ConfigureLocation = async () => {
@@ -160,28 +166,53 @@ const MapsCommerce = () => {
 
         return (
             <TouchableOpacity style={styles.cardContainer} onPress={direcction}>
-                <Image
-                    style={styles.cardImage}
-                    source={{ uri: parsedImage }}
-                />
+                <Image style={styles.cardImage} source={{ uri: parsedImage }} />
                 <View style={styles.containerImageAndTitle}>
                     <View style={styles.containerImage}>
-                        <Image source={imageProfileAvatar} style={styles.avatarEcommerce} />
+                        <Image
+                            source={imageProfileAvatar}
+                            style={styles.avatarEcommerce}
+                        />
                     </View>
 
                     <View style={styles.carSubcontainer}>
-                        <Text style={styles.cardTitle}>{item?.name_commerce}</Text>
-                        <Text style={styles.cardDirection}>{item?.address}</Text>
+                        <Text style={styles.cardTitle}>
+                            {item?.name_commerce}
+                        </Text>
+                        <Text style={styles.cardDirection}>
+                            {item?.address}
+                        </Text>
                     </View>
                 </View>
 
                 <View style={styles.containerTextDirection}>
                     <Text style={styles.textDirection}>Ver direcciones</Text>
-                    <Image source={iconDirection} style={styles.imageDirectionText} />
+                    <Image
+                        source={iconDirection}
+                        style={styles.imageDirectionText}
+                    />
                 </View>
             </TouchableOpacity>
         )
     }, [])
+
+    /**Funcion para setear la ubicacion de lal item que se muestra en el carrusel
+     *
+     * @param {newLatitude, newLongitude} index
+     */
+    const onChangeTap = index => {
+        var commerce = info[index]
+
+        setNewLatitude(commerce.latitude)
+        setNewLongitude(commerce.longitude)
+
+        markersRef[index].showCallout()
+    }
+
+    //Se cambia el tap del carusel segun el index
+    const changeTap = index => {
+        carouselRef.snapToItem(index)
+    }
 
     useEffect(() => {
         ConfigureLocation()
@@ -193,6 +224,7 @@ const MapsCommerce = () => {
             informationCommerce()
         }
     }, [state.latitude, state.longitude])
+
     /**
      * useEffect para cambiar la posicion de la camara si cambian los estados de:
      * @param {newLongitude, newLatitude} index
@@ -207,16 +239,6 @@ const MapsCommerce = () => {
             })
         }
     }, [newLatitude, newLongitude, click])
-    /**Funcion para setear la ubicacion de lal item que se muestra en el carrusel
-     *
-     * @param {newLatitude, newLongitude} index
-     */
-    const onChangeTap = index => {
-        var commerce = info[index]
-
-        setNewLatitude(commerce.latitude)
-        setNewLongitude(commerce.longitude)
-    }
 
     return (
         <View style={styles.container}>
@@ -247,7 +269,12 @@ const MapsCommerce = () => {
                         {info.map((item, index) => (
                             <Marker
                                 key={item.index}
-                                ref={ref => (item[index] = ref)}
+                                // ref={ref => (item[index] = ref)}
+                                ref={ref => {
+                                    let updaRef = markersRef
+                                    updaRef[index] = ref
+                                    setMarkersRef(updaRef)
+                                }}
                                 coordinate={{
                                     latitude: item.latitude,
                                     longitude: item.longitude,
@@ -271,6 +298,7 @@ const MapsCommerce = () => {
                         sliderWidth={Dimensions.get("window").width}
                         removeClippedSubviews={false}
                         layout={"default"}
+                        ref={ref => setCarouselRef(ref)}
                         onSnapToItem={index => onChangeTap(index)} //mandar el index de la targeta actual a la funcion
                     />
 
@@ -280,6 +308,7 @@ const MapsCommerce = () => {
                         setNewLatitude={setNewLatitude}
                         click={click}
                         setClick={setClick}
+                        changeTap={changeTap}
                     />
                 </>
             )}
@@ -325,7 +354,7 @@ const styles = StyleSheet.create({
         marginLeft: 20,
     },
     avatarEcommerce: {
-        resizeMode: "cover",        
+        resizeMode: "cover",
         height: RFValue(24),
         width: RFValue(24),
     },
@@ -341,7 +370,7 @@ const styles = StyleSheet.create({
         resizeMode: "cover",
     },
     cardDirection: {
-        color: "#CCC"
+        color: "#CCC",
     },
     cardTitle: {
         color: Colors.colorYellow,
@@ -356,11 +385,11 @@ const styles = StyleSheet.create({
     imageDirectionText: {
         resizeMode: "cover",
         height: RFValue(16),
-        width: RFValue(16)
+        width: RFValue(16),
     },
     textDirection: {
         color: Colors.colorYellow,
-        fontSize: RFValue(12)
+        fontSize: RFValue(12),
     },
     itemCommerce: {
         width: RFValue(60),

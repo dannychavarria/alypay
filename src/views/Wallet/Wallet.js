@@ -9,6 +9,7 @@ import ItemWallet from "../../components/ItemWallet/ItemWallet"
 import StoreElement from "../../components/StoreElement/StoreElement"
 import Switch from "../../components/Switch/Switch"
 import Search from "../../components/Search/Search"
+import ModalConfirmPin from "../../components/ModalConfirmPin/ModalConfirmPin"
 
 // Import other components
 import QRCodeScanner from "react-native-qrcode-scanner"
@@ -206,13 +207,13 @@ const initialStateSendComponent = {
 /** Componente que renderiza los datos necesarios para ejecutar una transaccion a otra wallet */
 const SendComponent = ({
     data: data = {},
-    onCompleteTrasanction = () => {},
+    onCompleteTrasanction = () => { },
 }) => {
     const [state, dispatch] = useReducer(reducer, initialStateSendComponent)
 
     const { global, functions } = store.getState()
 
-    const { navigate } = useNavigation()
+    const { navigation } = store.getState()
 
     const styles = StyleSheet.create({
         container: {
@@ -348,9 +349,9 @@ const SendComponent = ({
         },
     })
 
-    /** Metodo que se ejecuta para enviar los fondos */
-    const submit = async () => {
+    const verifiPin = async () => {
         try {
+
             Keyboard.dismiss()
 
             if (state.amountUSD.trim().length === 0) {
@@ -360,6 +361,24 @@ const SendComponent = ({
             // Ejecutamos una vibracion minima del dispositivo
             Vibration.vibrate(100)
 
+            // verificamos si el dispositvo tiene touch id
+            const auth = await CheckTouchIDPermission()
+
+            if (!auth) {
+                throw String("Autenticación incorrecta")
+            }else{
+                console.log("entra a la ejecucion")
+                store.dispatch({ type: 'SHOWPIN', payload: true})
+            }
+        } catch (error) {
+            errorMessage(error.toString())
+        }
+    }
+
+    /** Metodo que se ejecuta para enviar los fondos */
+    const submit = async () => {
+        try {
+
             // variables que se enviaran a una peticion
             const vars = {
                 amount_usd: state.amountUSD,
@@ -367,13 +386,6 @@ const SendComponent = ({
                 id_wallet: data.id,
                 wallet: state.walletAdress,
                 symbol: data.symbol,
-            }
-
-            // verificamos si el dispositvo tiene touch id
-            const auth = await CheckTouchIDPermission()
-
-            if (!auth) {
-                throw String("Autenticación incorrecta")
             }
 
             loader(true)
@@ -518,7 +530,7 @@ const SendComponent = ({
 
     /** Metodo que envia a la pantalla de retiros  */
     const onRetirement = () => {
-        navigate("Retirement", data)
+        navigation.navigate("Retirement", data)
     }
 
     /** Metodo que se ejecuta cuando el lector QR lee el codigo */
@@ -655,7 +667,7 @@ const SendComponent = ({
                                 <Text style={styles.textBodyFee}>
                                     {_.floor(
                                         parseFloat(state.amountFraction) +
-                                            parseFloat(state.fee.amount),
+                                        parseFloat(state.fee.amount),
                                         8,
                                     )}{" "}
                                     {state.fee.symbol}
@@ -714,7 +726,7 @@ const SendComponent = ({
 
             {state.walletAccepted && (
                 <TouchableOpacity
-                    onPress={submit}
+                    onPress={verifiPin}
                     style={GlobalStyles.buttonPrimary}>
                     <Text style={GlobalStyles.textButton}>Enviar</Text>
                 </TouchableOpacity>
@@ -734,6 +746,9 @@ const SendComponent = ({
                     />
                 </View>
             </Modal>
+
+            <ModalConfirmPin fn={submit}/>
+
         </ViewAnimate>
     )
 }
@@ -886,13 +901,13 @@ const Wallet = ({ route }) => {
             {state.information !== null && (
                 <>
                     {// Verificamos si esta en la pantalla de Recibir
-                    stateView === switchItems[0].state && (
-                        <ReceiveComponent
-                            wallet={state.wallet}
-                            data={state.information}
-                            isAly={isAly}
-                        />
-                    )}
+                        stateView === switchItems[0].state && (
+                            <ReceiveComponent
+                                wallet={state.wallet}
+                                data={state.information}
+                                isAly={isAly}
+                            />
+                        )}
 
                     {stateView === switchItems[1].state && (
                         <SendComponent
