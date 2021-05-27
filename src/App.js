@@ -204,13 +204,14 @@ const App = () => {
 
             {!state.loged && <ButtonSupport />}
 
+            {/* <ModalConfirmPin/> */}
+
             <Loader isVisible={state.loader} />
 
             <Splash isVisible={state.splash} />
 
             <FlashMessage position="top" floating={true} />
 
-            <ModalConfirmPin/>
         </>
     )
 }

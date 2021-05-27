@@ -27,6 +27,8 @@ import SwitchCoin from "../Switch/SwitchCoin"
 import _ from "lodash"
 import store from "../../store"
 
+import ModalConfirmPin from "../../components/ModalConfirmPin/ModalConfirmPin"
+
 const Payment = ({ route, navigation }) => {
     const { goBack } = useNavigation()
 
@@ -82,11 +84,7 @@ const Payment = ({ route, navigation }) => {
     }
 
     const verifiPIN = async () => {
-        try {
-            navigation.navigate('ModalConfirm', { fun : confirmPayment })
-        } catch (error) {
-            errorMessage(error.toString())
-        }
+        store.dispatch({type: 'SHOWPIN', payload: true})
     }
 
     /**Funcion que envia los datos al servidor backend */
@@ -243,6 +241,7 @@ const Payment = ({ route, navigation }) => {
                     </Text>
                 </TouchableOpacity>
             </View>
+            <ModalConfirmPin fn={confirmPayment}/>
         </Container>
     )
 }

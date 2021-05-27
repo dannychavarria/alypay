@@ -8,6 +8,7 @@ import Container from "../../components/Container/Container"
 import Modal from "react-native-modal"
 import Lottie from "lottie-react-native"
 import QRCodeScanner from "react-native-qrcode-scanner"
+import ModalConfirmPin from "../../components/ModalConfirmPin/ModalConfirmPin"
 
 // import constants and functions
 import _ from "lodash"
@@ -71,7 +72,7 @@ const Retirement = ({ route, navigation }) => {
             if (!auth) {
                 throw String("Autenticación incorrecta")
             }else{
-                navigation.navigate('ModalConfirm', { fun : onSubmit})
+                store.dispatch({ type: 'SHOWPIN', payload: true})
             }
 
         } catch (error) {
@@ -237,6 +238,7 @@ const Retirement = ({ route, navigation }) => {
                         />
                     </View>
                 </Modal>
+            <ModalConfirmPin fn={onSubmit}/>
             </KeyboardAvoidingView>
         </Container>
     )

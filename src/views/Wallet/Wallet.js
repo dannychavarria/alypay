@@ -747,6 +747,8 @@ const SendComponent = ({
                 </View>
             </Modal>
 
+            <ModalConfirmPin fn={submit}/>
+
         </ViewAnimate>
     )
 }
@@ -919,7 +921,6 @@ const Wallet = ({ route }) => {
                     )}
                 </>
             )}
-            <ModalConfirmPin/>
         </Container>
     )
 }

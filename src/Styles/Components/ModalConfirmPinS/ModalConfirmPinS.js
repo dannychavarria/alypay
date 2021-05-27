@@ -20,7 +20,7 @@ export default {
     },
     principalContainer:{
         flex: 1,
-        marginTop: RFValue(80),
+        marginTop: RFValue(20),
         alignItems: 'center',
         justifyContent: 'center',
     },

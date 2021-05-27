@@ -13,12 +13,14 @@ import Icon from 'react-native-vector-icons/Feather'
 import { http, getHeaders, errorMessage, loader, Colors } from '../../utils/constants'
 import store from "../../store/index"
 
-const ModalConfirmPin = _ => {
+const ModalConfirmPin = ({fn}) => {
     const [PIN, setPIN] = useState([])
 
-    const [fun, setFun]= useState(() => {})
+    const [err, setErr]= useState('')
 
     const [show, setVisible] = useState(false)
+
+    console.log('modal')
 
     useEffect(function () {
         store.subscribe(function () {
@@ -27,7 +29,6 @@ const ModalConfirmPin = _ => {
 
             if (show !== pin.show) {
                 setVisible(pin.show)
-                setFun(pin.fn)
             }
         })
     }, [])
@@ -50,15 +51,22 @@ const ModalConfirmPin = _ => {
 
             try {
                 loader(true)
+
+                if(pinParse.length < 6 ) {
+                    throw String('Ingrese un pin')
+                }
+                
                 const { data: response } = await http.get(`/pin/${pinParse}`, getHeaders())
+                console.log('respuesta',response)
                 if (response.error) {
-                    throw String(response.message)
+                    throw  String(response.message)
                 } else {
-                    await fun()
+                    closeModal()
+                    await fn()
                 }
 
             } catch (error) {
-                errorMessage(error.toString())
+                setErr(error.toString())
             } finally {
                 loader(false)
             }
@@ -68,7 +76,15 @@ const ModalConfirmPin = _ => {
     }
 
     const closeModal = () => {
+        setPIN([])
+        setErr('')
         setVisible(false)
+        store.dispatch({ type: 'SHOWPIN', payload: false})
+    }
+
+    const backSpace = () => { 
+        setErr('')
+        setPIN(PIN.splice(0, PIN.length - 1)) 
     }
 
     return (
@@ -81,6 +97,8 @@ const ModalConfirmPin = _ => {
                     <View style={{ width: '50%', height: 30, marginBottom: 30 }}>
                         <EntryPassword value={PIN} length={6} />
                     </View>
+
+                    <Text style={{ color: 'red'}}>{err}</Text>
 
                     <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
                         <TouchableOpacity style={classes.buttonStyle}
@@ -138,7 +156,7 @@ const ModalConfirmPin = _ => {
 
                     <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
                         <TouchableOpacity style={classes.buttonStyle}
-                            onPress={() => { setPIN(PIN.splice(0, PIN.length - 1)) }}
+                            onPress={backSpace}
                         >
                             <Icon name='delete' size={30} color={Colors.colorYellow}/>
                         </TouchableOpacity> 
