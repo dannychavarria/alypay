@@ -44,6 +44,7 @@ import ModalKyc from "./components/ModalKyc/ModalKyc"
 // import assets and animation
 import notConectionAnimation from "./animations/no-internet-connection.json"
 import ButtonSupport from "./components/ButtonSupport/ButtonSupport.component"
+import ModalConfirmPin from "./components/ModalConfirmPin/ModalConfirmPin"
 
 const Stack = createStackNavigator()
 
@@ -208,6 +209,8 @@ const App = () => {
             <Splash isVisible={state.splash} />
 
             <FlashMessage position="top" floating={true} />
+
+            <ModalConfirmPin/>
         </>
     )
 }

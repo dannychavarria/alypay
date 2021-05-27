@@ -367,6 +367,7 @@ const SendComponent = ({
             if (!auth) {
                 throw String("Autenticación incorrecta")
             }else{
+                console.log("entra a la ejecucion")
                 store.dispatch({ type: 'SHOWPIN', payload: true})
             }
         } catch (error) {
@@ -377,8 +378,6 @@ const SendComponent = ({
     /** Metodo que se ejecuta para enviar los fondos */
     const submit = async () => {
         try {
-
-            console.log('entra')
 
             // variables que se enviaran a una peticion
             const vars = {
@@ -920,6 +919,7 @@ const Wallet = ({ route }) => {
                     )}
                 </>
             )}
+            <ModalConfirmPin/>
         </Container>
     )
 }

@@ -344,8 +344,6 @@ export const CheckTouchIDPermission = async _ => {
             securityNotification,
         )
 
-        console.log('bio: ', biometricType)
-
         if (biometricType) {
             await TouchID.authenticate("Para continuar", configTouchIDAuth)
 

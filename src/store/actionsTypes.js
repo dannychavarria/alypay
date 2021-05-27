@@ -28,3 +28,5 @@ export const SETFUNCTION = "SETFUNCTION"
 export const PINAUTH = "PINAUTH"
 export const CLOSEAUTH = "CLOSEAUTH"
 export const SHOWPIN = "SHOWPIN"
+
+export const SETAFUNCTION = "SETAFUNCTION"

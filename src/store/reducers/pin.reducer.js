@@ -1,9 +1,10 @@
-import { PINAUTH, CLOSEAUTH, SHOWPIN } from "../actionsTypes"
+import { PINAUTH, CLOSEAUTH, SHOWPIN, SETAFUNCTION } from "../actionsTypes"
 import { http, getHeaders } from "../../utils/constants"
 
 
 const INITIAL_STATE = {
-    show: false
+    show: false,
+    fn: () => {}
 }
 
 /**
@@ -15,20 +16,20 @@ export const pin = (state = INITIAL_STATE, action) => {
         case SHOWPIN: {
             return { ...state, show: action.payload }
         }  
-        case PINAUTH: {
-            // const { data: response } = http.get(`/pin/${action.pin}`, getHeaders())            
-            
-            // if (response.error) {
-            //     showMessage({})
-            // } else {
-            //     // verificamos si existe la funcion para ejecutarla
-            //     action?.fn()
-            // }
 
-            return { ...state, show: false }
+        case PINAUTH: {
+            return state
         }
+
         case CLOSEAUTH: {
             return INITIAL_STATE
+        }
+
+        case SETAFUNCTION: {
+            return {
+                ...state,
+                fn: action.payload
+            }
         }
 
         default: {

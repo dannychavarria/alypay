@@ -8,22 +8,26 @@ import EntryPassword from '../../components/EntryPassword/entryPassword.componen
 
 import Container from '../../components/Container/Container'
 
-import { http, getHeaders, errorMessage, successMessage, loader } from '../../utils/constants'
+import Icon from 'react-native-vector-icons/Feather'
+
+import { http, getHeaders, errorMessage, loader, Colors } from '../../utils/constants'
 import store from "../../store/index"
-import { PINAUTH } from "../../store/actionsTypes"
 
 const ModalConfirmPin = _ => {
     const [PIN, setPIN] = useState([])
-    const { navigation, pin } = store.getState()
+
+    const [fun, setFun]= useState(() => {})
 
     const [show, setVisible] = useState(false)
 
-    useEffect(function() {
-        store.subscribe(function() {
+    useEffect(function () {
+        store.subscribe(function () {
+
             const { pin } = store.getState()
 
             if (show !== pin.show) {
                 setVisible(pin.show)
+                setFun(pin.fn)
             }
         })
     }, [])
@@ -36,31 +40,39 @@ const ModalConfirmPin = _ => {
 
     const submitPIN = async () => {
 
-        let pinParse = ''
+        console.log('show: ', show)
 
-        PIN.map(item => pinParse = pinParse + item)
+        if (show) {
 
-        try {
-            loader(true)
-            // const { data: response } = await http.get(`/pin/${pinParse}`, getHeaders())
-            // if (response.error) {
-            //     throw String(response.message)
-            // } else {
-            //     fun()
-            // }
+            let pinParse = ''
 
-            // await store.dispatch({ type: PINAUTH, fn: fun, pin: pinParse })
-        } catch (error) {
-            errorMessage(error.toString())
-        } finally {
-            loader(false)
-            navigation.pop()
+            PIN.map(item => pinParse = pinParse + item)
+
+            try {
+                loader(true)
+                const { data: response } = await http.get(`/pin/${pinParse}`, getHeaders())
+                if (response.error) {
+                    throw String(response.message)
+                } else {
+                    await fun()
+                }
+
+            } catch (error) {
+                errorMessage(error.toString())
+            } finally {
+                loader(false)
+            }
+
         }
 
     }
 
+    const closeModal = () => {
+        setVisible(false)
+    }
+
     return (
-        <Modal isVisible={show}>
+        <Modal visible={show}>
             <Container showLogo>
                 <View style={classes.principalContainer}>
 
@@ -128,8 +140,8 @@ const ModalConfirmPin = _ => {
                         <TouchableOpacity style={classes.buttonStyle}
                             onPress={() => { setPIN(PIN.splice(0, PIN.length - 1)) }}
                         >
-                            <Text style={classes.textButtonStyle}>X</Text>
-                        </TouchableOpacity>
+                            <Icon name='delete' size={30} color={Colors.colorYellow}/>
+                        </TouchableOpacity> 
                         <TouchableOpacity style={classes.buttonStyle}
                             onPress={() => { PinFunction(0) }}
                         >
@@ -138,10 +150,15 @@ const ModalConfirmPin = _ => {
                         <TouchableOpacity style={classes.buttonStyle}
                             onPress={submitPIN}
                         >
-                            <Text style={classes.textButtonStyle}>{"<"}</Text>
+                            <Icon name='check' size={30} color={Colors.colorYellow}/>
                         </TouchableOpacity>
                     </View>
                 </View>
+                <TouchableOpacity style={classes.buttonCloseStyle}
+                    onPress={closeModal}
+                >
+                    <Text>VOLVER</Text>
+                </TouchableOpacity>
             </Container>
         </Modal>
     )
