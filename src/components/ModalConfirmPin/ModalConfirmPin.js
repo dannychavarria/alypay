@@ -10,9 +10,10 @@ import Container from '../../components/Container/Container'
 
 import Icon from 'react-native-vector-icons/Feather'
 
-import { http, getHeaders, errorMessage, loader, Colors } from '../../utils/constants'
+import { http, getHeaders, loader, Colors } from '../../utils/constants'
 import store from "../../store/index"
 
+// modal para verificar el pin
 const ModalConfirmPin = ({fn}) => {
     const [PIN, setPIN] = useState([])
 
@@ -20,28 +21,15 @@ const ModalConfirmPin = ({fn}) => {
 
     const [show, setVisible] = useState(false)
 
-    console.log('modal')
-
-    useEffect(function () {
-        store.subscribe(function () {
-
-            const { pin } = store.getState()
-
-            if (show !== pin.show) {
-                setVisible(pin.show)
-            }
-        })
-    }, [])
-
     const classes = useStyles(ModalConfirmPinS)
 
+    //funcion para setear el pin
     const PinFunction = (pin) => {
         PIN.length < 6 ? setPIN([...PIN, pin]) : ''
     }
 
+    // funcion para consultar el pin
     const submitPIN = async () => {
-
-        console.log('show: ', show)
 
         if (show) {
 
@@ -75,6 +63,7 @@ const ModalConfirmPin = ({fn}) => {
 
     }
 
+    // funcion para cerrar el modal y setear los estados
     const closeModal = () => {
         setPIN([])
         setErr('')
@@ -82,10 +71,22 @@ const ModalConfirmPin = ({fn}) => {
         store.dispatch({ type: 'SHOWPIN', payload: false})
     }
 
+    //funcion para borrar el input
     const backSpace = () => { 
         setErr('')
         setPIN(PIN.splice(0, PIN.length - 1)) 
     }
+
+    useEffect(function () {
+        store.subscribe(function () {
+
+            const { pin } = store.getState()
+
+            if (show !== pin.show) {
+                setVisible(pin.show)
+            }
+        })
+    }, [])
 
     return (
         <Modal visible={show}>

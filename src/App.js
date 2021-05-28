@@ -8,7 +8,6 @@ import FlashMessage from "react-native-flash-message"
 import Loader from "./components/Loader/Loader"
 import Modal from "react-native-modal"
 import Lottie from "lottie-react-native"
-import { useNavigation } from "@react-navigation/native"
 
 // Import functions and utils constanst
 import { getStorage, reducer, RFValue, Colors } from "./utils/constants"
@@ -39,12 +38,10 @@ import WalletCommerce from "./views/WalletCommerce/WalletCommerce"
 import HistoryRetirementExcutive from "./components/HistoryRetirementExcutive/HistoryRetirementExcutive"
 import Kyc from "./views/KYC/KYC"
 import Profile from "./views/profile/Profile"
-import ModalKyc from "./components/ModalKyc/ModalKyc"
 
 // import assets and animation
 import notConectionAnimation from "./animations/no-internet-connection.json"
 import ButtonSupport from "./components/ButtonSupport/ButtonSupport.component"
-import ModalConfirmPin from "./components/ModalConfirmPin/ModalConfirmPin"
 
 const Stack = createStackNavigator()
 
@@ -203,8 +200,6 @@ const App = () => {
             </Modal>
 
             {!state.loged && <ButtonSupport />}
-
-            {/* <ModalConfirmPin/> */}
 
             <Loader isVisible={state.loader} />
 
