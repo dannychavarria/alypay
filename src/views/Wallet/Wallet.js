@@ -211,6 +211,9 @@ const SendComponent = ({
 }) => {
     const [state, dispatch] = useReducer(reducer, initialStateSendComponent)
 
+    // estado para renderizar el modal
+    const [loadModal, setLoadModal] = useState(false)
+
     const { global, functions } = store.getState()
 
     const { navigation } = store.getState()
@@ -349,7 +352,11 @@ const SendComponent = ({
         },
     })
 
+    // funcion que hace algunas verificacion y llama al modal para verificar el pin 
     const verifiPin = async () => {
+
+        setLoadModal(true)
+
         try {
 
             Keyboard.dismiss()
@@ -367,7 +374,6 @@ const SendComponent = ({
             if (!auth) {
                 throw String("Autenticación incorrecta")
             }else{
-                console.log("entra a la ejecucion")
                 store.dispatch({ type: 'SHOWPIN', payload: true})
             }
         } catch (error) {
@@ -430,6 +436,7 @@ const SendComponent = ({
             errorMessage(error.toString())
         } finally {
             loader(false)
+            setLoadModal(false)
         }
     }
 
@@ -747,7 +754,9 @@ const SendComponent = ({
                 </View>
             </Modal>
 
-            <ModalConfirmPin fn={submit}/>
+            {loadModal &&
+                <ModalConfirmPin fn={submit}/>
+            }
 
         </ViewAnimate>
     )
