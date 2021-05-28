@@ -62,26 +62,8 @@ const Retirement = ({ route, navigation }) => {
         dispatch({ type: "amountUSD", payload: isNaN(newAmount) ? 0 : newAmount.toFixed(2) })
     }
 
+    // funcion que hace algunas verificacion y llama al modal para verificar el pin 
     const verifiPIN = async () => {
-        try {
-
-            // verificamos los permisos del TouchID
-            const auth = await CheckTouchIDPermission()
-
-            // validamos si el usuario no esta autenticado
-            if (!auth) {
-                throw String("Autenticación incorrecta")
-            }else{
-                store.dispatch({ type: 'SHOWPIN', payload: true})
-            }
-
-        } catch (error) {
-            errorMessage(error.toString())
-        }
-    }
-
-    /** Metodo que se ejcuta cuando el usuario  */
-    const onSubmit = async () => {
         try {
 
             // validamos si hay alguna wallet ingresada
@@ -96,7 +78,33 @@ const Retirement = ({ route, navigation }) => {
                 throw String(`Monto de ${data.description} tiene un formato incorrecto`)
             }
 
+            // verificamos los permisos del TouchID
+            const auth = await CheckTouchIDPermission()
+
+            // validamos si el usuario no esta autenticado
+            if (!auth) {
+                throw String("Autenticación incorrecta")
+            } else {
+                store.dispatch({ type: 'SHOWPIN', payload: true })
+            }
+
+        } catch (error) {
+            errorMessage(error.toString())
+        }
+    }
+
+    /** Metodo que se ejcuta cuando el usuario  */
+    const onSubmit = async () => {
+        try {
+
             loader(true)
+
+            const amount = parseFloat(state.amountFraction)
+
+            // Validamos si el monto tiene un formato correcto
+            if (isNaN(amount)) {
+                throw String(`Monto de ${data.description} tiene un formato incorrecto`)
+            }
 
             const dataSend = {
                 wallet: state.walletAdress,
@@ -238,8 +246,8 @@ const Retirement = ({ route, navigation }) => {
                         />
                     </View>
                 </Modal>
-            <ModalConfirmPin fn={onSubmit}/>
             </KeyboardAvoidingView>
+            <ModalConfirmPin fn={onSubmit} />
         </Container>
     )
 }

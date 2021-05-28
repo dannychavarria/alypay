@@ -82,7 +82,7 @@ const Payment = ({ route, navigation }) => {
             loader(false)
         }
     }
-
+    // funcion que llama al modal para verificar el pin
     const verifiPIN = async () => {
         store.dispatch({type: 'SHOWPIN', payload: true})
     }
