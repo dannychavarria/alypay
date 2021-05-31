@@ -31,8 +31,6 @@ import {
 import countries from "../../utils/countries.json"
 import professions from "../../utils/profession.json"
 
-import store from "../../store/index"
-
 // Import Components
 import Container from "../../components/Container/Container"
 import CheckBox from "react-native-check-box"
@@ -46,6 +44,9 @@ import DateTimePicker from "@react-native-community/datetimepicker"
 import moment from "moment"
 import validator from "validator"
 import ModalKyc from "../../components/ModalKyc/ModalKyc"
+
+// Import Store
+import store from "../../store/index"
 
 const initialState = {
     identificationType: 1,
@@ -260,20 +261,14 @@ const KycUser = ({ navigation }) => {
 
         const myAvatar = {
             data: avatar.base64,
-            //name: avatar.fileName,
             type: avatar.type,
-            //uri: formatURI(avatar.uri),
             size: avatar.fileSize,
         }
         data.append("avatar", JSON.stringify(myAvatar))
 
-        // data.append("avatar", myAvatar)
-
         const myIdentificationPhoto = {
             data: identificationPhoto.base64,
-            //name: identificationPhoto.fileName,
             type: identificationPhoto.type,
-            //uri: formatURI(identificationPhoto.uri),
             size: identificationPhoto.fileSize,
         }
         data.append(
@@ -281,46 +276,27 @@ const KycUser = ({ navigation }) => {
             JSON.stringify(myIdentificationPhoto),
         )
 
-        // data.append("identificationPhoto", myIdentificationPhoto)
-
         if (CheckState) {
             data.append(
                 "beneficiaryAvatar",
                 JSON.stringify({
                     data: beneficiaryAvatar.base64,
-                    name: beneficiaryAvatar.fileName,
                     type: beneficiaryAvatar.type,
-                    uri: formatURI(beneficiaryAvatar.uri),
                     size: beneficiaryAvatar.size,
                 }),
-                // {
-                //     name: beneficiaryAvatar.fileName,
-                //     type: beneficiaryAvatar.type,
-                //     uri: formatURI(beneficiaryAvatar.uri),
-                // },
             )
 
             data.append(
                 "beneficiaryIdentificationPhoto",
                 JSON.stringify({
                     data: beneficiaryIdentificationPhoto.base64,
-                    // name: beneficiaryIdentificationPhoto.fileName,
                     type: beneficiaryIdentificationPhoto.type,
                     size: beneficiaryIdentificationPhoto.size,
-                    // uri: formatURI(beneficiaryIdentificationPhoto.uri),
                 }),
-                // {
-                //     name: beneficiaryIdentificationPhoto.fileName,
-                //     type: beneficiaryIdentificationPhoto.type,
-                //     uri: formatURI(beneficiaryIdentificationPhoto.uri),
-                // },
             )
         }
 
         Object.keys(body).forEach(i => data.append(i, body[i]))
-        // Object.keys(body).forEach(key => {
-        //     data.append(key, body[key])
-        // })
 
         return data
     }
