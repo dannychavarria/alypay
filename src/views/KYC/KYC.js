@@ -9,7 +9,6 @@ import {
     Alert,
     BackHandler,
 } from "react-native"
-import { StackActions } from "@react-navigation/native"
 
 // Import Hook
 import useStyles from "../../hooks/useStyles.hook"
@@ -26,9 +25,6 @@ import {
     RFValue,
     checkPermissionCamera,
     calcAge,
-    getHeaders,
-    http,
-    successMessage,
     logOutApp,
     formatURI,
 } from "../../utils/constants"

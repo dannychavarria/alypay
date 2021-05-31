@@ -19,7 +19,9 @@ const ROUTES = {
     RETIREMENTEXCUTIVE: "RetirementExcutive",
     HISTORYRETIREMENTEXCUTIVE: "HistoryRetirementExcutive",
     KYC: "Kyc",
+    PROFILE: "Profile",
     BUY: "Buy",
+    MODALCONFIRM: "ModalConfirm"
 }
 
 export default ROUTES

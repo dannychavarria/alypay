@@ -10,11 +10,11 @@ import { Colors, RFValue } from "../../utils/constants"
 // Import Assets
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 
-const CardExecutive = () => {
+const CardExecutive = (data) => {
     const { navigate } = useNavigation()
 
     const onListCommerce = () => {
-        navigate("Kyc")
+        navigate("Profile", data)
     }
 
     return (

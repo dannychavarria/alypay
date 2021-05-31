@@ -123,9 +123,11 @@ const MapsCommerce = () => {
                 throw String(data.message)
             }
 
-            console.log(data)
+            console.log('Comercios: ',data)
 
-            setInfo(data)
+            let commerceFilter = data.filter(info => info.id_state != 2 && info.id_state != 3)
+
+            setInfo(commerceFilter)
         } catch (error) {
             errorMessage(error.toString())
         } finally {

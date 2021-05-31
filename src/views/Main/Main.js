@@ -21,7 +21,6 @@ import {
 } from "react-native"
 import { Image } from "react-native-animatable"
 import { useNavigation } from "@react-navigation/native"
-import ModalKyc from "../../components/ModalKyc/ModalKyc"
 
 // Import constant and functions
 import * as CryptoJS from "react-native-crypto-js"
@@ -76,7 +75,7 @@ const initialState = {
  * Vista componente que se renderiza cuando
  * el usuario ejecuta el componente pagar en el switch
  */
-const PayComponent = ({ onGoBack = () => {} }) => {
+const PayComponent = ({ onGoBack = () => { } }) => {
     const { navigate } = useNavigation()
     const scanerCamera = useRef(null)
 
@@ -153,7 +152,7 @@ const PayComponent = ({ onGoBack = () => {} }) => {
             [
                 {
                     text: "Cancelar",
-                    onPress: () => {},
+                    onPress: () => { },
                 },
                 {
                     text: "Salir",
@@ -339,6 +338,7 @@ const Main = () => {
     const { globalStorage } = store.getState()
     const { navigate } = useNavigation()
 
+
     const { global } = store.getState()
 
     /**
@@ -423,6 +423,7 @@ const Main = () => {
             />
             {stateView === TYPE_VIEW.WALLET && (
                 <>
+                    {/* <CardExecutive data={global}/> */}
                     <FlatList
                         data={state.wallets}
                         keyExtractor={(_, i) => i.toString()}

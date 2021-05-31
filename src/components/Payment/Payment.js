@@ -27,6 +27,8 @@ import SwitchCoin from "../Switch/SwitchCoin"
 import _ from "lodash"
 import store from "../../store"
 
+import ModalConfirmPin from "../../components/ModalConfirmPin/ModalConfirmPin"
+
 const Payment = ({ route, navigation }) => {
     const { goBack } = useNavigation()
 
@@ -79,6 +81,10 @@ const Payment = ({ route, navigation }) => {
         } finally {
             loader(false)
         }
+    }
+    // funcion que llama al modal para verificar el pin
+    const verifiPIN = async () => {
+        store.dispatch({type: 'SHOWPIN', payload: true})
     }
 
     /**Funcion que envia los datos al servidor backend */
@@ -229,12 +235,13 @@ const Payment = ({ route, navigation }) => {
 
                 <TouchableOpacity style={GlobalStyles.buttonPrimary}>
                     <Text
-                        onPress={confirmPayment}
+                        onPress={verifiPIN}
                         style={{ textTransform: "uppercase" }}>
                         Confirmar
                     </Text>
                 </TouchableOpacity>
             </View>
+            <ModalConfirmPin fn={confirmPayment}/>
         </Container>
     )
 }

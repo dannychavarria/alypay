@@ -24,3 +24,6 @@ export const SETLOADER = "SETLOADER"
 
 /**Setea los datos una funcion */
 export const SETFUNCTION = "SETFUNCTION"
+
+/* Setea la muestra dek modal de pin */
+export const SHOWPIN = "SHOWPIN"

@@ -14,12 +14,12 @@ export default async function submitInfo(dataSent) {
     try {
         loader(true)
 
-        // console.log(dataSent, "Peticion Final")
+        console.log(dataSent, "Peticion Final")
 
         const { navigation } = store.getState()
 
         const { data: response } = await http.post(
-            "/user/create-kyc",
+            "/users/create-kyc",
             dataSent,
             // getHeaders(),
             getHeadersMultipartFormData(),

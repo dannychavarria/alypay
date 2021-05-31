@@ -97,7 +97,7 @@ const PORT = "3000"
 // export const serverAddress = "https://alypay.uc.r.appspot.com"
 // export const serverAddress = "https://root-anvil-299019.uc.r.appspot.com"
 export const serverAddress = "http://192.168.0.111:3085"
-// export const serverAddress = "http://7a45c15a1dff.ngrok.io"
+// export const serverAddress = "http://a1da9fb04f44.ngrok.io"
 export const serverSpeedtradingsURL = "https://ardent-medley-272823.appspot.com"
 
 /**
@@ -435,6 +435,7 @@ export const getHeadersMultipartFormData = () => {
 
     return {
         headers: {
+            Accept: "application/json",
             "Content-Type": "application/json",
             "x-auth-token": token,
         },
@@ -503,6 +504,7 @@ export const configTouchIDAuth = {
     title: "Autenticación",
     passcodeFallback: true,
     cancelText: "CANCELAR",
+    fallbackLabel: "CODIGO DE SEGURIDAD",
 }
 
 /**
