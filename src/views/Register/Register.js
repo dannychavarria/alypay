@@ -160,6 +160,9 @@ const Register = ({ navigation }) => {
     /**Funcion que envia los datos al servidor backend */
     const onSubmit = async () => {
         try {
+            if(!state.readTerms){
+                throw String("Acepte los terminos")
+            }
             // Loader on mode
             loader(true)
 
@@ -189,6 +192,7 @@ const Register = ({ navigation }) => {
 
             if (data.response === "success") {
                 dispatch({ type: "showSuccess", payload: true })
+                shoConfirm()
             } else {
                 throw "Tu registro no se ha podido completar, contacte a soporte"
             }
@@ -710,7 +714,7 @@ const Register = ({ navigation }) => {
                                 </TouchableOpacity>
 
                                 <TouchableOpacity
-                                    onPress={shoConfirm}
+                                    onPress={onSubmit}
                                     style={[
                                         GlobalStyles.buttonPrimaryLine,
                                         { flex: 1 },
@@ -942,7 +946,7 @@ const Register = ({ navigation }) => {
 
                     <TouchableOpacity
                         style={styles.buttonSuccess}
-                        onPress={onSubmit}>
+                        onPress={()=>{setShowModal(false)}}>
                         <Text style={GlobalStyles.textButton}>Listo</Text>
                     </TouchableOpacity>
                 </View>
