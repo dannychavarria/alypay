@@ -43,6 +43,7 @@ const ModalConfirmPin = ({fn}) => {
             if(pinParse.length < 6 ) {
                 setErr('Ingrese un pin')
             }else{
+                closeModal()
                 fn(pinParse)
             }
             
