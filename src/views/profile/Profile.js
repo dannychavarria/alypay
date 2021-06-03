@@ -15,6 +15,8 @@ import profileImage from "../../static/profile-default.png"
 import ModalPin from "../../components/ModalPin/ModalPin"
 import Container from "../../components/Container/Container"
 
+import HeaderComponent from "../../components/HeaderComponent/HeaderComponent"
+
 // import librerias
 import moment from 'moment'
 
@@ -59,7 +61,9 @@ const Profile = ({ route }) => {
     }, [])
 
     return (
-        <Container showLogo>
+        <View style={{ flex: 1, justifyContent: 'center', backgroundColor: 'black' }}>
+
+            <HeaderComponent />
 
             <View style={classes.notEditableDataContainer}>
 
@@ -82,16 +86,14 @@ const Profile = ({ route }) => {
 
             </View>
 
-            <View style={classes.bottomContainer}>
+            <TouchableOpacity style={classes.bottomStyle}
+                onPress={() => setShowModal(true)}
+                disabled={showModal}
+            >
+                <Text style={classes.textButton}>Cambiar PIN</Text>
+            </TouchableOpacity>
 
-                <TouchableOpacity style={classes.bottomStyle}
-                    onPress={() => setShowModal(true)}
-                    disabled={showModal}
-                >
-                    <Text style={classes.textButton}>Cambiar PIN</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={classes.bottomSecundary}
+            {/* <TouchableOpacity style={classes.bottomSecundary}
                     onPress={OpenSupport}
                     disabled={showModal}
                 >
@@ -103,13 +105,11 @@ const Profile = ({ route }) => {
                     disabled={showModal}
                 >
                     <Text style={classes.textButtonSecundary}>Cerrar sesión</Text>
-                </TouchableOpacity>
-
-            </View>
+                </TouchableOpacity> */}
 
             {showModal && <ModalPin showModal={showModal} setShowModal={setShowModal} />}
 
-        </Container>
+        </View>
     )
 }
 
