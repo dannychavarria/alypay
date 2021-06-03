@@ -14,14 +14,9 @@ export default async function submitInfo(dataSent) {
     try {
         loader(true)
 
-        console.log(dataSent, "Peticion Final")
-
-        const { navigation } = store.getState()
-
         const { data: response } = await http.post(
             "/users/create-kyc",
             dataSent,
-            // getHeaders(),
             getHeadersMultipartFormData(),
         )
 
@@ -32,7 +27,6 @@ export default async function submitInfo(dataSent) {
             await logOutApp()
         }
     } catch (error) {
-        console.log(error.toString())
         errorMessage(error.toString())
     } finally {
         loader(false)

@@ -72,10 +72,9 @@ const BuyCrypto = ({ route }) => {
             hash: hash,
             id_coin_from: idCoinSelected,
             symbol_from: symCoinSelected,
-            address: addressCoin
+            address: addressCoin,
         }
         submintInformation(dataSend)
-
     }
 
     useEffect(() => {
