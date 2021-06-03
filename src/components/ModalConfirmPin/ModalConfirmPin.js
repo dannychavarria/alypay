@@ -37,27 +37,30 @@ const ModalConfirmPin = ({fn}) => {
 
             PIN.map(item => pinParse = pinParse + item)
 
-            try {
-                loader(true)
+            // try {
+            //     loader(true)
 
-                if(pinParse.length < 6 ) {
-                    throw String('Ingrese un pin')
-                }
-                
-                const { data: response } = await http.get(`/pin/${pinParse}`, getHeaders())
-                console.log('respuesta',response)
-                if (response.error) {
-                    throw  String(response.message)
-                } else {
-                    closeModal()
-                    await fn()
-                }
-
-            } catch (error) {
-                setErr(error.toString())
-            } finally {
-                loader(false)
+            if(pinParse.length < 6 ) {
+                setErr('Ingrese un pin')
+            }else{
+                closeModal()
+                fn(pinParse)
             }
+            
+            //     const { data: response } = await http.get(`/pin/${pinParse}`, getHeaders())
+            //     console.log('respuesta',response)
+            //     if (response.error) {
+            //         throw  String(response.message)
+            //     } else {
+            //         closeModal()
+            //         await fn()
+            //     }
+
+            // } catch (error) {
+            //     setErr(error.toString())
+            // } finally {
+            //     loader(false)
+            // }
 
         }
 

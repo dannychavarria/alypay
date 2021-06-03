@@ -161,7 +161,7 @@ const Register = ({ navigation }) => {
     const onSubmit = async () => {
         try {
             if(!state.readTerms){
-                throw String("Acepte los terminos")
+                throw String('Acepte los terminos')
             }
             // Loader on mode
             loader(true)
@@ -192,8 +192,8 @@ const Register = ({ navigation }) => {
 
             if (data.response === "success") {
                 dispatch({ type: "showSuccess", payload: true })
-                shoConfirm()
-            } else {
+                setShowModal(true)
+        } else {
                 throw "Tu registro no se ha podido completar, contacte a soporte"
             }
         } catch (error) {
@@ -319,10 +319,6 @@ const Register = ({ navigation }) => {
     /** Funcion que modifica el estado que muestra la ventana modal de terminos y condiciones */
     const toggleModalTerms = () =>
         dispatch({ type: "showModalTerms", payload: !state.showModalTerms })
-
-    const shoConfirm = () => {
-        setShowModal(true)
-    }
 
     useEffect(() => {
         configurateComponent()

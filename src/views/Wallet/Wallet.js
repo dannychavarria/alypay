@@ -382,8 +382,10 @@ const SendComponent = ({
     }
 
     /** Metodo que se ejecuta para enviar los fondos */
-    const submit = async () => {
+    const submit = async (props) => {
         try {
+
+            console.log('pin', props)
 
             // variables que se enviaran a una peticion
             const vars = {
@@ -392,6 +394,7 @@ const SendComponent = ({
                 id_wallet: data.id,
                 wallet: state.walletAdress,
                 symbol: data.symbol,
+                pin: props
             }
 
             loader(true)

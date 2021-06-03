@@ -94,7 +94,7 @@ const Retirement = ({ route, navigation }) => {
     }
 
     /** Metodo que se ejcuta cuando el usuario  */
-    const onSubmit = async () => {
+    const onSubmit = async (props) => {
         try {
 
             loader(true)
@@ -111,6 +111,7 @@ const Retirement = ({ route, navigation }) => {
                 id_wallet: data.id,
                 amount,
                 symbol: data.symbol,
+                pin: props
             }
 
             const { data: response } = await http.post("/wallets/retirement", dataSend, getHeaders())
