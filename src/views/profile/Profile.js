@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, Alert, Image, TouchableOpacity } from 'react-native'
+import { View, Text, Image, TouchableOpacity } from 'react-native'
 
 // import hooks
 import useStyles from "../../hooks/useStyles.hook"
@@ -8,7 +8,6 @@ import useStyles from "../../hooks/useStyles.hook"
 import ProfileStyle from "../../Styles/Views/ProfileStyle/ProfileStyle"
 
 // import constanst
-import { OpenSupport, logOutApp } from "../../utils/constants"
 import profileImage from "../../static/profile-default.png"
 
 // import components
@@ -32,28 +31,7 @@ const Profile = ({ route }) => {
     // datos del cliente
     const { data } = route.params
 
-    // funcion de pregunta de cierre de sesion
-    const toggleMenu = () => {
-        Alert.alert("Cerrar sesion", "Estas apunto de cerrar sesion en AlyPay", [
-            {
-                text: "Cancelar",
-                onPress: () => { },
-            },
-            {
-                text: "Cerrar Sesion",
-                onPress: logOut
-            }
-        ])
-    }
-
-    // cierre de sesion
-    const logOut = async () => {
-        try {
-            await logOutApp()
-        } catch (error) {
-            console.log(error)
-        }
-    }
+    
 
     // seteo del cumpleaños del usuario
     useEffect(() => {

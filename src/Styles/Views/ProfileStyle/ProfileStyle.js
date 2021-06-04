@@ -69,8 +69,11 @@ export default {
     },
 
     modalContainer: {
-        flex: 1,
-        marginTop: 22,
+        position: "absolute",
+        left: 0,
+        top: 0,
+        right: 0,
+        bottom: 0,
         alignItems: 'center',
         justifyContent: 'center',
     },

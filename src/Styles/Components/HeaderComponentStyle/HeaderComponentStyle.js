@@ -6,7 +6,7 @@ export default {
         position: 'absolute',
         top: 0,
         left: 0,
-        height: 55,
+        height: RFValue(55),
         width: '100%',
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -15,7 +15,7 @@ export default {
     },
     imageStyle: {
         height: '100%',
-        width: 200,
+        width: RFValue(200),
         resizeMode: "contain"
     },
     modalOut: {
@@ -29,18 +29,20 @@ export default {
         position: 'absolute',
         end: 0,
         top: 0,
-        marginTop: 65,
-        marginRight: 40,
+        marginTop: RFValue(55),
+        marginRight: RFValue(20),
         backgroundColor: Colors.colorMain,
         borderColor: Colors.colorYellow,
         borderRadius: 5,
-        padding: 10,
-        borderWidth: 2
+        padding: RFValue(10),
+        borderWidth: 2,
+        height: RFValue(70),
+        justifyContent: 'space-between',
     },
     textButtonStyle: {
-        height: 30, 
+        marginLeft: RFValue(10),
         color: Colors.colorYellow, 
-        fontSize: 16 
+        fontSize: 18
     }
 
 }
