@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, Alert, Image, TouchableOpacity } from 'react-native'
+import { View, Text, Image, TouchableOpacity } from 'react-native'
 
 // import hooks
 import useStyles from "../../hooks/useStyles.hook"
@@ -8,12 +8,13 @@ import useStyles from "../../hooks/useStyles.hook"
 import ProfileStyle from "../../Styles/Views/ProfileStyle/ProfileStyle"
 
 // import constanst
-import { OpenSupport, logOutApp } from "../../utils/constants"
 import profileImage from "../../static/profile-default.png"
 
 // import components
 import ModalPin from "../../components/ModalPin/ModalPin"
 import Container from "../../components/Container/Container"
+
+import HeaderComponent from "../../components/HeaderComponent/HeaderComponent"
 
 // import librerias
 import moment from 'moment'
@@ -30,28 +31,7 @@ const Profile = ({ route }) => {
     // datos del cliente
     const { data } = route.params
 
-    // funcion de pregunta de cierre de sesion
-    const toggleMenu = () => {
-        Alert.alert("Cerrar sesion", "Estas apunto de cerrar sesion en AlyPay", [
-            {
-                text: "Cancelar",
-                onPress: () => { },
-            },
-            {
-                text: "Cerrar Sesion",
-                onPress: logOut
-            }
-        ])
-    }
-
-    // cierre de sesion
-    const logOut = async () => {
-        try {
-            await logOutApp()
-        } catch (error) {
-            console.log(error)
-        }
-    }
+    
 
     // seteo del cumpleaños del usuario
     useEffect(() => {
@@ -59,7 +39,9 @@ const Profile = ({ route }) => {
     }, [])
 
     return (
-        <Container showLogo>
+        <View style={{ flex: 1, justifyContent: 'center', backgroundColor: 'black' }}>
+
+            <HeaderComponent />
 
             <View style={classes.notEditableDataContainer}>
 
@@ -82,16 +64,14 @@ const Profile = ({ route }) => {
 
             </View>
 
-            <View style={classes.bottomContainer}>
+            <TouchableOpacity style={classes.bottomStyle}
+                onPress={() => setShowModal(true)}
+                disabled={showModal}
+            >
+                <Text style={classes.textButton}>Cambiar PIN</Text>
+            </TouchableOpacity>
 
-                <TouchableOpacity style={classes.bottomStyle}
-                    onPress={() => setShowModal(true)}
-                    disabled={showModal}
-                >
-                    <Text style={classes.textButton}>Cambiar PIN</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={classes.bottomSecundary}
+            {/* <TouchableOpacity style={classes.bottomSecundary}
                     onPress={OpenSupport}
                     disabled={showModal}
                 >
@@ -103,13 +83,11 @@ const Profile = ({ route }) => {
                     disabled={showModal}
                 >
                     <Text style={classes.textButtonSecundary}>Cerrar sesión</Text>
-                </TouchableOpacity>
-
-            </View>
+                </TouchableOpacity> */}
 
             {showModal && <ModalPin showModal={showModal} setShowModal={setShowModal} />}
 
-        </Container>
+        </View>
     )
 }
 
