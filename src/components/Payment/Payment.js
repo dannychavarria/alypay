@@ -66,6 +66,9 @@ const Payment = ({ route, navigation }) => {
                 getHeaders(),
             )
 
+            console.log("InfoPay", data)
+            console.log("InfoPay", Pay.order)
+
             if (data.error) {
                 throw String(data.message)
             }
@@ -84,7 +87,7 @@ const Payment = ({ route, navigation }) => {
     }
     // funcion que llama al modal para verificar el pin
     const verifiPIN = async () => {
-        store.dispatch({type: 'SHOWPIN', payload: true})
+        store.dispatch({ type: "SHOWPIN", payload: true })
     }
 
     /**Funcion que envia los datos al servidor backend */
@@ -113,6 +116,8 @@ const Payment = ({ route, navigation }) => {
                 senData,
                 getHeaders(),
             )
+
+            console.log("Pay", senData)
 
             if (data.error) {
                 throw String(data.message)
@@ -235,13 +240,14 @@ const Payment = ({ route, navigation }) => {
 
                 <TouchableOpacity style={GlobalStyles.buttonPrimary}>
                     <Text
-                        onPress={verifiPIN}
+                        // onPress={verifiPIN}
+                        onPress={confirmPayment}
                         style={{ textTransform: "uppercase" }}>
                         Confirmar
                     </Text>
                 </TouchableOpacity>
             </View>
-            <ModalConfirmPin fn={confirmPayment}/>
+            <ModalConfirmPin fn={confirmPayment} />
         </Container>
     )
 }
