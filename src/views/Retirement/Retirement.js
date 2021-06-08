@@ -1,7 +1,15 @@
 import React, { useReducer, useEffect } from "react"
 
 // import components from react native
-import { Text, StyleSheet, View, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView } from "react-native"
+import {
+    Text,
+    StyleSheet,
+    View,
+    TextInput,
+    TouchableOpacity,
+    Alert,
+    KeyboardAvoidingView,
+} from "react-native"
 
 // Import components
 import Container from "../../components/Container/Container"
@@ -13,7 +21,20 @@ import ModalConfirmPin from "../../components/ModalConfirmPin/ModalConfirmPin"
 // import constants and functions
 import _ from "lodash"
 import { RNCamera } from "react-native-camera"
-import { reducer, RFValue, Colors, GlobalStyles, WithDecimals, CheckTouchIDPermission, errorMessage, http, getHeaders, loader, successMessage, getFeePercentage } from "../../utils/constants"
+import {
+    reducer,
+    RFValue,
+    Colors,
+    GlobalStyles,
+    WithDecimals,
+    CheckTouchIDPermission,
+    errorMessage,
+    http,
+    getHeaders,
+    loader,
+    successMessage,
+    getFeePercentage,
+} from "../../utils/constants"
 
 // Import Assets
 import scanQRAnimation from "../../animations/scan-qr.json"
@@ -23,7 +44,6 @@ import ItemWallet from "../../components/ItemWallet/ItemWallet"
 import store from "../../store"
 
 const initialState = {
-
     // direccion wallet a depositar
     walletAdress: "",
 
@@ -59,13 +79,15 @@ const Retirement = ({ route, navigation }) => {
 
         const newAmount = data.price * parseFloat(payload)
 
-        dispatch({ type: "amountUSD", payload: isNaN(newAmount) ? 0 : newAmount.toFixed(2) })
+        dispatch({
+            type: "amountUSD",
+            payload: isNaN(newAmount) ? 0 : newAmount.toFixed(2),
+        })
     }
 
-    // funcion que hace algunas verificacion y llama al modal para verificar el pin 
+    // funcion que hace algunas verificacion y llama al modal para verificar el pin
     const verifiPIN = async () => {
         try {
-
             // validamos si hay alguna wallet ingresada
             if (state.walletAdress.length === 0) {
                 throw String("Ingresa una billetera")
@@ -75,35 +97,37 @@ const Retirement = ({ route, navigation }) => {
 
             // Validamos si el monto tiene un formato correcto
             if (isNaN(amount)) {
-                throw String(`Monto de ${data.description} tiene un formato incorrecto`)
+                throw String(
+                    `Monto de ${data.description} tiene un formato incorrecto`,
+                )
             }
 
-            // verificamos los permisos del TouchID
-            const auth = await CheckTouchIDPermission()
+            // // verificamos los permisos del TouchID
+            // const auth = await CheckTouchIDPermission()
 
-            // validamos si el usuario no esta autenticado
-            if (!auth) {
-                throw String("Autenticación incorrecta")
-            } else {
-                store.dispatch({ type: 'SHOWPIN', payload: true })
-            }
-
+            // // validamos si el usuario no esta autenticado
+            // if (!auth) {
+            //     throw String("Autenticación incorrecta")
+            // } else {
+            // }
+            store.dispatch({ type: "SHOWPIN", payload: true })
         } catch (error) {
             errorMessage(error.toString())
         }
     }
 
     /** Metodo que se ejcuta cuando el usuario  */
-    const onSubmit = async (props) => {
+    const onSubmit = async props => {
         try {
-
             loader(true)
 
             const amount = parseFloat(state.amountFraction)
 
             // Validamos si el monto tiene un formato correcto
             if (isNaN(amount)) {
-                throw String(`Monto de ${data.description} tiene un formato incorrecto`)
+                throw String(
+                    `Monto de ${data.description} tiene un formato incorrecto`,
+                )
             }
 
             const dataSend = {
@@ -111,10 +135,14 @@ const Retirement = ({ route, navigation }) => {
                 id_wallet: data.id,
                 amount,
                 symbol: data.symbol,
-                pin: props
+                pin: props,
             }
 
-            const { data: response } = await http.post("/wallets/retirement", dataSend, getHeaders())
+            const { data: response } = await http.post(
+                "/wallets/retirement",
+                dataSend,
+                getHeaders(),
+            )
 
             if (response.error) {
                 throw String(response.message)
@@ -126,14 +154,16 @@ const Retirement = ({ route, navigation }) => {
 
                 onChangeFractions("")
             } else {
-                throw String("Tu solictud no se ha podido procesar, contacte a soporte")
+                throw String(
+                    "Tu solictud no se ha podido procesar, contacte a soporte",
+                )
             }
 
             // actualizamos la wallets
             functions?.reloadWallets()
 
             // retornamos a la vista anterios
-            navigation.pop();
+            navigation.pop()
         } catch (error) {
             errorMessage(error.toString())
         } finally {
@@ -142,29 +172,40 @@ const Retirement = ({ route, navigation }) => {
     }
 
     /** Metodo que se ejcuta para activar/desactivar el scaner QR */
-    const toggleScan = () => dispatch({ type: "showScaner", payload: !state.showScaner })
+    const toggleScan = () =>
+        dispatch({ type: "showScaner", payload: !state.showScaner })
 
     useEffect(() => {
-
-        const dataAly = global.wallets.find((item) => {
-            if (item.symbol === 'ALY') {
+        const dataAly = global.wallets.find(item => {
+            if (item.symbol === "ALY") {
                 return item
             }
         })
 
-        const { fee, fee_aly } = getFeePercentage(state.amountUSD, 2, global.fee)
+        const { fee, fee_aly } = getFeePercentage(
+            state.amountUSD,
+            2,
+            global.fee,
+        )
 
         const amountFee = state.amountUSD * fee
 
         const amountFeeAly = state.amountUSD * fee_aly
 
-
         if (dataAly.amount >= amountFeeAly) {
-            dispatch({ type: 'fee', payload: { amount: amountFeeAly, symbol: 'ALY' } })
+            dispatch({
+                type: "fee",
+                payload: { amount: amountFeeAly, symbol: "ALY" },
+            })
         } else {
-            dispatch({ type: 'fee', payload: { amount: amountFee / data.price, symbol: data.symbol } })
+            dispatch({
+                type: "fee",
+                payload: {
+                    amount: amountFee / data.price,
+                    symbol: data.symbol,
+                },
+            })
         }
-
     }, [state.amountUSD])
 
     return (
@@ -176,20 +217,31 @@ const Retirement = ({ route, navigation }) => {
 
                 <View style={styles.row}>
                     <View style={styles.col}>
-                        <Text style={styles.legend}>Dirección de billetera externa</Text>
+                        <Text style={styles.legend}>
+                            Dirección de billetera externa
+                        </Text>
 
                         <View style={styles.rowInput}>
                             <TextInput
                                 value={state.walletAdress}
                                 returnKeyLabel="done"
-                                onChangeText={payload => dispatch({ type: "walletAdress", payload })}
-                                style={[GlobalStyles.textInput, { flex: 1 }]} />
+                                onChangeText={payload =>
+                                    dispatch({ type: "walletAdress", payload })
+                                }
+                                style={[GlobalStyles.textInput, { flex: 1 }]}
+                            />
 
-                            <TouchableOpacity onPress={toggleScan} style={styles.buttonScan}>
-                                <Lottie source={scanQRAnimation} style={styles.lottieQRAnimation} autoPlay loop />
+                            <TouchableOpacity
+                                onPress={toggleScan}
+                                style={styles.buttonScan}>
+                                <Lottie
+                                    source={scanQRAnimation}
+                                    style={styles.lottieQRAnimation}
+                                    autoPlay
+                                    loop
+                                />
                             </TouchableOpacity>
                         </View>
-
                     </View>
                 </View>
 
@@ -202,20 +254,25 @@ const Retirement = ({ route, navigation }) => {
                             onChangeText={onChangeFractions}
                             keyboardType="numeric"
                             returnKeyType="done"
-                            style={GlobalStyles.textInput} />
+                            style={GlobalStyles.textInput}
+                        />
                     </View>
 
-                    <View style={[styles.col, { justifyContent: "center", alignItems: "center" }]}>
+                    <View
+                        style={[
+                            styles.col,
+                            { justifyContent: "center", alignItems: "center" },
+                        ]}>
                         <Text style={styles.legend}>Monto (USD) Aprox.</Text>
 
                         <Text style={styles.legendUSDAmount}>
-                            {WithDecimals(state.amountUSD)} <Text style={{ fontSize: RFValue(8) }}>USD</Text>
+                            {WithDecimals(state.amountUSD)}{" "}
+                            <Text style={{ fontSize: RFValue(8) }}>USD</Text>
                         </Text>
                     </View>
                 </View>
 
-                {
-                    state.amountFraction.trim() !== "" &&
+                {state.amountFraction.trim() !== "" && (
                     <View style={styles.containerFee}>
                         <View style={styles.headerFee}>
                             <Text style={styles.textHeaderFee}>SubTotal</Text>
@@ -224,22 +281,44 @@ const Retirement = ({ route, navigation }) => {
                         </View>
 
                         <View style={styles.bodyFee}>
-                            <Text style={styles.textBodyFee}>{state.amountFraction} {data.symbol}</Text>
-                            <Text style={styles.textBodyFee}>{_.floor(state.fee.amount, 8)} {state.fee.symbol}</Text>
-                            {
-                                state.fee.symbol !== data.symbol
-                                    ? <Text style={styles.textBodyFee}>{state.amountFraction} {data.symbol}</Text>
-                                    : <Text style={styles.textBodyFee}>{_.floor(parseFloat(state.amountFraction) + state.fee.amount, 8)} {state.fee.symbol}</Text>
-                            }
+                            <Text style={styles.textBodyFee}>
+                                {state.amountFraction} {data.symbol}
+                            </Text>
+                            <Text style={styles.textBodyFee}>
+                                {_.floor(state.fee.amount, 8)}{" "}
+                                {state.fee.symbol}
+                            </Text>
+                            {state.fee.symbol !== data.symbol ? (
+                                <Text style={styles.textBodyFee}>
+                                    {state.amountFraction} {data.symbol}
+                                </Text>
+                            ) : (
+                                <Text style={styles.textBodyFee}>
+                                    {_.floor(
+                                        parseFloat(state.amountFraction) +
+                                            state.fee.amount,
+                                        8,
+                                    )}{" "}
+                                    {state.fee.symbol}
+                                </Text>
+                            )}
                         </View>
                     </View>
-                }
+                )}
 
-                <TouchableOpacity onPress={verifiPIN} style={[GlobalStyles.buttonPrimary, styles.buttonSend]}>
+                <TouchableOpacity
+                    onPress={verifiPIN}
+                    style={[GlobalStyles.buttonPrimary, styles.buttonSend]}>
                     <Text style={GlobalStyles.textButton}>Retirar</Text>
                 </TouchableOpacity>
 
-                <Modal backdropOpacity={0.9} animationIn="fadeIn" onBackButtonPress={toggleScan} onBackdropPress={toggleScan} animationOut="fadeOut" isVisible={state.showScaner}>
+                <Modal
+                    backdropOpacity={0.9}
+                    animationIn="fadeIn"
+                    onBackButtonPress={toggleScan}
+                    onBackdropPress={toggleScan}
+                    animationOut="fadeOut"
+                    isVisible={state.showScaner}>
                     <View style={styles.constainerQR}>
                         <QRCodeScanner
                             onRead={onReadCodeQR}
@@ -278,17 +357,17 @@ const styles = StyleSheet.create({
 
     legend: {
         color: Colors.colorYellow,
-        marginBottom: RFValue(5)
+        marginBottom: RFValue(5),
     },
 
     legendUSDAmount: {
         color: "#FFF",
-        fontSize: RFValue(24)
+        fontSize: RFValue(24),
     },
 
     rowInput: {
         alignItems: "center",
-        flexDirection: "row"
+        flexDirection: "row",
     },
 
     lottieQRAnimation: {
@@ -298,7 +377,7 @@ const styles = StyleSheet.create({
 
     buttonSend: {
         marginHorizontal: "10%",
-        marginTop: RFValue(10)
+        marginTop: RFValue(10),
     },
 
     constainerQR: {
@@ -345,7 +424,7 @@ const styles = StyleSheet.create({
 
     textBodyFee: {
         color: "#FFF",
-    }
+    },
 })
 
 export default Retirement

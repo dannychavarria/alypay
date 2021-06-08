@@ -1,41 +1,41 @@
-import { Colors, RFValue } from '../../../utils/constants'
+import { Colors, RFValue } from "../../../utils/constants"
 
 export default {
     buttonStyle: {
         backgroundColor: Colors.colorBlack,
         borderRadius: 10,
-        alignItems: 'center',
+        alignItems: "center",
         paddingVertical: 20,
         width: RFValue(75),
-        margin: 5
+        margin: 5,
     },
-    textButtonStyle: { 
+    textButtonStyle: {
         color: Colors.colorYellow,
         fontWeight: "bold",
         fontSize: RFValue(18),
     },
-    rowContainer:{
-        flexDirection: 'row', 
-        justifyContent: 'center' 
+    rowContainer: {
+        flexDirection: "row",
+        justifyContent: "center",
     },
-    principalContainer:{
+    principalContainer: {
         flex: 1,
-        marginTop: RFValue(20),
-        alignItems: 'center',
-        justifyContent: 'center',
+        // marginTop: RFValue(20),
+        alignItems: "center",
+        justifyContent: "center",
     },
     title: {
-        color: 'gray',
+        color: "gray",
         marginBottom: 40,
-        fontSize: RFValue(18)
+        fontSize: RFValue(18),
     },
-    buttonCloseStyle:{
+    buttonCloseStyle: {
         backgroundColor: Colors.colorYellow,
         borderRadius: 50,
-        alignItems: 'center',
-        alignSelf: 'flex-end',
-        paddingVertical: RFValue(20),
-        paddingHorizontal: RFValue(20),
-        margin: RFValue(30)
-    }
+        alignItems: "center",
+        alignSelf: "flex-end",
+        // paddingVertical: RFValue(20),
+        // paddingHorizontal: RFValue(20),
+        margin: RFValue(20),
+    },
 }
