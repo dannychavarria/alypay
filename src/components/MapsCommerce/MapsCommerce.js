@@ -123,9 +123,9 @@ const MapsCommerce = () => {
                 throw String(data.message)
             }
 
-            console.log('Comercios: ',data)
-
-            let commerceFilter = data.filter(info => info.id_state != 2 && info.id_state != 3)
+            let commerceFilter = data.filter(
+                info => info.id_state != 2 && info.id_state != 3,
+            )
 
             setInfo(commerceFilter)
         } catch (error) {
@@ -137,8 +137,6 @@ const MapsCommerce = () => {
 
     // Funcion que rendecira las tarjetas de los commercios
     const renderCarouselItem = useCallback(({ item }) => {
-        //console.log(item)
-
         // Obtenemos las posisciones iniciales del usuario
         const scheme = Platform.select({
             ios: `maps:${state.latitude},${state.longitude}?q=`,

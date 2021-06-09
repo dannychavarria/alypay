@@ -33,7 +33,9 @@ export default function useBuyCrypto() {
             // convertimos el objeto en array
             const arrayCoins = Object.values(data)
 
-            let arrayCoinsFilter = arrayCoins.filter(info => info.symbol != 'ALY' && info.symbol != 'USDT')
+            let arrayCoinsFilter = arrayCoins.filter(
+                info => info.symbol != "ALY" && info.symbol != "USDT",
+            )
 
             setInfoCoin(arrayCoinsFilter)
         } catch (e) {
@@ -54,8 +56,6 @@ export default function useBuyCrypto() {
         if (infoCoin.length === 0) {
             return
         }
-
-        console.log(!value)
 
         // Verifica si el value esta vacio
         if (!value) {

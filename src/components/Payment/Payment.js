@@ -91,7 +91,7 @@ const Payment = ({ route, navigation }) => {
     }
 
     /**Funcion que envia los datos al servidor backend */
-    const confirmPayment = async () => {
+    const confirmPayment = async (props) => {
         try {
             loader(true)
 
@@ -108,6 +108,7 @@ const Payment = ({ route, navigation }) => {
                 to: scanned ? Pay.wallet_commerce : commerceData.wallet,
                 amount: amount,
                 amountUSD: _amountUSD,
+                pin: props
             }
 
             // Realiza la peticion de pago con los datos de la transaccion obtenidos

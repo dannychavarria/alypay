@@ -12,6 +12,8 @@ export default async function submitInfo({ dataSent }) {
     try {
         loader(true)
 
+        console.log(dataSent)
+
         const { navigation } = store.getState()
 
         if (dataSent.amount_from === 0 || isNaN(dataSent.amount_from)) {

@@ -16,6 +16,7 @@ import {
     RFValue,
     GlobalStyles,
     CopyClipboard,
+    WithDecimals,
 } from "../../utils/constants"
 
 //import constants
@@ -169,7 +170,7 @@ const BuyCrypto = ({ route }) => {
                             Precio del mercado
                         </Text>
                         <Text style={classes.textWhite}>
-                            $ {Floor(priceCoin, 8)}
+                            $ {WithDecimals(Floor(priceCoin, 2))}
                         </Text>
                     </View>
                     <View>

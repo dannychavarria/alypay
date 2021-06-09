@@ -207,7 +207,7 @@ const initialStateSendComponent = {
 /** Componente que renderiza los datos necesarios para ejecutar una transaccion a otra wallet */
 const SendComponent = ({
     data: data = {},
-    onCompleteTrasanction = () => { },
+    onCompleteTrasanction = () => {},
 }) => {
     const [state, dispatch] = useReducer(reducer, initialStateSendComponent)
 
@@ -352,13 +352,11 @@ const SendComponent = ({
         },
     })
 
-    // funcion que hace algunas verificacion y llama al modal para verificar el pin 
+    // funcion que hace algunas verificacion y llama al modal para verificar el pin
     const verifiPin = async () => {
-
         setLoadModal(true)
 
         try {
-
             Keyboard.dismiss()
 
             if (state.amountUSD.trim().length === 0) {
@@ -368,23 +366,22 @@ const SendComponent = ({
             // Ejecutamos una vibracion minima del dispositivo
             Vibration.vibrate(100)
 
-            // verificamos si el dispositvo tiene touch id
-            const auth = await CheckTouchIDPermission()
+            // // verificamos si el dispositvo tiene touch id
+            // const auth = await CheckTouchIDPermission()
 
-            if (!auth) {
-                throw String("Autenticación incorrecta")
-            }else{
-                store.dispatch({ type: 'SHOWPIN', payload: true})
-            }
+            // if (!auth) {
+            //     throw String("Autenticación incorrecta")
+            // }else{
+            // }
+            store.dispatch({ type: "SHOWPIN", payload: true })
         } catch (error) {
             errorMessage(error.toString())
         }
     }
 
     /** Metodo que se ejecuta para enviar los fondos */
-    const submit = async () => {
+    const submit = async props => {
         try {
-
             // variables que se enviaran a una peticion
             const vars = {
                 amount_usd: state.amountUSD,
@@ -392,6 +389,7 @@ const SendComponent = ({
                 id_wallet: data.id,
                 wallet: state.walletAdress,
                 symbol: data.symbol,
+                pin: props,
             }
 
             loader(true)
@@ -674,7 +672,7 @@ const SendComponent = ({
                                 <Text style={styles.textBodyFee}>
                                     {_.floor(
                                         parseFloat(state.amountFraction) +
-                                        parseFloat(state.fee.amount),
+                                            parseFloat(state.fee.amount),
                                         8,
                                     )}{" "}
                                     {state.fee.symbol}
@@ -754,10 +752,7 @@ const SendComponent = ({
                 </View>
             </Modal>
 
-            {loadModal &&
-                <ModalConfirmPin fn={submit}/>
-            }
-
+            {loadModal && <ModalConfirmPin fn={submit} />}
         </ViewAnimate>
     )
 }
@@ -846,8 +841,6 @@ const Wallet = ({ route }) => {
 
     const isAly = params.symbol === "ALY"
 
-    console.log("Parametros", route)
-
     /**
      * Funcion que se encarga de configurar todo el componente
      */
@@ -910,13 +903,13 @@ const Wallet = ({ route }) => {
             {state.information !== null && (
                 <>
                     {// Verificamos si esta en la pantalla de Recibir
-                        stateView === switchItems[0].state && (
-                            <ReceiveComponent
-                                wallet={state.wallet}
-                                data={state.information}
-                                isAly={isAly}
-                            />
-                        )}
+                    stateView === switchItems[0].state && (
+                        <ReceiveComponent
+                            wallet={state.wallet}
+                            data={state.information}
+                            isAly={isAly}
+                        />
+                    )}
 
                     {stateView === switchItems[1].state && (
                         <SendComponent
