@@ -241,8 +241,8 @@ const Payment = ({ route, navigation }) => {
 
                 <TouchableOpacity style={GlobalStyles.buttonPrimary}>
                     <Text
-                        // onPress={verifiPIN}
-                        onPress={confirmPayment}
+                        onPress={verifiPIN}
+                        // onPress={confirmPayment}
                         style={{ textTransform: "uppercase" }}>
                         Confirmar
                     </Text>
