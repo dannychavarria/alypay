@@ -71,8 +71,8 @@ const ModalConfirmPin = ({ fn }) => {
         setPIN(PIN.splice(0, PIN.length - 1))
     }
 
-    useEffect(function() {
-        store.subscribe(function() {
+    useEffect(function () {
+        store.subscribe(function () {
             const { pin } = store.getState()
 
             if (show !== pin.show) {
@@ -96,112 +96,113 @@ const ModalConfirmPin = ({ fn }) => {
                         <EntryPassword value={PIN} length={6} />
                     </View>
 
-                    <View
-                        style={{
-                            flexDirection: "row",
-                            justifyContent: "center",
-                        }}>
-                        <TouchableOpacity
-                            style={classes.buttonStyle}
-                            onPress={() => {
-                                PinFunction(1)
+                    <View style={classes.bottomContainer}>
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                justifyContent: "center",
                             }}>
-                            <Text style={classes.textButtonStyle}>1</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={classes.buttonStyle}
-                            onPress={() => {
-                                PinFunction(2)
-                            }}>
-                            <Text style={classes.textButtonStyle}>2</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={classes.buttonStyle}
-                            onPress={() => {
-                                PinFunction(3)
-                            }}>
-                            <Text style={classes.textButtonStyle}>3</Text>
-                        </TouchableOpacity>
-                    </View>
+                            <TouchableOpacity
+                                style={classes.buttonStyle}
+                                onPress={() => {
+                                    PinFunction(1)
+                                }}>
+                                <Text style={classes.textButtonStyle}>1</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={classes.buttonStyle}
+                                onPress={() => {
+                                    PinFunction(2)
+                                }}>
+                                <Text style={classes.textButtonStyle}>2</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={classes.buttonStyle}
+                                onPress={() => {
+                                    PinFunction(3)
+                                }}>
+                                <Text style={classes.textButtonStyle}>3</Text>
+                            </TouchableOpacity>
+                        </View>
 
-                    <View
-                        style={{
-                            flexDirection: "row",
-                            justifyContent: "center",
-                        }}>
-                        <TouchableOpacity
-                            style={classes.buttonStyle}
-                            onPress={() => {
-                                PinFunction(4)
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                justifyContent: "center",
                             }}>
-                            <Text style={classes.textButtonStyle}>4</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={classes.buttonStyle}
-                            onPress={() => {
-                                PinFunction(5)
-                            }}>
-                            <Text style={classes.textButtonStyle}>5</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={classes.buttonStyle}
-                            onPress={() => {
-                                PinFunction(6)
-                            }}>
-                            <Text style={classes.textButtonStyle}>6</Text>
-                        </TouchableOpacity>
-                    </View>
+                            <TouchableOpacity
+                                style={classes.buttonStyle}
+                                onPress={() => {
+                                    PinFunction(4)
+                                }}>
+                                <Text style={classes.textButtonStyle}>4</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={classes.buttonStyle}
+                                onPress={() => {
+                                    PinFunction(5)
+                                }}>
+                                <Text style={classes.textButtonStyle}>5</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={classes.buttonStyle}
+                                onPress={() => {
+                                    PinFunction(6)
+                                }}>
+                                <Text style={classes.textButtonStyle}>6</Text>
+                            </TouchableOpacity>
+                        </View>
 
-                    <View
-                        style={{
-                            flexDirection: "row",
-                            justifyContent: "center",
-                        }}>
-                        <TouchableOpacity
-                            style={classes.buttonStyle}
-                            onPress={() => {
-                                PinFunction(7)
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                justifyContent: "center",
                             }}>
-                            <Text style={classes.textButtonStyle}>7</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={classes.buttonStyle}
-                            onPress={() => {
-                                PinFunction(8)
-                            }}>
-                            <Text style={classes.textButtonStyle}>8</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={classes.buttonStyle}
-                            onPress={() => {
-                                PinFunction(9)
-                            }}>
-                            <Text style={classes.textButtonStyle}>9</Text>
-                        </TouchableOpacity>
-                    </View>
+                            <TouchableOpacity
+                                style={classes.buttonStyle}
+                                onPress={() => {
+                                    PinFunction(7)
+                                }}>
+                                <Text style={classes.textButtonStyle}>7</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={classes.buttonStyle}
+                                onPress={() => {
+                                    PinFunction(8)
+                                }}>
+                                <Text style={classes.textButtonStyle}>8</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={classes.buttonStyle}
+                                onPress={() => {
+                                    PinFunction(9)
+                                }}>
+                                <Text style={classes.textButtonStyle}>9</Text>
+                            </TouchableOpacity>
+                        </View>
 
-                    <View
-                        style={{
-                            flexDirection: "row",
-                            justifyContent: "center",
-                        }}>
-                        <TouchableOpacity
-                            style={classes.buttonStyle}
-                            onPress={backSpace}>
-                            <Icon
-                                name="delete"
-                                size={RFValue(30)}
-                                color={Colors.colorYellow}
-                            />
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={classes.buttonStyle}
-                            onPress={() => {
-                                PinFunction(0)
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                with: '100%',
                             }}>
-                            <Text style={classes.textButtonStyle}>0</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
+                            <TouchableOpacity
+                                style={classes.buttonStyle}
+                                onPress={backSpace}>
+                                <Icon
+                                    name="delete"
+                                    size={RFValue(30)}
+                                    color={Colors.colorYellow}
+                                />
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={classes.buttonStyle}
+                                onPress={() => {
+                                    PinFunction(0)
+                                }}>
+                                <Text style={classes.textButtonStyle}>0</Text>
+                            </TouchableOpacity>
+                            {/* <TouchableOpacity
                             style={classes.buttonStyle}
                             onPress={submitPIN}>
                             <Icon
@@ -209,16 +210,26 @@ const ModalConfirmPin = ({ fn }) => {
                                 size={RFValue(30)}
                                 color={Colors.colorYellow}
                             />
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
+                        </View>
                     </View>
+
                 </View>
 
                 <View style={classes.buttonCloseStyle}>
                     <TouchableOpacity
-                        style={GlobalStyles.buttonPrimary}
+                        style={GlobalStyles.buttonPrimaryLine}
                         onPress={closeModal}>
-                        <Text style={GlobalStyles.textButton}>
+                        <Text style={GlobalStyles.textButtonPrimaryLine}>
                             Volver Atras
+                        </Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        style={GlobalStyles.buttonPrimary}
+                        onPress={submitPIN}>
+                        <Text style={GlobalStyles.textButton}>
+                            Confirmar
                         </Text>
                     </TouchableOpacity>
                 </View>

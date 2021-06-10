@@ -21,8 +21,12 @@ export default {
     principalContainer: {
         flex: 1,
         // marginTop: RFValue(20),
+        width: '100%',
         alignItems: "center",
         justifyContent: "center",
+    },
+    buttonContainer: {
+        width: '80%'
     },
     title: {
         color: "gray",
@@ -30,12 +34,9 @@ export default {
         fontSize: RFValue(18),
     },
     buttonCloseStyle: {
-        backgroundColor: Colors.colorYellow,
-        borderRadius: 50,
-        alignItems: "center",
-        alignSelf: "flex-end",
-        // paddingVertical: RFValue(20),
-        // paddingHorizontal: RFValue(20),
-        margin: RFValue(20),
+        flexDirection: "row",
+        justifyContent: "space-between",
+        padding: RFValue(30),
+        width: '100%'
     },
 }
