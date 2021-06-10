@@ -6,6 +6,7 @@ import {
     TouchableOpacity,
     FlatList,
     Platform,
+    Image,
     Alert,
     BackHandler,
 } from "react-native"
@@ -30,6 +31,8 @@ import {
 } from "../../utils/constants"
 import countries from "../../utils/countries.json"
 import professions from "../../utils/profession.json"
+import LogoFunko from "../../static/AlyFunko.png"
+import logo from "../../static/alypay.png"
 
 // Import Components
 import Container from "../../components/Container/Container"
@@ -156,6 +159,8 @@ const KycUser = ({ navigation }) => {
     // Estado que indica si muestra la modal de paises del Usuario
     const [modalCoutry, setModalCountry] = useState(false)
 
+    const [showPin, setShowPin] = useState(false)
+
     // Estado que indica si muestra la modal de paises del beneficiario
     const [modalCoutryBeneficiary, setModalCountryBeneficiary] = useState(false)
 
@@ -177,9 +182,8 @@ const KycUser = ({ navigation }) => {
                 gender: state.gender,
                 idTypeIdentification: state.identificationType,
                 identificationNumber: state.identificationNumber,
-                alternativeNumber: `${state.country.phoneCode} ${
-                    state.alternativeNumber
-                }`,
+                alternativeNumber: `${state.country.phoneCode} ${state.alternativeNumber
+                    }`,
                 nationality: state.nationality,
                 nationalityPhoneCode: state.phoneCodeNationality,
                 nationalityCurrencySymbol: state.currencyNationality,
@@ -247,7 +251,7 @@ const KycUser = ({ navigation }) => {
             )
         } catch (error) {
             errorMessage(error.toString())
-        }
+        }finally{setShowPin(false)}
     }
 
     const createFormData = (
@@ -334,7 +338,7 @@ const KycUser = ({ navigation }) => {
         if (
             item.name.length > 0 &&
             item.name.toLowerCase().search(state.filter.toLocaleLowerCase()) >
-                -1
+            -1
         ) {
             return (
                 <TouchableOpacity
@@ -379,7 +383,7 @@ const KycUser = ({ navigation }) => {
             switch (tab) {
                 case 0: {
                     // Validamos que ahiga ingresado el numero de identificacion
-                    if (state.identificationNumber.trim().length === 0) {
+                    if (state.identificationNumber.trim().length < 5) {
                         throw String("Ingrese un numero de identificacion")
                     }
                     break
@@ -431,14 +435,14 @@ const KycUser = ({ navigation }) => {
                     // Validamos que ahiga ingresado el numero de identificacion
                     if (
                         beneficiaryState.beneficiaryIdentificationNumber.trim()
-                            .length <= 7
+                            .length === 0
                     ) {
                         throw String("Ingrese un numero de identificacion")
                     }
 
                     // Validamos el numero de telefono
                     if (
-                        beneficiaryState.beneficiaryPrincipalNumber.length <= 7
+                        beneficiaryState.beneficiaryPrincipalNumber.length < 7
                     ) {
                         throw String("Ingrese numero de telefono")
                     }
@@ -572,7 +576,7 @@ const KycUser = ({ navigation }) => {
             [
                 {
                     text: "Cancelar",
-                    onPress: () => {},
+                    onPress: () => { },
                 },
                 {
                     text: "Salir",
@@ -601,7 +605,9 @@ const KycUser = ({ navigation }) => {
         <Container showLogo>
             <View style={classes.container}>
                 {state.tab === 0 && (
-                    <ViewAnimation style={classes.tab} animation="fadeIn">
+                    <ViewAnimation
+                        style={[classes.tab, { paddingBottom: RFValue(5) }]}
+                        animation="fadeIn">
                         <View style={classes.containerTitle}>
                             <Text style={classes.containerTitleText}>
                                 Información del titular de la cuenta
@@ -617,7 +623,7 @@ const KycUser = ({ navigation }) => {
                         <View style={classes.row}>
                             <View style={classes.labelsRow}>
                                 <Text style={classes.legendRow}>
-                                    Seleccione su genero
+                                    Seleccione su género
                                 </Text>
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
@@ -756,7 +762,9 @@ const KycUser = ({ navigation }) => {
                     </ViewAnimation>
                 )}
                 {state.tab === 1 && (
-                    <ViewAnimation style={classes.tab} animation="fadeIn">
+                    <ViewAnimation
+                        style={[classes.tab, { paddingBottom: RFValue(5) }]}
+                        animation="fadeIn">
                         <View style={classes.containerTitle}>
                             <Text style={classes.textTitle}>
                                 3. Nacionalidad y residencia
@@ -884,7 +892,9 @@ const KycUser = ({ navigation }) => {
                 )}
 
                 {state.tab === 2 && (
-                    <ViewAnimation style={classes.tab} animation="fadeIn">
+                    <ViewAnimation
+                        style={[classes.tab, { paddingBottom: RFValue(5) }]}
+                        animation="fadeIn">
                         {age > 18 ? (
                             <>
                                 <View style={classes.row}>
@@ -1031,10 +1041,10 @@ const KycUser = ({ navigation }) => {
                             </>
                         ) : (
                             <TouchableOpacity
-                                onPress={submitInformation}
+                                onPress={_ => setShowPin(true)}
                                 style={GlobalStyles.buttonPrimary}>
                                 <Text style={GlobalStyles.textButton}>
-                                    Guardar
+                                    Continuar
                                 </Text>
                             </TouchableOpacity>
                         )}
@@ -1042,7 +1052,9 @@ const KycUser = ({ navigation }) => {
                 )}
 
                 {state.tab === 3 && (
-                    <ViewAnimation style={classes.tab} animation="fadeIn">
+                    <ViewAnimation
+                        style={[classes.tab, { paddingBottom: RFValue(100) }]}
+                        animation="fadeIn">
                         <View style={classes.containerTitle}>
                             {age > 18 || CheckState ? (
                                 <Text style={classes.containerTitleText}>
@@ -1358,7 +1370,9 @@ const KycUser = ({ navigation }) => {
                     </ViewAnimation>
                 )}
                 {state.tab === 4 && (
-                    <ViewAnimation style={classes.tab} animation="fadeIn">
+                    <ViewAnimation
+                        style={[classes.tab, { paddingBottom: RFValue(5) }]}
+                        animation="fadeIn">
                         <View style={classes.containerTitle}>
                             {age > 18 || CheckState ? (
                                 <Text style={classes.containerTitleText}>
@@ -1589,7 +1603,9 @@ const KycUser = ({ navigation }) => {
                 )}
 
                 {state.tab === 5 && (
-                    <ViewAnimation style={classes.tab} animation="fadeIn">
+                    <ViewAnimation
+                        style={[classes.tab, { paddingBottom: RFValue(5) }]}
+                        animation="fadeIn">
                         <View style={classes.containerTitle}>
                             {age > 18 || CheckState ? (
                                 <Text style={classes.containerTitleText}>
@@ -1734,10 +1750,10 @@ const KycUser = ({ navigation }) => {
                                 <Text style={classes.textBack}>Atras</Text>
                             </TouchableOpacity>
                             <TouchableOpacity
-                                onPress={submitInformation}
+                                onPress={_ => setShowPin(true)}
                                 style={GlobalStyles.buttonPrimary}>
                                 <Text style={GlobalStyles.textButton}>
-                                    Guardar
+                                    Continuar
                                 </Text>
                             </TouchableOpacity>
                         </View>
@@ -1797,6 +1813,53 @@ const KycUser = ({ navigation }) => {
                         renderItem={ItemCountryBenficiary}
                         keyExtractor={(_, i) => i.toString()}
                     />
+                </View>
+            </Modal>
+
+            <Modal
+                isVisible={showPin}
+                animationIn="fadeIn"
+                animationOut="fadeOut"
+                // backdropOpacity={0.95}
+                onBackButtonPress={_ => setShowPin(false)}>
+                <View style={classes.containerModalSuccess1}>
+                    <Image style={classes.logoSuccess} source={logo} />
+
+                    <View style={[classes.rowImage, { alignItems: "center" }]}>
+                        <View style={{ alignItems: "center" }}>
+                            <Text style={classes.textTitleSuccess}>
+                                Su registro ya esta casi listo
+                            </Text>
+
+                            <Text style={classes.subTitle}>
+                                Enviaremos un correo con un PIN aleatorio
+                                el cual sera necesario para realizar
+                                transacciones, puede cambiarlo luego si lo desea
+                                en la vista de perfil.
+                            </Text>
+                        </View>
+
+                        <View style={{ paddingTop: 15 }}>
+                            <Image
+                                style={classes.logoSuccess}
+                                source={LogoFunko}
+                            />
+                        </View>
+                    </View>
+
+                    <View style={{ alignItems: "center" }}>
+                        <View style={classes.row}>
+                            <Text style={classes.textTitleSuccess}>
+                                ¡Gracias por registrarse con nosotros!
+                            </Text>
+                        </View>
+                    </View>
+
+                    <TouchableOpacity
+                        style={classes.buttonSuccess}
+                        onPress={submitInformation}>
+                        <Text style={GlobalStyles.textButton}>Guardar información</Text>
+                    </TouchableOpacity>
                 </View>
             </Modal>
 

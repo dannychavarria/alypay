@@ -9,7 +9,7 @@ import {
 } from "react-native"
 
 // import constanst
-import { GlobalStyles, errorMessage } from "../../utils/constants"
+import { GlobalStyles, errorMessage, RFValue } from "../../utils/constants"
 
 // import styles
 import useStyles from "../../hooks/useStyles.hook"
@@ -100,11 +100,7 @@ const ModalPin = ({ showModal, setShowModal }) => {
                             maxLength={6}
                         />
 
-                        <Text
-                            style={{
-                                color: "gray",
-                                fontSize: 16,
-                            }}>
+                        <Text style={classes.modalTextSubtitle}>
                             Ingrese su contraseña para verificar el cambio de
                             PIN.
                         </Text>
