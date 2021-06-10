@@ -94,10 +94,10 @@ export const Colors = {
 const PORT = "3000"
 
 /**Direction for server */
-export const serverAddress = "https://alypay.uc.r.appspot.com"
+// export const serverAddress = "https://alypay.uc.r.appspot.com"
 // export const serverAddress = "https://root-anvil-299019.uc.r.appspot.com"
 // export const serverAddress = "http://4e43efb91454.ngrok.io"
-// export const serverAddress = "http://192.168.0.151:3085"
+export const serverAddress = "http://192.168.0.151:3085"
 export const serverSpeedtradingsURL = "https://ardent-medley-272823.appspot.com"
 
 /**
@@ -385,6 +385,20 @@ export const errorMessage = (description = "") => {
         backgroundColor: Colors.colorRed,
         icon: "danger",
         duration: 5000,
+    })
+}
+
+/**
+ * Funcion que ejeucta un mensaje de pin en el correo
+ */
+export const pinMessage = (description = "", title = "AlyPay") => {
+    showMessage({
+        message: title,
+        description,
+        color: "#FFF",
+        backgroundColor: '#3fbfbf',
+        icon: "success",
+        duration: 10000,
     })
 }
 

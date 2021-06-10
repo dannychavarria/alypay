@@ -1,4 +1,4 @@
-import { Colors, RFValue } from "../../../utils/constants"
+import { Colors, RFValue, GlobalStyles} from "../../../utils/constants"
 
 export default {
     borderLeft: {
@@ -229,5 +229,42 @@ export default {
         paddingLeft: 5,
         padding: 0,
         color: "white",
+    },
+
+    containerModalSuccess1: {
+        // flex: 1,
+        alignSelf: "center",
+        alignItems: "center",
+        // justifyContent: 'space-between',
+        backgroundColor: Colors.colorBlack,
+        borderRadius: 10,
+        padding: 10,
+        height: "85%",
+        width: "90%",
+    },
+    logoSuccess: {
+        resizeMode: "contain",
+        height: RFValue(128),
+        width: RFValue(256),
+    },
+    rowImage: {
+        flexDirection: "column",
+        alignItems: "center",
+    },
+    subTitle: {
+        color: "#FFF",
+        fontSize: RFValue(14),
+        textAlign: "center",
+        //marginVertical: RFValue(10),
+    },
+    textTitleSuccess: {
+        color: Colors.colorYellow,
+        fontSize: RFValue(18),
+        marginVertical: RFValue(10),
+    },
+    buttonSuccess: {
+        ...GlobalStyles.buttonPrimary,
+        marginTop: RFValue(25),
+        width: "80%",
     },
 }
