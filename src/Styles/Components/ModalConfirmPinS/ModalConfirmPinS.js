@@ -21,12 +21,12 @@ export default {
     principalContainer: {
         flex: 1,
         // marginTop: RFValue(20),
-        width: '100%',
+        width: "100%",
         alignItems: "center",
         justifyContent: "center",
     },
     buttonContainer: {
-        width: '80%'
+        width: "80%",
     },
     title: {
         color: "gray",
@@ -37,6 +37,12 @@ export default {
         flexDirection: "row",
         justifyContent: "space-between",
         padding: RFValue(30),
-        width: '100%'
+        paddingTop: RFValue(50),
+        width: "100%",
+        alignItems: "center",
+    },
+
+    buttonBack: {
+        marginRight: RFValue(50),
     },
 }

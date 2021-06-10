@@ -71,8 +71,8 @@ const ModalConfirmPin = ({ fn }) => {
         setPIN(PIN.splice(0, PIN.length - 1))
     }
 
-    useEffect(function () {
-        store.subscribe(function () {
+    useEffect(function() {
+        store.subscribe(function() {
             const { pin } = store.getState()
 
             if (show !== pin.show) {
@@ -184,7 +184,7 @@ const ModalConfirmPin = ({ fn }) => {
                         <View
                             style={{
                                 flexDirection: "row",
-                                with: '100%',
+                                with: "100%",
                             }}>
                             <TouchableOpacity
                                 style={classes.buttonStyle}
@@ -213,12 +213,11 @@ const ModalConfirmPin = ({ fn }) => {
                         </TouchableOpacity> */}
                         </View>
                     </View>
-
                 </View>
 
                 <View style={classes.buttonCloseStyle}>
                     <TouchableOpacity
-                        style={GlobalStyles.buttonPrimaryLine}
+                        style={classes.buttonBack}
                         onPress={closeModal}>
                         <Text style={GlobalStyles.textButtonPrimaryLine}>
                             Volver Atras
@@ -226,11 +225,9 @@ const ModalConfirmPin = ({ fn }) => {
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                        style={GlobalStyles.buttonPrimary}
+                        style={[GlobalStyles.buttonPrimary, { flex: 1 }]}
                         onPress={submitPIN}>
-                        <Text style={GlobalStyles.textButton}>
-                            Confirmar
-                        </Text>
+                        <Text style={GlobalStyles.textButton}>Confirmar</Text>
                     </TouchableOpacity>
                 </View>
             </Container>
