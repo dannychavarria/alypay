@@ -379,7 +379,7 @@ const KycUser = ({ navigation }) => {
             switch (tab) {
                 case 0: {
                     // Validamos que ahiga ingresado el numero de identificacion
-                    if (state.identificationNumber.trim().length === 0) {
+                    if (state.identificationNumber.trim().length < 5) {
                         throw String("Ingrese un numero de identificacion")
                     }
                     break
@@ -431,14 +431,14 @@ const KycUser = ({ navigation }) => {
                     // Validamos que ahiga ingresado el numero de identificacion
                     if (
                         beneficiaryState.beneficiaryIdentificationNumber.trim()
-                            .length <= 7
+                            .length === 0
                     ) {
                         throw String("Ingrese un numero de identificacion")
                     }
 
                     // Validamos el numero de telefono
                     if (
-                        beneficiaryState.beneficiaryPrincipalNumber.length <= 7
+                        beneficiaryState.beneficiaryPrincipalNumber.length < 7
                     ) {
                         throw String("Ingrese numero de telefono")
                     }
@@ -601,7 +601,9 @@ const KycUser = ({ navigation }) => {
         <Container showLogo>
             <View style={classes.container}>
                 {state.tab === 0 && (
-                    <ViewAnimation style={classes.tab} animation="fadeIn">
+                    <ViewAnimation
+                        style={[classes.tab, { paddingBottom: RFValue(5) }]}
+                        animation="fadeIn">
                         <View style={classes.containerTitle}>
                             <Text style={classes.containerTitleText}>
                                 Información del titular de la cuenta
@@ -617,7 +619,7 @@ const KycUser = ({ navigation }) => {
                         <View style={classes.row}>
                             <View style={classes.labelsRow}>
                                 <Text style={classes.legendRow}>
-                                    Seleccione su genero
+                                    Seleccione su género
                                 </Text>
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
@@ -756,7 +758,9 @@ const KycUser = ({ navigation }) => {
                     </ViewAnimation>
                 )}
                 {state.tab === 1 && (
-                    <ViewAnimation style={classes.tab} animation="fadeIn">
+                    <ViewAnimation
+                        style={[classes.tab, { paddingBottom: RFValue(5) }]}
+                        animation="fadeIn">
                         <View style={classes.containerTitle}>
                             <Text style={classes.textTitle}>
                                 3. Nacionalidad y residencia
@@ -884,7 +888,9 @@ const KycUser = ({ navigation }) => {
                 )}
 
                 {state.tab === 2 && (
-                    <ViewAnimation style={classes.tab} animation="fadeIn">
+                    <ViewAnimation
+                        style={[classes.tab, { paddingBottom: RFValue(5) }]}
+                        animation="fadeIn">
                         {age > 18 ? (
                             <>
                                 <View style={classes.row}>
@@ -1042,7 +1048,9 @@ const KycUser = ({ navigation }) => {
                 )}
 
                 {state.tab === 3 && (
-                    <ViewAnimation style={classes.tab} animation="fadeIn">
+                    <ViewAnimation
+                        style={[classes.tab, { paddingBottom: RFValue(100) }]}
+                        animation="fadeIn">
                         <View style={classes.containerTitle}>
                             {age > 18 || CheckState ? (
                                 <Text style={classes.containerTitleText}>
@@ -1358,7 +1366,9 @@ const KycUser = ({ navigation }) => {
                     </ViewAnimation>
                 )}
                 {state.tab === 4 && (
-                    <ViewAnimation style={classes.tab} animation="fadeIn">
+                    <ViewAnimation
+                        style={[classes.tab, { paddingBottom: RFValue(5) }]}
+                        animation="fadeIn">
                         <View style={classes.containerTitle}>
                             {age > 18 || CheckState ? (
                                 <Text style={classes.containerTitleText}>
@@ -1589,7 +1599,9 @@ const KycUser = ({ navigation }) => {
                 )}
 
                 {state.tab === 5 && (
-                    <ViewAnimation style={classes.tab} animation="fadeIn">
+                    <ViewAnimation
+                        style={[classes.tab, { paddingBottom: RFValue(5) }]}
+                        animation="fadeIn">
                         <View style={classes.containerTitle}>
                             {age > 18 || CheckState ? (
                                 <Text style={classes.containerTitleText}>

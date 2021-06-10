@@ -75,7 +75,7 @@ const initialState = {
  * Vista componente que se renderiza cuando
  * el usuario ejecuta el componente pagar en el switch
  */
-const PayComponent = ({ onGoBack = () => { } }) => {
+const PayComponent = ({ onGoBack = () => {} }) => {
     const { navigate } = useNavigation()
     const scanerCamera = useRef(null)
 
@@ -152,7 +152,7 @@ const PayComponent = ({ onGoBack = () => { } }) => {
             [
                 {
                     text: "Cancelar",
-                    onPress: () => { },
+                    onPress: () => {},
                 },
                 {
                     text: "Salir",
@@ -337,7 +337,6 @@ const Main = () => {
     const [indexActive, setIndexActive] = useState(0)
     const { globalStorage } = store.getState()
     const { navigate } = useNavigation()
-
 
     const { global } = store.getState()
 
