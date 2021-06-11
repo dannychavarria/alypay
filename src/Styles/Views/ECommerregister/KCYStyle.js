@@ -1,4 +1,4 @@
-import { Colors, RFValue, GlobalStyles} from "../../../utils/constants"
+import { Colors, RFValue, GlobalStyles } from "../../../utils/constants"
 
 export default {
     borderLeft: {
@@ -232,14 +232,13 @@ export default {
     },
 
     containerModalSuccess1: {
-        // flex: 1,
         alignSelf: "center",
         alignItems: "center",
-        // justifyContent: 'space-between',
+        justifyContent: "space-between",
         backgroundColor: Colors.colorBlack,
         borderRadius: 10,
-        padding: 10,
-        height: "85%",
+        paddingVertical: RFValue(20),
+        height: "90%",
         width: "90%",
     },
     logoSuccess: {
@@ -255,12 +254,13 @@ export default {
         color: "#FFF",
         fontSize: RFValue(14),
         textAlign: "center",
-        //marginVertical: RFValue(10),
+        marginVertical: RFValue(10),
     },
     textTitleSuccess: {
         color: Colors.colorYellow,
         fontSize: RFValue(18),
         marginVertical: RFValue(10),
+        textAlign: "center",
     },
     buttonSuccess: {
         ...GlobalStyles.buttonPrimary,
