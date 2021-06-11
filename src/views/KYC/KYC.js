@@ -182,8 +182,9 @@ const KycUser = ({ navigation }) => {
                 gender: state.gender,
                 idTypeIdentification: state.identificationType,
                 identificationNumber: state.identificationNumber,
-                alternativeNumber: `${state.country.phoneCode} ${state.alternativeNumber
-                    }`,
+                alternativeNumber: `${state.country.phoneCode} ${
+                    state.alternativeNumber
+                }`,
                 nationality: state.nationality,
                 nationalityPhoneCode: state.phoneCodeNationality,
                 nationalityCurrencySymbol: state.currencyNationality,
@@ -251,7 +252,9 @@ const KycUser = ({ navigation }) => {
             )
         } catch (error) {
             errorMessage(error.toString())
-        }finally{setShowPin(false)}
+        } finally {
+            setShowPin(false)
+        }
     }
 
     const createFormData = (
@@ -338,7 +341,7 @@ const KycUser = ({ navigation }) => {
         if (
             item.name.length > 0 &&
             item.name.toLowerCase().search(state.filter.toLocaleLowerCase()) >
-            -1
+                -1
         ) {
             return (
                 <TouchableOpacity
@@ -576,7 +579,7 @@ const KycUser = ({ navigation }) => {
             [
                 {
                     text: "Cancelar",
-                    onPress: () => { },
+                    onPress: () => {},
                 },
                 {
                     text: "Salir",
@@ -751,7 +754,6 @@ const KycUser = ({ navigation }) => {
                                 </Text>
                             </TouchableOpacity>
                             <TouchableOpacity
-                                // onPress={nextPage}
                                 onPress={nextPage}
                                 style={GlobalStyles.buttonPrimary}>
                                 <Text style={GlobalStyles.textButton}>
@@ -1832,10 +1834,10 @@ const KycUser = ({ navigation }) => {
                             </Text>
 
                             <Text style={classes.subTitle}>
-                                Enviaremos un correo con un PIN aleatorio
-                                el cual sera necesario para realizar
-                                transacciones, puede cambiarlo luego si lo desea
-                                en la vista de perfil.
+                                Enviaremos un correo con un PIN aleatorio el
+                                cual sera necesario para realizar transacciones,
+                                puede cambiarlo luego si lo desea en la vista de
+                                perfil.
                             </Text>
                         </View>
 
@@ -1858,7 +1860,9 @@ const KycUser = ({ navigation }) => {
                     <TouchableOpacity
                         style={classes.buttonSuccess}
                         onPress={submitInformation}>
-                        <Text style={GlobalStyles.textButton}>Guardar información</Text>
+                        <Text style={GlobalStyles.textButton}>
+                            Guardar información
+                        </Text>
                     </TouchableOpacity>
                 </View>
             </Modal>
