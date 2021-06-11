@@ -44,7 +44,6 @@ const Recharge = () => {
     const { wallet } = store.getState()
 
     const { information } = wallet
-    console.log("Wallet", information)
 
     let checkHashPattern = /[a-zA-Z0-9]*$/
 

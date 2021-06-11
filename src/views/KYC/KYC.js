@@ -6,10 +6,10 @@ import {
     TouchableOpacity,
     FlatList,
     Platform,
+    Image,
     Alert,
     BackHandler,
 } from "react-native"
-import { StackActions } from "@react-navigation/native"
 
 // Import Hook
 import useStyles from "../../hooks/useStyles.hook"
@@ -26,16 +26,13 @@ import {
     RFValue,
     checkPermissionCamera,
     calcAge,
-    getHeaders,
-    http,
-    successMessage,
     logOutApp,
     formatURI,
 } from "../../utils/constants"
 import countries from "../../utils/countries.json"
 import professions from "../../utils/profession.json"
-
-import store from "../../store/index"
+import LogoFunko from "../../static/AlyFunko.png"
+import logo from "../../static/alypay.png"
 
 // Import Components
 import Container from "../../components/Container/Container"
@@ -50,6 +47,9 @@ import DateTimePicker from "@react-native-community/datetimepicker"
 import moment from "moment"
 import validator from "validator"
 import ModalKyc from "../../components/ModalKyc/ModalKyc"
+
+// Import Store
+import store from "../../store/index"
 
 const initialState = {
     identificationType: 1,
@@ -110,7 +110,7 @@ const beneficiaryStateReducer = {
 }
 
 const optionsOpenCamera = {
-    noData: true,
+    //noData: true,
     includeBase64: true,
     maxHeight: 1024,
     maxWidth: 1024,
@@ -159,6 +159,8 @@ const KycUser = ({ navigation }) => {
     // Estado que indica si muestra la modal de paises del Usuario
     const [modalCoutry, setModalCountry] = useState(false)
 
+    const [showPin, setShowPin] = useState(false)
+
     // Estado que indica si muestra la modal de paises del beneficiario
     const [modalCoutryBeneficiary, setModalCountryBeneficiary] = useState(false)
 
@@ -180,7 +182,8 @@ const KycUser = ({ navigation }) => {
                 gender: state.gender,
                 idTypeIdentification: state.identificationType,
                 identificationNumber: state.identificationNumber,
-                alternativeNumber: `${state.country.phoneCode} ${state.alternativeNumber}`,
+                alternativeNumber: `${state.country.phoneCode} ${state.alternativeNumber
+                    }`,
                 nationality: state.nationality,
                 nationalityPhoneCode: state.phoneCodeNationality,
                 nationalityCurrencySymbol: state.currencyNationality,
@@ -248,7 +251,7 @@ const KycUser = ({ navigation }) => {
             )
         } catch (error) {
             errorMessage(error.toString())
-        }
+        }finally{setShowPin(false)}
     }
 
     const createFormData = (
@@ -262,34 +265,39 @@ const KycUser = ({ navigation }) => {
 
         const myAvatar = {
             data: avatar.base64,
-            name: avatar.fileName,
             type: avatar.type,
-            uri: formatURI(avatar.uri)
+            size: avatar.fileSize,
         }
         data.append("avatar", JSON.stringify(myAvatar))
 
         const myIdentificationPhoto = {
             data: identificationPhoto.base64,
-            name: identificationPhoto.fileName,
             type: identificationPhoto.type,
-            uri: formatURI(identificationPhoto.uri)
+            size: identificationPhoto.fileSize,
         }
-        data.append("identificationPhoto", myIdentificationPhoto)
+        data.append(
+            "identificationPhoto",
+            JSON.stringify(myIdentificationPhoto),
+        )
 
         if (CheckState) {
-            data.append("beneficiaryAvatar", {
-                data: beneficiaryAvatar.base64,
-                name: beneficiaryAvatar.fileName,
-                type: beneficiaryAvatar.type,
-                uri: formatURI(beneficiaryAvatar.uri)
-            })
+            data.append(
+                "beneficiaryAvatar",
+                JSON.stringify({
+                    data: beneficiaryAvatar.base64,
+                    type: beneficiaryAvatar.type,
+                    size: beneficiaryAvatar.size,
+                }),
+            )
 
-            data.append("beneficiaryIdentificationPhoto", {
-                data: beneficiaryIdentificationPhoto.base64,
-                name: beneficiaryIdentificationPhoto.fileName,
-                type: beneficiaryIdentificationPhoto.type,
-                uri: formatURI(beneficiaryIdentificationPhoto.uri)
-            })
+            data.append(
+                "beneficiaryIdentificationPhoto",
+                JSON.stringify({
+                    data: beneficiaryIdentificationPhoto.base64,
+                    type: beneficiaryIdentificationPhoto.type,
+                    size: beneficiaryIdentificationPhoto.size,
+                }),
+            )
         }
 
         Object.keys(body).forEach(i => data.append(i, body[i]))
@@ -375,7 +383,7 @@ const KycUser = ({ navigation }) => {
             switch (tab) {
                 case 0: {
                     // Validamos que ahiga ingresado el numero de identificacion
-                    if (state.identificationNumber.trim().length === 0) {
+                    if (state.identificationNumber.trim().length < 5) {
                         throw String("Ingrese un numero de identificacion")
                     }
                     break
@@ -427,14 +435,14 @@ const KycUser = ({ navigation }) => {
                     // Validamos que ahiga ingresado el numero de identificacion
                     if (
                         beneficiaryState.beneficiaryIdentificationNumber.trim()
-                            .length <= 7
+                            .length === 0
                     ) {
                         throw String("Ingrese un numero de identificacion")
                     }
 
                     // Validamos el numero de telefono
                     if (
-                        beneficiaryState.beneficiaryPrincipalNumber.length <= 7
+                        beneficiaryState.beneficiaryPrincipalNumber.length < 7
                     ) {
                         throw String("Ingrese numero de telefono")
                     }
@@ -597,7 +605,9 @@ const KycUser = ({ navigation }) => {
         <Container showLogo>
             <View style={classes.container}>
                 {state.tab === 0 && (
-                    <ViewAnimation style={classes.tab} animation="fadeIn">
+                    <ViewAnimation
+                        style={[classes.tab, { paddingBottom: RFValue(5) }]}
+                        animation="fadeIn">
                         <View style={classes.containerTitle}>
                             <Text style={classes.containerTitleText}>
                                 Información del titular de la cuenta
@@ -613,7 +623,7 @@ const KycUser = ({ navigation }) => {
                         <View style={classes.row}>
                             <View style={classes.labelsRow}>
                                 <Text style={classes.legendRow}>
-                                    Seleccione su genero
+                                    Seleccione su género
                                 </Text>
                                 <Text style={classes.required}>Requerido</Text>
                             </View>
@@ -752,7 +762,9 @@ const KycUser = ({ navigation }) => {
                     </ViewAnimation>
                 )}
                 {state.tab === 1 && (
-                    <ViewAnimation style={classes.tab} animation="fadeIn">
+                    <ViewAnimation
+                        style={[classes.tab, { paddingBottom: RFValue(5) }]}
+                        animation="fadeIn">
                         <View style={classes.containerTitle}>
                             <Text style={classes.textTitle}>
                                 3. Nacionalidad y residencia
@@ -880,7 +892,9 @@ const KycUser = ({ navigation }) => {
                 )}
 
                 {state.tab === 2 && (
-                    <ViewAnimation style={classes.tab} animation="fadeIn">
+                    <ViewAnimation
+                        style={[classes.tab, { paddingBottom: RFValue(5) }]}
+                        animation="fadeIn">
                         {age > 18 ? (
                             <>
                                 <View style={classes.row}>
@@ -1027,10 +1041,10 @@ const KycUser = ({ navigation }) => {
                             </>
                         ) : (
                             <TouchableOpacity
-                                onPress={submitInformation}
+                                onPress={_ => setShowPin(true)}
                                 style={GlobalStyles.buttonPrimary}>
                                 <Text style={GlobalStyles.textButton}>
-                                    Guardar
+                                    Continuar
                                 </Text>
                             </TouchableOpacity>
                         )}
@@ -1038,7 +1052,9 @@ const KycUser = ({ navigation }) => {
                 )}
 
                 {state.tab === 3 && (
-                    <ViewAnimation style={classes.tab} animation="fadeIn">
+                    <ViewAnimation
+                        style={[classes.tab, { paddingBottom: RFValue(100) }]}
+                        animation="fadeIn">
                         <View style={classes.containerTitle}>
                             {age > 18 || CheckState ? (
                                 <Text style={classes.containerTitleText}>
@@ -1354,7 +1370,9 @@ const KycUser = ({ navigation }) => {
                     </ViewAnimation>
                 )}
                 {state.tab === 4 && (
-                    <ViewAnimation style={classes.tab} animation="fadeIn">
+                    <ViewAnimation
+                        style={[classes.tab, { paddingBottom: RFValue(5) }]}
+                        animation="fadeIn">
                         <View style={classes.containerTitle}>
                             {age > 18 || CheckState ? (
                                 <Text style={classes.containerTitleText}>
@@ -1585,7 +1603,9 @@ const KycUser = ({ navigation }) => {
                 )}
 
                 {state.tab === 5 && (
-                    <ViewAnimation style={classes.tab} animation="fadeIn">
+                    <ViewAnimation
+                        style={[classes.tab, { paddingBottom: RFValue(5) }]}
+                        animation="fadeIn">
                         <View style={classes.containerTitle}>
                             {age > 18 || CheckState ? (
                                 <Text style={classes.containerTitleText}>
@@ -1730,10 +1750,10 @@ const KycUser = ({ navigation }) => {
                                 <Text style={classes.textBack}>Atras</Text>
                             </TouchableOpacity>
                             <TouchableOpacity
-                                onPress={submitInformation}
+                                onPress={_ => setShowPin(true)}
                                 style={GlobalStyles.buttonPrimary}>
                                 <Text style={GlobalStyles.textButton}>
-                                    Guardar
+                                    Continuar
                                 </Text>
                             </TouchableOpacity>
                         </View>
@@ -1793,6 +1813,53 @@ const KycUser = ({ navigation }) => {
                         renderItem={ItemCountryBenficiary}
                         keyExtractor={(_, i) => i.toString()}
                     />
+                </View>
+            </Modal>
+
+            <Modal
+                isVisible={showPin}
+                animationIn="fadeIn"
+                animationOut="fadeOut"
+                // backdropOpacity={0.95}
+                onBackButtonPress={_ => setShowPin(false)}>
+                <View style={classes.containerModalSuccess1}>
+                    <Image style={classes.logoSuccess} source={logo} />
+
+                    <View style={[classes.rowImage, { alignItems: "center" }]}>
+                        <View style={{ alignItems: "center" }}>
+                            <Text style={classes.textTitleSuccess}>
+                                Su registro ya esta casi listo
+                            </Text>
+
+                            <Text style={classes.subTitle}>
+                                Enviaremos un correo con un PIN aleatorio
+                                el cual sera necesario para realizar
+                                transacciones, puede cambiarlo luego si lo desea
+                                en la vista de perfil.
+                            </Text>
+                        </View>
+
+                        <View style={{ paddingTop: 15 }}>
+                            <Image
+                                style={classes.logoSuccess}
+                                source={LogoFunko}
+                            />
+                        </View>
+                    </View>
+
+                    <View style={{ alignItems: "center" }}>
+                        <View style={classes.row}>
+                            <Text style={classes.textTitleSuccess}>
+                                ¡Gracias por registrarse con nosotros!
+                            </Text>
+                        </View>
+                    </View>
+
+                    <TouchableOpacity
+                        style={classes.buttonSuccess}
+                        onPress={submitInformation}>
+                        <Text style={GlobalStyles.textButton}>Guardar información</Text>
+                    </TouchableOpacity>
                 </View>
             </Modal>
 

@@ -13,6 +13,7 @@ import BuyCrypto from "../../views/BuyCrypto/BuyCrypto"
 
 // Import components
 import Navbar from "../../components/Navbar/Navbar"
+import ModalTwoFactor from '../../components/ModalConfirmPin/ModalConfirmPin'
 
 // Import store from redux
 import store from "../../store/index"
@@ -40,6 +41,7 @@ const App = ({ navigation }) => {
                     component={RetirementCommerce}
                 />
                 <Stack.Screen name={ROUTES.BUY} component={BuyCrypto} />
+                <Stack.Screen name={ROUTES.MODALCONFIRM} component={ModalTwoFactor} />
             </Stack.Navigator>
 
             <Navbar />

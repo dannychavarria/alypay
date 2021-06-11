@@ -9,6 +9,7 @@ import ItemWallet from "../../components/ItemWallet/ItemWallet"
 import StoreElement from "../../components/StoreElement/StoreElement"
 import Switch from "../../components/Switch/Switch"
 import Search from "../../components/Search/Search"
+import ModalConfirmPin from "../../components/ModalConfirmPin/ModalConfirmPin"
 
 // Import other components
 import QRCodeScanner from "react-native-qrcode-scanner"
@@ -210,9 +211,12 @@ const SendComponent = ({
 }) => {
     const [state, dispatch] = useReducer(reducer, initialStateSendComponent)
 
+    // estado para renderizar el modal
+    const [loadModal, setLoadModal] = useState(false)
+
     const { global, functions } = store.getState()
 
-    const { navigate } = useNavigation()
+    const { navigation } = store.getState()
 
     const styles = StyleSheet.create({
         container: {
@@ -348,8 +352,10 @@ const SendComponent = ({
         },
     })
 
-    /** Metodo que se ejecuta para enviar los fondos */
-    const submit = async () => {
+    // funcion que hace algunas verificacion y llama al modal para verificar el pin
+    const verifiPin = async () => {
+        setLoadModal(true)
+
         try {
             Keyboard.dismiss()
 
@@ -360,6 +366,22 @@ const SendComponent = ({
             // Ejecutamos una vibracion minima del dispositivo
             Vibration.vibrate(100)
 
+            // // verificamos si el dispositvo tiene touch id
+            // const auth = await CheckTouchIDPermission()
+
+            // if (!auth) {
+            //     throw String("Autenticación incorrecta")
+            // }else{
+            // }
+            store.dispatch({ type: "SHOWPIN", payload: true })
+        } catch (error) {
+            errorMessage(error.toString())
+        }
+    }
+
+    /** Metodo que se ejecuta para enviar los fondos */
+    const submit = async props => {
+        try {
             // variables que se enviaran a una peticion
             const vars = {
                 amount_usd: state.amountUSD,
@@ -367,13 +389,7 @@ const SendComponent = ({
                 id_wallet: data.id,
                 wallet: state.walletAdress,
                 symbol: data.symbol,
-            }
-
-            // verificamos si el dispositvo tiene touch id
-            const auth = await CheckTouchIDPermission()
-
-            if (!auth) {
-                throw String("Autenticación incorrecta")
+                pin: props,
             }
 
             loader(true)
@@ -418,6 +434,7 @@ const SendComponent = ({
             errorMessage(error.toString())
         } finally {
             loader(false)
+            setLoadModal(false)
         }
     }
 
@@ -518,7 +535,7 @@ const SendComponent = ({
 
     /** Metodo que envia a la pantalla de retiros  */
     const onRetirement = () => {
-        navigate("Retirement", data)
+        navigation.navigate("Retirement", data)
     }
 
     /** Metodo que se ejecuta cuando el lector QR lee el codigo */
@@ -714,7 +731,7 @@ const SendComponent = ({
 
             {state.walletAccepted && (
                 <TouchableOpacity
-                    onPress={submit}
+                    onPress={verifiPin}
                     style={GlobalStyles.buttonPrimary}>
                     <Text style={GlobalStyles.textButton}>Enviar</Text>
                 </TouchableOpacity>
@@ -734,6 +751,8 @@ const SendComponent = ({
                     />
                 </View>
             </Modal>
+
+            {loadModal && <ModalConfirmPin fn={submit} />}
         </ViewAnimate>
     )
 }
@@ -821,8 +840,6 @@ const Wallet = ({ route }) => {
     const { params } = route
 
     const isAly = params.symbol === "ALY"
-
-    console.log("Parametros", route)
 
     /**
      * Funcion que se encarga de configurar todo el componente

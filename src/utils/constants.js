@@ -22,7 +22,6 @@ import moment from "moment"
 // Store and action from redux
 import store from "../store/index"
 import { SETPERMISSIONS, DELETESTORAGE, SETLOADER } from "../store/actionsTypes"
-import { createIconSetFromFontello } from "react-native-vector-icons"
 
 import Floor from "lodash/floor"
 
@@ -97,7 +96,8 @@ const PORT = "3000"
 /**Direction for server */
 export const serverAddress = "https://alypay.uc.r.appspot.com"
 // export const serverAddress = "https://root-anvil-299019.uc.r.appspot.com"
-// export const serverAddress = "http://192.168.0.110:3085"
+// export const serverAddress = "http://192.168.0.151:3085"
+// export const serverAddress = "http://4e43efb91454.ngrok.io"
 export const serverSpeedtradingsURL = "https://ardent-medley-272823.appspot.com"
 
 /**
@@ -435,7 +435,8 @@ export const getHeadersMultipartFormData = () => {
 
     return {
         headers: {
-            "Content-Type": "multipart/form-data",
+            Accept: "application/json",
+            "Content-Type": "application/json",
             "x-auth-token": token,
         },
     }
@@ -503,13 +504,15 @@ export const configTouchIDAuth = {
     title: "Autenticación",
     passcodeFallback: true,
     cancelText: "CANCELAR",
+    fallbackLabel: "CODIGO DE SEGURIDAD",
 }
 
 /**
- * 
+ *
  * @author msobalvarro
  * @summary Funcion que valida direccion de archivos del dispositovp
- * @param {String} uri 
+ * @param {String} uri
  * @returns String
  */
-export const formatURI = uri => Platform.OS === "android" ? uri : uri.replace("file://", "",)
+export const formatURI = uri =>
+    Platform.OS === "android" ? uri : uri.replace("file://", "")

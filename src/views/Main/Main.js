@@ -21,7 +21,6 @@ import {
 } from "react-native"
 import { Image } from "react-native-animatable"
 import { useNavigation } from "@react-navigation/native"
-import ModalKyc from "../../components/ModalKyc/ModalKyc"
 
 // Import constant and functions
 import * as CryptoJS from "react-native-crypto-js"
@@ -43,7 +42,6 @@ import { BlurView } from "@react-native-community/blur"
 
 // import assets
 import ExampleImage from "../../static/example-order.png"
-import CardExecutive from "../../components/CardExecutive/CardExecutive"
 
 /**
  * Constante que almacena el tipo de vista seleccionada del switch
@@ -424,6 +422,7 @@ const Main = () => {
             />
             {stateView === TYPE_VIEW.WALLET && (
                 <>
+                    {/* <CardExecutive data={global}/> */}
                     <FlatList
                         data={state.wallets}
                         keyExtractor={(_, i) => i.toString()}

@@ -16,6 +16,7 @@ import {
     RFValue,
     GlobalStyles,
     CopyClipboard,
+    WithDecimals,
 } from "../../utils/constants"
 
 //import constants
@@ -72,10 +73,9 @@ const BuyCrypto = ({ route }) => {
             hash: hash,
             id_coin_from: idCoinSelected,
             symbol_from: symCoinSelected,
-            address: addressCoin
+            address: addressCoin,
         }
         submintInformation(dataSend)
-
     }
 
     useEffect(() => {
@@ -170,7 +170,7 @@ const BuyCrypto = ({ route }) => {
                             Precio del mercado
                         </Text>
                         <Text style={classes.textWhite}>
-                            $ {Floor(priceCoin, 8)}
+                            $ {WithDecimals(Floor(priceCoin, 2))}
                         </Text>
                     </View>
                     <View>

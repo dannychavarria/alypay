@@ -7,6 +7,7 @@ import { navigation } from "./navigation"
 import { permissions } from "./permissions"
 import { loader } from "./loader"
 import { functions } from "./functions.reducer"
+import { pin } from "./pin.reducer"
 
 const reducers = combineReducers({
     global,
@@ -14,7 +15,8 @@ const reducers = combineReducers({
     permissions,
     loader,
     navigation,
-    functions
+    functions,
+    pin
 })
 
 export default reducers

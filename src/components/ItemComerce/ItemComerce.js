@@ -19,18 +19,19 @@ const ItemComerce = ({ data = {} }) => {
     const { navigate } = useNavigation()
     const images = data.item.profile_picture
 
+
     const onInformacion = () => {
         navigate(ROUTES.WALLETCOMMERCE, data)
     }
 
-    const parsedImage = images.replace("http", "https")
+    // const parsedImage = images.replace("http", "https")
 
     return (
         <>
             <TouchableOpacity style={styles.container} onPress={onInformacion}>
                 <Image
                     style={styles.logo}
-                    source={images === null ? avatar : { uri: parsedImage }}
+                    source={images === null ? avatar : { uri: images }}
                 />
 
                 <View style={styles.cardInformation}>
