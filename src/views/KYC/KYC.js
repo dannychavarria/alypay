@@ -182,9 +182,7 @@ const KycUser = ({ navigation }) => {
                 gender: state.gender,
                 idTypeIdentification: state.identificationType,
                 identificationNumber: state.identificationNumber,
-                alternativeNumber: `${state.country.phoneCode} ${
-                    state.alternativeNumber
-                }`,
+                alternativeNumber: state.alternativeNumber,
                 nationality: state.nationality,
                 nationalityPhoneCode: state.phoneCodeNationality,
                 nationalityCurrencySymbol: state.currencyNationality,
@@ -989,7 +987,7 @@ const KycUser = ({ navigation }) => {
                         <View style={classes.position}>
                             <View style={classes.labelsRow}>
                                 <Text style={classes.textImage}>
-                                    Subir foto frontal sosteniendo su ID
+                                    Subir foto de su identificacion personal
                                 </Text>
                             </View>
                             <UploadImage
@@ -1734,7 +1732,7 @@ const KycUser = ({ navigation }) => {
                         <View style={classes.position}>
                             <View style={classes.labelsRow}>
                                 <Text style={classes.textImage}>
-                                    Subir foto frontal sosteniendo su ID
+                                    Subir foto de su identificacion personal
                                 </Text>
                             </View>
                             <UploadImage
