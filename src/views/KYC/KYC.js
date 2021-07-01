@@ -383,6 +383,10 @@ const KycUser = ({ navigation }) => {
         try {
             switch (tab) {
                 case 0: {
+                    if (state.gender.length === 0) {
+                        throw String("Selecione un genero para poder continuar")
+                    }
+
                     // Validamos que ahiga ingresado el numero de identificacion
                     if (state.identificationNumber.trim().length < 5) {
                         throw String("Ingrese un numero de identificacion")

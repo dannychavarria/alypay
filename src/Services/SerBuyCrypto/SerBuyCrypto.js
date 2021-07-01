@@ -1,10 +1,14 @@
-import { http, serverSpeedtradingsURL, errorMessage } from "../../utils/constants"
+import {
+    http,
+    serverSpeedtradingsURL,
+    errorMessage,
+} from "../../utils/constants"
 
 export default async function configurateComponent() {
     try {
         // obtenemos los precios de las monedas principales
         const { data } = await http.get(
-            `${serverSpeedtradingsURL}/collection/prices/minimal`,
+            `${serverSpeedtradingsURL}/collection/prices`,
         )
 
         if (data.error) {

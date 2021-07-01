@@ -380,6 +380,7 @@ const Main = () => {
                 ...globalStorage,
                 fee: {},
             }
+            console.log("Fees", dataStore)
 
             if (Object.values(fee).length > 0) {
                 dataStore.fee = fee
