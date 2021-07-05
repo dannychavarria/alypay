@@ -94,10 +94,10 @@ export const Colors = {
 const PORT = "3000"
 
 /**Direction for server */
-// export const serverAddress = "https://alypay.uc.r.appspot.com"
+export const serverAddress = "https://alypay.uc.r.appspot.com"
 // export const serverAddress = "https://root-anvil-299019.uc.r.appspot.com"
-export const serverAddress = "http://192.168.0.106:3085"
-// export const serverAddress = "http://105c7e18e9ef.ngrok.io"
+// export const serverAddress = "http://192.168.0.151:3085"
+// export const serverAddress = "http://01daa136edd8.ngrok.io"
 export const serverSpeedtradingsURL = "https://ardent-medley-272823.appspot.com"
 
 /**
