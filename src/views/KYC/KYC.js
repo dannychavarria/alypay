@@ -189,8 +189,8 @@ const KycUser = ({ navigation }) => {
                 province: state.province,
                 direction1: state.direction1,
                 direction2: state.direction2,
-                answer1: state.foundsOrigin,
-                answer2: state.profession,
+                answer1: age < 18 ? "-" : state.foundsOrigin,
+                answer2: age < 18 ? "-" : state.profession,
 
                 haveBeneficiary: age < 18 || CheckState ? 1 : 0,
             }
