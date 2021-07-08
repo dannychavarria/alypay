@@ -3,6 +3,7 @@ import HistoryExcutiveStyles from "../Components/HistoryRetirementExcutive/Histo
 import SearchMapStyle from "../Components/SearchMapS/SearchMapS"
 import ModalKycStyles from "../Components/ModalKyc/ModalKyc"
 import EditProfileStyles from "../Components/EditProfileStyle/EditProfileStyles"
+import EditPinStyles from "../Components/EditPinStyles/EditPinStyles"
 
 export {
     ListExcuteStyle,
@@ -10,4 +11,5 @@ export {
     HistoryExcutiveStyles,
     ModalKycStyles,
     EditProfileStyles,
+    EditPinStyles,
 }

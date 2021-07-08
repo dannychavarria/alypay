@@ -14,6 +14,7 @@ import profileImage from "../../static/profile-default.png"
 // import components
 import Container from "../../components/Container/Container"
 import EditProfile from "../../components/EditProfile/EditProfile.component"
+import EditPin from "../../components/EditPin/EditPin.component"
 import HeaderComponent from "../../components/HeaderComponent/HeaderComponent"
 import ModalPin from "../../components/ModalPin/ModalPin"
 
@@ -41,6 +42,7 @@ const Profile = ({ route }) => {
         <Container>
             <HeaderComponent />
             <EditProfile data={data} />
+            <EditPin />
         </Container>
         // <View
         //     style={{
