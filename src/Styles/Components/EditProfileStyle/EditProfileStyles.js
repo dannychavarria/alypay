@@ -2,8 +2,8 @@ import { Colors, RFValue } from "../../../utils/constants"
 
 export default {
     container: {
-        flex: 1,
-        margin: RFValue(20),
+        // flex: 1,
+        margin: RFValue(25),
         alignItems: "center",
     },
     image: {
@@ -26,7 +26,7 @@ export default {
     icon: {
         paddingTop: 50,
         opacity: 0.6,
-        borderColor: Colors.colorYellow,
+        // borderColor: Colors.colorYellow,
         alignItems: "center",
         justifyContent: "center",
     },
@@ -35,7 +35,7 @@ export default {
         marginHorizontal: RFValue(15),
     },
     containerCardInfo: {
-        width: "100%",
+        // width: "100%",
         backgroundColor: Colors.colorBlack,
         borderRadius: RFValue(5),
         padding: RFValue(10),
@@ -44,7 +44,7 @@ export default {
         alignItems: "center",
         flexDirection: "row",
         justifyContent: "space-between",
-        marginHorizontal: RFValue(10),
+        // marginHorizontal: RFValue(10),
     },
     rowCard: {
         alignItems: "center",
@@ -96,5 +96,35 @@ export default {
         marginVertical: RFValue(25),
         flexDirection: "row",
         justifyContent: "space-between",
+    },
+    header: {
+        backgroundColor: Colors.colorBlack,
+        paddingTop: RFValue(10),
+        borderTopLeftRadius: RFValue(20),
+        borderTopRightRadius: RFValue(20),
+    },
+    panelHeader: {
+        alignItems: "center",
+    },
+    panelHandle: {
+        width: RFValue(40),
+        height: RFValue(10),
+        borderRadius: 4,
+        backgroundColor: Colors.colorYellow,
+        marginBottom: RFValue(10),
+    },
+    panel: {
+        padding: RFValue(20),
+        backgroundColor: Colors.colorBlack,
+        // paddingTop: RFValue(30),
+        // height: "100%",
+    },
+    panelTitle: {
+        fontSize: RFValue(20),
+        color: Colors.colorYellow,
+    },
+    panelSubtitle: {
+        fontSize: RFValue(16),
+        color: "#CCC",
     },
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import {
     Text,
     View,
@@ -15,6 +15,7 @@ import { EditProfileStyles } from "../../Styles/Components/index"
 
 //Import Components
 import Icon from "react-native-vector-icons/Entypo"
+import { Modalize } from "react-native-modalize"
 import { launchCamera, launchImageLibrary } from "react-native-image-picker"
 
 //Import Assets
@@ -39,11 +40,12 @@ const EditProfile = ({ data = {} }) => {
     const cancelInfo = () => {
         setShowInfoEdit(false)
     }
+    const sheetRef = useRef(null)
 
     return (
         <>
             <View style={classes.container}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => sheetRef.current.open()}>
                     <View style={classes.imageContainer}>
                         <ImageBackground style={classes.image} source={profile}>
                             <View style={classes.containerIcon}>
@@ -58,7 +60,6 @@ const EditProfile = ({ data = {} }) => {
                     </View>
                 </TouchableOpacity>
             </View>
-
             <View style={classes.containerCard}>
                 <View style={classes.row}>
                     <Text style={classes.titlePrincipal}>Datos Personales</Text>
@@ -168,6 +169,51 @@ const EditProfile = ({ data = {} }) => {
                     </View>
                 )}
             </View>
+
+            <Modalize
+                ref={sheetRef}
+                snapPoint={200}
+                modalHeight={200}
+                modalStyle={classes.panel}
+                HeaderComponent={
+                    <View style={{ alignItems: "center" }}>
+                        <Text style={classes.panelTitle}>Upload Photo</Text>
+                        <Text style={classes.panelSubtitle}>
+                            Choose Your Profile Picture
+                        </Text>
+
+                        <TouchableOpacity
+                            style={[
+                                GlobalStyles.buttonPrimaryLine,
+                                { margin: 5 },
+                            ]}>
+                            <Text style={GlobalStyles.textButtonPrimaryLine}>
+                                Tomar fotografia
+                            </Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            style={[
+                                GlobalStyles.buttonPrimaryLine,
+                                { margin: 5 },
+                            ]}>
+                            <Text style={GlobalStyles.textButtonPrimaryLine}>
+                                Tomar fotografia
+                            </Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            style={[
+                                GlobalStyles.buttonPrimaryCancel,
+                                { margin: 5 },
+                            ]}>
+                            <Text style={GlobalStyles.textButtonCancel}>
+                                Cancelar
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                }
+            />
         </>
     )
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { View, Text, Image, TouchableOpacity } from "react-native"
+import { View, ScrollView } from "react-native"
 
 // import hooks
 import useStyles from "../../hooks/useStyles.hook"
@@ -39,11 +39,19 @@ const Profile = ({ route }) => {
     }, [])
 
     return (
-        <Container>
-            <HeaderComponent />
-            <EditProfile data={data} />
-            <EditPin />
-        </Container>
+        <View
+            style={{
+                flex: 1,
+                justifyContent: "center",
+                backgroundColor: "black",
+            }}>
+            <ScrollView>
+                <HeaderComponent />
+                <EditProfile data={data} />
+                <EditPin />
+            </ScrollView>
+        </View>
+
         // <View
         //     style={{
         //         flex: 1,
