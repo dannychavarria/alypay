@@ -12,10 +12,19 @@ import { EditPinStyles } from "../../Styles/Components/index"
 // Import Constants
 import { Colors, RFValue, GlobalStyles } from "../../utils/constants"
 
+import ServiceProfile from "../../Services/SerProfile/SerProfile"
+
+
 const EditPinProfile = () => {
-    const classes = useStyles(EditPinStyles)
+    // estados de pin y contraseña
+    const [pin, setPin] = useState("")
+    const [pinConfirm, setPinConfirm] = useState("")
+    const [password, setPassword] = useState("")
 
     const [showEdit, setShowEdit] = useState(false)
+
+    const classes = useStyles(EditPinStyles)
+
 
     const editInfo = () => {
         setShowEdit(true)
@@ -24,6 +33,29 @@ const EditPinProfile = () => {
     const closeEdit = () => {
         setShowEdit(false)
     }
+    
+     // funcion de cierre del modal
+     const closeModal = () => {
+         setShowModal(false)
+     }
+ 
+     // funcion de envio de informacion
+     const submitInformation = () => {
+         try {
+             if (pin !== pinConfirm) {
+                 throw String("Pins no coinciden")
+             }
+ 
+             const DataSent = {
+                 pin_number: pin,
+                 password: password,
+             }
+ 
+             ServiceProfile(DataSent, 'pin')
+         } catch (error) {
+             errorMessage(error.toString())
+         }
+     }
 
     return (
         <>
@@ -70,6 +102,8 @@ const EditPinProfile = () => {
 
                             <TextInput
                                 style={GlobalStyles.textInput}
+                                value={pin}
+                                onChangeText={setPin}
                                 placeholder="Ingrese su pin"
                                 placeholderTextColor="#ccc"
                                 keyboardType="numeric"
@@ -85,6 +119,8 @@ const EditPinProfile = () => {
 
                             <TextInput
                                 style={GlobalStyles.textInput}
+                                value={pinConfirm}
+                                onChangeText={setPinConfirm}
                                 placeholder="Ingrese su pin para confirmar"
                                 placeholderTextColor="#ccc"
                                 keyboardType="numeric"
@@ -105,6 +141,8 @@ const EditPinProfile = () => {
 
                             <TextInput
                                 style={GlobalStyles.textInput}
+                                value={password}
+                                onChangeText={setPassword}
                                 placeholder="Ingrese su contraseña"
                                 placeholderTextColor="#ccc"
                                 keyboardType="numeric"
@@ -124,7 +162,7 @@ const EditPinProfile = () => {
                             </TouchableOpacity>
 
                             <TouchableOpacity
-                                // onPress={editInfo}
+                                onPress={submitInformation}
                                 style={[
                                     GlobalStyles.buttonPrimary,
                                     { width: "40%" },

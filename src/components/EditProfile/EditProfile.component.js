@@ -12,6 +12,7 @@ import useStyles from "../../hooks/useStyles.hook"
 
 // Import Styles
 import { EditProfileStyles } from "../../Styles/Components/index"
+import ServiceProfile from "../../Services/SerProfile/SerProfile"
 
 //Import Components
 import Icon from "react-native-vector-icons/Entypo"
@@ -24,7 +25,16 @@ import profile from "../../static/profile-default.png"
 // Import constants
 import { Colors, GlobalStyles } from "../../utils/constants"
 
-const EditProfile = ({ data = {} }) => {
+const EditProfile = ({ data = {}, navigation }) => {
+
+    const [firtsName, setFirtsName] = useState('')
+    const [lastName, setLastName] = useState('')
+    const [username, setUsername] = useState('')
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+
+    const idUser = data.id
+
     const classes = useStyles(EditProfileStyles)
 
     // Estado que visualiza el formulario de edicion de perfil
@@ -36,18 +46,45 @@ const EditProfile = ({ data = {} }) => {
         setShowInfoEdit(true)
     }
 
+    const sentEditInfo = () => {
+        const DataSent = {
+            username: username === '' ? '-' : username,
+            email: email === '' ? '-' : email,
+            password: password === '' ? '-' : password,
+            // picture: imgPerfil,
+            last_name: lastName === '' ? '-' : lastName,
+            first_name: firtsName === '' ? '-' : firtsName,
+            option: 'UPDATEGNRALINFO'
+        }
+
+        console.log(DataSent, idUser)
+
+        ServiceProfile(DataSent, 'profile', idUser)
+    }
+
     // Funcion que cancela la edicion del formulario de perfil
     const cancelInfo = () => {
         setShowInfoEdit(false)
     }
+
+    const goToEditFoto = _ => {
+        navigation.navigate('EditFoto', { imgPerfil: data.picture, idUser: idUser })
+    }
+
     const sheetRef = useRef(null)
 
     return (
         <>
             <View style={classes.container}>
-                <TouchableOpacity onPress={() => sheetRef.current.open()}>
+                <TouchableOpacity onPress={
+                    //() => sheetRef.current.open()
+                    goToEditFoto
+                }>
                     <View style={classes.imageContainer}>
-                        <ImageBackground style={classes.image} source={profile}>
+                        <ImageBackground style={classes.image} source={
+                            data.picture != undefined ?
+                                data.picture : profile
+                        }>
                             <View style={classes.containerIcon}>
                                 <Icon
                                     name="camera"
@@ -78,6 +115,14 @@ const EditProfile = ({ data = {} }) => {
                             </Text>
                             <Text style={classes.subTitleCard}>
                                 {data.first_name}
+                            </Text>
+                        </View>
+
+                        <View style={classes.rowCard}>
+                            <Text style={classes.titlePrincipalCard}>
+                                Apellido:
+                            </Text>
+                            <Text style={classes.subTitleCard}>
                                 {data.last_name}
                             </Text>
                         </View>
@@ -120,7 +165,23 @@ const EditProfile = ({ data = {} }) => {
                                 </Text>
                             </View>
 
-                            <TextInput style={GlobalStyles.textInput} />
+                            <TextInput style={GlobalStyles.textInput}
+                                value={firtsName}
+                                onChangeText={value => { setFirtsName(value.replace(/ /g, '')) }}
+                            />
+                        </View>
+
+                        <View style={classes.rowForm}>
+                            <View style={classes.legendRow}>
+                                <Text style={classes.titlePrincipalCard}>
+                                    Apellido
+                                </Text>
+                            </View>
+
+                            <TextInput style={GlobalStyles.textInput}
+                                value={lastName}
+                                onChangeText={value => { setLastName(value.replace(/ /g, '')) }}
+                            />
                         </View>
 
                         <View style={classes.rowForm}>
@@ -130,7 +191,10 @@ const EditProfile = ({ data = {} }) => {
                                 </Text>
                             </View>
 
-                            <TextInput style={GlobalStyles.textInput} />
+                            <TextInput style={GlobalStyles.textInput}
+                                value={username}
+                                onChangeText={value => { setUsername(value.replace(/ /g, '')) }}
+                            />
                         </View>
 
                         <View style={classes.rowForm}>
@@ -140,7 +204,24 @@ const EditProfile = ({ data = {} }) => {
                                 </Text>
                             </View>
 
-                            <TextInput style={GlobalStyles.textInput} />
+                            <TextInput style={GlobalStyles.textInput}
+                                value={email}
+                                onChangeText={value => { setEmail(value.replace(/ /g, '')) }}
+                            />
+                        </View>
+
+                        <View style={classes.rowForm}>
+                            <View style={classes.legendRow}>
+                                <Text style={classes.titlePrincipalCard}>
+                                    Contraseña
+                                </Text>
+                            </View>
+
+                            <TextInput style={GlobalStyles.textInput}
+                                value={password}
+                                onChangeText={setPassword}
+                                secureTextEntry
+                            />
                         </View>
 
                         <View style={classes.rowFormsButtons}>
@@ -156,7 +237,7 @@ const EditProfile = ({ data = {} }) => {
                             </TouchableOpacity>
 
                             <TouchableOpacity
-                                onPress={editInfo}
+                                onPress={sentEditInfo}
                                 style={[
                                     GlobalStyles.buttonPrimary,
                                     { width: "40%" },
@@ -169,51 +250,6 @@ const EditProfile = ({ data = {} }) => {
                     </View>
                 )}
             </View>
-
-            <Modalize
-                ref={sheetRef}
-                snapPoint={200}
-                modalHeight={200}
-                modalStyle={classes.panel}
-                HeaderComponent={
-                    <View style={{ alignItems: "center" }}>
-                        <Text style={classes.panelTitle}>Upload Photo</Text>
-                        <Text style={classes.panelSubtitle}>
-                            Choose Your Profile Picture
-                        </Text>
-
-                        <TouchableOpacity
-                            style={[
-                                GlobalStyles.buttonPrimaryLine,
-                                { margin: 5 },
-                            ]}>
-                            <Text style={GlobalStyles.textButtonPrimaryLine}>
-                                Tomar fotografia
-                            </Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                            style={[
-                                GlobalStyles.buttonPrimaryLine,
-                                { margin: 5 },
-                            ]}>
-                            <Text style={GlobalStyles.textButtonPrimaryLine}>
-                                Tomar fotografia
-                            </Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                            style={[
-                                GlobalStyles.buttonPrimaryCancel,
-                                { margin: 5 },
-                            ]}>
-                            <Text style={GlobalStyles.textButtonCancel}>
-                                Cancelar
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-                }
-            />
         </>
     )
 }

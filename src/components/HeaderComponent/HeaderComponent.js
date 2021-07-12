@@ -36,7 +36,7 @@ const HeaderComponent = () => {
             [
                 {
                     text: "Cancelar",
-                    onPress: () => {},
+                    onPress: () => { },
                 },
                 {
                     text: "Cerrar Sesion",

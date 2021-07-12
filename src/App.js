@@ -38,6 +38,7 @@ import WalletCommerce from "./views/WalletCommerce/WalletCommerce"
 import HistoryRetirementExcutive from "./components/HistoryRetirementExcutive/HistoryRetirementExcutive"
 import Kyc from "./views/KYC/KYC"
 import Profile from "./views/profile/Profile"
+import EditFoto from './views/editFotoView/EditFoto.view'
 
 // import assets and animation
 import notConectionAnimation from "./animations/no-internet-connection.json"
@@ -167,6 +168,8 @@ const App = () => {
                             <Stack.Screen name={ROUTES.KYC} component={Kyc} />
 
                             <Stack.Screen name={ROUTES.PROFILE} component={Profile} />
+
+                            <Stack.Screen name={'EditFoto'} component={EditFoto} />
                         </>
                     )}
 

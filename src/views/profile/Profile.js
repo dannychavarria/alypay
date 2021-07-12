@@ -21,7 +21,7 @@ import ModalPin from "../../components/ModalPin/ModalPin"
 // import librerias
 import moment from "moment"
 
-const Profile = ({ route }) => {
+const Profile = (props) => {
     // estado para el cumpleaños del usuario
     const [birthday, setBirthday] = useState(new Date())
     // estado para mostrar el modal
@@ -31,7 +31,10 @@ const Profile = ({ route }) => {
     const classes = useStyles(ProfileStyle)
 
     // datos del cliente
-    const { data } = route.params
+    const { data } = props.route.params
+
+    //objeto de navegacion
+    const { navigation } = props
 
     // seteo del cumpleaños del usuario
     useEffect(() => {
@@ -47,7 +50,7 @@ const Profile = ({ route }) => {
             }}>
             <ScrollView>
                 <HeaderComponent />
-                <EditProfile data={data} />
+                <EditProfile data={data} navigation={navigation}/>
                 <EditPin />
             </ScrollView>
         </View>
