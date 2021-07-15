@@ -10,14 +10,17 @@ export default {
     containerCard: {
         marginHorizontal: RFValue(15),
     },
+
     containerCardInfoMini: {
         height: RFValue(50),
+        justifyContent: 'center',
         width: "100%",
         backgroundColor: Colors.colorBlack,
         borderRadius: RFValue(5),
         padding: RFValue(10),
     },
     containerCardInfoMax: {
+        justifyContent: 'center',
         width: "100%",
         backgroundColor: Colors.colorBlack,
         borderRadius: RFValue(5),

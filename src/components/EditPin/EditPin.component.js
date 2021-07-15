@@ -10,7 +10,7 @@ import useStyles from "../../hooks/useStyles.hook"
 import { EditPinStyles } from "../../Styles/Components/index"
 
 // Import Constants
-import { Colors, RFValue, GlobalStyles } from "../../utils/constants"
+import { Colors, RFValue, GlobalStyles, showNotification } from "../../utils/constants"
 
 import ServiceProfile from "../../Services/SerProfile/SerProfile"
 
@@ -40,7 +40,7 @@ const EditPinProfile = () => {
      }
  
      // funcion de envio de informacion
-     const submitInformation = () => {
+     const submitInformation = async () => {
          try {
              if (pin !== pinConfirm) {
                  throw String("Pins no coinciden")
@@ -50,8 +50,9 @@ const EditPinProfile = () => {
                  pin_number: pin,
                  password: password,
              }
- 
+
              ServiceProfile(DataSent, 'pin')
+
          } catch (error) {
              errorMessage(error.toString())
          }
@@ -81,11 +82,11 @@ const EditPinProfile = () => {
                 {showEdit === false ? (
                     <TouchableOpacity
                         onPress={editInfo}
-                        style={classes.containerCardInfo}>
+                        style={classes.containerCardInfoMini}>
                         <Text style={classes.titlePrincipal}>******</Text>
                     </TouchableOpacity>
                 ) : (
-                    <View style={classes.containerCardInfo}>
+                    <View style={classes.containerCardInfoMax}>
                         <Text style={classes.subTitle}>
                             Ingrese un PIN válido e 6 dígitos y recuerdelo, no
                             comparta su PIN con nadie. Es la manera más segura

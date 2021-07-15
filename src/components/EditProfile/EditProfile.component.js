@@ -46,7 +46,7 @@ const EditProfile = ({ data = {}, navigation }) => {
         setShowInfoEdit(true)
     }
 
-    const sentEditInfo = () => {
+    const sentEditInfo = async () => {
         const DataSent = {
             username: username === '' ? '-' : username,
             email: email === '' ? '-' : email,
@@ -57,9 +57,13 @@ const EditProfile = ({ data = {}, navigation }) => {
             option: 'UPDATEGNRALINFO'
         }
 
-        console.log(DataSent, idUser)
+        console.log('antes', showInfoEdit)
 
-        ServiceProfile(DataSent, 'profile', idUser)
+        let resSer = await ServiceProfile(DataSent, 'profile', idUser)
+
+        setShowInfoEdit(!resSer)
+
+        console.log('despues', showInfoEdit)
     }
 
     // Funcion que cancela la edicion del formulario de perfil

@@ -15,6 +15,7 @@ import profileImage from "../../static/profile-default.png"
 import Container from "../../components/Container/Container"
 import EditProfile from "../../components/EditProfile/EditProfile.component"
 import EditPin from "../../components/EditPin/EditPin.component"
+import EditWallets from "../../components/EditWallets/EditWallets.component"
 import HeaderComponent from "../../components/HeaderComponent/HeaderComponent"
 import ModalPin from "../../components/ModalPin/ModalPin"
 
@@ -52,6 +53,7 @@ const Profile = (props) => {
                 <HeaderComponent />
                 <EditProfile data={data} navigation={navigation}/>
                 <EditPin />
+                <EditWallets />
             </ScrollView>
         </View>
 

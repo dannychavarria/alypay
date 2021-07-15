@@ -12,27 +12,32 @@ import {
 import store from "../../store/index"
 
 // funcion de peticion a la endpoint
-export default async function ServiceProfile(DataSent, options='pin', idUser){
-    switch(options){
+export default async function ServiceProfile(DataSent, options = 'pin', idUser = -1) {
+
+    const { navigation } = store.getState()
+
+    let res = false
+
+    switch (options) {
         case 'pin': {
             try {
 
                 loader(true)
-        
-                const { navigation } = store.getState()
-        
-                const {data: response} = await http.put('/pin/update', DataSent, getHeaders())
-        
+
+                const { data: response } = await http.put('/pin/update', DataSent, getHeaders())
+
                 if (response.error) {
                     throw String(response.message)
                 } else {
                     successMessage(response.message)
+                    res = true
                     navigation.pop()
                 }
-        
+
             } catch (error) {
+                res = false
                 errorMessage(error.toString())
-            }finally{
+            } finally {
                 loader(false)
                 break;
             }
@@ -41,26 +46,30 @@ export default async function ServiceProfile(DataSent, options='pin', idUser){
             try {
                 loader(true)
 
-                const {data: response} = await http.post(`/users/update-info/${
-                    idUser
-                }`, DataSent, getHeadersMultipartFormData())
+                console.log('datos: ', DataSent)
 
-                console.log('respuesta: ',response)
+                const { data: response } = await http.post(`/users/update-info/${idUser
+                    }`, DataSent, getHeadersMultipartFormData())
 
                 if (response.error) {
                     throw String(response.message)
                 } else {
                     successMessage(response.message)
+                    res = true
                     //cambiar el store
+                    if (DataSent.option === 'UPDATEPICTURE') {
+                        navigation.pop()
+                    }
                 }
 
             } catch (error) {
-                console.log('error: ', error)
+                res = false
                 errorMessage(error.toString())
-            }finally{
+            } finally {
                 loader(false)
                 break;
             }
         }
     }
+    return res
 }

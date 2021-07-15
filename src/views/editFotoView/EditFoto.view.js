@@ -94,16 +94,6 @@ const EditFotoView = (props) => {
 
         DataSent.append("option", 'UPDATEPICTURE')
 
-        // console.log(JSON.stringify(picture))
-        // const DataSent = {
-        //     // username: '-',
-        //     // email: '-',
-        //     password: password,
-        //     picture: formdata,
-        //     // last_name: '-',
-        //     // first_name: '-',
-        //     option: 'UPDATEPICTURE'
-        // }
         ServiceProfile(DataSent, 'profile', idUser)
     }
 
