@@ -1,14 +1,40 @@
-import React, { useState } from 'react'
+import { is } from '@babel/types'
+import React, { useEffect, useState } from 'react'
 import {
     View,
-    TouchableOpacity,
     Text,
     Image,
     Switch
 } from 'react-native'
 
-const MiniCardWallet = () => {
+import {
+    urlAlyCoin,
+} from '../../utils/constants'
+
+
+const MiniCardWallet = (props) => {
     const [isActive, setActive] = useState(true)
+
+    const { wallet, setDataSent, setShowModal } = props
+
+    const urlImage =
+        wallet._id !== null
+            ? `https://s2.coinmarketcap.com/static/img/coins/128x128/${wallet._id
+            }.png`
+            : urlAlyCoin
+
+    const alternWallet = _ => {
+        // setActive(!isActive)
+        setDataSent({
+            display: wallet.id_state === 1 ? 2 : 1,
+            id_wallet: wallet.id
+        })
+        setShowModal(true)
+    }
+
+    useEffect(_ => {
+        setActive(wallet.id_state === 1 ? true : false)
+    }, [wallet])
     return (
         <View style={{
             width: '100%',
@@ -27,7 +53,7 @@ const MiniCardWallet = () => {
                 alignItems: 'center',
             }}>
 
-                <Image source={undefined} style={{
+                <Image source={{ uri: urlImage }} style={{
                     height: 45,
                     width: 45,
                     resizeMode: 'contain',
@@ -41,7 +67,7 @@ const MiniCardWallet = () => {
                     fontSize: 20,
                 }}
                     numberOfLines={1}
-                >Moneda</Text>
+                >{wallet.name}</Text>
 
             </View>
 
@@ -55,7 +81,7 @@ const MiniCardWallet = () => {
                     fontSize: 16
                 }}
                     numberOfLines={1}
-                >1000$</Text>
+                >{wallet.price}</Text>
             </View>
 
             <View style={{
@@ -68,11 +94,10 @@ const MiniCardWallet = () => {
                     trackColor={{ false: "#767577", true: "#81b0ff" }}
                     thumbColor={isActive ? "#f5dd4b" : "red"}
                     ios_backgroundColor="#3e3e3e"
-                    onValueChange={_ => setActive(!isActive)}
+                    onValueChange={alternWallet}
                     value={isActive}
                 />
             </View>
-
         </View>
     )
 }

@@ -126,7 +126,7 @@ const Login = ({ navigation }) => {
 
             const { data } = await http.post("/login", variables)
 
-            console.log(data)
+            console.log('datos del usuario: ',data)
 
             // Verificamos si hay un error
             if (data.error) {
