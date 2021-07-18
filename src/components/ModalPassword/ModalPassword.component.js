@@ -6,7 +6,7 @@ import {
     Text,
     TextInput
 } from 'react-native'
-
+//componetes
 import Modal from "react-native-modal"
 
 const ModalPassword = ({ password, setPassword, showModal, setShowModal, fn }) => {

@@ -75,4 +75,47 @@ export default {
         fontSize: RFValue(12),
         marginBottom: RFValue(2.5),
     },
+    //minicardwallet
+    miniContainer: {
+        width: '100%',
+        backgroundColor: 'black',
+        height: 45,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 15,
+        paddingHorizontal: 10
+    },
+    miniLeftContainer: {
+        height: '100%',
+        width: '40%',
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    miniImage: {
+        height: 45,
+        width: 45,
+        resizeMode: 'contain',
+        borderRadius: 50,
+        marginRight: 10,
+    },
+    miniTextCoin: {
+        flex: 1,
+        color: Colors.colorYellow,
+        fontSize: 20,
+    },
+    miniContainerCenter: {
+        height: '100%',
+        width: '15%',
+        justifyContent: 'center',
+    },
+    miniTextCenter: {
+        color: 'white',
+        fontSize: 16
+    },
+    miniRightContainer: {
+        height: '100%',
+        width: '15%',
+        justifyContent: 'center',
+        alignItems: 'center'
+    }
 }
