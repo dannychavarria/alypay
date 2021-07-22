@@ -33,13 +33,9 @@ export default function useBuyCrypto() {
             // convertimos el objeto en array
             const arrayCoins = Object.values(data)
 
-            console.log("CoinList", arrayCoins)
-
             let arrayCoinsFilter = arrayCoins.filter(
                 info => info.symbol !== "ALY",
             )
-
-            console.log("ListoCoin", arrayCoinsFilter)
 
             setInfoCoin(arrayCoinsFilter)
         } catch (error) {

@@ -23,6 +23,9 @@ import { Modalize } from "react-native-modalize"
 
 import HeaderComponent from "../../components/HeaderComponent/HeaderComponent"
 import FotoPerfil from '../../components/FotoPerfil/FotoPerfil.component'
+import PasswordInput from '../../components/passwordInput/PasswordInput.component'
+
+import store from '../../store/index'
 
 const EditFotoView = (props) => {
 
@@ -32,7 +35,7 @@ const EditFotoView = (props) => {
     const { navigation } = props
 
     const { imgPerfil: picture, idUser } = props.route.params
-
+    
     const sheetRef = useRef(null)
 
     const classes = useStyles(EditFotoStyle)
@@ -79,7 +82,7 @@ const EditFotoView = (props) => {
         }
     }
 
-    const sentInfo = _ => {
+    const sentInfo = async _ => {
 
         const DataSent = new FormData()
 
@@ -94,7 +97,28 @@ const EditFotoView = (props) => {
 
         DataSent.append("option", 'UPDATEPICTURE')
 
-        ServiceProfile(DataSent, 'profile', idUser)
+        updateStore()
+
+        let res = await ServiceProfile(DataSent, 'profile', idUser)
+
+        if(res){
+            close()
+        }
+    }
+
+    const updateStore = _ => {
+
+        const { global } = store.getState()
+
+        const dataStorage = {
+            ...global,
+            src: imgPerfil.uri
+        }
+
+        store.dispatch({ type: 'SETSTORAGE', payload: dataStorage })
+
+        console.log('imagen: ', imgPerfil)
+        console.log('store: ', global)
     }
 
     const close = _ => {
@@ -102,7 +126,7 @@ const EditFotoView = (props) => {
     }
 
     useEffect(_ => {
-        setImgPerfil(picture)
+        setImgPerfil({uri: picture})
     }, [])
 
     return (
@@ -148,25 +172,7 @@ const EditFotoView = (props) => {
                         fontSize: 18
                     }}>Confirme el cambio con su contraseña</Text>
 
-                    <View>
-                        <Text style={{
-                            color: 'white'
-                        }}>Contraseña</Text>
-                        <TextInput style={{
-                            paddingVertical: 0,
-                            height: 50,
-                            width: '100%',
-                            borderWidth: 1,
-                            borderRadius: 10,
-                            borderColor: 'gray',
-                            color: 'white'
-                        }}
-                            value={password}
-                            onChangeText={setPassword}
-                            placeholder='Constraseña'
-                            placeholderTextColor='gray'
-                            secureTextEntry />
-                    </View>
+                    <PasswordInput value={password} onChangeText={setPassword}/>
 
                     <TouchableOpacity style={GlobalStyles.buttonPrimary}
                         onPress={sentInfo}

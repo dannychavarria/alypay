@@ -3,7 +3,7 @@ import {
     Text,
     View,
     TouchableOpacity,
-    ImageBackground,
+    Image,
     TextInput,
 } from "react-native"
 
@@ -16,8 +16,6 @@ import ServiceProfile from "../../Services/SerProfile/SerProfile"
 
 //Import Components
 import Icon from "react-native-vector-icons/Entypo"
-import { Modalize } from "react-native-modalize"
-import { launchCamera, launchImageLibrary } from "react-native-image-picker"
 
 //Import Assets
 import profile from "../../static/profile-default.png"
@@ -51,19 +49,15 @@ const EditProfile = ({ data = {}, navigation }) => {
             username: username === '' ? '-' : username,
             email: email === '' ? '-' : email,
             password: password === '' ? '-' : password,
-            // picture: imgPerfil,
             last_name: lastName === '' ? '-' : lastName,
             first_name: firtsName === '' ? '-' : firtsName,
             option: 'UPDATEGNRALINFO'
         }
 
-        console.log('antes', showInfoEdit)
-
         let resSer = await ServiceProfile(DataSent, 'profile', idUser)
 
         setShowInfoEdit(!resSer)
 
-        console.log('despues', showInfoEdit)
     }
 
     // Funcion que cancela la edicion del formulario de perfil
@@ -72,7 +66,7 @@ const EditProfile = ({ data = {}, navigation }) => {
     }
 
     const goToEditFoto = _ => {
-        navigation.navigate('EditFoto', { imgPerfil: data.picture, idUser: idUser })
+        navigation.navigate('EditFoto', { imgPerfil: data.src, idUser: idUser })
     }
 
     const sheetRef = useRef(null)
@@ -85,19 +79,19 @@ const EditProfile = ({ data = {}, navigation }) => {
                     goToEditFoto
                 }>
                     <View style={classes.imageContainer}>
-                        <ImageBackground style={classes.image} source={
-                            data.picture != undefined ?
-                                data.picture : profile
-                        }>
-                            <View style={classes.containerIcon}>
-                                <Icon
-                                    name="camera"
-                                    size={20}
-                                    color={Colors.colorYellow}
-                                    style={classes.icon}
-                                />
-                            </View>
-                        </ImageBackground>
+                        <Image style={classes.image} source={
+                            data.src !== undefined ? 
+                            { uri: data.src } :
+                            profile
+                            } />
+                        <View style={classes.containerIcon}>
+                            <Icon
+                                name="camera"
+                                size={20}
+                                color={Colors.colorYellow}
+                                style={classes.icon}
+                            />
+                        </View>
                     </View>
                 </TouchableOpacity>
             </View>

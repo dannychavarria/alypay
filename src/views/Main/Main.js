@@ -352,7 +352,8 @@ const Main = () => {
             if (data.error) {
                 throw String(data.message)
             } else {
-                dispatch({ type: "wallets", payload: data })
+                let walltesFilter = data.filter(item => item.id_state !== 2)
+                dispatch({ type: "wallets", payload: walltesFilter })
             }
 
             const dataStorage = {

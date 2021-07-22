@@ -95,9 +95,10 @@ const PORT = "3000"
 
 /**Direction for server */
 // export const serverAddress = "https://alypay.uc.r.appspot.com"
-export const serverAddress = "https://root-anvil-299019.uc.r.appspot.com"
+// export const serverAddress = "https://root-anvil-299019.uc.r.appspot.com"
 // export const serverAddress = "http://192.168.0.116:3085"
-// export const serverAddress = "http://105c7e18e9ef.ngrok.io"
+export const serverAddress = "http://368ee55075f9.ngrok.io" // joker
+// export const serverAddress = "http://e1d4c5c15528.ngrok.io" //alvario
 export const serverSpeedtradingsURL = "https://ardent-medley-272823.appspot.com"
 
 /**

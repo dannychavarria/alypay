@@ -1,12 +1,16 @@
 import React from 'react'
-import { 
+import {
     View,
     Image,
- } from 'react-native'
+} from 'react-native'
+
+import profile from '../../static/profile-default.png'
 
 const FotoPerfil = (props) => {
 
     const { imgPerfil } = props
+
+    console.log('componente: ', imgPerfil)
 
     return (
         <View style={{
@@ -19,11 +23,15 @@ const FotoPerfil = (props) => {
             borderStyle: "dashed",
             padding: 15
         }}>
-            <Image source={imgPerfil} style={{
+            <Image source={
+                imgPerfil?.uri === undefined || imgPerfil === null ?
+                    profile :
+                    imgPerfil
+            } style={{
                 height: '100%',
                 width: '100%',
                 resizeMode: 'contain'
-            }}/>
+            }} />
         </View>
     )
 }

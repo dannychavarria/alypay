@@ -46,8 +46,6 @@ export default async function ServiceProfile(DataSent, options = 'pin', idUser =
             try {
                 loader(true)
 
-                console.log('datos: ', DataSent)
-
                 const { data: response } = await http.post(`/users/update-info/${idUser
                     }`, DataSent, getHeadersMultipartFormData())
 

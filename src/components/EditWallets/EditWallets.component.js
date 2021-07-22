@@ -28,22 +28,16 @@ import store from "../../store/index"
 import MiniCardWallet from '../MiniCardWallet/MiniCardWallet.component'
 import ModalPassword from '../ModalPassword/ModalPassword.component'
 
-const initialState = {
-    hash: "",
-    amount: "",
-    information: null,
-}
-
 const EditWallets = () => {
     //accedomes al store
-    const { global, wallet } = store.getState()
-    const [state, dispatch] = useReducer(reducer, initialState)
+    const { global } = store.getState()
     //estado para mostra la edicion de las billeteras
     const [showEdit, setShowEdit] = useState(false)
     //estado para mostrar el modal que pide la contraseña
     const [showModal, setShowModal] = useState(false)
     //estado para manejar las wallets de manera local al componente
     const [wallets, setWallets] = useState([])
+    const [walletIndex, setWalletIndex] = useState(-1)
     //estado para la contraseña
     const [password, setPassword] = useState('')
     //estado para manejar el envio a la endpoint
@@ -63,7 +57,6 @@ const EditWallets = () => {
     //funcion para obtener las billeteras del store
     const getWallets = _ => {
         let wallets = global.wallets
-        console.log('billeteras: ', wallets)
         setWallets(wallets)
     }
     //funcion de peticion, para cambiar el estado de las billeteras
@@ -82,13 +75,13 @@ const EditWallets = () => {
                 dataComplet,
                 getHeaders()
             )
-            
+
             if (response.error) {
                 throw String(response.message)
             } else {
+                updateStore()
                 successMessage('Billetera actualizada')
-               
-                // await updateStore()
+                setShowEdit(false)
             }
         } catch (error) {
             errorMessage(error)
@@ -97,42 +90,37 @@ const EditWallets = () => {
         }
     }
     //funcion que actualiza la store
-    const updateStore = async _ => {
-        try {
-            const { globalStorage } = store.getState()
+    const updateStore = _ => {
 
-            const { data: response } = await http.get('/wallets', getHeaders())
+        let walletChange = wallets[walletIndex]
+        walletChange.id_state = walletChange.id_state === 1 ? 2 : 1
 
-            if (response.error) {
-                throw String(response.message)
-            } else {
-                const dataStorage = {
-                    ...globalStorage,
-                    wallets: response
-                }
+        let walletsPosChange = wallets
+        walletsPosChange[walletIndex] = walletChange
 
-                store.dispatch({ type: 'SETSTORAGE', payload: dataStorage })
-                setWallets(response)
-            }
-        } catch (error) {
-            errorMessage(error)
+        setWallets(walletsPosChange)
+
+        const { globalStorage } = store.getState()
+
+        const dataStorage = {
+            ...globalStorage,
+            wallets: walletsPosChange
         }
+
+        store.dispatch({ type: 'SETSTORAGE', payload: dataStorage })
     }
 
     useEffect(() => {
         getWallets()
 
-        const { information } = wallet
+        // store.subscribe(() => {
+        //     // Actualizar informacion de la billetera
+        //     let { global } = store.getState()
+        //     setWallets(global.wallets)
 
-        // Actualizar informacion de la billetera
-        dispatch({ type: "information", payload: information })
+        // })
 
-        // Suscribimos a cualquier cambio
-        store.subscribe(() => {
-            // Actualizar informacion de la billetera
-            dispatch({ type: "information", payload: wallet })
-        })
-    }, [wallet])
+    }, [wallets])
 
     return (
         <View style={styles.container}>
@@ -150,13 +138,14 @@ const EditWallets = () => {
                 showEdit ? (
                     <View style={styles.containerCardInfoMax}>
                         <FlatList
-                            keyExtractor={({ index }) => index}
+                            keyExtractor={(item, index) => `${item.name}`}
                             data={wallets}
                             renderItem={({ item, index }) => <MiniCardWallet
                                 wallet={item}
                                 setDataSent={setDataSent}
                                 setShowModal={setShowModal}
-                                password={password} />}
+                                setWalletIndex={setWalletIndex}
+                                index={index}/>}
                         />
                     </View>
                 ) : (
@@ -172,7 +161,8 @@ const EditWallets = () => {
                 setPassword={setPassword}
                 showModal={showModal}
                 setShowModal={setShowModal}
-                fn={changeWallets} />
+                fn={changeWallets} 
+                indexWallet={walletIndex}/>
         </View>
     )
 }

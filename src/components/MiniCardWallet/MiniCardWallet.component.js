@@ -18,7 +18,7 @@ const MiniCardWallet = (props) => {
     //estado para activar o desactivar el switch
     const [isActive, setActive] = useState(true)
     //props
-    const { wallet, setDataSent, setShowModal } = props
+    const { wallet, setDataSent, setShowModal, index, setWalletIndex } = props
     //estilos
     const styles = useStyles(EditWalletsStyles)
     //url imagen
@@ -29,11 +29,11 @@ const MiniCardWallet = (props) => {
             : urlAlyCoin
     //funcion para alternar el switch
     const alternWallet = _ => {
-        setActive(!isActive)
         setDataSent({
             display: wallet.id_state === 1 ? 2 : 1,
             id_wallet: wallet.id
         })
+        setWalletIndex(index)
         setShowModal(true)
     }
 
@@ -56,13 +56,14 @@ const MiniCardWallet = (props) => {
             <View style={styles.miniContainerCenter}>
                 <Text style={styles.miniTextCenter}
                     numberOfLines={1}
-                >{wallet.price}</Text>
+                >$ {wallet.price}</Text>
             </View>
 
             <View style={styles.miniRightContainer}>
                 <Switch
+                    disabled = {wallet.name === 'Alycoin' ? true : false}
                     trackColor={{ false: "#767577", true: "#81b0ff" }}
-                    thumbColor={isActive ? "#f5dd4b" : "red"}
+                    thumbColor={isActive ? wallet.name === 'Alycoin' ? '#767577' : "#f5dd4b"  : "red"}
                     ios_backgroundColor="#3e3e3e"
                     onValueChange={alternWallet}
                     value={isActive}

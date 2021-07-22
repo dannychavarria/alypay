@@ -23,7 +23,7 @@ const ItemComerce = ({ data = {} }) => {
         navigate(ROUTES.WALLETCOMMERCE, data)
     }
 
-    const parsedImage = images.replace("http", "https")
+    const parsedImage = images?.replace("http", "https")
 
     return (
         <>

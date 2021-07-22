@@ -83,6 +83,7 @@ export default {
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginBottom: 15,
+        borderRadius: RFValue(5),
         paddingHorizontal: 10
     },
     miniLeftContainer: {
@@ -105,7 +106,7 @@ export default {
     },
     miniContainerCenter: {
         height: '100%',
-        width: '15%',
+        width: '25%',
         justifyContent: 'center',
     },
     miniTextCenter: {
