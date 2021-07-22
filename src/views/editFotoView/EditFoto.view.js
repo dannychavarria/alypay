@@ -116,9 +116,6 @@ const EditFotoView = (props) => {
         }
 
         store.dispatch({ type: 'SETSTORAGE', payload: dataStorage })
-
-        console.log('imagen: ', imgPerfil)
-        console.log('store: ', global)
     }
 
     const close = _ => {

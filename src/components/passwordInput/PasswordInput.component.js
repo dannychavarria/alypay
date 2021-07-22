@@ -3,6 +3,8 @@ import { View, TextInput, Text, TouchableOpacity } from 'react-native'
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
+import { GlobalStyles } from '../../utils/constants'
+
 const PasswordInput = ({ value='', onChangeText }) => {
 
     const [showPassword, setShowPassword] = useState(false)
@@ -18,7 +20,7 @@ const PasswordInput = ({ value='', onChangeText }) => {
 
             <Text style={{
                 fontSize: 16,
-                color: 'white'
+                color: 'yellow'
                 }}>Contraseña</Text>
 
             <View style={{
@@ -27,18 +29,7 @@ const PasswordInput = ({ value='', onChangeText }) => {
                 justifyContent: 'center'
             }}>
                 <TextInput
-                    style={{
-                        position: 'absolute',
-                        left: 0,
-                        height: 40,
-                        width: '100%',
-                        borderColor: 'gray',
-                        borderWidth: 1,
-                        borderRadius: 10,
-                        paddingVertical: 0,
-                        paddingHorizontal: 10,
-                        color: 'white'
-                    }}
+                    style={GlobalStyles.textInput}
                     value={value}
                     onChangeText={onChangeText}
                     placeholder='Constraseña'

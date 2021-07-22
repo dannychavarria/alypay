@@ -17,7 +17,6 @@ const Profile = (props) => {
     //objeto de navegacion
     const { navigation } = props
 
-    // seteo del cumpleaños del usuario
     useEffect(() => {
         setDataUser(data)
         store.subscribe(_ => {

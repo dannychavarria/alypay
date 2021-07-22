@@ -13,6 +13,7 @@ import { EditPinStyles } from "../../Styles/Components/index"
 import { Colors, RFValue, GlobalStyles, showNotification } from "../../utils/constants"
 
 import ServiceProfile from "../../Services/SerProfile/SerProfile"
+import PasswordInput from "../passwordInput/PasswordInput.component"
 
 
 const EditPinProfile = () => {
@@ -133,22 +134,7 @@ const EditPinProfile = () => {
                             PIN.
                         </Text>
 
-                        <View style={classes.rowForm}>
-                            <View style={classes.legendRow}>
-                                <Text style={classes.titlePrincipalCard}>
-                                    Ingrese su contraseña
-                                </Text>
-                            </View>
-
-                            <TextInput
-                                style={GlobalStyles.textInput}
-                                value={password}
-                                onChangeText={setPassword}
-                                placeholder="Ingrese su contraseña"
-                                placeholderTextColor="#ccc"
-                                keyboardType="numeric"
-                            />
-                        </View>
+                        <PasswordInput value={password} onChangeText={setPassword}/>
 
                         <View style={classes.rowFormsButtons}>
                             <TouchableOpacity

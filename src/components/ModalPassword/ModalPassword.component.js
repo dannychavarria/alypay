@@ -44,7 +44,7 @@ const ModalPassword = ({ password, setPassword, showModal, setShowModal, fn, ind
                     >¡Atención!</Text>
 
                     <Text style={styles.subtitle}>
-                        {global.wallets[indexWallet]?.id_state === 1 ?
+                        {global?.wallets[indexWallet === -1? 0 : indexWallet]?.id_state === 1 ?
                         `Usted esta apunto de deshablitar una billetera.
                         Al hacerlo, no podra usar sus fondos en dicha
                         billetera para realizar transacciones. Si esta

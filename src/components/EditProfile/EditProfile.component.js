@@ -22,13 +22,15 @@ import profile from "../../static/profile-default.png"
 
 // Import constants
 import { Colors, GlobalStyles } from "../../utils/constants"
+import store from "../../store"
+import PasswordInput from "../passwordInput/PasswordInput.component"
 
 const EditProfile = ({ data = {}, navigation }) => {
 
     const [firtsName, setFirtsName] = useState('')
     const [lastName, setLastName] = useState('')
     const [username, setUsername] = useState('')
-    const [email, setEmail] = useState('')
+    // const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
     const idUser = data.id
@@ -47,7 +49,7 @@ const EditProfile = ({ data = {}, navigation }) => {
     const sentEditInfo = async () => {
         const DataSent = {
             username: username === '' ? '-' : username,
-            email: email === '' ? '-' : email,
+            email: '-',
             password: password === '' ? '-' : password,
             last_name: lastName === '' ? '-' : lastName,
             first_name: firtsName === '' ? '-' : firtsName,
@@ -56,7 +58,11 @@ const EditProfile = ({ data = {}, navigation }) => {
 
         let resSer = await ServiceProfile(DataSent, 'profile', idUser)
 
-        setShowInfoEdit(!resSer)
+        if (resSer) {
+            updateStore()
+            setShowInfoEdit(!resSer)
+            clearStates()
+        }
 
     }
 
@@ -65,11 +71,41 @@ const EditProfile = ({ data = {}, navigation }) => {
         setShowInfoEdit(false)
     }
 
+    // Limpiar estados
+    const clearStates = _ => {
+        setFirtsName('')
+        setLastName('')
+        setUsername('')
+        setPassword('')
+    }
+
     const goToEditFoto = _ => {
         navigation.navigate('EditFoto', { imgPerfil: data.src, idUser: idUser })
     }
 
-    const sheetRef = useRef(null)
+    const updateStore = _ => {
+
+        const { global } = store.getState()
+
+        const dataStorage = {
+            ...global,
+            first_name: firtsName === '' ? global.first_name : firtsName,
+            last_name: lastName === '' ? global.last_name : lastName,
+            username: username === '' ? global.username : username 
+        }
+
+        store.dispatch({ type: 'SETSTORAGE', payload: dataStorage })
+
+        console.log('store: ', global)
+    }
+
+    // const sheetRef = useRef(null)
+
+    // useEffect(_ => {
+    //     store.subscribe(_ => {
+
+    //     })
+    // })
 
     return (
         <>
@@ -80,10 +116,10 @@ const EditProfile = ({ data = {}, navigation }) => {
                 }>
                     <View style={classes.imageContainer}>
                         <Image style={classes.image} source={
-                            data.src !== undefined ? 
-                            { uri: data.src } :
-                            profile
-                            } />
+                            data.src !== undefined ?
+                                { uri: data.src } :
+                                profile
+                        } />
                         <View style={classes.containerIcon}>
                             <Icon
                                 name="camera"
@@ -195,7 +231,7 @@ const EditProfile = ({ data = {}, navigation }) => {
                             />
                         </View>
 
-                        <View style={classes.rowForm}>
+                        {/* <View style={classes.rowForm}>
                             <View style={classes.legendRow}>
                                 <Text style={classes.titlePrincipalCard}>
                                     Correo Electronico
@@ -206,9 +242,9 @@ const EditProfile = ({ data = {}, navigation }) => {
                                 value={email}
                                 onChangeText={value => { setEmail(value.replace(/ /g, '')) }}
                             />
-                        </View>
+                        </View> */}
 
-                        <View style={classes.rowForm}>
+                        {/* <View style={classes.rowForm}>
                             <View style={classes.legendRow}>
                                 <Text style={classes.titlePrincipalCard}>
                                     Contraseña
@@ -220,7 +256,9 @@ const EditProfile = ({ data = {}, navigation }) => {
                                 onChangeText={setPassword}
                                 secureTextEntry
                             />
-                        </View>
+                        </View> */}
+
+                        <PasswordInput value={password} onChangeText={setPassword} />
 
                         <View style={classes.rowFormsButtons}>
                             <TouchableOpacity
