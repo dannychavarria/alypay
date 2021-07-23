@@ -38,7 +38,7 @@ const PasswordInput = ({ value = "", onChangeText, typeText = "" }) => {
                     <MaterialIcons
                         name={showPassword ? "visibility-off" : "visibility"}
                         size={20}
-                        color="gray"
+                        color={Colors.colorYellow}
                     />
                 </TouchableOpacity>
             </View>

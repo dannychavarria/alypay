@@ -17,6 +17,8 @@ const MiniCardWallet = props => {
     const { wallet, setDataSent, setShowModal, index, setWalletIndex } = props
     //estilos
     const styles = useStyles(EditWalletsStyles)
+
+    // console.log("Wallet", wallet)
     //url imagen
     const urlImage =
         wallet._id !== null
@@ -45,9 +47,7 @@ const MiniCardWallet = props => {
             <View style={styles.miniLeftContainer}>
                 <Image source={{ uri: urlImage }} style={styles.miniImage} />
 
-                <Text style={styles.miniTextCoin} numberOfLines={1}>
-                    {wallet.name}
-                </Text>
+                <Text style={styles.miniTextCoin}>{wallet.name}</Text>
             </View>
 
             <View style={styles.miniContainerCenter}>

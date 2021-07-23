@@ -4,8 +4,6 @@ import { View, Text, TextInput, TouchableOpacity } from "react-native"
 // Import Hooks
 import useStyles from "../../hooks/useStyles.hook"
 
-// Import Component
-
 // Import Styles
 import { EditPinStyles } from "../../Styles/Components/index"
 

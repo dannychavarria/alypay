@@ -81,6 +81,7 @@ const EditWallets = () => {
             loader(false)
         }
     }
+
     //funcion que actualiza la store
     const updateStore = _ => {
         let walletChange = wallets[walletIndex]
