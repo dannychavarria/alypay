@@ -1,11 +1,5 @@
 import React, { useState, useEffect, useRef } from "react"
-import {
-    Text,
-    View,
-    TouchableOpacity,
-    Image,
-    TextInput,
-} from "react-native"
+import { Text, View, TouchableOpacity, Image, TextInput } from "react-native"
 
 //Import Hooks
 import useStyles from "../../hooks/useStyles.hook"
@@ -26,12 +20,11 @@ import store from "../../store"
 import PasswordInput from "../passwordInput/PasswordInput.component"
 
 const EditProfile = ({ data = {}, navigation }) => {
-
-    const [firtsName, setFirtsName] = useState('')
-    const [lastName, setLastName] = useState('')
-    const [username, setUsername] = useState('')
+    const [firtsName, setFirtsName] = useState("")
+    const [lastName, setLastName] = useState("")
+    const [username, setUsername] = useState("")
     // const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+    const [password, setPassword] = useState("")
 
     const idUser = data.id
 
@@ -48,22 +41,21 @@ const EditProfile = ({ data = {}, navigation }) => {
 
     const sentEditInfo = async () => {
         const DataSent = {
-            username: username === '' ? '-' : username,
-            email: '-',
-            password: password === '' ? '-' : password,
-            last_name: lastName === '' ? '-' : lastName,
-            first_name: firtsName === '' ? '-' : firtsName,
-            option: 'UPDATEGNRALINFO'
+            username: username === "" ? "-" : username,
+            email: "-",
+            password: password === "" ? "-" : password,
+            last_name: lastName === "" ? "-" : lastName,
+            first_name: firtsName === "" ? "-" : firtsName,
+            option: "UPDATEGNRALINFO",
         }
 
-        let resSer = await ServiceProfile(DataSent, 'profile', idUser)
+        let resSer = await ServiceProfile(DataSent, "profile", idUser)
 
         if (resSer) {
             updateStore()
             setShowInfoEdit(!resSer)
             clearStates()
         }
-
     }
 
     // Funcion que cancela la edicion del formulario de perfil
@@ -73,53 +65,44 @@ const EditProfile = ({ data = {}, navigation }) => {
 
     // Limpiar estados
     const clearStates = _ => {
-        setFirtsName('')
-        setLastName('')
-        setUsername('')
-        setPassword('')
+        setFirtsName("")
+        setLastName("")
+        setUsername("")
+        setPassword("")
     }
 
     const goToEditFoto = _ => {
-        navigation.navigate('EditFoto', { imgPerfil: data.src, idUser: idUser })
+        navigation.navigate("EditFoto", { imgPerfil: data.src, idUser: idUser })
     }
 
     const updateStore = _ => {
-
         const { global } = store.getState()
 
         const dataStorage = {
             ...global,
-            first_name: firtsName === '' ? global.first_name : firtsName,
-            last_name: lastName === '' ? global.last_name : lastName,
-            username: username === '' ? global.username : username 
+            first_name: firtsName === "" ? global.first_name : firtsName,
+            last_name: lastName === "" ? global.last_name : lastName,
+            username: username === "" ? global.username : username,
         }
 
-        store.dispatch({ type: 'SETSTORAGE', payload: dataStorage })
+        store.dispatch({ type: "SETSTORAGE", payload: dataStorage })
 
-        console.log('store: ', global)
+        console.log("store: ", global)
     }
-
-    // const sheetRef = useRef(null)
-
-    // useEffect(_ => {
-    //     store.subscribe(_ => {
-
-    //     })
-    // })
 
     return (
         <>
             <View style={classes.container}>
-                <TouchableOpacity onPress={
-                    //() => sheetRef.current.open()
-                    goToEditFoto
-                }>
+                <TouchableOpacity onPress={goToEditFoto}>
                     <View style={classes.imageContainer}>
-                        <Image style={classes.image} source={
-                            data.src !== undefined ?
-                                { uri: data.src } :
-                                profile
-                        } />
+                        <Image
+                            style={classes.image}
+                            source={
+                                data.src !== undefined
+                                    ? { uri: data.src }
+                                    : profile
+                            }
+                        />
                         <View style={classes.containerIcon}>
                             <Icon
                                 name="camera"
@@ -199,9 +182,12 @@ const EditProfile = ({ data = {}, navigation }) => {
                                 </Text>
                             </View>
 
-                            <TextInput style={GlobalStyles.textInput}
+                            <TextInput
+                                style={GlobalStyles.textInput}
                                 value={firtsName}
-                                onChangeText={value => { setFirtsName(value.replace(/ /g, '')) }}
+                                onChangeText={value => {
+                                    setFirtsName(value.replace(/ /g, ""))
+                                }}
                             />
                         </View>
 
@@ -212,9 +198,12 @@ const EditProfile = ({ data = {}, navigation }) => {
                                 </Text>
                             </View>
 
-                            <TextInput style={GlobalStyles.textInput}
+                            <TextInput
+                                style={GlobalStyles.textInput}
                                 value={lastName}
-                                onChangeText={value => { setLastName(value.replace(/ /g, '')) }}
+                                onChangeText={value => {
+                                    setLastName(value.replace(/ /g, ""))
+                                }}
                             />
                         </View>
 
@@ -225,9 +214,12 @@ const EditProfile = ({ data = {}, navigation }) => {
                                 </Text>
                             </View>
 
-                            <TextInput style={GlobalStyles.textInput}
+                            <TextInput
+                                style={GlobalStyles.textInput}
                                 value={username}
-                                onChangeText={value => { setUsername(value.replace(/ /g, '')) }}
+                                onChangeText={value => {
+                                    setUsername(value.replace(/ /g, ""))
+                                }}
                             />
                         </View>
 
@@ -258,7 +250,10 @@ const EditProfile = ({ data = {}, navigation }) => {
                             />
                         </View> */}
 
-                        <PasswordInput value={password} onChangeText={setPassword} />
+                        <PasswordInput
+                            value={password}
+                            onChangeText={setPassword}
+                        />
 
                         <View style={classes.rowFormsButtons}>
                             <TouchableOpacity

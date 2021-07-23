@@ -1,60 +1,79 @@
-import React, { useState } from 'react'
-import { View, TextInput, Text, TouchableOpacity } from 'react-native'
+import React, { useState } from "react"
+import {
+    View,
+    TextInput,
+    Text,
+    TouchableOpacity,
+    StyleSheet,
+} from "react-native"
 
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 
-import { GlobalStyles } from '../../utils/constants'
+import { GlobalStyles, RFValue, Colors } from "../../utils/constants"
 
-const PasswordInput = ({ value='', onChangeText }) => {
-
+const PasswordInput = ({ value = "", onChangeText, typeText = "" }) => {
     const [showPassword, setShowPassword] = useState(false)
 
-    const showPasswordInvert = _ => { setShowPassword(!showPassword) }
+    const showPasswordInvert = _ => {
+        setShowPassword(!showPassword)
+    }
 
     return (
-        <View style={{
-            height: 70,
-            width: '100%',
-            justifyContent: 'space-between'
-        }}>
+        <View style={styles.rowForm}>
+            <Text style={styles.legend}>Contraseña</Text>
 
-            <Text style={{
-                fontSize: 16,
-                color: 'yellow'
-                }}>Contraseña</Text>
-
-            <View style={{
-                height: '65%',
-                width: '100%',
-                justifyContent: 'center'
-            }}>
+            <View style={[styles.textInputWithImage, GlobalStyles.textInput]}>
                 <TextInput
-                    style={GlobalStyles.textInput}
+                    style={styles.textInputCol}
                     value={value}
                     onChangeText={onChangeText}
-                    placeholder='Constraseña'
-                    placeholderTextColor='gray'
+                    placeholder="Constraseña"
+                    placeholderTextColor="#CCC"
                     secureTextEntry={!showPassword}
                 />
 
-                <TouchableOpacity style={{
-                    position: 'absolute',
-                    right: 0,
-                    margin: 10,
-                    alignItems: "flex-end",
-                }}
-                    onPress={showPasswordInvert}
-                >
-                    <MaterialIcons name={
-                        showPassword
-                            ? "visibility-off"
-                            : "visibility"
-                    }
-                        size={30} color='gray' />
+                <TouchableOpacity
+                    style={styles.touchableCol}
+                    onPress={showPasswordInvert}>
+                    <MaterialIcons
+                        name={showPassword ? "visibility-off" : "visibility"}
+                        size={20}
+                        color="gray"
+                    />
                 </TouchableOpacity>
             </View>
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    rowForm: {
+        flex: 1,
+        flexDirection: "column",
+        width: "100%",
+        marginVertical: RFValue(10),
+    },
+
+    textInputWithImage: {
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    textInputCol: {
+        flex: 0.9,
+        // paddingLeft: 5,
+        padding: 0,
+        color: "white",
+    },
+    touchableCol: {
+        flex: 0.1,
+        alignItems: "flex-end",
+    },
+    legend: {
+        color: Colors.colorYellow,
+        fontSize: RFValue(16),
+        marginBottom: RFValue(2.5),
+    },
+})
 
 export default PasswordInput

@@ -1,14 +1,5 @@
-import React, {
-    useEffect,
-    useState,
-    useReducer
-} from 'react'
-import {
-    View,
-    TouchableOpacity,
-    Text,
-    FlatList
-} from 'react-native'
+import React, { useEffect, useState, useReducer } from "react"
+import { View, TouchableOpacity, Text, FlatList } from "react-native"
 
 //utils
 import {
@@ -17,16 +8,16 @@ import {
     http,
     successMessage,
     loader,
-    reducer
-} from '../../utils/constants'
+    reducer,
+} from "../../utils/constants"
 //estilos
-import useStyles from '../../hooks/useStyles.hook'
-import EditWalletsStyles from '../../Styles/Components/EditWalletsStyle/EditWallets.styles'
+import useStyles from "../../hooks/useStyles.hook"
+import EditWalletsStyles from "../../Styles/Components/EditWalletsStyle/EditWallets.styles"
 //store
 import store from "../../store/index"
 //componentes
-import MiniCardWallet from '../MiniCardWallet/MiniCardWallet.component'
-import ModalPassword from '../ModalPassword/ModalPassword.component'
+import MiniCardWallet from "../MiniCardWallet/MiniCardWallet.component"
+import ModalPassword from "../ModalPassword/ModalPassword.component"
 
 const EditWallets = () => {
     //accedomes al store
@@ -39,12 +30,12 @@ const EditWallets = () => {
     const [wallets, setWallets] = useState([])
     const [walletIndex, setWalletIndex] = useState(-1)
     //estado para la contraseña
-    const [password, setPassword] = useState('')
+    const [password, setPassword] = useState("")
     //estado para manejar el envio a la endpoint
     const [dataSent, setDataSent] = useState({
         display: 1,
-        password: '',
-        id_wallet: -1
+        password: "",
+        id_wallet: -1,
     })
     //estilos :v
     const styles = useStyles(EditWalletsStyles)
@@ -66,21 +57,22 @@ const EditWallets = () => {
 
             let dataComplet = {
                 ...dataSent,
-                password: password
+                password: password,
             }
 
             setDataSent(dataComplet)
 
-            const { data: response } = await http.post('/wallets/change-display',
+            const { data: response } = await http.post(
+                "/wallets/change-display",
                 dataComplet,
-                getHeaders()
+                getHeaders(),
             )
 
             if (response.error) {
                 throw String(response.message)
             } else {
                 updateStore()
-                successMessage('Billetera actualizada')
+                successMessage("Billetera actualizada")
                 setShowEdit(false)
             }
         } catch (error) {
@@ -91,7 +83,6 @@ const EditWallets = () => {
     }
     //funcion que actualiza la store
     const updateStore = _ => {
-
         let walletChange = wallets[walletIndex]
         walletChange.id_state = walletChange.id_state === 1 ? 2 : 1
 
@@ -104,10 +95,10 @@ const EditWallets = () => {
 
         const dataStorage = {
             ...globalStorage,
-            wallets: walletsPosChange
+            wallets: walletsPosChange,
         }
 
-        store.dispatch({ type: 'SETSTORAGE', payload: dataStorage })
+        store.dispatch({ type: "SETSTORAGE", payload: dataStorage })
     }
 
     useEffect(() => {
@@ -119,50 +110,49 @@ const EditWallets = () => {
         //     setWallets(global.wallets)
 
         // })
-
     }, [wallets])
 
     return (
         <View style={styles.container}>
             <View style={styles.row}>
                 <Text style={styles.titlePrincipal}>Billeteras</Text>
-                <TouchableOpacity
-                    onPress={alternEdit}
-                >
+                <TouchableOpacity onPress={alternEdit}>
                     <Text style={styles.subTitle}>
-                        {showEdit ? 'X' : 'Editar'}
+                        {showEdit ? "X" : "Editar"}
                     </Text>
                 </TouchableOpacity>
             </View>
-            {
-                showEdit ? (
-                    <View style={styles.containerCardInfoMax}>
-                        <FlatList
-                            keyExtractor={(item, index) => `${item.name}`}
-                            data={wallets}
-                            renderItem={({ item, index }) => <MiniCardWallet
+            {showEdit ? (
+                <View style={styles.containerCardInfoMax}>
+                    <FlatList
+                        keyExtractor={(item, index) => `${item.name}`}
+                        data={wallets}
+                        renderItem={({ item, index }) => (
+                            <MiniCardWallet
                                 wallet={item}
                                 setDataSent={setDataSent}
                                 setShowModal={setShowModal}
                                 setWalletIndex={setWalletIndex}
-                                index={index}/>}
-                        />
-                    </View>
-                ) : (
-                    <TouchableOpacity style={styles.containerCardInfoMini}
-                        onPress={openEdit}
-                    >
-                        <Text style={styles.subTitle}>Mostrar mis belleteras</Text>
-                    </TouchableOpacity>
-                )
-            }
+                                index={index}
+                            />
+                        )}
+                    />
+                </View>
+            ) : (
+                <TouchableOpacity
+                    style={styles.containerCardInfoMini}
+                    onPress={openEdit}>
+                    <Text style={styles.subTitle}>Mostrar mis belleteras</Text>
+                </TouchableOpacity>
+            )}
             <ModalPassword
                 password={password}
                 setPassword={setPassword}
                 showModal={showModal}
                 setShowModal={setShowModal}
-                fn={changeWallets} 
-                indexWallet={walletIndex}/>
+                fn={changeWallets}
+                indexWallet={walletIndex}
+            />
         </View>
     )
 }

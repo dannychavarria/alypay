@@ -55,7 +55,7 @@ export default {
         padding: RFValue(5),
     },
     titlePrincipalCard: {
-        color: "#ccc",
+        color: Colors.colorYellow,
         fontSize: RFValue(16),
         padding: RFValue(5),
     },

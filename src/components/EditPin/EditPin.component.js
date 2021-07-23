@@ -10,11 +10,15 @@ import useStyles from "../../hooks/useStyles.hook"
 import { EditPinStyles } from "../../Styles/Components/index"
 
 // Import Constants
-import { Colors, RFValue, GlobalStyles, showNotification } from "../../utils/constants"
+import {
+    Colors,
+    RFValue,
+    GlobalStyles,
+    showNotification,
+} from "../../utils/constants"
 
 import ServiceProfile from "../../Services/SerProfile/SerProfile"
 import PasswordInput from "../passwordInput/PasswordInput.component"
-
 
 const EditPinProfile = () => {
     // estados de pin y contraseña
@@ -26,7 +30,6 @@ const EditPinProfile = () => {
 
     const classes = useStyles(EditPinStyles)
 
-
     const editInfo = () => {
         setShowEdit(true)
     }
@@ -34,30 +37,29 @@ const EditPinProfile = () => {
     const closeEdit = () => {
         setShowEdit(false)
     }
-    
-     // funcion de cierre del modal
-     const closeModal = () => {
-         setShowModal(false)
-     }
- 
-     // funcion de envio de informacion
-     const submitInformation = async () => {
-         try {
-             if (pin !== pinConfirm) {
-                 throw String("Pins no coinciden")
-             }
- 
-             const DataSent = {
-                 pin_number: pin,
-                 password: password,
-             }
 
-             ServiceProfile(DataSent, 'pin')
+    // funcion de cierre del modal
+    const closeModal = () => {
+        setShowModal(false)
+    }
 
-         } catch (error) {
-             errorMessage(error.toString())
-         }
-     }
+    // funcion de envio de informacion
+    const submitInformation = async () => {
+        try {
+            if (pin !== pinConfirm) {
+                throw String("Pins no coinciden")
+            }
+
+            const DataSent = {
+                pin_number: pin,
+                password: password,
+            }
+
+            ServiceProfile(DataSent, "pin")
+        } catch (error) {
+            errorMessage(error.toString())
+        }
+    }
 
     return (
         <>
@@ -134,7 +136,10 @@ const EditPinProfile = () => {
                             PIN.
                         </Text>
 
-                        <PasswordInput value={password} onChangeText={setPassword}/>
+                        <PasswordInput
+                            value={password}
+                            onChangeText={setPassword}
+                        />
 
                         <View style={classes.rowFormsButtons}>
                             <TouchableOpacity

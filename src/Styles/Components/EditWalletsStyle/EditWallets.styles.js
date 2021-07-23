@@ -2,7 +2,7 @@ import { Colors, RFValue } from "../../../utils/constants"
 
 export default {
     container: {
-        flex: 1,
+        // flex: 1,
         margin: RFValue(20),
         // alignItems: "center",
     },
@@ -13,14 +13,14 @@ export default {
 
     containerCardInfoMini: {
         height: RFValue(50),
-        justifyContent: 'center',
+        justifyContent: "center",
         width: "100%",
         backgroundColor: Colors.colorBlack,
         borderRadius: RFValue(5),
         padding: RFValue(10),
     },
     containerCardInfoMax: {
-        justifyContent: 'center',
+        justifyContent: "center",
         width: "100%",
         backgroundColor: Colors.colorBlack,
         borderRadius: RFValue(5),
@@ -77,46 +77,46 @@ export default {
     },
     //minicardwallet
     miniContainer: {
-        width: '100%',
-        backgroundColor: 'black',
-        height: 45,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+        width: "100%",
+        backgroundColor: "black",
+        height: RFValue(45),
+        flexDirection: "row",
+        justifyContent: "space-between",
         marginBottom: 15,
         borderRadius: RFValue(5),
-        paddingHorizontal: 10
+        paddingHorizontal: 10,
     },
     miniLeftContainer: {
-        height: '100%',
-        width: '40%',
-        flexDirection: 'row',
-        alignItems: 'center',
+        height: "100%",
+        width: "40%",
+        flexDirection: "row",
+        alignItems: "center",
     },
     miniImage: {
-        height: 45,
-        width: 45,
-        resizeMode: 'contain',
+        height: RFValue(40),
+        width: RFValue(40),
+        resizeMode: "contain",
         borderRadius: 50,
         marginRight: 10,
     },
     miniTextCoin: {
-        flex: 1,
+        // flex: 1,
         color: Colors.colorYellow,
-        fontSize: 20,
+        fontSize: RFValue(16),
     },
     miniContainerCenter: {
-        height: '100%',
-        width: '25%',
-        justifyContent: 'center',
+        height: "100%",
+        width: "25%",
+        justifyContent: "center",
     },
     miniTextCenter: {
-        color: 'white',
-        fontSize: 16
+        color: "white",
+        fontSize: RFValue(15),
     },
     miniRightContainer: {
-        height: '100%',
-        width: '15%',
-        justifyContent: 'center',
-        alignItems: 'center'
-    }
+        height: "100%",
+        width: "15%",
+        justifyContent: "center",
+        alignItems: "center",
+    },
 }
