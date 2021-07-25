@@ -12,7 +12,8 @@ import useStyles from '../../hooks/useStyles.hook'
 import {
     GlobalStyles,
     checkPermissionCamera,
-    showNotification
+    showNotification,
+    RFValue
 } from '../../utils/constants'
 
 import { launchCamera, launchImageLibrary } from "react-native-image-picker"
@@ -127,60 +128,38 @@ const EditFotoView = (props) => {
     }, [])
 
     return (
-        <View style={{
-            flex: 1,
-            backgroundColor: 'black'
-        }}>
+        <View style={classes.contain}>
             <HeaderComponent />
-            <View style={{
-                paddingHorizontal: '5%',
-                paddingVertical: '15%',
-                justifyContent: 'space-between',
-                alignItems: 'center'
-            }}>
+            <View style={classes.container}>
 
-                <View style={{
-                    height: '60%',
-                    width: '100%',
-                    justifyContent: 'space-between',
-                }}>
+                <View style={classes.subContainer}>
 
                     <FotoPerfil imgPerfil={imgPerfil} />
 
                     <TouchableOpacity style={GlobalStyles.buttonPrimaryLine}
                         onPress={_ => sheetRef.current.open()}
                     >
-                        <Text style={{
-                            color: 'white',
-                            fontSize: 22
-                        }}>Editar</Text>
+                        <Text style={classes.textWhite}>Editar</Text>
                     </TouchableOpacity>
 
                 </View>
 
-                <View style={{
-                    height: '30%',
-                    width: '100%',
-                    justifyContent: 'space-between',
-                }}>
+                <View style={classes.subContainerDown}>
 
-                    <Text style={{
-                        color: 'white',
-                        fontSize: 18
-                    }}>Confirme el cambio con su contraseña</Text>
+                    <Text style={classes.textWhite}>Confirme el cambio con su contraseña</Text>
 
                     <PasswordInput value={password} onChangeText={setPassword}/>
 
                     <TouchableOpacity style={GlobalStyles.buttonPrimary}
                         onPress={sentInfo}
                     >
-                        <Text style={{ fontSize: 16 }}>Confirmar</Text>
+                        <Text style={{ fontSize: RFValue(16) }}>Confirmar</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={GlobalStyles.buttonPrimaryCancel}
                         onPress={close}
                     >
-                        <Text style={{ color: 'white', fontSize: 16 }}>Cancelar</Text>
+                        <Text style={{ fontSize: RFValue(16), color: 'white'}}>Cancelar</Text>
                     </TouchableOpacity>
                 </View>
 
@@ -188,8 +167,8 @@ const EditFotoView = (props) => {
 
             <Modalize
                 ref={sheetRef}
-                snapPoint={300}
-                modalHeight={300}
+                snapPoint={RFValue(300)}
+                modalHeight={RFValue(300)}
                 modalStyle={classes.panel}
                 HeaderComponent={
                     <View style={{ alignItems: "center" }}>
@@ -201,7 +180,7 @@ const EditFotoView = (props) => {
                         <TouchableOpacity
                             style={[
                                 GlobalStyles.buttonPrimaryLine,
-                                { margin: 5 },
+                                { margin: RFValue(5) },
                             ]}
                             onPress={_ => uploadImageView(true)}
                         >
@@ -213,7 +192,7 @@ const EditFotoView = (props) => {
                         <TouchableOpacity
                             style={[
                                 GlobalStyles.buttonPrimaryLine,
-                                { margin: 5 },
+                                { margin: RFValue(5) },
                             ]}
                             onPress={_ => uploadImageView(false)}
                         >
@@ -225,7 +204,7 @@ const EditFotoView = (props) => {
                         <TouchableOpacity
                             style={[
                                 GlobalStyles.buttonPrimaryCancel,
-                                { margin: 5 },
+                                { margin: RFValue(5) },
                             ]}>
                             <Text style={GlobalStyles.textButtonCancel}>
                                 Cancelar

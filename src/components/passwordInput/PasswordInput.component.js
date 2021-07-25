@@ -11,7 +11,7 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 
 import { GlobalStyles, RFValue, Colors } from "../../utils/constants"
 
-const PasswordInput = ({ value = "", onChangeText, typeText = "" }) => {
+const PasswordInput = ({ value = "", onChangeText }) => {
     const [showPassword, setShowPassword] = useState(false)
 
     const showPasswordInvert = _ => {
@@ -22,7 +22,7 @@ const PasswordInput = ({ value = "", onChangeText, typeText = "" }) => {
         <View style={styles.rowForm}>
             <Text style={styles.legend}>Contraseña</Text>
 
-            <View style={[styles.textInputWithImage, GlobalStyles.textInput]}>
+            <View style={[styles.textInputWithImage, GlobalStyles.textInput, { elevation: 0 }]}>
                 <TextInput
                     style={styles.textInputCol}
                     value={value}
@@ -48,10 +48,10 @@ const PasswordInput = ({ value = "", onChangeText, typeText = "" }) => {
 
 const styles = StyleSheet.create({
     rowForm: {
-        flex: 1,
-        flexDirection: "column",
+        height: RFValue(60),
         width: "100%",
         marginVertical: RFValue(10),
+        flexDirection: "column",
     },
 
     textInputWithImage: {

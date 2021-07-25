@@ -61,6 +61,7 @@ const EditProfile = ({ data = {}, navigation }) => {
     // Funcion que cancela la edicion del formulario de perfil
     const cancelInfo = () => {
         setShowInfoEdit(false)
+        clearStates()
     }
 
     // Limpiar estados
@@ -188,6 +189,8 @@ const EditProfile = ({ data = {}, navigation }) => {
                                 onChangeText={value => {
                                     setFirtsName(value.replace(/ /g, ""))
                                 }}
+                                placeholder='Nombre'
+                                placeholderTextColor='#CCC'
                             />
                         </View>
 
@@ -204,6 +207,8 @@ const EditProfile = ({ data = {}, navigation }) => {
                                 onChangeText={value => {
                                     setLastName(value.replace(/ /g, ""))
                                 }}
+                                placeholder='Apellido'
+                                placeholderTextColor='#CCC'
                             />
                         </View>
 
@@ -220,6 +225,8 @@ const EditProfile = ({ data = {}, navigation }) => {
                                 onChangeText={value => {
                                     setUsername(value.replace(/ /g, ""))
                                 }}
+                                placeholder='Usuario'
+                                placeholderTextColor='#CCC'
                             />
                         </View>
 

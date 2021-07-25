@@ -51,7 +51,9 @@ const MiniCardWallet = props => {
             </View>
 
             <View style={styles.miniContainerCenter}>
-                <Text style={styles.miniTextCenter}>
+                <Text style={styles.miniTextCenter}
+                    numberOfLines={1}
+                >
                     $ {WithDecimals(Floor(wallet.price, 2))}
                 </Text>
             </View>

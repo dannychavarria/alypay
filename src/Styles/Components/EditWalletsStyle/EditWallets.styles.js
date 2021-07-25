@@ -106,7 +106,7 @@ export default {
     },
     miniContainerCenter: {
         height: "100%",
-        width: "25%",
+        width: "35%",
         justifyContent: "center",
     },
     miniTextCenter: {
