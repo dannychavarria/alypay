@@ -30,6 +30,7 @@ import styleMap from "../../animations/map-dark-mode.json"
 import imageProfileAvatar from "../../static/ecommerce-avatar.png"
 import IconMarket from "../../static/maket-icon-logo-yellow.png"
 import iconDirection from "../../static/icon-directions-map.png"
+import FontAwesome from "react-native-vector-icons/FontAwesome"
 
 const initialState = {
     latitude: null,
@@ -158,12 +159,16 @@ const MapsCommerce = () => {
         const direcction = () => {
             Linking.openURL(url)
         }
+        // Funcion que abre whatsapp con el numero del comercio
+        const whatsapp = () => {
+            Linking.openURL(`https://wa.me/${item.country_phone_code}${item.phone_commerce}`)
+        }
 
         const image = item.image
         const parsedImage = image.replace("http", "https")
 
         return (
-            <TouchableOpacity style={styles.cardContainer} onPress={direcction}>
+            <View style={styles.cardContainer}>
                 <Image style={styles.cardImage} source={{ uri: parsedImage }} />
                 <View style={styles.containerImageAndTitle}>
                     <View style={styles.containerImage}>
@@ -183,14 +188,21 @@ const MapsCommerce = () => {
                     </View>
                 </View>
 
-                <View style={styles.containerTextDirection}>
-                    <Text style={styles.textDirection}>Ver direcciones</Text>
-                    <Image
-                        source={iconDirection}
-                        style={styles.imageDirectionText}
-                    />
+                <View style={styles.containerInfo} >
+                    <TouchableOpacity style={styles.containerTextDirection} onPress={whatsapp}>
+                        <Text style={styles.textDirection}>Whatsapp</Text>
+                        <FontAwesome name='whatsapp' size={RFValue(20)} color={Colors.colorYellow}/>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.containerTextDirection} onPress={direcction}>
+                        <Text style={styles.textDirection}>Ver direcciones</Text>
+                        <Image
+                            source={iconDirection}
+                            style={styles.imageDirectionText}
+                        />
+                    </TouchableOpacity>
                 </View>
-            </TouchableOpacity>
+            </View>
         )
     }, [])
 
@@ -374,11 +386,16 @@ const styles = StyleSheet.create({
         color: Colors.colorYellow,
         fontSize: 22,
     },
+    containerInfo: {
+        flexDirection: "row",
+        width: '80%',
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
     containerTextDirection: {
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
-        marginVertical: 10,
     },
     imageDirectionText: {
         resizeMode: "cover",
@@ -387,7 +404,8 @@ const styles = StyleSheet.create({
     },
     textDirection: {
         color: Colors.colorYellow,
-        fontSize: RFValue(12),
+        fontSize: RFValue(14),
+        marginRight: RFValue(10),
     },
     itemCommerce: {
         width: RFValue(60),
