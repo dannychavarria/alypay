@@ -189,8 +189,8 @@ const EditProfile = ({ data = {}, navigation }) => {
                                 onChangeText={value => {
                                     setFirtsName(value.replace(/ /g, ""))
                                 }}
-                                placeholder='Nombre'
-                                placeholderTextColor='#CCC'
+                                placeholder="Nombre"
+                                placeholderTextColor="#CCC"
                             />
                         </View>
 
@@ -207,8 +207,8 @@ const EditProfile = ({ data = {}, navigation }) => {
                                 onChangeText={value => {
                                     setLastName(value.replace(/ /g, ""))
                                 }}
-                                placeholder='Apellido'
-                                placeholderTextColor='#CCC'
+                                placeholder="Apellido"
+                                placeholderTextColor="#CCC"
                             />
                         </View>
 
@@ -225,8 +225,8 @@ const EditProfile = ({ data = {}, navigation }) => {
                                 onChangeText={value => {
                                     setUsername(value.replace(/ /g, ""))
                                 }}
-                                placeholder='Usuario'
-                                placeholderTextColor='#CCC'
+                                placeholder="Usuario"
+                                placeholderTextColor="#CCC"
                             />
                         </View>
 

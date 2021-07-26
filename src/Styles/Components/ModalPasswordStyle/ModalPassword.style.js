@@ -58,6 +58,7 @@ export default {
         // padding: 10,
         justifyContent: "space-between",
         marginVertical: RFValue(25),
+        paddingTop: RFValue(15),
     },
     button: {
         backgroundColor: "green",
