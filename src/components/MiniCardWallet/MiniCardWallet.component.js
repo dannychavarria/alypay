@@ -61,13 +61,13 @@ const MiniCardWallet = props => {
             <View style={styles.miniRightContainer}>
                 <Switch
                     disabled={wallet.name === "Alycoin" ? true : false}
-                    trackColor={{ false: "#767577", true: "#81b0ff" }}
+                    trackColor={{ false: "#949494", true: "#c7c7c7" }}
                     thumbColor={
                         isActive
                             ? wallet.name === "Alycoin"
                                 ? "#767577"
-                                : "#f5dd4b"
-                            : "red"
+                                : "#d5b73f"
+                            : "#ff2424"
                     }
                     ios_backgroundColor="#3e3e3e"
                     onValueChange={alternWallet}

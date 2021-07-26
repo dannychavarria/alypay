@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 
 import {
     View,
@@ -35,13 +35,25 @@ const ModalPassword = ({
 
     // console.log("Index", indexWallet)
 
-    const [showPassword, setShowPassword] = useState(false)
+    const [active, setActive] = useState(true)
 
     const styles = useStyle(ModalPasswordStyle)
 
-    const showPasswordInvert = _ => {
-        setShowPassword(!showPassword)
+    const changeText = _ => {
+        if (global.wallets !== undefined) {
+            setActive(true)
+        } else {
+            global.wallets[indexWallet === -1 ? 0 : indexWallet].id_state === 1 ?
+                setActive(false) :
+                setActive(true)
+        }
+
     }
+
+
+    useEffect(_ => {
+        changeText()
+    }, [])
 
     return (
         <KeyboardAvoidingView
@@ -58,14 +70,9 @@ const ModalPassword = ({
                         <Text style={styles.title}>¡Atención!</Text>
 
                         <Text style={styles.subtitle}>
-                            {global?.wallets[
-                                (indexWallet === -1 ? 0 : indexWallet)
-                            ]?.id_state === 1
-                                ? `Usted esta apunto de deshablitar una billetera.
-                        Al hacerlo, no podra usar sus fondos en dicha
-                        billetera para realizar transacciones. Si esta
-                        deacuerdo, presione el boton "Continuar"`
-                                : `Usted esta apunto de habilitar una billetera. Si esta deacuerdo, presione el boton "Continuar"`}
+                            {active ?
+                            'Usted esta apunto de deshablitar una billetera. Al hacerlo, no podra usar sus fondos en dicha billetera para realizar transacciones. Si esta deacuerdo, presione el boton "Continuar"':
+                                `Usted esta apunto de habilitar una billetera. Si esta deacuerdo, presione el boton "Continuar"`}
                         </Text>
                     </View>
                     <PasswordInput

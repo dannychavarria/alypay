@@ -13,7 +13,8 @@ import {
     GlobalStyles,
     checkPermissionCamera,
     showNotification,
-    RFValue
+    RFValue,
+    errorMessage
 } from '../../utils/constants'
 
 import { launchCamera, launchImageLibrary } from "react-native-image-picker"
@@ -36,7 +37,7 @@ const EditFotoView = (props) => {
     const { navigation } = props
 
     const { imgPerfil: picture, idUser } = props.route.params
-    
+
     const sheetRef = useRef(null)
 
     const classes = useStyles(EditFotoStyle)
@@ -85,25 +86,34 @@ const EditFotoView = (props) => {
 
     const sentInfo = async _ => {
 
-        const DataSent = new FormData()
+        try {
 
-        const picturePerfil = {
-            data: imgPerfil.base64,
-            type: imgPerfil.type,
-            size: imgPerfil.fileSize,
-        }
-        DataSent.append("picture", JSON.stringify(picturePerfil))
+            if(password === ''){
+                throw String('Escriba su contraseña')
+            }
 
-        DataSent.append("password", password)
+            const DataSent = new FormData()
 
-        DataSent.append("option", 'UPDATEPICTURE')
+            const picturePerfil = {
+                data: imgPerfil.base64,
+                type: imgPerfil.type,
+                size: imgPerfil.fileSize,
+            }
+            DataSent.append("picture", JSON.stringify(picturePerfil))
 
-        updateStore()
+            DataSent.append("password", password)
 
-        let res = await ServiceProfile(DataSent, 'profile', idUser)
+            DataSent.append("option", 'UPDATEPICTURE')
 
-        if(res){
-            close()
+            updateStore()
+
+            let res = await ServiceProfile(DataSent, 'profile', idUser)
+
+            if (res) {
+                close()
+            }
+        } catch (error) {
+            errorMessage(error)
         }
     }
 
@@ -124,7 +134,7 @@ const EditFotoView = (props) => {
     }
 
     useEffect(_ => {
-        setImgPerfil({uri: picture})
+        setImgPerfil({ uri: picture })
     }, [])
 
     return (
@@ -148,7 +158,7 @@ const EditFotoView = (props) => {
 
                     <Text style={classes.textWhite}>Confirme el cambio con su contraseña</Text>
 
-                    <PasswordInput value={password} onChangeText={setPassword}/>
+                    <PasswordInput value={password} onChangeText={setPassword} />
 
                     <TouchableOpacity style={GlobalStyles.buttonPrimary}
                         onPress={sentInfo}
@@ -159,7 +169,7 @@ const EditFotoView = (props) => {
                     <TouchableOpacity style={GlobalStyles.buttonPrimaryCancel}
                         onPress={close}
                     >
-                        <Text style={{ fontSize: RFValue(16), color: 'white'}}>Cancelar</Text>
+                        <Text style={{ fontSize: RFValue(16), color: 'white' }}>Cancelar</Text>
                     </TouchableOpacity>
                 </View>
 
