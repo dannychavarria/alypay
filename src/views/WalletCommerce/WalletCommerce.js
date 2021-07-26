@@ -145,8 +145,6 @@ const initialStateSendComponent = {
 const SendComponent = ({ data = {}, onCompleteTransaction = () => {} }) => {
     const { global, functions } = store.getState()
 
-    console.log("Data", data)
-
     const [state, dispatch] = useReducer(reducer, initialStateSendComponent)
     const navigation = useNavigation()
 
