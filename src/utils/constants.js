@@ -5,6 +5,7 @@ import {
     Dimensions,
     StyleSheet,
     Alert,
+  
     Linking,
 } from "react-native"
 
@@ -94,9 +95,9 @@ export const Colors = {
 const PORT = "3000"
 
 /**Direction for server */
-export const serverAddress = "https://alypay.uc.r.appspot.com"
+//export const serverAddress = "https://alypay.uc.r.appspot.com"
 // export const serverAddress = "https://root-anvil-299019.uc.r.appspot.com"
-// export const serverAddress = "http://192.168.0.151:3085"
+ export const serverAddress = "http://192.168.0.151:3085"
 // export const serverAddress = "http://01daa136edd8.ngrok.io"
 export const serverSpeedtradingsURL = "https://ardent-medley-272823.appspot.com"
 
@@ -190,6 +191,13 @@ export const GlobalStyles = StyleSheet.create({
         textTransform: "uppercase",
     },
 
+    textButtonCancel: {
+        color: "#FFFFFF",
+        // fontWeight: 'bold',
+        fontSize: RFValue(18),
+        textTransform: "uppercase",
+    },
+
     buttonPrimaryLine: {
         ...buttonStyle,
         borderWidth: 1,
@@ -205,6 +213,11 @@ export const GlobalStyles = StyleSheet.create({
     buttonPrimary: {
         ...buttonStyle,
         backgroundColor: Colors.colorYellow,
+    },
+
+    buttonPrimaryCancel: {
+        ...buttonStyle,
+        backgroundColor: Colors.colorRed,
     },
 
     buttonSecondary: {
