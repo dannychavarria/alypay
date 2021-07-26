@@ -3,27 +3,31 @@ import { Colors, RFValue } from "../../../utils/constants"
 export default {
     contain: {
         flex: 1,
-        backgroundColor: 'black'
+        backgroundColor: "black",
     },
     container: {
-        paddingHorizontal: '5%',
-        paddingVertical: '15%',
-        justifyContent: 'space-between',
-        alignItems: 'center'
+        marginHorizontal: RFValue(10),
+        // paddingHorizontal: '5%',
+        paddingVertical: "15%",
+        // flexDirection: "row",
+        // justifyContent: "center",
+        // justifyContent: "row",
+        // alignItems: "center",
     },
     subContainer: {
-        height: '60%',
-        width: '100%',
-        justifyContent: 'space-between',
+        height: RFValue(300),
+        width: "100%",
+        flexDirection: "column",
+        padding: RFValue(10),
+        // justifyContent: "space-between",
     },
     subContainerDown: {
-        height: '37.5%',
-        width: '100%',
-        justifyContent: 'space-between',
+        alignItems: "center",
+        paddingTop: RFValue(20),
     },
     textWhite: {
-        color: 'white',
-        fontSize: RFValue(18)
+        color: "#CCC",
+        fontSize: RFValue(18),
     },
     panelHeader: {
         alignItems: "center",
@@ -38,7 +42,7 @@ export default {
     panel: {
         padding: RFValue(20),
         backgroundColor: Colors.colorBlack,
-        elevation: 6
+        elevation: 6,
         // paddingTop: RFValue(30),
         // height: "100%",
     },
@@ -49,5 +53,17 @@ export default {
     panelSubtitle: {
         fontSize: RFValue(16),
         color: "#CCC",
+    },
+
+    rowFormsButtons: {
+        // flex: 1,
+        // backgroundColor: "blue",
+        flexDirection: "row",
+        // width: "100%",
+        alignItems: "center",
+        margin: 10,
+        justifyContent: "space-between",
+        marginVertical: RFValue(25),
+        paddingTop: RFValue(15),
     },
 }

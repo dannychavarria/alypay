@@ -61,10 +61,7 @@ const ModalPassword = ({
                             {global?.wallets[
                                 (indexWallet === -1 ? 0 : indexWallet)
                             ]?.id_state === 1
-                                ? `Usted esta apunto de deshablitar una billetera.
-                        Al hacerlo, no podra usar sus fondos en dicha
-                        billetera para realizar transacciones. Si esta
-                        deacuerdo, presione el boton "Continuar"`
+                                ? `Usted esta apunto de deshablitar una billetera. Al hacerlo, no podra usar sus fondos en dichabilletera para realizar transacciones. Si esta deacuerdo, presione el boton "Continuar"`
                                 : `Usted esta apunto de habilitar una billetera. Si esta deacuerdo, presione el boton "Continuar"`}
                         </Text>
                     </View>

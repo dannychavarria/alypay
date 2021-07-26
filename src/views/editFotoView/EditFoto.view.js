@@ -1,42 +1,36 @@
-import React, { useState, useRef, useEffect } from 'react'
-import {
-    View,
-    TouchableOpacity,
-    Text,
-    TextInput
-} from 'react-native'
+import React, { useState, useRef, useEffect } from "react"
+import { View, TouchableOpacity, Text, TextInput } from "react-native"
 
-import EditFotoStyle from '../../Styles/Components/EditFotoView/EditFotoView.style'
-import useStyles from '../../hooks/useStyles.hook'
+import EditFotoStyle from "../../Styles/Components/EditFotoView/EditFotoView.style"
+import useStyles from "../../hooks/useStyles.hook"
 
 import {
     GlobalStyles,
     checkPermissionCamera,
     showNotification,
-    RFValue
-} from '../../utils/constants'
+    RFValue,
+} from "../../utils/constants"
 
 import { launchCamera, launchImageLibrary } from "react-native-image-picker"
 import ServiceProfile from "../../Services/SerProfile/SerProfile"
 
-
 import { Modalize } from "react-native-modalize"
 
 import HeaderComponent from "../../components/HeaderComponent/HeaderComponent"
-import FotoPerfil from '../../components/FotoPerfil/FotoPerfil.component'
-import PasswordInput from '../../components/passwordInput/PasswordInput.component'
+import FotoPerfil from "../../components/FotoPerfil/FotoPerfil.component"
+import PasswordInput from "../../components/passwordInput/PasswordInput.component"
 
-import store from '../../store/index'
+import store from "../../store/index"
+import { G } from "react-native-svg"
 
-const EditFotoView = (props) => {
-
+const EditFotoView = props => {
     const [imgPerfil, setImgPerfil] = useState(null)
-    const [password, setPassword] = useState('')
+    const [password, setPassword] = useState("")
 
     const { navigation } = props
 
     const { imgPerfil: picture, idUser } = props.route.params
-    
+
     const sheetRef = useRef(null)
 
     const classes = useStyles(EditFotoStyle)
@@ -60,31 +54,30 @@ const EditFotoView = (props) => {
         try {
             await checkPermissionCamera()
 
-            camara ?
-                launchCamera(optionsOpenCamera, response => {
-                    if (response.error) {
-                        throw String(response.error)
-                    } if (!response.didCancel) {
-                        setImgPerfil(response)
-                    }
-                }) :
-                launchImageLibrary(optionsOpenCamera, response => {
-                    if (response.error) {
-                        throw String(response.error)
-                    } if (!response.didCancel) {
-                        setImgPerfil(response)
-                    }
-                })
+            camara
+                ? launchCamera(optionsOpenCamera, response => {
+                      if (response.error) {
+                          throw String(response.error)
+                      }
+                      if (!response.didCancel) {
+                          setImgPerfil(response)
+                      }
+                  })
+                : launchImageLibrary(optionsOpenCamera, response => {
+                      if (response.error) {
+                          throw String(response.error)
+                      }
+                      if (!response.didCancel) {
+                          setImgPerfil(response)
+                      }
+                  })
             sheetRef.current.close()
-
-
         } catch (error) {
             showNotification(error.toString())
         }
     }
 
     const sentInfo = async _ => {
-
         const DataSent = new FormData()
 
         const picturePerfil = {
@@ -96,27 +89,26 @@ const EditFotoView = (props) => {
 
         DataSent.append("password", password)
 
-        DataSent.append("option", 'UPDATEPICTURE')
+        DataSent.append("option", "UPDATEPICTURE")
 
         updateStore()
 
-        let res = await ServiceProfile(DataSent, 'profile', idUser)
+        let res = await ServiceProfile(DataSent, "profile", idUser)
 
-        if(res){
+        if (res) {
             close()
         }
     }
 
     const updateStore = _ => {
-
         const { global } = store.getState()
 
         const dataStorage = {
             ...global,
-            src: imgPerfil.uri
+            src: imgPerfil.uri,
         }
 
-        store.dispatch({ type: 'SETSTORAGE', payload: dataStorage })
+        store.dispatch({ type: "SETSTORAGE", payload: dataStorage })
     }
 
     const close = _ => {
@@ -124,45 +116,49 @@ const EditFotoView = (props) => {
     }
 
     useEffect(_ => {
-        setImgPerfil({uri: picture})
+        setImgPerfil({ uri: picture })
     }, [])
 
     return (
         <View style={classes.contain}>
             <HeaderComponent />
             <View style={classes.container}>
-
                 <View style={classes.subContainer}>
-
                     <FotoPerfil imgPerfil={imgPerfil} />
 
-                    <TouchableOpacity style={GlobalStyles.buttonPrimaryLine}
-                        onPress={_ => sheetRef.current.open()}
-                    >
-                        <Text style={classes.textWhite}>Editar</Text>
-                    </TouchableOpacity>
-
+                    <View style={{ paddingTop: RFValue(10) }}>
+                        <TouchableOpacity
+                            style={GlobalStyles.buttonPrimaryLine}
+                            onPress={_ => sheetRef.current.open()}>
+                            <Text style={classes.textWhite}>Editar</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
 
                 <View style={classes.subContainerDown}>
+                    <Text style={classes.textWhite}>
+                        Confirme el cambio con su contraseña
+                    </Text>
 
-                    <Text style={classes.textWhite}>Confirme el cambio con su contraseña</Text>
-
-                    <PasswordInput value={password} onChangeText={setPassword}/>
-
-                    <TouchableOpacity style={GlobalStyles.buttonPrimary}
-                        onPress={sentInfo}
-                    >
-                        <Text style={{ fontSize: RFValue(16) }}>Confirmar</Text>
+                    <PasswordInput
+                        value={password}
+                        onChangeText={setPassword}
+                    />
+                </View>
+                <View style={classes.rowFormsButtons}>
+                    <TouchableOpacity
+                        style={GlobalStyles.buttonPrimaryCancel}
+                        onPress={close}>
+                        <Text style={GlobalStyles.textButtonCancel}>
+                            Cancelar
+                        </Text>
                     </TouchableOpacity>
-
-                    <TouchableOpacity style={GlobalStyles.buttonPrimaryCancel}
-                        onPress={close}
-                    >
-                        <Text style={{ fontSize: RFValue(16), color: 'white'}}>Cancelar</Text>
+                    <TouchableOpacity
+                        style={[GlobalStyles.buttonPrimary]}
+                        onPress={sentInfo}>
+                        <Text style={GlobalStyles.textButton}>Confirmar</Text>
                     </TouchableOpacity>
                 </View>
-
             </View>
 
             <Modalize
@@ -182,8 +178,7 @@ const EditFotoView = (props) => {
                                 GlobalStyles.buttonPrimaryLine,
                                 { margin: RFValue(5) },
                             ]}
-                            onPress={_ => uploadImageView(true)}
-                        >
+                            onPress={_ => uploadImageView(true)}>
                             <Text style={GlobalStyles.textButtonPrimaryLine}>
                                 Tomar fotografia
                             </Text>
@@ -194,8 +189,7 @@ const EditFotoView = (props) => {
                                 GlobalStyles.buttonPrimaryLine,
                                 { margin: RFValue(5) },
                             ]}
-                            onPress={_ => uploadImageView(false)}
-                        >
+                            onPress={_ => uploadImageView(false)}>
                             <Text style={GlobalStyles.textButtonPrimaryLine}>
                                 Subir fotografia
                             </Text>
@@ -213,7 +207,6 @@ const EditFotoView = (props) => {
                     </View>
                 }
             />
-
         </View>
     )
 }

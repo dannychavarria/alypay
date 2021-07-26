@@ -7,9 +7,9 @@ import EditPin from "../../components/EditPin/EditPin.component"
 import EditWallets from "../../components/EditWallets/EditWallets.component"
 import HeaderComponent from "../../components/HeaderComponent/HeaderComponent"
 //store
-import store from '../../store/index'
+import store from "../../store/index"
 
-const Profile = (props) => {
+const Profile = props => {
     const [dataUser, setDataUser] = useState({})
     // datos del cliente
     const { data } = props.route.params
