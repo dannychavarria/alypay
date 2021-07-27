@@ -15,7 +15,7 @@ import Icon from "react-native-vector-icons/Entypo"
 import profile from "../../static/profile-default.png"
 
 // Import constants
-import { Colors, GlobalStyles } from "../../utils/constants"
+import { Colors, errorMessage, GlobalStyles } from "../../utils/constants"
 import store from "../../store"
 import PasswordInput from "../passwordInput/PasswordInput.component"
 
@@ -40,21 +40,28 @@ const EditProfile = ({ data = {}, navigation }) => {
     }
 
     const sentEditInfo = async () => {
-        const DataSent = {
-            username: username === "" ? "-" : username,
-            email: "-",
-            password: password === "" ? "-" : password,
-            last_name: lastName === "" ? "-" : lastName,
-            first_name: firtsName === "" ? "-" : firtsName,
-            option: "UPDATEGNRALINFO",
-        }
-
-        let resSer = await ServiceProfile(DataSent, "profile", idUser)
-
-        if (resSer) {
-            updateStore()
-            setShowInfoEdit(!resSer)
-            clearStates()
+        try {
+            if(password === ''){
+                throw String('Escriba su contraseña')
+            }
+            const DataSent = {
+                username: username === "" ? "-" : username,
+                email: "-",
+                password: password === "" ? "-" : password,
+                last_name: lastName === "" ? "-" : lastName,
+                first_name: firtsName === "" ? "-" : firtsName,
+                option: "UPDATEGNRALINFO",
+            }
+    
+            let resSer = await ServiceProfile(DataSent, "profile", idUser)
+    
+            if (resSer) {
+                updateStore()
+                setShowInfoEdit(!resSer)
+                clearStates()
+            }
+        } catch (error) {
+            errorMessage(error)
         }
     }
 

@@ -88,7 +88,7 @@ export default {
     },
     miniLeftContainer: {
         height: "100%",
-        width: "40%",
+        width: "45%",
         flexDirection: "row",
         alignItems: "center",
     },

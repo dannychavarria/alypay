@@ -9,10 +9,8 @@ import { EditPinStyles } from "../../Styles/Components/index"
 
 // Import Constants
 import {
-    Colors,
-    RFValue,
     GlobalStyles,
-    showNotification,
+    errorMessage
 } from "../../utils/constants"
 
 import ServiceProfile from "../../Services/SerProfile/SerProfile"
@@ -33,17 +31,23 @@ const EditPinProfile = () => {
     }
 
     const closeEdit = () => {
+        clearStates()
         setShowEdit(false)
     }
 
     // funcion de cierre del modal
-    const closeModal = () => {
-        setShowModal(false)
+    const clearStates = () => {
+        setPin('')
+        setPinConfirm('')
+        setPassword('')
     }
 
     // funcion de envio de informacion
     const submitInformation = async () => {
         try {
+            if (password === ''){
+                throw String('Ingrese una contraseña')
+            }
             if (pin !== pinConfirm) {
                 throw String("Pins no coinciden")
             }
@@ -53,9 +57,15 @@ const EditPinProfile = () => {
                 password: password,
             }
 
-            ServiceProfile(DataSent, "pin")
+            let res = await ServiceProfile(DataSent, "pin")
+
+            console.log('res: ', res)
+
+            if(res){
+                closeEdit()
+            }
         } catch (error) {
-            errorMessage(error.toString())
+            errorMessage(error)
         }
     }
 
