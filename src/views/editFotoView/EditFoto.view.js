@@ -1,6 +1,13 @@
 import React, { useState, useRef, useEffect } from "react"
-import { View, TouchableOpacity, Text, TextInput } from "react-native"
+import {
+    View,
+    TouchableOpacity,
+    Text,
+    KeyboardAvoidingView,
+    Platform,
+} from "react-native"
 
+// Import Constanst
 import {
     GlobalStyles,
     checkPermissionCamera,
@@ -9,19 +16,26 @@ import {
     errorMessage,
 } from "../../utils/constants"
 
+// Import Hooks
 import useStyles from "../../hooks/useStyles.hook"
+
+// Import Styles
 import EditFotoStyle from "../../Styles/Components/EditFotoView/EditFotoView.style"
 
-import { launchCamera, launchImageLibrary } from "react-native-image-picker"
+// Import Services
 import ServiceProfile from "../../Services/SerProfile/SerProfile"
 
-import { Modalize } from "react-native-modalize"
-
+// Import Components
+import Container from "../../components/Container/Container"
 import HeaderComponent from "../../components/HeaderComponent/HeaderComponent"
 import FotoPerfil from "../../components/FotoPerfil/FotoPerfil.component"
 import PasswordInput from "../../components/passwordInput/PasswordInput.component"
+import { Modalize } from "react-native-modalize"
+import { launchCamera, launchImageLibrary } from "react-native-image-picker"
 
+// Import Store
 import store from "../../store/index"
+import { ScrollView } from "react-native-gesture-handler"
 
 const EditFotoView = props => {
     const [imgPerfil, setImgPerfil] = useState(null)
@@ -130,95 +144,104 @@ const EditFotoView = props => {
     }, [])
 
     return (
-        <View style={classes.contain}>
-            <HeaderComponent />
-            <View style={classes.container}>
-                <View style={classes.subContainer}>
-                    <FotoPerfil imgPerfil={imgPerfil} />
+        <Container>
+            <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "padding" : "padding"}>
+                <View style={classes.container}>
+                    <HeaderComponent />
+                    <View style={classes.subContainer}>
+                        <FotoPerfil imgPerfil={imgPerfil} />
 
-                    <View style={{ paddingTop: RFValue(10) }}>
-                        <TouchableOpacity
-                            style={GlobalStyles.buttonPrimaryLine}
-                            onPress={_ => sheetRef.current.open()}>
-                            <Text style={classes.textWhite}>Editar</Text>
-                        </TouchableOpacity>
+                        <View style={{ paddingTop: RFValue(10) }}>
+                            <TouchableOpacity
+                                style={GlobalStyles.buttonPrimaryLine}
+                                onPress={_ => sheetRef.current.open()}>
+                                <Text style={classes.textWhite}>Editar</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
-                </View>
 
-                <View style={classes.subContainerDown}>
-                    <Text style={classes.textWhite}>
-                        Confirme el cambio con su contraseña
-                    </Text>
-
-                    <PasswordInput
-                        value={password}
-                        onChangeText={setPassword}
-                    />
-                </View>
-
-                <View style={classes.rowFormsButtons}>
-                    <TouchableOpacity
-                        style={GlobalStyles.buttonPrimaryCancel}
-                        onPress={close}>
-                        <Text style={GlobalStyles.textButtonCancel}>
-                            Cancelar
-                        </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={[GlobalStyles.buttonPrimary]}
-                        onPress={sentInfo}>
-                        <Text style={GlobalStyles.textButton}>Confirmar</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-
-            <Modalize
-                ref={sheetRef}
-                snapPoint={RFValue(300)}
-                modalHeight={RFValue(300)}
-                modalStyle={classes.panel}
-                HeaderComponent={
-                    <View style={{ alignItems: "center" }}>
-                        <Text style={classes.panelTitle}>Actualizar foto</Text>
-                        <Text style={classes.panelSubtitle}>
-                            Cambia tu foto de perfil
+                    <View style={classes.subContainerDown}>
+                        <Text style={classes.textWhite}>
+                            Confirme el cambio con su contraseña
                         </Text>
 
-                        <TouchableOpacity
-                            style={[
-                                GlobalStyles.buttonPrimaryLine,
-                                { margin: RFValue(5) },
-                            ]}
-                            onPress={_ => uploadImageView(true)}>
-                            <Text style={GlobalStyles.textButtonPrimaryLine}>
-                                Tomar fotografia
-                            </Text>
-                        </TouchableOpacity>
+                        <PasswordInput
+                            value={password}
+                            onChangeText={setPassword}
+                        />
+                    </View>
 
+                    <View style={classes.rowFormsButtons}>
                         <TouchableOpacity
-                            style={[
-                                GlobalStyles.buttonPrimaryLine,
-                                { margin: RFValue(5) },
-                            ]}
-                            onPress={_ => uploadImageView(false)}>
-                            <Text style={GlobalStyles.textButtonPrimaryLine}>
-                                Subir fotografia
-                            </Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                            style={[
-                                GlobalStyles.buttonPrimaryCancel,
-                                { margin: RFValue(5) },
-                            ]}>
+                            style={GlobalStyles.buttonPrimaryCancel}
+                            onPress={close}>
                             <Text style={GlobalStyles.textButtonCancel}>
                                 Cancelar
                             </Text>
                         </TouchableOpacity>
+                        <TouchableOpacity
+                            style={[GlobalStyles.buttonPrimary]}
+                            onPress={sentInfo}>
+                            <Text style={GlobalStyles.textButton}>
+                                Confirmar
+                            </Text>
+                        </TouchableOpacity>
                     </View>
-                }
-            />
-        </View>
+                </View>
+
+                <Modalize
+                    ref={sheetRef}
+                    snapPoint={RFValue(300)}
+                    modalHeight={RFValue(300)}
+                    modalStyle={classes.panel}
+                    HeaderComponent={
+                        <View style={{ alignItems: "center" }}>
+                            <Text style={classes.panelTitle}>
+                                Actualizar foto
+                            </Text>
+                            <Text style={classes.panelSubtitle}>
+                                Cambia tu foto de perfil
+                            </Text>
+
+                            <TouchableOpacity
+                                style={[
+                                    GlobalStyles.buttonPrimaryLine,
+                                    { margin: RFValue(5) },
+                                ]}
+                                onPress={_ => uploadImageView(true)}>
+                                <Text
+                                    style={GlobalStyles.textButtonPrimaryLine}>
+                                    Tomar fotografia
+                                </Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                style={[
+                                    GlobalStyles.buttonPrimaryLine,
+                                    { margin: RFValue(5) },
+                                ]}
+                                onPress={_ => uploadImageView(false)}>
+                                <Text
+                                    style={GlobalStyles.textButtonPrimaryLine}>
+                                    Subir fotografia
+                                </Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                style={[
+                                    GlobalStyles.buttonPrimaryCancel,
+                                    { margin: RFValue(5) },
+                                ]}>
+                                <Text style={GlobalStyles.textButtonCancel}>
+                                    Cancelar
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    }
+                />
+            </KeyboardAvoidingView>
+        </Container>
     )
 }
 

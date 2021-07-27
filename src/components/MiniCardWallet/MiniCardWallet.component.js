@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { View, Text, Image, Switch } from "react-native"
 
 //utils
-import { urlAlyCoin, WithDecimals } from "../../utils/constants"
+import { urlAlyCoin, WithDecimals, Colors } from "../../utils/constants"
 //estilos
 import useStyles from "../../hooks/useStyles.hook"
 import EditWalletsStyles from "../../Styles/Components/EditWalletsStyle/EditWallets.styles"
@@ -22,8 +22,9 @@ const MiniCardWallet = props => {
     //url imagen
     const urlImage =
         wallet._id !== null
-            ? `https://s2.coinmarketcap.com/static/img/coins/128x128/${wallet._id
-            }.png`
+            ? `https://s2.coinmarketcap.com/static/img/coins/128x128/${
+                  wallet._id
+              }.png`
             : urlAlyCoin
     //funcion para alternar el switch
     const alternWallet = _ => {
@@ -43,23 +44,30 @@ const MiniCardWallet = props => {
     )
     return (
         <View style={styles.miniContainer}>
-            <View style={styles.miniLeftContainer}>
-                <Image source={{ uri: urlImage }} style={styles.miniImage} />
+            <Image source={{ uri: urlImage }} style={styles.miniImage} />
+
+            <View style={styles.subContainer}>
+                <View style={styles.lastContainer}>
+                    <Text style={styles.miniTextCoin}>{wallet.name}</Text>
+                    <Text style={styles.miniTextCenter}>
+                        $ {WithDecimals(Floor(wallet.price, 2))}
+                    </Text>
+                </View>
+            </View>
+            {/* <View style={styles.miniLeftContainer}>
 
                 <View style={{ width: '60%' }}>
                     <Text style={styles.miniTextCoin}
                         numberOfLines={1}
                     >{wallet.name}</Text>
                 </View>
-            </View>
+            </View> */}
 
-            <View style={styles.miniContainerCenter}>
-                <Text style={styles.miniTextCenter}
-                    numberOfLines={1}
-                >
+            {/* <View style={styles.miniContainerCenter}>
+                <Text style={styles.miniTextCenter} numberOfLines={1}>
                     $ {WithDecimals(Floor(wallet.price, 2))}
                 </Text>
-            </View>
+            </View> */}
 
             <View style={styles.miniRightContainer}>
                 <Switch
@@ -69,8 +77,8 @@ const MiniCardWallet = props => {
                         isActive
                             ? wallet.name === "Alycoin"
                                 ? "#767577"
-                                : "#d5b73f"
-                            : "#ff2424"
+                                : "#998E00"
+                            : Colors.colorRed
                     }
                     ios_backgroundColor="#3e3e3e"
                     onValueChange={alternWallet}
