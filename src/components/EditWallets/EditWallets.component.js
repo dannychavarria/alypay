@@ -100,8 +100,10 @@ const EditWallets = () => {
         }
 
         store.dispatch({ type: "SETSTORAGE", payload: dataStorage })
-    }
 
+        store.getState().functions.reloadWallets()
+    }
+    
     useEffect(() => {
         getWallets()
 

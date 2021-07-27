@@ -1,15 +1,16 @@
 import React, { useState, useRef, useEffect } from "react"
 import { View, TouchableOpacity, Text, TextInput } from "react-native"
 
-import EditFotoStyle from "../../Styles/Components/EditFotoView/EditFotoView.style"
-import useStyles from "../../hooks/useStyles.hook"
-
 import {
     GlobalStyles,
     checkPermissionCamera,
     showNotification,
     RFValue,
+    errorMessage,
 } from "../../utils/constants"
+
+import useStyles from "../../hooks/useStyles.hook"
+import EditFotoStyle from "../../Styles/Components/EditFotoView/EditFotoView.style"
 
 import { launchCamera, launchImageLibrary } from "react-native-image-picker"
 import ServiceProfile from "../../Services/SerProfile/SerProfile"
@@ -21,7 +22,6 @@ import FotoPerfil from "../../components/FotoPerfil/FotoPerfil.component"
 import PasswordInput from "../../components/passwordInput/PasswordInput.component"
 
 import store from "../../store/index"
-import { G } from "react-native-svg"
 
 const EditFotoView = props => {
     const [imgPerfil, setImgPerfil] = useState(null)
@@ -78,25 +78,35 @@ const EditFotoView = props => {
     }
 
     const sentInfo = async _ => {
-        const DataSent = new FormData()
+        try {
+            if (password.trim().length === 0) {
+                throw String(
+                    "La contraseña es requerida para realizar esta accion",
+                )
+            }
 
-        const picturePerfil = {
-            data: imgPerfil.base64,
-            type: imgPerfil.type,
-            size: imgPerfil.fileSize,
-        }
-        DataSent.append("picture", JSON.stringify(picturePerfil))
+            const DataSent = new FormData()
 
-        DataSent.append("password", password)
+            const picturePerfil = {
+                data: imgPerfil.base64,
+                type: imgPerfil.type,
+                size: imgPerfil.fileSize,
+            }
+            DataSent.append("picture", JSON.stringify(picturePerfil))
 
-        DataSent.append("option", "UPDATEPICTURE")
+            DataSent.append("password", password)
 
-        updateStore()
+            DataSent.append("option", "UPDATEPICTURE")
 
-        let res = await ServiceProfile(DataSent, "profile", idUser)
+            updateStore()
 
-        if (res) {
-            close()
+            let res = await ServiceProfile(DataSent, "profile", idUser)
+
+            if (res) {
+                close()
+            }
+        } catch (error) {
+            errorMessage(error)
         }
     }
 
@@ -145,6 +155,7 @@ const EditFotoView = props => {
                         onChangeText={setPassword}
                     />
                 </View>
+
                 <View style={classes.rowFormsButtons}>
                     <TouchableOpacity
                         style={GlobalStyles.buttonPrimaryCancel}

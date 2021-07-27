@@ -61,7 +61,7 @@ const switchItems = [
         state: TYPE_VIEW.WALLET,
     },
     {
-        text: "AlyPay",
+        text: "Pago Comercio",
         state: TYPE_VIEW.PAY,
     },
 ]

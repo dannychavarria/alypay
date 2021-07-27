@@ -72,4 +72,20 @@ export default {
         fontSize: RFValue(12),
         marginBottom: RFValue(2.5),
     },
+
+    textInputWithImage: {
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    textInputCol: {
+        flex: 0.9,
+        paddingLeft: 5,
+        padding: 0,
+        color: "white",
+    },
+    touchableCol: {
+        flex: 0.1,
+        alignItems: "flex-end",
+    },
 }
