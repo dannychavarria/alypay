@@ -38,14 +38,15 @@ const ModalPassword = ({
     const styles = useStyle(ModalPasswordStyle)
 
     const changeWallet = _ => {
-
         try {
-            if(password !== ''){
-                setPassword('')
+            if (password.trim().length === 0) {
+                throw String(
+                    "La contraseña es requerida para realizar esta accion",
+                )
+            } else {
+                setPassword("")
                 setShowModal(false)
                 fn()
-            }else{
-                throw String('Ingrese una contraseña')
             }
         } catch (error) {
             errorMessage(error)
@@ -62,7 +63,6 @@ const ModalPassword = ({
     //     }
 
     // }
-
 
     // useEffect(_ => {
     //     changeText()
@@ -83,10 +83,10 @@ const ModalPassword = ({
                         <Text style={styles.title}>¡Atención!</Text>
 
                         <Text style={styles.subtitle}>
-                            Usted esta apunto de habilitar o deshabilitar una billetera. 
-                            Al deshabilitar, no podra usar sus fondos en dicha 
-                            billetera para realizar transacciones. Si esta deacuerdo, 
-                            presione el boton "Continuar"
+                            Usted esta apunto de habilitar o deshabilitar una
+                            billetera. Al deshabilitar, no podra usar sus fondos
+                            en dicha billetera para realizar transacciones. Si
+                            esta deacuerdo, presione el boton "Continuar"
                         </Text>
                     </View>
                     <PasswordInput

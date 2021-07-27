@@ -4,25 +4,22 @@ export default {
     contain: {
         flex: 1,
         backgroundColor: "black",
-        justifyContent: 'space-between'
     },
     container: {
-        flex: 1,
-        paddingHorizontal: '5%',
-        paddingVertical: '12.5%',
-        justifyContent: "space-between",
-        alignItems: "center",
+        // flex: 1,
+        paddingTop: RFValue(15),
+        marginHorizontal: RFValue(10),
+        // paddingVertical: "15%",
     },
     subContainer: {
-        height: '50%',
+        height: RFValue(300),
         width: "100%",
         flexDirection: "column",
-        justifyContent: "space-between",
+        padding: RFValue(10),
     },
     subContainerDown: {
-        height: '40%',
-        width: '100%',
-        justifyContent: "space-between",
+        alignItems: "center",
+        paddingTop: RFValue(20),
     },
     textWhite: {
         color: "#CCC",
@@ -55,14 +52,11 @@ export default {
     },
 
     rowFormsButtons: {
-        flex: 1,
-        backgroundColor: "blue",
         flexDirection: "row",
         width: "100%",
         alignItems: "center",
-        margin: 10,
         justifyContent: "space-between",
-        marginVertical: RFValue(25),
-        paddingTop: RFValue(15),
+        marginVertical: RFValue(30),
+        padding: RFValue(15),
     },
 }

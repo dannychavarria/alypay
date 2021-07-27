@@ -39,10 +39,20 @@ const EditProfile = ({ data = {}, navigation }) => {
         setShowInfoEdit(true)
     }
 
+    const infoEdit = () => {
+        try {
+            setFirtsName(data.first_name)
+            setLastName(data.last_name)
+            setUsername(data.username)
+        } catch (error) {
+            console.log(error.toString())
+        }
+    }
+
     const sentEditInfo = async () => {
         try {
-            if(password === ''){
-                throw String('Escriba su contraseña')
+            if (password === "") {
+                throw String("Escriba su contraseña")
             }
             const DataSent = {
                 username: username === "" ? "-" : username,
@@ -52,9 +62,9 @@ const EditProfile = ({ data = {}, navigation }) => {
                 first_name: firtsName === "" ? "-" : firtsName,
                 option: "UPDATEGNRALINFO",
             }
-    
+
             let resSer = await ServiceProfile(DataSent, "profile", idUser)
-    
+
             if (resSer) {
                 updateStore()
                 setShowInfoEdit(!resSer)
@@ -68,7 +78,7 @@ const EditProfile = ({ data = {}, navigation }) => {
     // Funcion que cancela la edicion del formulario de perfil
     const cancelInfo = () => {
         setShowInfoEdit(false)
-        clearStates()
+        // clearStates()
     }
 
     // Limpiar estados
@@ -97,6 +107,10 @@ const EditProfile = ({ data = {}, navigation }) => {
 
         console.log("store: ", global)
     }
+
+    useEffect(() => {
+        infoEdit()
+    }, [data])
 
     return (
         <>
@@ -236,33 +250,6 @@ const EditProfile = ({ data = {}, navigation }) => {
                                 placeholderTextColor="#CCC"
                             />
                         </View>
-
-                        {/* <View style={classes.rowForm}>
-                            <View style={classes.legendRow}>
-                                <Text style={classes.titlePrincipalCard}>
-                                    Correo Electronico
-                                </Text>
-                            </View>
-
-                            <TextInput style={GlobalStyles.textInput}
-                                value={email}
-                                onChangeText={value => { setEmail(value.replace(/ /g, '')) }}
-                            />
-                        </View> */}
-
-                        {/* <View style={classes.rowForm}>
-                            <View style={classes.legendRow}>
-                                <Text style={classes.titlePrincipalCard}>
-                                    Contraseña
-                                </Text>
-                            </View>
-
-                            <TextInput style={GlobalStyles.textInput}
-                                value={password}
-                                onChangeText={setPassword}
-                                secureTextEntry
-                            />
-                        </View> */}
 
                         <PasswordInput
                             value={password}

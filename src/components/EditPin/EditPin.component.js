@@ -8,11 +8,10 @@ import useStyles from "../../hooks/useStyles.hook"
 import { EditPinStyles } from "../../Styles/Components/index"
 
 // Import Constants
-import {
-    GlobalStyles,
-    errorMessage
-} from "../../utils/constants"
+import { GlobalStyles, errorMessage, Colors } from "../../utils/constants"
 
+// Import Components
+import Icon from "react-native-vector-icons/MaterialIcons"
 import ServiceProfile from "../../Services/SerProfile/SerProfile"
 import PasswordInput from "../passwordInput/PasswordInput.component"
 
@@ -23,6 +22,8 @@ const EditPinProfile = () => {
     const [password, setPassword] = useState("")
 
     const [showEdit, setShowEdit] = useState(false)
+    const [showPin, setShowPin] = useState(false)
+    const [showPinConfirm, setShowPinConfirm] = useState(false)
 
     const classes = useStyles(EditPinStyles)
 
@@ -37,19 +38,23 @@ const EditPinProfile = () => {
 
     // funcion de cierre del modal
     const clearStates = () => {
-        setPin('')
-        setPinConfirm('')
-        setPassword('')
+        setPin("")
+        setPinConfirm("")
+        setPassword("")
     }
 
     // funcion de envio de informacion
     const submitInformation = async () => {
         try {
-            if (password === ''){
-                throw String('Ingrese una contraseña')
-            }
             if (pin !== pinConfirm) {
-                throw String("Pins no coinciden")
+                throw String(
+                    "El pin ingresado no coinciden porfavor vuela a intentarlo",
+                )
+            }
+            if (password.trim().length === 0) {
+                throw String(
+                    "La contraseña es requerida para realizar esta acción",
+                )
             }
 
             const DataSent = {
@@ -59,9 +64,9 @@ const EditPinProfile = () => {
 
             let res = await ServiceProfile(DataSent, "pin")
 
-            console.log('res: ', res)
+            console.log("res: ", res)
 
-            if(res){
+            if (res) {
                 closeEdit()
             }
         } catch (error) {
@@ -99,7 +104,7 @@ const EditPinProfile = () => {
                 ) : (
                     <View style={classes.containerCardInfoMax}>
                         <Text style={classes.subTitle}>
-                            Ingrese un PIN válido e 6 dígitos y recuerdelo, no
+                            Ingrese un PIN válido ce 6 dígitos y recuerde, no
                             comparta su PIN con nadie. Es la manera más segura
                             de verificar su identidad cuando efectúe usa
                             transacción.
@@ -112,31 +117,75 @@ const EditPinProfile = () => {
                                 </Text>
                             </View>
 
-                            <TextInput
-                                style={GlobalStyles.textInput}
-                                value={pin}
-                                onChangeText={setPin}
-                                placeholder="Ingrese su pin"
-                                placeholderTextColor="#ccc"
-                                keyboardType="numeric"
-                            />
+                            <View
+                                style={[
+                                    classes.textInputWithImage,
+                                    GlobalStyles.textInput,
+                                ]}>
+                                <TextInput
+                                    style={classes.textInputCol}
+                                    value={pin}
+                                    onChangeText={setPin}
+                                    placeholder="Ingrese su pin"
+                                    placeholderTextColor="#ccc"
+                                    keyboardType="numeric"
+                                    secureTextEntry={!showPin}
+                                />
+
+                                <TouchableOpacity
+                                    onPress={_ => setShowPin(!showPin)}
+                                    style={classes.touchableCol}>
+                                    <Icon
+                                        name={
+                                            showPin
+                                                ? "visibility-off"
+                                                : "visibility"
+                                        }
+                                        color={Colors.colorYellow}
+                                        size={20}
+                                    />
+                                </TouchableOpacity>
+                            </View>
                         </View>
 
                         <View style={classes.rowForm}>
                             <View style={classes.legendRow}>
                                 <Text style={classes.titlePrincipalCard}>
-                                    Confirme su PIN
+                                    Confirmar PIN
                                 </Text>
                             </View>
 
-                            <TextInput
-                                style={GlobalStyles.textInput}
-                                value={pinConfirm}
-                                onChangeText={setPinConfirm}
-                                placeholder="Ingrese su pin para confirmar"
-                                placeholderTextColor="#ccc"
-                                keyboardType="numeric"
-                            />
+                            <View
+                                style={[
+                                    classes.textInputWithImage,
+                                    GlobalStyles.textInput,
+                                ]}>
+                                <TextInput
+                                    style={classes.textInputCol}
+                                    value={pinConfirm}
+                                    onChangeText={setPinConfirm}
+                                    placeholder="Confirmar Pin"
+                                    placeholderTextColor="#ccc"
+                                    keyboardType="numeric"
+                                    secureTextEntry={!showPinConfirm}
+                                />
+
+                                <TouchableOpacity
+                                    onPress={_ =>
+                                        setShowPinConfirm(!showPinConfirm)
+                                    }
+                                    style={classes.touchableCol}>
+                                    <Icon
+                                        name={
+                                            showPinConfirm
+                                                ? "visibility-off"
+                                                : "visibility"
+                                        }
+                                        color={Colors.colorYellow}
+                                        size={20}
+                                    />
+                                </TouchableOpacity>
+                            </View>
                         </View>
 
                         <Text style={classes.subTitle}>

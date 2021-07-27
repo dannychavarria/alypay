@@ -1,16 +1,16 @@
 import React, { useState, useRef, useEffect } from "react"
 import { View, TouchableOpacity, Text, TextInput } from "react-native"
 
-import EditFotoStyle from "../../Styles/Components/EditFotoView/EditFotoView.style"
-import useStyles from "../../hooks/useStyles.hook"
-
 import {
     GlobalStyles,
     checkPermissionCamera,
     showNotification,
     RFValue,
-    errorMessage
-} from '../../utils/constants'
+    errorMessage,
+} from "../../utils/constants"
+
+import useStyles from "../../hooks/useStyles.hook"
+import EditFotoStyle from "../../Styles/Components/EditFotoView/EditFotoView.style"
 
 import { launchCamera, launchImageLibrary } from "react-native-image-picker"
 import ServiceProfile from "../../Services/SerProfile/SerProfile"
@@ -22,7 +22,6 @@ import FotoPerfil from "../../components/FotoPerfil/FotoPerfil.component"
 import PasswordInput from "../../components/passwordInput/PasswordInput.component"
 
 import store from "../../store/index"
-import { G } from "react-native-svg"
 
 const EditFotoView = props => {
     const [imgPerfil, setImgPerfil] = useState(null)
@@ -79,11 +78,11 @@ const EditFotoView = props => {
     }
 
     const sentInfo = async _ => {
-
         try {
-
-            if(password === ''){
-                throw String('Escriba su contraseña')
+            if (password.trim().length === 0) {
+                throw String(
+                    "La contraseña es requerida para realizar esta accion",
+                )
             }
 
             const DataSent = new FormData()
@@ -97,11 +96,11 @@ const EditFotoView = props => {
 
             DataSent.append("password", password)
 
-            DataSent.append("option", 'UPDATEPICTURE')
+            DataSent.append("option", "UPDATEPICTURE")
 
             updateStore()
 
-            let res = await ServiceProfile(DataSent, 'profile', idUser)
+            let res = await ServiceProfile(DataSent, "profile", idUser)
 
             if (res) {
                 close()
@@ -147,21 +146,28 @@ const EditFotoView = props => {
                 </View>
 
                 <View style={classes.subContainerDown}>
+                    <Text style={classes.textWhite}>
+                        Confirme el cambio con su contraseña
+                    </Text>
 
-                    <Text style={classes.textWhite}>Confirme el cambio con su contraseña</Text>
+                    <PasswordInput
+                        value={password}
+                        onChangeText={setPassword}
+                    />
+                </View>
 
-                    <PasswordInput value={password} onChangeText={setPassword} />
-
-                    <TouchableOpacity style={GlobalStyles.buttonPrimary}
-                        onPress={sentInfo}
-                    >
-                        <Text style={{ fontSize: RFValue(16) }}>Confirmar</Text>
+                <View style={classes.rowFormsButtons}>
+                    <TouchableOpacity
+                        style={GlobalStyles.buttonPrimaryCancel}
+                        onPress={close}>
+                        <Text style={GlobalStyles.textButtonCancel}>
+                            Cancelar
+                        </Text>
                     </TouchableOpacity>
-
-                    <TouchableOpacity style={GlobalStyles.buttonPrimaryCancel}
-                        onPress={close}
-                    >
-                        <Text style={{ fontSize: RFValue(16), color: 'white' }}>Cancelar</Text>
+                    <TouchableOpacity
+                        style={[GlobalStyles.buttonPrimary]}
+                        onPress={sentInfo}>
+                        <Text style={GlobalStyles.textButton}>Confirmar</Text>
                     </TouchableOpacity>
                 </View>
             </View>
