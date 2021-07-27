@@ -15,7 +15,7 @@ import Icon from "react-native-vector-icons/Entypo"
 import profile from "../../static/profile-default.png"
 
 // Import constants
-import { Colors, GlobalStyles } from "../../utils/constants"
+import { Colors, errorMessage, GlobalStyles } from "../../utils/constants"
 import store from "../../store"
 import PasswordInput from "../passwordInput/PasswordInput.component"
 
@@ -39,29 +39,46 @@ const EditProfile = ({ data = {}, navigation }) => {
         setShowInfoEdit(true)
     }
 
-    const sentEditInfo = async () => {
-        const DataSent = {
-            username: username === "" ? "-" : username,
-            email: "-",
-            password: password === "" ? "-" : password,
-            last_name: lastName === "" ? "-" : lastName,
-            first_name: firtsName === "" ? "-" : firtsName,
-            option: "UPDATEGNRALINFO",
+    const infoEdit = () => {
+        try {
+            setFirtsName(data.first_name)
+            setLastName(data.last_name)
+            setUsername(data.username)
+        } catch (error) {
+            console.log(error.toString())
         }
+    }
 
-        let resSer = await ServiceProfile(DataSent, "profile", idUser)
+    const sentEditInfo = async () => {
+        try {
+            if (password === "") {
+                throw String("Escriba su contraseña")
+            }
+            const DataSent = {
+                username: username === "" ? "-" : username,
+                email: "-",
+                password: password === "" ? "-" : password,
+                last_name: lastName === "" ? "-" : lastName,
+                first_name: firtsName === "" ? "-" : firtsName,
+                option: "UPDATEGNRALINFO",
+            }
 
-        if (resSer) {
-            updateStore()
-            setShowInfoEdit(!resSer)
-            clearStates()
+            let resSer = await ServiceProfile(DataSent, "profile", idUser)
+
+            if (resSer) {
+                updateStore()
+                setShowInfoEdit(!resSer)
+                clearStates()
+            }
+        } catch (error) {
+            errorMessage(error)
         }
     }
 
     // Funcion que cancela la edicion del formulario de perfil
     const cancelInfo = () => {
         setShowInfoEdit(false)
-        clearStates()
+        // clearStates()
     }
 
     // Limpiar estados
@@ -90,6 +107,10 @@ const EditProfile = ({ data = {}, navigation }) => {
 
         console.log("store: ", global)
     }
+
+    useEffect(() => {
+        infoEdit()
+    }, [data])
 
     return (
         <>
@@ -229,33 +250,6 @@ const EditProfile = ({ data = {}, navigation }) => {
                                 placeholderTextColor="#CCC"
                             />
                         </View>
-
-                        {/* <View style={classes.rowForm}>
-                            <View style={classes.legendRow}>
-                                <Text style={classes.titlePrincipalCard}>
-                                    Correo Electronico
-                                </Text>
-                            </View>
-
-                            <TextInput style={GlobalStyles.textInput}
-                                value={email}
-                                onChangeText={value => { setEmail(value.replace(/ /g, '')) }}
-                            />
-                        </View> */}
-
-                        {/* <View style={classes.rowForm}>
-                            <View style={classes.legendRow}>
-                                <Text style={classes.titlePrincipalCard}>
-                                    Contraseña
-                                </Text>
-                            </View>
-
-                            <TextInput style={GlobalStyles.textInput}
-                                value={password}
-                                onChangeText={setPassword}
-                                secureTextEntry
-                            />
-                        </View> */}
 
                         <PasswordInput
                             value={password}

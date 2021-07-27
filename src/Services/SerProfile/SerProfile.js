@@ -31,7 +31,6 @@ export default async function ServiceProfile(DataSent, options = 'pin', idUser =
                 } else {
                     successMessage(response.message)
                     res = true
-                    navigation.pop()
                 }
 
             } catch (error) {

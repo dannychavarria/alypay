@@ -1,10 +1,9 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 
 import {
     View,
     TouchableOpacity,
     Text,
-    TextInput,
     KeyboardAvoidingView,
 } from "react-native"
 
@@ -14,14 +13,13 @@ import ModalPasswordStyle from "../../Styles/Components/ModalPasswordStyle/Modal
 
 // Import Components
 import Modal from "react-native-modal"
-import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 import PasswordInput from "../passwordInput/PasswordInput.component"
 
 // Import Constants
-import { GlobalStyles } from "../../utils/constants"
+import { errorMessage, GlobalStyles } from "../../utils/constants"
 
 // Impor Store
-import store from "../../store/index"
+// import store from "../../store/index"
 
 const ModalPassword = ({
     password,
@@ -31,17 +29,44 @@ const ModalPassword = ({
     fn,
     indexWallet,
 }) => {
-    const { global } = store.getState()
+    // const { global } = store.getState()
 
     // console.log("Index", indexWallet)
 
-    const [showPassword, setShowPassword] = useState(false)
+    // const [active, setActive] = useState(true)
 
     const styles = useStyle(ModalPasswordStyle)
 
-    const showPasswordInvert = _ => {
-        setShowPassword(!showPassword)
+    const changeWallet = _ => {
+        try {
+            if (password.trim().length === 0) {
+                throw String(
+                    "La contraseña es requerida para realizar esta accion",
+                )
+            } else {
+                setPassword("")
+                setShowModal(false)
+                fn()
+            }
+        } catch (error) {
+            errorMessage(error)
+        }
     }
+
+    // const changeText = _ => {
+    //     if (global.wallets !== undefined) {
+    //         setActive(true)
+    //     } else {
+    //         global.wallets[indexWallet === -1 ? 0 : indexWallet].id_state === 1 ?
+    //             setActive(false) :
+    //             setActive(true)
+    //     }
+
+    // }
+
+    // useEffect(_ => {
+    //     changeText()
+    // }, [])
 
     return (
         <KeyboardAvoidingView
@@ -58,11 +83,10 @@ const ModalPassword = ({
                         <Text style={styles.title}>¡Atención!</Text>
 
                         <Text style={styles.subtitle}>
-                            {global?.wallets[
-                                (indexWallet === -1 ? 0 : indexWallet)
-                            ]?.id_state === 1
-                                ? `Usted esta apunto de deshablitar una billetera. Al hacerlo, no podra usar sus fondos en dichabilletera para realizar transacciones. Si esta deacuerdo, presione el boton "Continuar"`
-                                : `Usted esta apunto de habilitar una billetera. Si esta deacuerdo, presione el boton "Continuar"`}
+                            Usted esta apunto de habilitar o deshabilitar una
+                            billetera. Al deshabilitar, no podra usar sus fondos
+                            en dicha billetera para realizar transacciones. Si
+                            esta deacuerdo, presione el boton "Continuar"
                         </Text>
                     </View>
                     <PasswordInput
@@ -83,10 +107,7 @@ const ModalPassword = ({
 
                         <TouchableOpacity
                             style={GlobalStyles.buttonPrimary}
-                            onPress={_ => {
-                                setShowModal(false)
-                                fn()
-                            }}>
+                            onPress={changeWallet}>
                             <Text style={GlobalStyles.textButton}>
                                 Continuar
                             </Text>

@@ -22,9 +22,8 @@ const MiniCardWallet = props => {
     //url imagen
     const urlImage =
         wallet._id !== null
-            ? `https://s2.coinmarketcap.com/static/img/coins/128x128/${
-                  wallet._id
-              }.png`
+            ? `https://s2.coinmarketcap.com/static/img/coins/128x128/${wallet._id
+            }.png`
             : urlAlyCoin
     //funcion para alternar el switch
     const alternWallet = _ => {
@@ -47,7 +46,11 @@ const MiniCardWallet = props => {
             <View style={styles.miniLeftContainer}>
                 <Image source={{ uri: urlImage }} style={styles.miniImage} />
 
-                <Text style={styles.miniTextCoin}>{wallet.name}</Text>
+                <View style={{ width: '60%' }}>
+                    <Text style={styles.miniTextCoin}
+                        numberOfLines={1}
+                    >{wallet.name}</Text>
+                </View>
             </View>
 
             <View style={styles.miniContainerCenter}>
@@ -61,13 +64,13 @@ const MiniCardWallet = props => {
             <View style={styles.miniRightContainer}>
                 <Switch
                     disabled={wallet.name === "Alycoin" ? true : false}
-                    trackColor={{ false: "#767577", true: "#81b0ff" }}
+                    trackColor={{ false: "#949494", true: "#c7c7c7" }}
                     thumbColor={
                         isActive
                             ? wallet.name === "Alycoin"
                                 ? "#767577"
-                                : "#f5dd4b"
-                            : "red"
+                                : "#d5b73f"
+                            : "#ff2424"
                     }
                     ios_backgroundColor="#3e3e3e"
                     onValueChange={alternWallet}
