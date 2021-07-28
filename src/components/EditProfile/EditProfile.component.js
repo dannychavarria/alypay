@@ -105,7 +105,7 @@ const EditProfile = ({ data = {}, navigation }) => {
 
         store.dispatch({ type: "SETSTORAGE", payload: dataStorage })
 
-        console.log("store: ", global)
+        // console.log("store: ", global)
     }
 
     useEffect(() => {

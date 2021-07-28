@@ -36,14 +36,31 @@ export default {
         marginBottom: RFValue(10),
     },
     panel: {
+        flex: 1,
         padding: RFValue(20),
+        justifyContent: "center",
+        flexDirection: "row",
+        alignItems: "center",
+        borderRadius: 10,
         backgroundColor: Colors.colorBlack,
         elevation: 6,
         paddingTop: RFValue(30),
-        height: "100%",
+        // backgroundColor: "blue",
+        width: "100%",
+    },
+    panelContainerButton: {
+        // backgroundColor: "blue",
+        // alignItems: "center",
+        flexDirection: "row",
+        margin: 10,
+        // padding: RFValue(15),
+        // marginVertical: RFValue(20)
+        // paddingTop: RFValue(20),
+        justifyContent: "space-between",
+        // height: "100%",
     },
     panelTitle: {
-        fontSize: RFValue(20),
+        fontSize: RFValue(24),
         color: Colors.colorYellow,
     },
     panelSubtitle: {

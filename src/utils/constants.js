@@ -5,7 +5,6 @@ import {
     Dimensions,
     StyleSheet,
     Alert,
-  
     Linking,
 } from "react-native"
 
@@ -98,7 +97,7 @@ const PORT = "3000"
 // export const serverAddress = "https://alypay.uc.r.appspot.com"
 // export const serverAddress = "https://root-anvil-299019.uc.r.appspot.com"
 // export const serverAddress = "http://192.168.0.116:3085"
-export const serverAddress = "https://20641adeb4e9.ngrok.io" // joker
+export const serverAddress = "https://8dbb5ec696dc.ngrok.io" // joker
 // export const serverAddress = "http://e1d4c5c15528.ngrok.io" //alvario
 export const serverSpeedtradingsURL = "https://ardent-medley-272823.appspot.com"
 
@@ -208,6 +207,12 @@ export const GlobalStyles = StyleSheet.create({
     textButtonPrimaryLine: {
         color: Colors.colorYellow,
         fontSize: RFValue(18),
+        textTransform: "uppercase",
+    },
+
+    textButtonPrimaryLineSub: {
+        color: Colors.colorYellow,
+        fontSize: RFValue(16),
         textTransform: "uppercase",
     },
 
