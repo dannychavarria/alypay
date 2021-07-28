@@ -7,19 +7,23 @@ export default {
     },
     container: {
         // flex: 1,
-        paddingTop: RFValue(15),
-        marginHorizontal: RFValue(10),
+        // paddingTop: RFValue(15),
+        // marginHorizontal: RFValue(10),
         // paddingVertical: "15%",
     },
     subContainer: {
         height: RFValue(300),
-        width: "100%",
+        // width: "100%",
+        paddingTop: RFValue(15),
+        marginHorizontal: RFValue(10),
         flexDirection: "column",
         padding: RFValue(10),
     },
     subContainerDown: {
         alignItems: "center",
         paddingTop: RFValue(20),
+        paddingTop: RFValue(15),
+        marginHorizontal: RFValue(10),
     },
     textWhite: {
         color: "#CCC",

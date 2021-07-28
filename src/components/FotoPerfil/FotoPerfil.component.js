@@ -10,8 +10,6 @@ const FotoPerfil = (props) => {
 
     const { imgPerfil } = props
 
-    console.log('componente: ', imgPerfil)
-
     return (
         <View style={{
             height: '85%',

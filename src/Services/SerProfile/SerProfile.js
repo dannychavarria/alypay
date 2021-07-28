@@ -15,7 +15,6 @@ import store from "../../store/index"
 export default async function ServiceProfile(
     DataSent,
     options = "pin",
-    idUser = -1,
 ) {
     const { navigation } = store.getState()
 
