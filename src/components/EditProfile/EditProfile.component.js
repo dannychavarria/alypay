@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect } from "react"
 import { Text, View, TouchableOpacity, Image, TextInput } from "react-native"
 
 //Import Hooks
@@ -20,13 +20,13 @@ import store from "../../store"
 import PasswordInput from "../passwordInput/PasswordInput.component"
 
 const EditProfile = ({ data = {}, navigation }) => {
+    const { global } = store.getState()
+
     const [firtsName, setFirtsName] = useState("")
     const [lastName, setLastName] = useState("")
     const [username, setUsername] = useState("")
     // const [email, setEmail] = useState('')
     const [password, setPassword] = useState("")
-
-    const idUser = data.id
 
     const classes = useStyles(EditProfileStyles)
 
@@ -37,13 +37,14 @@ const EditProfile = ({ data = {}, navigation }) => {
     // Funcion que visualiza el formulario
     const editInfo = () => {
         setShowInfoEdit(true)
+        // clearStates()
     }
 
     const infoEdit = () => {
         try {
-            setFirtsName(data.first_name)
-            setLastName(data.last_name)
-            setUsername(data.username)
+            setFirtsName(global.first_name)
+            setLastName(global.last_name)
+            setUsername(global.username)
         } catch (error) {
             console.log(error.toString())
         }
@@ -63,12 +64,13 @@ const EditProfile = ({ data = {}, navigation }) => {
                 option: "UPDATEGNRALINFO",
             }
 
-            let resSer = await ServiceProfile(DataSent, "profile", idUser)
+            let resSer = await ServiceProfile(DataSent, "profile")
 
             if (resSer) {
+                // clearStates()
+                editInfo()
                 updateStore()
                 setShowInfoEdit(!resSer)
-                clearStates()
             }
         } catch (error) {
             errorMessage(error)
@@ -82,15 +84,15 @@ const EditProfile = ({ data = {}, navigation }) => {
     }
 
     // Limpiar estados
-    const clearStates = _ => {
-        setFirtsName("")
-        setLastName("")
-        setUsername("")
-        setPassword("")
-    }
+    // const clearStates = _ => {
+    //     setFirtsName("")
+    //     setLastName("")
+    //     setUsername("")
+    //     setPassword("")
+    // }
 
     const goToEditFoto = _ => {
-        navigation.navigate("EditFoto", { imgPerfil: data.src, idUser: idUser })
+        navigation.navigate("EditFoto", { imgPerfil: data.src })
     }
 
     const updateStore = _ => {
@@ -103,10 +105,18 @@ const EditProfile = ({ data = {}, navigation }) => {
             username: username === "" ? global.username : username,
         }
 
+        // console.log('dataStorage: ', dataStorage)
+
         store.dispatch({ type: "SETSTORAGE", payload: dataStorage })
 
-        console.log("store: ", global)
+        // console.log("global: ", global)
     }
+
+    // console.log("store: ", store.getState().global)
+
+    // console.log('Datos de arriba: ', data)
+
+    console.log('Estados: ', firtsName, lastName, username)
 
     useEffect(() => {
         infoEdit()
@@ -121,7 +131,7 @@ const EditProfile = ({ data = {}, navigation }) => {
                             style={classes.image}
                             source={
                                 data.src !== undefined
-                                    ? { uri: data.src }
+                                    ? { uri: global.src }
                                     : profile
                             }
                         />
@@ -153,7 +163,7 @@ const EditProfile = ({ data = {}, navigation }) => {
                                 Nombre:
                             </Text>
                             <Text style={classes.subTitleCard}>
-                                {data.first_name}
+                                {firtsName}
                             </Text>
                         </View>
 
@@ -162,7 +172,7 @@ const EditProfile = ({ data = {}, navigation }) => {
                                 Apellido:
                             </Text>
                             <Text style={classes.subTitleCard}>
-                                {data.last_name}
+                                {lastName}
                             </Text>
                         </View>
 
@@ -171,7 +181,7 @@ const EditProfile = ({ data = {}, navigation }) => {
                                 Usuario:
                             </Text>
                             <Text style={classes.subTitleCard}>
-                                @{data.username}
+                                @{username}
                             </Text>
                         </View>
 

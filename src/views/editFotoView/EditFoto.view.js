@@ -114,7 +114,8 @@ const EditFotoView = props => {
 
             updateStore()
 
-            let res = await ServiceProfile(DataSent, "profile", idUser)
+            console.log("Image", picturePerfil)
+            let res = await ServiceProfile(DataSent, "profile")
 
             if (res) {
                 close()
@@ -189,58 +190,62 @@ const EditFotoView = props => {
                         </TouchableOpacity>
                     </View>
                 </View>
+            </KeyboardAvoidingView>
+            <Modalize
+                ref={sheetRef}
+                snapPoint={RFValue(180)}
+                modalHeight={RFValue(180)}
+                modalStyle={classes.panel}
+                HeaderComponent={
+                    <View style={{ alignItems: "center" }}>
+                        <Text style={classes.panelTitle}>Actualizar foto</Text>
+                        <Text style={classes.panelSubtitle}>
+                            Cambia tu foto de perfil
+                        </Text>
 
-                <Modalize
-                    ref={sheetRef}
-                    snapPoint={RFValue(300)}
-                    modalHeight={RFValue(300)}
-                    modalStyle={classes.panel}
-                    HeaderComponent={
-                        <View style={{ alignItems: "center" }}>
-                            <Text style={classes.panelTitle}>
-                                Actualizar foto
-                            </Text>
-                            <Text style={classes.panelSubtitle}>
-                                Cambia tu foto de perfil
-                            </Text>
-
+                        <View style={classes.panelContainerButton}>
                             <TouchableOpacity
                                 style={[
                                     GlobalStyles.buttonPrimaryLine,
-                                    { margin: RFValue(5) },
+                                    { margin: RFValue(20) },
                                 ]}
                                 onPress={_ => uploadImageView(true)}>
                                 <Text
-                                    style={GlobalStyles.textButtonPrimaryLine}>
-                                    Tomar fotografia
+                                    style={
+                                        GlobalStyles.textButtonPrimaryLineSub
+                                    }>
+                                    Tomar foto
                                 </Text>
                             </TouchableOpacity>
 
                             <TouchableOpacity
                                 style={[
                                     GlobalStyles.buttonPrimaryLine,
-                                    { margin: RFValue(5) },
+                                    { margin: RFValue(20) },
                                 ]}
                                 onPress={_ => uploadImageView(false)}>
                                 <Text
-                                    style={GlobalStyles.textButtonPrimaryLine}>
-                                    Subir fotografia
-                                </Text>
-                            </TouchableOpacity>
-
-                            <TouchableOpacity
-                                style={[
-                                    GlobalStyles.buttonPrimaryCancel,
-                                    { margin: RFValue(5) },
-                                ]}>
-                                <Text style={GlobalStyles.textButtonCancel}>
-                                    Cancelar
+                                    style={
+                                        GlobalStyles.textButtonPrimaryLineSub
+                                    }>
+                                    Subir foto
                                 </Text>
                             </TouchableOpacity>
                         </View>
-                    }
-                />
-            </KeyboardAvoidingView>
+
+                        {/* <TouchableOpacity
+                            onPress={_ => sheetRef.current.close()}
+                            style={[
+                                GlobalStyles.buttonPrimaryCancel,
+                                { margin: RFValue(5) },
+                            ]}>
+                            <Text style={GlobalStyles.textButtonCancel}>
+                                Cancelar
+                            </Text>
+                        </TouchableOpacity> */}
+                    </View>
+                }
+            />
         </Container>
     )
 }
