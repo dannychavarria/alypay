@@ -24,6 +24,7 @@ import Main from "./views/Main/Index"
 import Splash from "./components/Splash/Splash"
 import Register from "./views/Register/Register"
 import Payment from "./components/Payment/Payment"
+import FilterCommerces from "./views/FilterCommercesView/FilterCommerces.view"
 
 // Import Components
 import Search from "./components/Search/Search"
@@ -167,6 +168,8 @@ const App = () => {
                             <Stack.Screen name={ROUTES.KYC} component={Kyc} />
 
                             <Stack.Screen name={ROUTES.PROFILE} component={Profile} />
+
+                            <Stack.Screen name={ROUTES.FILTERCOMMERCES} component={FilterCommerces} />
                         </>
                     )}
 

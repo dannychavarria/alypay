@@ -2,12 +2,15 @@ import { RFValue, Colors, GlobalStyles } from '../../../utils/constants'
 
 export default {
     container:{
-        padding: RFValue(20),
+        width: '100%',
+        paddingTop: RFValue(20),
+        alignItems: 'center',
     },
     containerPicker: {
         ...GlobalStyles.textInput,
         alignItems: "center",
         flexDirection: "row",
+        width: '87.5%',
     },
     textInput: {
         borderColor: Colors.colorSecondary + "55",
@@ -24,9 +27,11 @@ export default {
     cardContainer: {
         backgroundColor: Colors.colorBlack,
         height: RFValue(40),
+        width: '87.5%',
         marginTop: RFValue(2),
         justifyContent: "center",
         alignItems: "center",
+        alignSelf: "center",
         borderColor: Colors.colorYellow + 55,
         borderWidth: 1,
         borderRadius: 5,

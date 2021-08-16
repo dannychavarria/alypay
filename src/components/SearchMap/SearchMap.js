@@ -12,8 +12,8 @@ const SearchMap = ({
     data,
     setNewLongitude,
     setNewLatitude,
-    click,
-    setClick,
+    searching,
+    setSearching,
     changeTap
 }) => {
     const [value, setValue] = useState("")
@@ -28,22 +28,30 @@ const SearchMap = ({
                     const { name_commerce } = item
                     return name_commerce
                         .toLowerCase()
-                        .includes(value.toLowerCase()) 
-                }),
+                        .includes(value.toLowerCase())
+                }).slice(0, 5),
             )
         }
         return ""
     }
 
     useEffect(() => {
-        value != list ? setList([]) : ""
+        value != list ? setList([]) : ''
     }, [value])
+    //useEffect Necesario para dejar de renderizar las categorias al mostrar resultados
+    useEffect(() => {
+        if (list.length === 0) {
+            setSearching(false)
+        } else {
+            setSearching(true)
+        }
+    }, [list])
 
     //Seteo de la nueva longitud y latitud a la que se dirigira
     const positionCommerce = (longitude, latitude) => {
 
         //Se busca el comercio que selecciono mediante comparar la latitud y longitud
-        let commerce = data.find(item=> item.latitude === latitude && item.longitude === longitude)
+        let commerce = data.find(item => item.latitude === latitude && item.longitude === longitude)
         //Se obtiene el indice del comercio en el arreglo principal
         let index = data.indexOf(commerce)
 
@@ -51,7 +59,6 @@ const SearchMap = ({
         setNewLatitude(latitude)
         setValue("") //Para que se quite el flatlist al momento de tocar algun elemento de este
         setList([])
-        setClick(!click)
         //Se envia el index del comercio seleccionado
         changeTap(index)
     }
@@ -75,6 +82,9 @@ const SearchMap = ({
             </View>
 
             <FlatList
+                style={{
+                    width: '100%',
+                }}
                 keyExtractor={(_, i) => (i = i)}
                 data={list}
                 renderItem={({ item, index }) => (

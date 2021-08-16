@@ -31,6 +31,7 @@ import imageProfileAvatar from "../../static/ecommerce-avatar.png"
 import IconMarket from "../../static/maket-icon-logo-yellow.png"
 import iconDirection from "../../static/icon-directions-map.png"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
+import CategoryCommerces from "../CategoryCommerces/CategoryCommerces.component"
 
 const initialState = {
     latitude: null,
@@ -47,7 +48,7 @@ const reducer = (state, action) => {
 const MapsCommerce = () => {
     const [state, dispatch] = useReducer(reducer, initialState)
     const [info, setInfo] = useState([])
-    const [click, setClick] = useState(false)
+    const [searching, setSearching] = useState(false)
     //Estados para la nueva posicion de la camara
     const [newLongitude, setNewLongitude] = useState(999)
     const [newLatitude, setNewLatitude] = useState(999)
@@ -191,7 +192,7 @@ const MapsCommerce = () => {
                 <View style={styles.containerInfo} >
                     <TouchableOpacity style={styles.containerTextDirection} onPress={whatsapp}>
                         <Text style={styles.textDirection}>Whatsapp</Text>
-                        <FontAwesome name='whatsapp' size={RFValue(20)} color={Colors.colorYellow}/>
+                        <FontAwesome name='whatsapp' size={RFValue(20)} color={Colors.colorYellow} />
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.containerTextDirection} onPress={direcction}>
@@ -248,7 +249,7 @@ const MapsCommerce = () => {
                 longitudeDelta: 0.045,
             })
         }
-    }, [newLatitude, newLongitude, click])
+    }, [newLatitude, newLongitude, searching])
 
     return (
         <View style={styles.container}>
@@ -316,10 +317,14 @@ const MapsCommerce = () => {
                         data={info}
                         setNewLongitude={setNewLongitude}
                         setNewLatitude={setNewLatitude}
-                        click={click}
-                        setClick={setClick}
+                        searching={searching}
+                        setSearching={setSearching}
                         changeTap={changeTap}
                     />
+                    {searching ?
+                        null :
+                        <CategoryCommerces />
+                    }
                 </>
             )}
         </View>
