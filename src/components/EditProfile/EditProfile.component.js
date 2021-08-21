@@ -116,7 +116,7 @@ const EditProfile = ({ data = {}, navigation }) => {
 
     // console.log('Datos de arriba: ', data)
 
-    console.log('Estados: ', firtsName, lastName, username)
+    // console.log('Estados: ', firtsName, lastName, username)
 
     useEffect(() => {
         infoEdit()
@@ -171,9 +171,7 @@ const EditProfile = ({ data = {}, navigation }) => {
                             <Text style={classes.titlePrincipalCard}>
                                 Apellido:
                             </Text>
-                            <Text style={classes.subTitleCard}>
-                                {lastName}
-                            </Text>
+                            <Text style={classes.subTitleCard}>{lastName}</Text>
                         </View>
 
                         <View style={classes.rowCard}>

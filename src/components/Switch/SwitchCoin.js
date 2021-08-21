@@ -28,7 +28,7 @@ const SwitchCoin = ({ onSwitch = () => {}, items = {} }) => {
         if (items.ALY !== null) {
             let _coins = Object.entries(items)
                 .map(item => item[1])
-                .filter(item => item.symbol !== "USDT")
+                .filter(item => item.wallet_type === 1)
             setCoins(_coins)
             setState(_coins[0])
             setItemWidth(100 / _coins.length)

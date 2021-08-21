@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 
 // import React navigation functions and constants
 import ROUTES from "../../utils/routes.config"
@@ -21,6 +21,9 @@ import Floor from "lodash/floor"
  */
 const ItemWallet = ({ data = {}, disabled = false }) => {
     const { navigate } = useNavigation()
+    // console.log("DataWallet", data)
+
+    const [infoData, setInfoData] = useState([])
 
     const urlImage =
         data._id !== null
@@ -33,11 +36,10 @@ const ItemWallet = ({ data = {}, disabled = false }) => {
      * Funcion que verifica si tiene es dueño de compañia
      */
     const isTherter = () => {
-        if (data.id !== -1 && data.wallet_type !== 3) {
-            navigate(ROUTES.WALLET, data)
-        } else {
-            navigate(ROUTES.LIST, data)
-        }
+        navigate(ROUTES.WALLET, data)
+        // } else {
+        //     navigate(ROUTES.LIST, data)
+        // }
     }
 
     return (

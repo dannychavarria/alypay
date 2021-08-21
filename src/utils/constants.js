@@ -95,6 +95,8 @@ const PORT = "3000"
 
 /**Direction for server */
 export const serverAddress = "https://alypay.uc.r.appspot.com"
+// export const serverAddress = "http://e9b68527de21.ngrok.io"
+
 export const serverSpeedtradingsURL = "https://ardent-medley-272823.appspot.com"
 
 /**
@@ -479,9 +481,11 @@ export const OpenSupport = () => Linking.openURL("https://wa.me/+50585570529")
  */
 export const getFeePercentage = (amount, feeType, fees) => {
     const enableFees = {
-        1: "transaction",
-        2: "retirement",
-        3: "exchange",
+        1: "transactionsFee",
+        2: "userWithdrawalsFee",
+        3: "commercePaymentFee",
+        4: "exchangeFee",
+        5: "commerceWithdrawalsFee",
     }
 
     const currentFeeType = enableFees[feeType]

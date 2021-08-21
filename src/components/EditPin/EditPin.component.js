@@ -64,7 +64,7 @@ const EditPinProfile = () => {
 
             let res = await ServiceProfile(DataSent, "pin")
 
-            console.log("res: ", res)
+            // console.log("res: ", res)
 
             if (res) {
                 closeEdit()

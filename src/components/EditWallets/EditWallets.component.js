@@ -45,11 +45,13 @@ const EditWallets = () => {
     const closeEdit = _ => setShowEdit(false)
     //funcion que alterna entre abrir o cerrar la edicion de la billeteras
     const alternEdit = _ => setShowEdit(!showEdit)
+
     //funcion para obtener las billeteras del store
     const getWallets = _ => {
-        let wallets = global.wallets
+        let wallets = global.wallets.filter(item => item.wallet_type === 1)
         setWallets(wallets)
     }
+
     //funcion de peticion, para cambiar el estado de las billeteras
     const changeWallets = async _ => {
         try {
@@ -103,16 +105,9 @@ const EditWallets = () => {
 
         store.getState().functions.reloadWallets()
     }
-    
+
     useEffect(() => {
         getWallets()
-
-        // store.subscribe(() => {
-        //     // Actualizar informacion de la billetera
-        //     let { global } = store.getState()
-        //     setWallets(global.wallets)
-
-        // })
     }, [wallets])
 
     return (
@@ -128,7 +123,7 @@ const EditWallets = () => {
             {showEdit ? (
                 <View style={styles.containerCardInfoMax}>
                     <FlatList
-                        keyExtractor={(item, index) => `${item.name}`}
+                        keyExtractor={(_, key) => key.toString()}
                         data={wallets}
                         renderItem={({ item, index }) => (
                             <MiniCardWallet

@@ -35,7 +35,6 @@ import { launchCamera, launchImageLibrary } from "react-native-image-picker"
 
 // Import Store
 import store from "../../store/index"
-import { ScrollView } from "react-native-gesture-handler"
 
 const EditFotoView = props => {
     const [imgPerfil, setImgPerfil] = useState(null)
@@ -114,7 +113,7 @@ const EditFotoView = props => {
 
             updateStore()
 
-            console.log("Image", picturePerfil)
+            // console.log("Image", picturePerfil)
             let res = await ServiceProfile(DataSent, "profile")
 
             if (res) {

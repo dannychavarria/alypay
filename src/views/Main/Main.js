@@ -352,7 +352,14 @@ const Main = () => {
             if (data.error) {
                 throw String(data.message)
             } else {
-                let walltesFilter = data.filter(item => item.id_state !== 2)
+                /**
+                 * Recorremos la data de las wallet para verificar si estan activas o no
+                 * asi como tambien verificamos si son wallet de usuario o de compañia para
+                 * eliminar la duplicidad de las wallet Tether
+                 */
+                let walltesFilter = data.filter(
+                    item => item.id_state !== 2 && item.wallet_type === 1,
+                )
                 dispatch({ type: "wallets", payload: walltesFilter })
             }
 
@@ -381,7 +388,6 @@ const Main = () => {
                 ...globalStorage,
                 fee: {},
             }
-            console.log("Fees", dataStore)
 
             if (Object.values(fee).length > 0) {
                 dataStore.fee = fee
@@ -424,7 +430,6 @@ const Main = () => {
             />
             {stateView === TYPE_VIEW.WALLET && (
                 <>
-                    {/* <CardExecutive data={global}/> */}
                     <FlatList
                         data={state.wallets}
                         keyExtractor={(_, i) => i.toString()}

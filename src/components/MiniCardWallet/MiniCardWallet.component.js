@@ -26,6 +26,7 @@ const MiniCardWallet = props => {
                   wallet._id
               }.png`
             : urlAlyCoin
+
     //funcion para alternar el switch
     const alternWallet = _ => {
         setDataSent({
@@ -54,20 +55,6 @@ const MiniCardWallet = props => {
                     </Text>
                 </View>
             </View>
-            {/* <View style={styles.miniLeftContainer}>
-
-                <View style={{ width: '60%' }}>
-                    <Text style={styles.miniTextCoin}
-                        numberOfLines={1}
-                    >{wallet.name}</Text>
-                </View>
-            </View> */}
-
-            {/* <View style={styles.miniContainerCenter}>
-                <Text style={styles.miniTextCenter} numberOfLines={1}>
-                    $ {WithDecimals(Floor(wallet.price, 2))}
-                </Text>
-            </View> */}
 
             <View style={styles.miniRightContainer}>
                 <Switch

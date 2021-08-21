@@ -66,9 +66,6 @@ const Payment = ({ route, navigation }) => {
                 getHeaders(),
             )
 
-            console.log("InfoPay", data)
-            console.log("InfoPay", Pay.order)
-
             if (data.error) {
                 throw String(data.message)
             }
@@ -91,7 +88,7 @@ const Payment = ({ route, navigation }) => {
     }
 
     /**Funcion que envia los datos al servidor backend */
-    const confirmPayment = async (props) => {
+    const confirmPayment = async props => {
         try {
             loader(true)
 
@@ -108,7 +105,7 @@ const Payment = ({ route, navigation }) => {
                 to: scanned ? Pay.wallet_commerce : commerceData.wallet,
                 amount: amount,
                 amountUSD: _amountUSD,
-                pin: props
+                pin: props,
             }
 
             // Realiza la peticion de pago con los datos de la transaccion obtenidos
@@ -118,7 +115,7 @@ const Payment = ({ route, navigation }) => {
                 getHeaders(),
             )
 
-            console.log("Pay", senData)
+            // console.log("Pay", senData)
 
             if (data.error) {
                 throw String(data.message)

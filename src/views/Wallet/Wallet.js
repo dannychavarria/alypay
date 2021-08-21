@@ -804,19 +804,6 @@ const History = ({ data = [] }) => {
                     )}
                 />
             )}
-            {/*  {
-                data.map(StoreElement)
-            }
-
-
-            {
-                (data.length === 0) &&
-                <>
-                    <Lottie source={emptyAnimation} style={styles.lottieQRAnimation} autoPlay loop={false} />
-
-                    <Text style={styles.text}>Sin registros</Text>
-                </>
-            } */}
         </ViewAnimate>
     )
 }
