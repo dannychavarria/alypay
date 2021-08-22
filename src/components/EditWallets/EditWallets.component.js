@@ -108,7 +108,7 @@ const EditWallets = () => {
 
     useEffect(() => {
         getWallets()
-    }, [wallets])
+    }, [])
 
     return (
         <View style={styles.container}>
